@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Header from '../components/Header';
+import { getAllVaults } from '../utils/supabase';
 
 export default function Home() {
   return (
@@ -15,7 +16,11 @@ export default function Home() {
       </div>
 
       <main>
-        {/* <h1>Vaults</h1> */}
+        <h1
+          className={styles.h1Container}
+        >
+          Active strategies
+        </h1>
       </main>
 
       <link
@@ -27,4 +32,22 @@ export default function Home() {
       />
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  const response = await getAllVaults();
+  if(response !== null) {
+    return {
+      props: {
+        vaults: response
+      }
+    }
+  }
+  else {
+    return {
+      props: {
+        vaults: null
+      }
+    }
+  }
 }
