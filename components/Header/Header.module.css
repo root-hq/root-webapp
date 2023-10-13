@@ -1,0 +1,30 @@
+.headerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.socialButtonContainer {
+    font-size: 1.75rem;
+    margin-right: 0.75rem;
+    margin-top: 1.3rem;
+    color: white;
+    display: flex;
+    flex-direction: row;
+}
+
+.socialButton {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+@media (min-width: 375px) {
+    .socialButtonContainer {
+        font-size: 2rem;
+        margin-right: 1rem;
+        margin-top: 1.5rem;
+        color: white;
+        display: flex;
+        flex-direction: row;
+    }
+}
