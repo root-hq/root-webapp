@@ -1,0 +1,14 @@
+.appContainer {
+    height: 100vh;
+    background-image: -webkit-radial-gradient(top, circle cover, #1f2330 0%, #101015 80%);
+    width: 100%;
+  }
+  
+  .heroSectionContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 50px;
+  }
