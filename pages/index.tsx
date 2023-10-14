@@ -3,8 +3,9 @@ import styles from '../styles/Home.module.css';
 import Header from '../components/Header';
 import { getAllTokenMetadata, getAllVaults } from '../utils/supabase';
 import VaultContainer from '../components/VaultContainer';
+import { UnifiedVault, TokenMetadata } from '@squarerootlabs/root-db-utils/src/supabase';
 
-export default function Home({ vaults, allTokenMetadata }) {
+export default function Home({ vaults, allTokenMetadata }: HomePageProps) {
   return (
     <div className={styles.appContainer}>
       <Head>
@@ -24,11 +25,15 @@ export default function Home({ vaults, allTokenMetadata }) {
         </h1>
         <div>
           {
-            vaults && allTokenMetadata ?
+            vaults.length > 0 && allTokenMetadata.length > 0 ?
               <>
                 {
-                  vaults.map((vault) =>
-                    <VaultContainer vault={vault} key={vault.vaultAddress}/>
+                  vaults.map((vault: UnifiedVault) => {
+                    const baseTokenMetadata = allTokenMetadata.filter((info: TokenMetadata) => info.mint === vault.base_token_address)[0];
+                    const quoteTokenMetadata = allTokenMetadata.filter((info: TokenMetadata) => info.mint === vault.quote_token_address)[0];
+                    
+                    return <VaultContainer vault={vault} key={vault.vault_address} baseToken = {baseTokenMetadata} quoteToken = {quoteTokenMetadata}/>;
+                  }
                   )
                 }
               </>
@@ -50,14 +55,19 @@ export default function Home({ vaults, allTokenMetadata }) {
   );
 }
 
+export interface HomePageProps {
+  vaults: UnifiedVault[],
+  allTokenMetadata: TokenMetadata[]
+}
+
 export async function getServerSideProps() {
   const vaults = await getAllVaults();
   const allTokenMetadata = await getAllTokenMetadata();
 
   return {
     props: {
-      vaults: vaults ? vaults : null,
-      allTokenMetadata: allTokenMetadata ? allTokenMetadata : null
+      vaults: vaults ? vaults : [],
+      allTokenMetadata: allTokenMetadata ? allTokenMetadata : []
     }
   }
 }

@@ -1,11 +1,13 @@
-import axios from "axios"
+import axios from "axios";
+import { UnifiedVault } from '@squarerootlabs/root-db-utils/src/supabase';
 
-export const getAllVaults = async(): Promise<any | null> => {
+
+export const getAllVaults = async(): Promise<UnifiedVault[] | null> => {
     try {
         const response = await axios.get(`${process.env.NEXT_DATABASE_SERVER_URL}/api/get-all-vaults`);
 
         if(response) {
-            return response.data;
+            return response.data as UnifiedVault[];
         }
         else {
             console.log(`Failed to retrieve vaults data`);
@@ -17,12 +19,12 @@ export const getAllVaults = async(): Promise<any | null> => {
     }
 }
 
-export const getVault = async(vaultAddress: string): Promise<any | null> => {
+export const getVault = async(vaultAddress: string): Promise<UnifiedVault[] | null> => {
     try {
         const response = await axios.get(`${process.env.NEXT_DATABASE_SERVER_URL}/api/get-vault?vaultAddress=${vaultAddress}`);
 
         if(response) {
-            return response.data;
+            return response.data as UnifiedVault[];
         }
         else {
             console.log(`Failed to retrieve data on vault:"${vaultAddress}`);

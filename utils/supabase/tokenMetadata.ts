@@ -1,11 +1,13 @@
 import axios from "axios"
+import { TokenMetadata } from '@squarerootlabs/root-db-utils/src/supabase';
 
-export const getAllTokenMetadata = async(): Promise<any | null> => {
+
+export const getAllTokenMetadata = async(): Promise<TokenMetadata[] | null> => {
     try {
         const response = await axios.get(`${process.env.NEXT_DATABASE_SERVER_URL}/api/get-all-token-metadata`);
 
         if(response) {
-            return response.data;
+            return response.data as TokenMetadata[];
         }
         else {
             console.log(`Failed to retrieve all token metadata`);
@@ -17,12 +19,12 @@ export const getAllTokenMetadata = async(): Promise<any | null> => {
     }
 }
 
-export const getTokenMetadata = async(tokenMint: string): Promise<any | null> => {
+export const getTokenMetadata = async(tokenMint: string): Promise<TokenMetadata[] | null> => {
     try {
         const response = await axios.get(`${process.env.NEXT_DATABASE_SERVER_URL}/api/get-token-metadata?tokenMint=${tokenMint}`);
 
         if(response) {
-            return response.data;
+            return response.data as TokenMetadata[];
         }
         else {
             console.log(`Failed to retrieve data on token:"${tokenMint}`);
