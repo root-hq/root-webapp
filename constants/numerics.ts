@@ -1,0 +1,1 @@
+export const DEFAULT_ORDERBOOK_VIEW_DEPTH = 10;

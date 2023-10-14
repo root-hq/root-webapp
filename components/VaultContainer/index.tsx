@@ -19,7 +19,9 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
     const router = useRouter();
 
     const handleViewButtonClick = (vaultAddress: string) => {
-        router.push(`/vault/${vaultAddress}`);
+        router.push({
+            pathname: `/vault/${vaultAddress}`,
+        });
     }
 
     useEffect(() => {
