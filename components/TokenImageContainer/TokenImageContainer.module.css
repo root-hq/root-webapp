@@ -1,4 +1,13 @@
-.tokenImageContainer {
+.dualTokenImageContainer {
     display: flex;
     flex-direction: row;
+}
+
+.tokenImageContainer {
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.tokenImage {
+    border-radius: 50%;
 }

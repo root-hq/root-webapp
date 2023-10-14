@@ -1,0 +1,4 @@
+.keyValueContainer {
+    display: flex;
+    flex-direction: row;
+}

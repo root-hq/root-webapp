@@ -17,24 +17,30 @@ export interface TokenImageContainerProps {
 const TokenImageContainer = ({baseTokenImageMetadata, quoteTokenImageMetadata}: TokenImageContainerProps) => {
     return(
         <div
-            className={styles.tokenImageContainer}
+            className={styles.dualTokenImageContainer}
         >
             {
                 baseTokenImageMetadata && quoteTokenImageMetadata ?
                     <>
-                        <Image
-                            src={baseTokenImageMetadata.url}
-                            width={baseTokenImageMetadata.width}
-                            height={baseTokenImageMetadata.height}
-                            alt={baseTokenImageMetadata.alt}
-                        />
+                        <div className={styles.tokenImageContainer}>
+                            <Image
+                                src={baseTokenImageMetadata.url}
+                                width={baseTokenImageMetadata.width}
+                                height={baseTokenImageMetadata.height}
+                                alt={baseTokenImageMetadata.alt}
+                                className={styles.tokenImage}
+                            />
+                        </div>
                         
-                        <Image
-                            src={quoteTokenImageMetadata.url}
-                            width={quoteTokenImageMetadata.width}
-                            height={quoteTokenImageMetadata.height}
-                            alt={quoteTokenImageMetadata.alt}
-                        />
+                        <div className={styles.tokenImageContainer}>
+                            <Image
+                                src={quoteTokenImageMetadata.url}
+                                width={quoteTokenImageMetadata.width}
+                                height={quoteTokenImageMetadata.height}
+                                alt={quoteTokenImageMetadata.alt}
+                                className={styles.tokenImage}
+                            />
+                        </div>
                     </>
                 :
                     <></>

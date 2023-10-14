@@ -23,7 +23,9 @@ export default function Home({ vaults, allTokenMetadata }: HomePageProps) {
         >
           Active strategies
         </h1>
-        <div>
+        <div
+          className={styles.vaultsContainer}
+        >
           {
             vaults.length > 0 && allTokenMetadata.length > 0 ?
               <>

@@ -1,4 +1,116 @@
 .vaultContainer {
     display: flex;
+    flex-direction: column;
+    background-color: #101115;
+    width: 30vw;
+    border: 1px solid rgba(90, 139, 244, 0.5);
+    padding: 2rem;
+    border-radius: 2rem;
+    box-shadow:0 0px 0 black,0 0px 0 rgba(255,255,255,0.3) inset,0 30px 60px 0px rgba(90, 139, 244, 0.1);
+}
+
+.vaultDetailsContainer {
+    display: flex;
     flex-direction: row;
+    justify-content: space-between;
+}
+
+.tokenInfoContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.exchangeInfoContainer {
+    margin-top: 0.25rem;
+}
+
+.exchangeText {
+    color: #999;
+    font-size: 1rem;
+}
+
+.depositDetailsContainer {
+    margin-top: 1.5rem;
+}
+
+.earningDetailsContainer {
+    margin-top: 1rem;
+}
+
+.vaultNameContainer {
+    color: white;
+    font-size: 1.6rem;
+    font-family: 'Inter';
+    font-weight: bold;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.viewButtonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.viewButton {
+    background-color: #5A8BF4;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    width: 250px;
+    height: 35px;
+    cursor: pointer;
+}
+
+.viewButton:hover {
+    color: #5A8BF4;
+    background-color: white;
+}
+
+@media (max-width: 768px) {
+    .vaultContainer {
+        width: 60vw;
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+    
+    .vaultDetailsContainer {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .exchangeInfoContainer {
+        margin-top: 1rem;
+    }
+
+    .exchangeText {
+        color: #999;
+        font-size: 0.85rem;
+    }
+
+    .vaultNameContainer {
+        font-size: 1.3rem;
+    }
+
+    .viewButton {
+        font-size: 1rem;
+        width: 200px;
+        height: 30px;
+        min-height: 30px;
+    } 
+}
+
+@media (max-width: 425px) {
+    .vaultNameContainer {
+        font-size: 1rem;
+    }
+
+    .viewButton {
+        height: 25px;
+        min-height: 25px;
+    }   
 }
