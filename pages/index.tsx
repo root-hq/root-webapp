@@ -3,7 +3,7 @@ import styles from '../styles/Home.module.css';
 import Header from '../components/Header';
 import { getAllTokenMetadata, getAllVaults } from '../utils/supabase';
 import VaultContainer from '../components/VaultContainer';
-import { UnifiedVault, TokenMetadata } from '@squarerootlabs/root-db-utils/src/supabase';
+import { UnifiedVault, TokenMetadata } from '../utils/supabase';
 
 export default function Home({ vaults, allTokenMetadata }: HomePageProps) {
   return (

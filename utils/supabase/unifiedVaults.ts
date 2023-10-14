@@ -1,6 +1,5 @@
 import axios from "axios";
-import { UnifiedVault } from '@squarerootlabs/root-db-utils/src/supabase';
-
+import { UnifiedVault } from ".";
 
 export const getAllVaults = async(): Promise<UnifiedVault[] | null> => {
     try {

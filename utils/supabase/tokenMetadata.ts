@@ -1,6 +1,5 @@
 import axios from "axios"
-import { TokenMetadata } from '@squarerootlabs/root-db-utils/src/supabase';
-
+import { TokenMetadata } from ".";
 
 export const getAllTokenMetadata = async(): Promise<TokenMetadata[] | null> => {
     try {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from './VaultContainer.module.css';
-import { TokenMetadata, UnifiedVault } from '@squarerootlabs/root-db-utils/src/supabase';
 import TokenImageContainer, { ImageMetadata } from '../TokenImageContainer';
 import { Button } from 'react-bootstrap';
 import KeyValueText, { KeyValueJustification } from '../KeyValueText';
+import { TokenMetadata, UnifiedVault } from '../../utils/supabase';
 
 export interface VaultContainerProps {
     vault: UnifiedVault,
