@@ -4,6 +4,7 @@ import TokenImageContainer, { ImageMetadata } from '../TokenImageContainer';
 import { Button } from 'react-bootstrap';
 import KeyValueComponent, { KeyValueJustification } from '../KeyValueComponent';
 import { TokenMetadata, UnifiedVault } from '../../utils/supabase';
+import { useRouter } from 'next/router';
 
 export interface VaultContainerProps {
     vault: UnifiedVault,
@@ -14,6 +15,12 @@ export interface VaultContainerProps {
 const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) => {
 
     const [windowSize, setWindowSize] = useState([0,0]);
+
+    const router = useRouter();
+
+    const handleViewButtonClick = (vaultAddress: string) => {
+        router.push(`/vault/${vaultAddress}`);
+    }
 
     useEffect(() => {
         const handleWindowResize = () => {
@@ -111,6 +118,7 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
             <div className={styles.viewButtonContainer}>
                 <Button
                     className={styles.viewButton}
+                    onClick={() => handleViewButtonClick(vault.vault_address)}
                 >
                     View
                 </Button>
