@@ -1,9 +1,10 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Header from '../components/Header';
-import { getAllVaults } from '../utils/supabase';
+import { getAllTokenMetadata, getAllVaults } from '../utils/supabase';
+import VaultContainer from '../components/VaultContainer';
 
-export default function Home() {
+export default function Home({ vaults, allTokenMetadata }) {
   return (
     <div className={styles.appContainer}>
       <Head>
@@ -21,6 +22,21 @@ export default function Home() {
         >
           Active strategies
         </h1>
+        <div>
+          {
+            vaults && allTokenMetadata ?
+              <>
+                {
+                  vaults.map((vault) =>
+                    <VaultContainer vault={vault} key={vault.vaultAddress}/>
+                  )
+                }
+              </>
+            :
+              <>
+              </>
+          }
+        </div>
       </main>
 
       <link
@@ -35,19 +51,13 @@ export default function Home() {
 }
 
 export async function getServerSideProps() {
-  const response = await getAllVaults();
-  if(response !== null) {
-    return {
-      props: {
-        vaults: response
-      }
-    }
-  }
-  else {
-    return {
-      props: {
-        vaults: null
-      }
+  const vaults = await getAllVaults();
+  const allTokenMetadata = await getAllTokenMetadata();
+
+  return {
+    props: {
+      vaults: vaults ? vaults : null,
+      allTokenMetadata: allTokenMetadata ? allTokenMetadata : null
     }
   }
 }
