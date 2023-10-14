@@ -64,8 +64,10 @@ export interface HomePageProps {
 
 export async function getServerSideProps() {
   const vaults = await getAllVaults();
-  const allTokenMetadata = await getAllTokenMetadata();
+  console.log("vaults Fetched: ", vaults);
 
+  const allTokenMetadata = await getAllTokenMetadata();
+  console.log("allTokenMetadata fetched: ", allTokenMetadata);
   return {
     props: {
       vaults: vaults ? vaults : [],
