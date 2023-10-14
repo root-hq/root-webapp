@@ -1,20 +1,20 @@
 import React from "react";
-import styles from './KeyValueText.module.css';
+import styles from './KeyValueComponent.module.css';
 
 export enum KeyValueJustification {
     SpaceBetween,
     SpaceAround
 }
 
-export interface KeyValueText {
-    keyText: string,
+export interface KeyValueComponentProps {
+    keyElement: React.JSX.Element,
     keyTextStyle: React.CSSProperties,
-    valueText: string,
+    valueElement: React.JSX.Element,
     valueTextStyle: React.CSSProperties,
     justification: KeyValueJustification,
 }
 
-export const KeyValueText = ({keyText, keyTextStyle,  valueText, valueTextStyle, justification}: KeyValueText) => {
+export const KeyValueComponent = ({keyElement, keyTextStyle,  valueElement, valueTextStyle, justification}: KeyValueComponentProps) => {
     return (
         <div
             className={styles.keyValueContainer}
@@ -25,13 +25,13 @@ export const KeyValueText = ({keyText, keyTextStyle,  valueText, valueTextStyle,
             }
         >
             <div className={styles.keyTextContainer}>
-                <span style = {keyTextStyle}>{keyText}</span>
+                <span style = {keyTextStyle}>{keyElement}</span>
             </div>
             <div className={styles.valueTextContainer}>
-                <span style = {valueTextStyle}>{valueText}</span>
+                <span style = {valueTextStyle}>{valueElement}</span>
             </div>
         </div>
     );
 }
 
-export default KeyValueText;
+export default KeyValueComponent;

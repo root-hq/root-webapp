@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './VaultContainer.module.css';
 import TokenImageContainer, { ImageMetadata } from '../TokenImageContainer';
 import { Button } from 'react-bootstrap';
-import KeyValueText, { KeyValueJustification } from '../KeyValueText';
+import KeyValueComponent, { KeyValueJustification } from '../KeyValueComponent';
 import { TokenMetadata, UnifiedVault } from '../../utils/supabase';
 
 export interface VaultContainerProps {
@@ -67,8 +67,8 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                 </div>
             </div>
             <div className={styles.depositDetailsContainer}>
-                <KeyValueText
-                    keyText='Total Deposits'
+                <KeyValueComponent
+                    keyElement={<span>{`Total Deposits`}</span>}
                     keyTextStyle={
                         {
                             fontWeight: 'bold',
@@ -76,7 +76,7 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                             color: '#999'
                         }
                     }
-                    valueText='$69,420'
+                    valueElement={<span>{`$69,420`}</span>}
                     valueTextStyle={
                         {
                             fontWeight: 'bold',
@@ -88,8 +88,8 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                 />
             </div>
             <div className={styles.earningDetailsContainer}>
-                <KeyValueText
-                    keyText='24h fee'
+                <KeyValueComponent
+                    keyElement={<span>{`24h fee`}</span>}
                     keyTextStyle={
                         {
                             fontWeight: 'bold',
@@ -97,7 +97,7 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                             color: '#999'
                         }
                     }
-                    valueText='$1,210'
+                    valueElement={<span>{`$1,210`}</span>}
                     valueTextStyle={
                         {
                             fontWeight: 'bold',
