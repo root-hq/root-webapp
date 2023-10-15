@@ -6,6 +6,7 @@ import { getL3Book } from '../../utils/phoenix';
 import { L3UiBook } from '@ellipsis-labs/phoenix-sdk';
 import { DEFAULT_ORDERBOOK_VIEW_DEPTH } from '../../constants';
 import { Col, Container, Row } from 'react-bootstrap';
+import L3UiBookDisplay from '../../components/L3UiBookDisplay';
 
 export interface VaultPageContainerProps {
     vaultData: UnifiedVault,
@@ -44,6 +45,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                 </Col>
                 <Col md = {6} xs = {12} className={styles.bookColumn}>
                     <div className={styles.bookContainer}>
+                        <L3UiBookDisplay l3UiBook = {l3UiBook} />
                     </div>
                 </Col>
             </Row>
