@@ -29,7 +29,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
             catch(error) {
                 console.error(`Error polling latest L3 book: `, error);
             }            
-        }, 2000);
+        }, 1000);
 
         // Clean up the interval on component unmount
         return () => clearInterval(intervalId);

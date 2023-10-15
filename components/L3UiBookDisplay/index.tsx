@@ -22,6 +22,9 @@ const L3UiBookDisplay = ({ l3UiBook }: L3UiBookDisplayProps) => {
     }
     return (
         <div className={styles.l3UiBookContainer}>
+            <div className={styles.l3UiBookTitleContainer}>
+                <span>Live trading</span>
+            </div>
             {
                 l3UiBook.asks.map((orderInfo)=> {
                     return <OrderInfoBar orderInfo={orderInfo} key={orderInfo.orderSequenceNumber} relativeSize={getRelativeSize(orderInfo)}/>
