@@ -163,7 +163,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                                             color: '#999'
                                         }
                                     }
-                                    valueElement={<div><span>{`${vaultBalance.baseTokenBalance}`}</span><span>{`${vaultBalance.baseTokenBalance}`}</span></div>}
+                                    valueElement={<span>{`${vaultBalance.baseTokenBalance}`}</span>}
                                     valueTextStyle={
                                         {
                                             fontWeight: 'bold',
