@@ -11,6 +11,7 @@ import L3UiBookDisplay from '../../components/L3UiBookDisplay';
 import { VaultBalance, getVaultBalance } from '../../utils/root/utils';
 import TokenImageContainer, { ImageMetadata } from '../../components/TokenImageContainer';
 import Tag from '../../components/Tag';
+import KeyValueComponent, { KeyValueJustification } from '../../components/KeyValueComponent';
 
 export interface VaultPageContainerProps {
     vaultData: UnifiedVault,
@@ -149,8 +150,53 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                 <Col md = {6} xs = {12} className={styles.vaultInfoColumn}>
                     <div className={styles.vaultInfoContainer}>
                         <div className={styles.vaultBalanceContainer}>
-                            <span>Base token balance: {vaultBalance.baseTokenBalance}</span>
-                            <span>Quote token balance: {vaultBalance.quoteTokenBalance}</span>
+                            <div className={styles.vaultTitle}>
+                                <span>Vault composition</span>
+                            </div>
+                            <div className={styles.vaultStat}>
+                                <KeyValueComponent
+                                    keyElement={<span>{`${baseTokenMetadata.ticker} balance`}</span>}
+                                    keyTextStyle={
+                                        {
+                                            fontWeight: 'bold',
+                                            fontSize: windowSize[0] > 425 ? `1.25rem` : `1rem`,
+                                            color: '#999'
+                                        }
+                                    }
+                                    valueElement={<div><span>{`${vaultBalance.baseTokenBalance}`}</span><span>{`${vaultBalance.baseTokenBalance}`}</span></div>}
+                                    valueTextStyle={
+                                        {
+                                            fontWeight: 'bold',
+                                            fontSize: windowSize[0] > 425 ? `1.25rem` : `1rem`,
+                                            color: 'white'
+                                        }
+                                    }
+                                    justification={KeyValueJustification.SpaceBetween}
+                                    
+                                />
+                            </div>
+                            <div className={styles.vaultStat}>
+                                <KeyValueComponent
+                                    keyElement={<span>{`${quoteTokenMetadata.ticker} balance`}</span>}
+                                    keyTextStyle={
+                                        {
+                                            fontWeight: 'bold',
+                                            fontSize: windowSize[0] > 425 ? `1.25rem` : `1rem`,
+                                            color: '#999'
+                                        }
+                                    }
+                                    valueElement={<span>{`${vaultBalance.quoteTokenBalance}`}</span>}
+                                    valueTextStyle={
+                                        {
+                                            fontWeight: 'bold',
+                                            fontSize: windowSize[0] > 425 ? `1.25rem` : `1rem`,
+                                            color: 'white'
+                                        }
+                                    }
+                                    justification={KeyValueJustification.SpaceBetween}
+                                    
+                                />
+                            </div>
                         </div>
                     </div>
                 </Col>

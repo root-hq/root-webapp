@@ -7,7 +7,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
 
     min-height: 100vh;
-    background-image: -webkit-radial-gradient(top, circle cover, #1f2330 0%, #101015 80%);
+    /* background-image: -webkit-radial-gradient(top, circle cover, #1f2330 0%, #101015 80%); */
+    background-color: #000;
     width: 100%;
   }
   
