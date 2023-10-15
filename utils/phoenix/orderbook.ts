@@ -14,31 +14,29 @@ export const getL3Book = async(
     }
     catch(err) {
         console.log('Error fetching orderbook data on Pheonix: ', err);
-    }
-
-    return {
-        bids: [
-            {
-                price: 0,
-                side: Side.Bid,
-                size: 0,
-                makerPubkey: '',
-                orderSequenceNumber: '',
-                lastValidSlot: 0,
-                lastValidUnixTimestampInSeconds: 0
-            }
-        ],
-        asks: [
-            {
-                price: 0,
-                side: Side.Ask,
-                size: 0,
-                makerPubkey: '',
-                orderSequenceNumber: '',
-                lastValidSlot: 0,
-                lastValidUnixTimestampInSeconds: 0
-            }
-        ]
-
+        return {
+            bids: [
+                {
+                    price: 0,
+                    side: Side.Bid,
+                    size: 0,
+                    makerPubkey: '',
+                    orderSequenceNumber: '',
+                    lastValidSlot: 0,
+                    lastValidUnixTimestampInSeconds: 0
+                }
+            ],
+            asks: [
+                {
+                    price: 0,
+                    side: Side.Ask,
+                    size: 0,
+                    makerPubkey: '',
+                    orderSequenceNumber: '',
+                    lastValidSlot: 0,
+                    lastValidUnixTimestampInSeconds: 0
+                }
+            ]
+        }
     }
 }

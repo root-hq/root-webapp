@@ -16,14 +16,6 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
 
     const [windowSize, setWindowSize] = useState([0,0]);
 
-    const router = useRouter();
-
-    const handleViewButtonClick = (vaultAddress: string) => {
-        router.push({
-            pathname: `/vault/${vaultAddress}`,
-        });
-    }
-
     useEffect(() => {
         const handleWindowResize = () => {
             setWindowSize([window.innerWidth, window.innerHeight]);
@@ -118,12 +110,15 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                 />
             </div>
             <div className={styles.viewButtonContainer}>
+                <a
+                    href={`/vault/${vault.vault_address}`}
+                >
                 <Button
                     className={styles.viewButton}
-                    onClick={() => handleViewButtonClick(vault.vault_address)}
-                >
+                >   
                     View
                 </Button>
+                </a>
             </div>
         </div>
     );
