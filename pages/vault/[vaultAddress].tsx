@@ -130,7 +130,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                         }
                     />
                     <Tag
-                        value={<span>{`No hedging`}</span>}
+                        value={<span>{`NO HEDGING`}</span>}
                         valueStyle={
                             {
                                 color: '#f4c910',
