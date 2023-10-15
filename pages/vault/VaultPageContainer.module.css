@@ -3,9 +3,11 @@
     flex-direction: column;
 }
 
-.firstRow {
-    margin-left: 2rem;
-    margin-right: 2rem;
+.firstRowContainer {
+    display: flex;
+    flex-direction: row;
+    margin-left: 10rem;
+    margin-right: 10rem;
 }
 
 .navigationContainer {
@@ -57,7 +59,6 @@
     flex-direction: row;
     width: 100%;
     justify-content: center;
-    /* align-items: center; */
     align-self: center;
 }
 
@@ -136,20 +137,22 @@
 .bookColumn {
     margin: 3rem;
     width: 30%;
-    /* background-color: #101115; */
     background-color: #111111;
-    /* border: 1px solid rgba(90, 139, 244, 0.5); */
     border: 1px solid #676767;
-
     padding: 1.4rem;
     border-radius: 1rem;
-    /* box-shadow:0 0px 0 black,0 0px 0 rgba(255,255,255,0.3) inset,0 30px 60px 0px rgba(90, 139, 244, 0.1); */
 }
 
 @media (max-width: 768px) {
+
+    .firstRowContainer {
+        margin-left: 4rem;
+        margin-right: 4rem;
+    }
     .vaultAndBookContainer {
         display: flex;
         flex-direction: column;
+        align-items: center;
     }
 
     .vaultInfoColumn {
