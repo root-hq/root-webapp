@@ -3,6 +3,11 @@
     flex-direction: column;
 }
 
+.firstRow {
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
 .navigationContainer {
     display: flex;
     flex-direction: row;
@@ -11,7 +16,6 @@
     color: white;
     font-weight: bold;
     font-size: 1rem;
-    margin: 2rem;
 }
 
 .backLinkContainer {
@@ -21,6 +25,29 @@
 }
 
 .vaultAddressContainer {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.vaultMetadataContainer {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2rem;
+}
+
+.vaultNameContainer {
+    margin-left: 1rem;
+}
+
+.vaultName {
+    color: white;
+    font-weight: bolder;
+    font-size: 2.5rem;
+}
+
+.tags {
+    display: flex;
+    margin-top: 1.25rem;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
 }
@@ -61,10 +88,32 @@
     }
 
     .vaultInfoColumn {
+        margin: 2rem;
         width: 80%;
     }
     
     .bookColumn {
+        margin: 2rem;
         width: 80%;
+    }
+}
+
+@media (max-width: 425px) {
+    .vaultName {
+        font-size: 2rem;
+    }
+
+    .navigationContainer {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .vaultName {
+        font-size: 1.6rem;
+    }
+
+    .navigationContainer {
+        font-size: 0.75rem;
     }
 }

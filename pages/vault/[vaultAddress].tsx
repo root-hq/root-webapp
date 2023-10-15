@@ -4,11 +4,13 @@ import styles from './VaultPageContainer.module.css';
 import { TokenMetadata, UnifiedVault, getTokenMetadata, getVault } from '../../utils/supabase';
 import { getL3Book } from '../../utils/phoenix';
 import { L3UiBook } from '@ellipsis-labs/phoenix-sdk';
-import { DEFAULT_ORDERBOOK_VIEW_DEPTH } from '../../constants';
+import { DEFAULT_ORDERBOOK_UPDATE_FREQUENCY_IN_MS, DEFAULT_ORDERBOOK_VIEW_DEPTH } from '../../constants';
 import { Col, Container, Row } from 'react-bootstrap';
 import Link from 'next/link';
 import L3UiBookDisplay from '../../components/L3UiBookDisplay';
 import { VaultBalance, getVaultBalance } from '../../utils/root/utils';
+import TokenImageContainer, { ImageMetadata } from '../../components/TokenImageContainer';
+import Tag from '../../components/Tag';
 
 export interface VaultPageContainerProps {
     vaultData: UnifiedVault,
@@ -20,6 +22,20 @@ export interface VaultPageContainerProps {
 
 const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, vaultBalance, l3UiBook }: VaultPageContainerProps) => {
     const router = useRouter();
+    
+    const [windowSize, setWindowSize] = useState([0,0]);
+
+    useEffect(() => {
+        const handleWindowResize = () => {
+            setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+    
+        window.addEventListener('resize', handleWindowResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleWindowResize);
+        };
+    }, []);
 
     const [l3UiBookState, setL3UiBookState] = useState(l3UiBook);
 
@@ -32,7 +48,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
             catch(error) {
                 console.error(`Error polling latest L3 book: `, error);
             }            
-        }, 1000);
+        }, DEFAULT_ORDERBOOK_UPDATE_FREQUENCY_IN_MS);
 
         // Clean up the interval on component unmount
         return () => clearInterval(intervalId);
@@ -41,23 +57,93 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
 
     return(
         <Container className={styles.vaultPageContainer}>
-            <Row className={styles.navigationContainer}>
-                <span
-                    className={styles.backLinkContainer}
-                >
-                    <Link
-                        href="/"
-                        className={styles.backLink}
+            <Row className={styles.firstRow}>
+                <div className={styles.navigationContainer}>
+                    <span
+                        className={styles.backLinkContainer}
                     >
-                        All Strategies
-                    </Link>
-                </span>
-                <span
-                    className={styles.arrowContainer}
-                >{`>`}</span>
-                <span
-                    className={styles.vaultAddressContainer}
-                >{`${baseTokenMetadata.ticker}-${quoteTokenMetadata.ticker}`}</span>
+                        <Link
+                            href="/"
+                            className={styles.backLink}
+                        >
+                            All Strategies
+                        </Link>
+                    </span>
+                    <span
+                        className={styles.arrowContainer}
+                    >{`>`}</span>
+                    <span
+                        className={styles.vaultAddressContainer}
+                    >{`${baseTokenMetadata.ticker}-${quoteTokenMetadata.ticker}`}</span>
+                </div>
+                <div className={styles.vaultMetadataContainer}>
+                    <div className={styles.vaultTokenLogoContainer}>
+                        <div className={styles.tokenImageContainer}>
+                            {
+                                baseTokenMetadata && quoteTokenMetadata && baseTokenMetadata.img_url && quoteTokenMetadata.img_url ?
+                                    <>
+                                        <TokenImageContainer 
+                                            baseTokenImageMetadata={
+                                                {
+                                                    url: baseTokenMetadata.img_url,
+                                                    width: windowSize[0] > 425 ? 50 : 40,
+                                                    height: windowSize[0] > 425 ? 50 : 40,
+                                                    alt: `Base token: ${baseTokenMetadata.ticker}`
+                                                } as ImageMetadata
+                                            }
+                                            quoteTokenImageMetadata={
+                                                {
+                                                    url: quoteTokenMetadata.img_url,
+                                                    width: windowSize[0] > 425 ? 50 : 40,
+                                                    height: windowSize[0] > 425 ? 50 : 40,
+                                                    alt: `Quote token: ${quoteTokenMetadata.ticker}`
+                                                } as ImageMetadata
+                                            }
+                                        />
+                                    </>
+                                :
+                                    <></>
+                            }
+                        </div>
+                    </div>
+                    <div className={styles.vaultNameContainer}>
+                        <span className={styles.vaultName}>{`${baseTokenMetadata.ticker}-${quoteTokenMetadata.ticker}`}</span>
+                    </div>
+                </div>
+                <div className={styles.tags}>
+                    <Tag
+                        value={<span>{`PHOENIX`}</span>}
+                        valueStyle={
+                            {
+                                color: '#477df2',
+                                fontSize: windowSize[0] > 320 ? '0.8rem': '0.65rem',
+                                padding: '0.5rem',
+                                border: '1px solid #888',
+                                borderRadius: '0.25rem',
+                                backgroundColor: '#111',
+                                fontWeight: 'bold',
+                                marginLeft: '0.5rem',
+                                marginRight: '0.5rem',
+                            }
+                        }
+                    />
+                    <Tag
+                        value={<span>{`No hedging`}</span>}
+                        valueStyle={
+                            {
+                                color: '#f4c910',
+                                fontSize: windowSize[0] > 320 ? '0.8rem': '0.65rem',
+                                padding: '0.5rem',
+                                border: '1px solid #888',
+                                borderRadius: '0.25rem',
+                                backgroundColor: '#111',
+                                fontWeight: 600,
+                                marginLeft: '0.5rem',
+                                marginRight: '0.5rem',
+                            }
+                        }
+                    />
+                </div>
             </Row>
             <Row className={styles.vaultAndBookContainer}>
                 <Col md = {6} xs = {12} className={styles.vaultInfoColumn}>
