@@ -5,9 +5,9 @@
 }
 
 .socialButtonContainer {
-    font-size: 1.75rem;
-    margin-right: 0.75rem;
-    margin-top: 1.3rem;
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    margin-top: 1.5rem;
     color: white;
     display: flex;
     flex-direction: row;
@@ -18,13 +18,10 @@
     margin-right: 1rem;
 }
 
-@media (min-width: 375px) {
+@media (max-width: 375px) {
     .socialButtonContainer {
-        font-size: 2rem;
-        margin-right: 1rem;
-        margin-top: 1.5rem;
-        color: white;
-        display: flex;
-        flex-direction: row;
+        font-size: 0rem;
+        margin-right: 0.75rem;
+        margin-top: 1.3rem;
     }
 }
