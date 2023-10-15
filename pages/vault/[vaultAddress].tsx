@@ -8,15 +8,17 @@ import { DEFAULT_ORDERBOOK_VIEW_DEPTH } from '../../constants';
 import { Col, Container, Row } from 'react-bootstrap';
 import Link from 'next/link';
 import L3UiBookDisplay from '../../components/L3UiBookDisplay';
+import { VaultBalance, getVaultBalance } from '../../utils/root/utils';
 
 export interface VaultPageContainerProps {
     vaultData: UnifiedVault,
     baseTokenMetadata: TokenMetadata,
     quoteTokenMetadata: TokenMetadata,
+    vaultBalance: VaultBalance
     l3UiBook: L3UiBook
 }
 
-const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, l3UiBook }: VaultPageContainerProps) => {
+const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, vaultBalance, l3UiBook }: VaultPageContainerProps) => {
     const router = useRouter();
 
     const [l3UiBookState, setL3UiBookState] = useState(l3UiBook);
@@ -60,6 +62,10 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
             <Row className={styles.vaultAndBookContainer}>
                 <Col md = {6} xs = {12} className={styles.vaultInfoColumn}>
                     <div className={styles.vaultInfoContainer}>
+                        <div className={styles.vaultBalanceContainer}>
+                            <span>Base token balance: {vaultBalance.baseTokenBalance}</span>
+                            <span>Quote token balance: {vaultBalance.quoteTokenBalance}</span>
+                        </div>
                     </div>
                 </Col>
                 <Col md = {6} xs = {12} className={styles.bookColumn}>
@@ -82,11 +88,14 @@ export async function getServerSideProps({ params }) {
 
     const l3UiBook = await getL3Book(vaultData.market_address, DEFAULT_ORDERBOOK_VIEW_DEPTH);
 
+    const vaultBalance = await getVaultBalance(vaultAddress);
+
     return {
         props: {
             vaultData: vaultData ? vaultData : null,
             baseTokenMetadata: baseTokenMetadata ? baseTokenMetadata : null,
             quoteTokenMetadata: quoteTokenMetadata ? quoteTokenMetadata : null,
+            vaultBalance,
             l3UiBook: l3UiBook ? l3UiBook : null
         }
     }

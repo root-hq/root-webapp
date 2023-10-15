@@ -11,6 +11,7 @@
   "dependencies": {
     "@coral-xyz/anchor": "^0.28.1-beta.2",
     "@ellipsis-labs/phoenix-sdk": "^2.0.2",
+    "@squarerootlabs/root-market-maker": "^1.0.9",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@solana/web3.js": "^1.87.1",
