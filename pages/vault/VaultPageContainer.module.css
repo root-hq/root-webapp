@@ -49,7 +49,7 @@
     min-height: 100px;
 }
 
-@media (max-width: 664px) {
+@media (max-width: 768px) {
     .vaultAndBookContainer {
         display: flex;
         flex-direction: column;

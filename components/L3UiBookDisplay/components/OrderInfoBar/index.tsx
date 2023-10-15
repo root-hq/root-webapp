@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './OrderInfoBar.module.css';
 import { L3UiOrder, Side } from '@ellipsis-labs/phoenix-sdk';
 
 export interface OrderInfoBarProps {
-    orderInfo: L3UiOrder
+    orderInfo: L3UiOrder,
+    relativeSize: number
 }
 
-const OrderInfoBar = ({ orderInfo }: OrderInfoBarProps) => {
+const OrderInfoBar = ({ orderInfo, relativeSize }: OrderInfoBarProps) => {
+
+    const [windowSize, setWindowSize] = useState([0,0]);
+
+    useEffect(() => {
+        const handleWindowResize = () => {
+            setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+    
+        window.addEventListener('resize', handleWindowResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleWindowResize);
+        };
+    }, []);
 
     const isSideBid = (orderInfo: L3UiOrder): boolean => orderInfo.side === Side.Bid;
 
@@ -21,7 +36,7 @@ const OrderInfoBar = ({ orderInfo }: OrderInfoBarProps) => {
                     className={styles.orderPrice}
                     style = {
                         {
-                            color: orderInfo && isSideBid(orderInfo) ? 'green' : isSideAsk(orderInfo) ? 'red' : 'grey',
+                            color: orderInfo && isSideBid(orderInfo) ? '#237a55' : isSideAsk(orderInfo) ? '#c34c49' : 'grey',
                         }
                     }
                 >{orderInfo.price}</span>
@@ -31,17 +46,18 @@ const OrderInfoBar = ({ orderInfo }: OrderInfoBarProps) => {
                     className={styles.orderSizeBar}
                     style={
                         {
-                            backgroundColor: orderInfo && isSideBid(orderInfo) ? 'green' : isSideAsk(orderInfo) ? 'red' : 'grey',
+                            backgroundColor: orderInfo && isSideBid(orderInfo) ? '#154536' : isSideAsk(orderInfo) ? '#56272a' : 'grey',
                             fontWeight: 'bold',
                             color: 'white',
                             padding: `0.2rem`,
                             paddingLeft: `3rem`,
                             paddingRight: '1rem',
+                            overflow: 'hidden',
                             textAlign: 'right',
                         }
                     }
                 >
-                    <span className={styles.orderSize}>{orderInfo.size}</span>
+                    <span className={styles.orderSize}>{`${orderInfo.size}`}</span>
                 </div>
             </div>
         </div>

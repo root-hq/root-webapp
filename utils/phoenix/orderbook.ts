@@ -6,7 +6,11 @@ export const getL3Book = async(
     depthPerSide: number
 ): Promise<L3UiBook> => {
     try {
-        const connection = new web3.Connection(process.env.NEXT_RPC_ENDPOINT, { commitment: 'processed' });
+        const endpoint = process.env.NEXT_RPC_ENDPOINT ?
+            process.env.NEXT_RPC_ENDPOINT : process.env.RPC_ENDPOINT ?
+                process.env.RPC_ENDPOINT : `https://solitary-orbital-sheet.solana-mainnet.quiknode.pro/05d455acb67a72d87bad972ed175c31aead941e3/`;
+
+        const connection = new web3.Connection( endpoint, { commitment: 'processed' });
     
         const client = await Client.create(connection);
         const book = client.getL3UiBook(marketAddress, depthPerSide);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from './VaultPageContainer.module.css';
 import { TokenMetadata, UnifiedVault, getTokenMetadata, getVault } from '../../utils/supabase';
@@ -17,6 +17,24 @@ export interface VaultPageContainerProps {
 
 const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, l3UiBook }: VaultPageContainerProps) => {
     const router = useRouter();
+
+    const [l3UiBookState, setL3UiBookState] = useState(l3UiBook);
+
+    useEffect(() => {
+        const intervalId = setInterval(async () => {
+            try {
+                let latestBook = await getL3Book(vaultData.market_address, DEFAULT_ORDERBOOK_VIEW_DEPTH);
+                setL3UiBookState(() => ({...latestBook}));
+            }
+            catch(error) {
+                console.error(`Error polling latest L3 book: `, error);
+            }            
+        }, 2000);
+
+        // Clean up the interval on component unmount
+        return () => clearInterval(intervalId);
+
+    }, [l3UiBook]);
 
     return(
         <Container className={styles.vaultPageContainer}>
@@ -45,7 +63,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                 </Col>
                 <Col md = {6} xs = {12} className={styles.bookColumn}>
                     <div className={styles.bookContainer}>
-                        <L3UiBookDisplay l3UiBook = {l3UiBook} />
+                        <L3UiBookDisplay l3UiBook = {l3UiBookState} />
                     </div>
                 </Col>
             </Row>
