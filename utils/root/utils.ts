@@ -8,7 +8,8 @@ export interface VaultBalance {
 
 export const getVaultBalance = async(vaultAddress: string): Promise<VaultBalance> => {
     try {
-        const connection = new web3.Connection(process.env.NEXT_RPC_ENDPOINT);
+        const endpoint = process.env.NEXT_RPC_ENDPOINT ? process.env.NEXT_RPC_ENDPOINT : 'https://solitary-orbital-sheet.solana-mainnet.quiknode.pro/05d455acb67a72d87bad972ed175c31aead941e3/';
+        const connection = new web3.Connection(endpoint);
     
         const baseTokenBalance = (await connection.getTokenAccountBalance(getBaseTokenVaultAddress(new web3.PublicKey(vaultAddress)))).value.uiAmount;
         const quoteTokenBalance = (await connection.getTokenAccountBalance(getQuoteTokenVaultAddress(new web3.PublicKey(vaultAddress)))).value.uiAmount;
