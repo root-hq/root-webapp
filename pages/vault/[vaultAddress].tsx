@@ -40,12 +40,16 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
     }, []);
 
     const [l3UiBookState, setL3UiBookState] = useState(l3UiBook);
+    const [vaultBalanceState, setVaultBalanceState] = useState(vaultBalance);
 
     useEffect(() => {
         const intervalId = setInterval(async () => {
             try {
                 let latestBook = await getL3Book(vaultData.market_address, DEFAULT_ORDERBOOK_VIEW_DEPTH);
                 setL3UiBookState(() => ({...latestBook}));
+
+                let latestVaultBalance = await getVaultBalance(vaultData.vault_address);
+                setVaultBalanceState(() => ({...latestVaultBalance}));
             }
             catch(error) {
                 console.error(`Error polling latest L3 book: `, error);
@@ -55,7 +59,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
         // Clean up the interval on component unmount
         return () => clearInterval(intervalId);
 
-    }, [l3UiBook, vaultData.market_address]);
+    }, [l3UiBook, vaultData.market_address, vaultData.vault_address]);
 
     return(
         <Container className={styles.vaultPageContainer}>
