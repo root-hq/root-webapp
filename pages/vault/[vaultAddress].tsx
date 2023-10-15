@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import styles from './VaultPageContainer.module.css';
-import { TokenMetadata, UnifiedVault, getTokenMetadata, getVault } from '../../utils/supabase';
+import { FillTrade, TokenMetadata, UnifiedVault, getFillTrades, getTokenMetadata, getVault } from '../../utils/supabase';
 import { getL3Book } from '../../utils/phoenix';
 import { L3UiBook } from '@ellipsis-labs/phoenix-sdk';
 import { DEFAULT_ORDERBOOK_UPDATE_FREQUENCY_IN_MS, DEFAULT_ORDERBOOK_VIEW_DEPTH } from '../../constants';
@@ -17,11 +17,12 @@ export interface VaultPageContainerProps {
     vaultData: UnifiedVault,
     baseTokenMetadata: TokenMetadata,
     quoteTokenMetadata: TokenMetadata,
-    vaultBalance: VaultBalance
+    vaultBalance: VaultBalance,
+    fillTrades: FillTrade[],
     l3UiBook: L3UiBook
 }
 
-const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, vaultBalance, l3UiBook }: VaultPageContainerProps) => {
+const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, vaultBalance, fillTrades, l3UiBook }: VaultPageContainerProps) => {
     const router = useRouter();
     
     const [windowSize, setWindowSize] = useState([0,0]);
@@ -199,7 +200,88 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                             </div>
                         </div>
                     </div>
+
+                    <div className={styles.vaultInfoContainer}>
+                            <div className={styles.vaultBalanceContainer}>
+                                <div className={styles.vaultTitle}>
+                                    <span>Historical Fills</span>
+                                </div>
+                                <div className={styles.vaultStat}>
+                                    <div
+                                        className={styles.historicalTradeTitle}
+                                        style = {
+                                            {
+                                                justifyContent: "space-between"
+                                            }
+                                        }
+                                    >
+                                        <div className={styles.fillPriceContainer}>
+                                            <span
+                                                style ={{
+                                                    color: '#888',
+                                                    fontWeight: 'bold'
+                                                }}
+                                            >{'PRICE'}</span>
+                                        </div>
+                                        <div className={styles.fillSizeContainer}>
+                                            <span
+                                                style ={{
+                                                    color: '#888',
+                                                    fontWeight: 'bold'
+                                                }}
+                                            >{'SIZE'}</span>
+                                        </div>
+                                    </div>
+                                    {
+                                        fillTrades.map((trade, i) => {
+                                            return (
+                                                <div
+                                                    key = {i}
+                                                    className={styles.historicalTrade}
+                                                    style = {
+                                                        {
+                                                            justifyContent: "space-between"
+                                                        }
+                                                    }
+                                                >
+                                                    <div className={styles.fillPriceContainer}>
+                                                        <span
+                                                            style ={{
+                                                                color: trade.isBid ? '#237a55' : '#c34c49',
+                                                                fontWeight: 'bold',
+                                                                opacity: 1.0
+                                                            }}
+                                                        >{trade.price}</span>
+                                                    </div>
+                                                    <div className={styles.fillSizeContainer}>
+                                                        <span
+                                                            style ={{
+                                                                color: '#888',
+                                                                fontWeight: 'bold'
+                                                            }}
+                                                        >{trade.size.toFixed(3)}</span>
+                                                    </div>
+                                                    <div className={styles.fillTxContainer}>
+                                                        <a
+                                                            className={styles.fillTxSignature}
+                                                            href={`${trade.tx}`}
+                                                            target='_blank'
+                                                            style ={{
+                                                                color: '#888',
+                                                                fontWeight: 'bold',
+                                                                fontSize: '0.9rem',
+                                                            }}
+                                                        >{'View tx'}</a>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </div>
+                    </div>
                 </Col>
+                
                 <Col md = {6} xs = {12} className={styles.bookColumn}>
                     <div className={styles.bookContainer}>
                         <L3UiBookDisplay l3UiBook = {l3UiBookState} />
@@ -222,12 +304,15 @@ export async function getServerSideProps({ params }) {
 
     const vaultBalance = await getVaultBalance(vaultAddress);
 
+    const fillTrades = await getFillTrades();
+
     return {
         props: {
             vaultData: vaultData ? vaultData : null,
             baseTokenMetadata: baseTokenMetadata ? baseTokenMetadata : null,
             quoteTokenMetadata: quoteTokenMetadata ? quoteTokenMetadata : null,
             vaultBalance,
+            fillTrades,
             l3UiBook: l3UiBook ? l3UiBook : null
         }
     }
