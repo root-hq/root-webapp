@@ -6,6 +6,7 @@ import { getL3Book } from '../../utils/phoenix';
 import { L3UiBook } from '@ellipsis-labs/phoenix-sdk';
 import { DEFAULT_ORDERBOOK_VIEW_DEPTH } from '../../constants';
 import { Col, Container, Row } from 'react-bootstrap';
+import Link from 'next/link';
 import L3UiBookDisplay from '../../components/L3UiBookDisplay';
 
 export interface VaultPageContainerProps {
@@ -34,7 +35,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
         // Clean up the interval on component unmount
         return () => clearInterval(intervalId);
 
-    }, [l3UiBook]);
+    }, [l3UiBook, vaultData.market_address]);
 
     return(
         <Container className={styles.vaultPageContainer}>
@@ -42,12 +43,12 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                 <span
                     className={styles.backLinkContainer}
                 >
-                    <a
+                    <Link
                         href="/"
                         className={styles.backLink}
                     >
                         All Strategies
-                    </a>
+                    </Link>
                 </span>
                 <span
                     className={styles.arrowContainer}

@@ -4,7 +4,7 @@ import TokenImageContainer, { ImageMetadata } from '../TokenImageContainer';
 import { Button } from 'react-bootstrap';
 import KeyValueComponent, { KeyValueJustification } from '../KeyValueComponent';
 import { TokenMetadata, UnifiedVault } from '../../utils/supabase';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export interface VaultContainerProps {
     vault: UnifiedVault,
@@ -110,7 +110,7 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                 />
             </div>
             <div className={styles.viewButtonContainer}>
-                <a
+                <Link
                     href={`/vault/${vault.vault_address}`}
                 >
                 <Button
@@ -118,7 +118,7 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                 >   
                     View
                 </Button>
-                </a>
+                </Link>
             </div>
         </div>
     );

@@ -1,6 +1,7 @@
 import React from 'react';
 import Logo from '../Logo';
 import styles from './Header.module.css';
+import Link from 'next/link';
 
 const Header = () => {
   return (
@@ -15,20 +16,20 @@ const Header = () => {
       </div>
       <div className={styles.socialButtonContainer}>
         <div className={styles.socialButton}>
-            <a
+            <Link
                 href = {`https://twitter.com/roothq_`}
                 target = "_blank"
             >
                 <i className="fa-brands fa-twitter"></i>
-            </a>
+            </Link>
         </div>
         <div className={styles.socialButton}>
-            <a
+            <Link
                 href = {`https://github.com/root-hq`}
                 target = "_blank"
             >
                 <i className="fa-brands fa-github"></i>
-            </a>
+            </Link>
         </div>
       </div>
     </div>
