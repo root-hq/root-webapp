@@ -1,11 +1,11 @@
 .vaultContainer {
     display: flex;
     flex-direction: column;
-    background-color: #3a3a3a;
+    background-color: #191919;
     /* background-color: #101115; */
     width: 30vw;
     /* border: 1px solid rgba(90, 139, 244, 0.5); */
-    border: 1px solid rgba(255, 255, 255, 0.75);;
+    border: 1px solid #676767;;
     padding: 2rem;
     border-radius: 2rem;
     /* box-shadow:0 0px 0 black,0 0px 0 rgba(255,255,255,0.3) inset,0 30px 60px 0px rgba(90, 139, 244, 0.1); */
