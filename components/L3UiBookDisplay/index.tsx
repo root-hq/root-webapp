@@ -26,12 +26,12 @@ const L3UiBookDisplay = ({ l3UiBook }: L3UiBookDisplayProps) => {
                 <span>Live trading</span>
             </div>
             {
-                l3UiBook.asks.map((orderInfo)=> {
+                l3UiBook.asks.sort((a, b) => -1).map((orderInfo)=> {
                     return <OrderInfoBar orderInfo={orderInfo} key={orderInfo.orderSequenceNumber} relativeSize={getRelativeSize(orderInfo)}/>
                 })
             }
             {
-                l3UiBook.bids.map((orderInfo)=> {
+                l3UiBook.bids.sort((a, b) => 1).map((orderInfo)=> {
                     return <OrderInfoBar orderInfo={orderInfo} key={orderInfo.orderSequenceNumber} relativeSize={getRelativeSize(orderInfo)}/>
                 })
             }
