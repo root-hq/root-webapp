@@ -1,3 +1,27 @@
 .orderInfoContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0.15rem;
+}
+
+.orderPriceContainer {
+
+}
+
+.orderPrice {
+    font-weight: bold;
+    opacity: 0.85;
+}
+
+.orderSizeContainer {
+
+}
+
+.orderSizeBar {
+
+}
+
+.orderSize {
     
 }

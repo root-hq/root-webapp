@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from "./L3UiBookDisplay.module.css";
-import {  L3UiBook } from "@ellipsis-labs/phoenix-sdk";
+import {  L3UiBook, L3UiOrder, Side } from "@ellipsis-labs/phoenix-sdk";
 import OrderInfoBar from './components/OrderInfoBar';
 
 export interface L3UiBookDisplayProps {

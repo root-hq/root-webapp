@@ -15,18 +15,35 @@ const OrderInfoBar = ({ orderInfo }: OrderInfoBarProps) => {
     return (
         <div
             className={styles.orderInfoContainer}
-            style={
-                {
-                    backgroundColor: orderInfo && isSideBid(orderInfo) ? 'green' : isSideAsk(orderInfo) ? 'red' : 'grey',
-                    fontWeight: 'bold',
-                    color: 'white',
-                    padding: `0.2rem`,
-                    textAlign: 'right',
-                    margin: `0.15rem`
-                }
-            }
         >
-            <span>{`${orderInfo.price}, ${orderInfo.size}`}</span>
+            <div className={styles.orderPriceContainer}>
+                <span
+                    className={styles.orderPrice}
+                    style = {
+                        {
+                            color: orderInfo && isSideBid(orderInfo) ? 'green' : isSideAsk(orderInfo) ? 'red' : 'grey',
+                        }
+                    }
+                >{orderInfo.price}</span>
+            </div>
+            <div className={styles.orderSizeContainer}>
+                <div
+                    className={styles.orderSizeBar}
+                    style={
+                        {
+                            backgroundColor: orderInfo && isSideBid(orderInfo) ? 'green' : isSideAsk(orderInfo) ? 'red' : 'grey',
+                            fontWeight: 'bold',
+                            color: 'white',
+                            padding: `0.2rem`,
+                            paddingLeft: `3rem`,
+                            paddingRight: '1rem',
+                            textAlign: 'right',
+                        }
+                    }
+                >
+                    <span className={styles.orderSize}>{orderInfo.size}</span>
+                </div>
+            </div>
         </div>
     );
 }

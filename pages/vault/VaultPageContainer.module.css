@@ -37,14 +37,14 @@
 .vaultInfoColumn {
     background-color: red;
     margin: 2rem;
-    width: 40%;
+    width: 35%;
     height: 100px;
     min-height: 100px;
 }
 
 .bookColumn {
     margin: 2rem;
-    width: 40%;
+    width: 35%;
     height: 100px;
     min-height: 100px;
 }
@@ -53,5 +53,13 @@
     .vaultAndBookContainer {
         display: flex;
         flex-direction: column;
+    }
+
+    .vaultInfoColumn {
+        width: 80%;
+    }
+    
+    .bookColumn {
+        width: 80%;
     }
 }
