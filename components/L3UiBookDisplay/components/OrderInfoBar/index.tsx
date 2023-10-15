@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './OrderInfoBar.module.css';
 import { L3UiOrder, Side } from '@ellipsis-labs/phoenix-sdk';
+import { MAKER_PUBKEY } from '../../../../constants/addresses';
 
 export interface OrderInfoBarProps {
     orderInfo: L3UiOrder,
@@ -48,7 +49,7 @@ const OrderInfoBar = ({ orderInfo, relativeSize }: OrderInfoBarProps) => {
                         {
                             backgroundColor: orderInfo && isSideBid(orderInfo) ? '#154536' : isSideAsk(orderInfo) ? '#56272a' : 'grey',
                             fontWeight: 'bold',
-                            color: 'white',
+                            color: orderInfo.makerPubkey === MAKER_PUBKEY ? '#477df2' : 'white',
                             padding: `0.2rem`,
                             paddingLeft: `3rem`,
                             paddingRight: '1rem',

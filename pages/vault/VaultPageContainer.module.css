@@ -63,7 +63,7 @@
 
 .vaultInfoColumn {
     margin: 3rem;
-    width: 50%;    
+    width: 30%;    
     /* background-color: #101115; */
     background-color: #191919;
     /* border: 1px solid rgba(90, 139, 244, 0.5); */
@@ -89,7 +89,7 @@
 
 .bookColumn {
     margin: 3rem;
-    width: 50%;
+    width: 30%;
     /* background-color: #101115; */
     background-color: #191919;
     /* border: 1px solid rgba(90, 139, 244, 0.5); */

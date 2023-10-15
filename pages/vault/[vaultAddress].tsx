@@ -117,7 +117,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                         valueStyle={
                             {
                                 color: '#477df2',
-                                fontSize: windowSize[0] > 320 ? '0.8rem': '0.65rem',
+                                fontSize: windowSize[0] > 320 ? '0.9rem': '0.8rem',
                                 padding: '0.5rem',
                                 border: '1px solid #888',
                                 borderRadius: '0.25rem',
@@ -133,7 +133,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                         valueStyle={
                             {
                                 color: '#f4c910',
-                                fontSize: windowSize[0] > 320 ? '0.8rem': '0.65rem',
+                                fontSize: windowSize[0] > 320 ? '0.9rem': '0.8rem',
                                 padding: '0.5rem',
                                 border: '1px solid #888',
                                 borderRadius: '0.25rem',
