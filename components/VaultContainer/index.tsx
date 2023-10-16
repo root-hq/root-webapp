@@ -77,7 +77,7 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                             color: '#999'
                         }
                     }
-                    valueElement={<span>{`$69,420`}</span>}
+                    valueElement={<span>{`$100`}</span>}
                     valueTextStyle={
                         {
                             fontWeight: 'bold',
@@ -88,7 +88,7 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                     justification={KeyValueJustification.SpaceBetween}
                 />
             </div>
-            <div className={styles.earningDetailsContainer}>
+            {/* <div className={styles.earningDetailsContainer}>
                 <KeyValueComponent
                     keyElement={<span>{`24h fee`}</span>}
                     keyTextStyle={
@@ -98,7 +98,7 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                             color: '#999'
                         }
                     }
-                    valueElement={<span>{`$1,210`}</span>}
+                    valueElement={<span>{`$0.97`}</span>}
                     valueTextStyle={
                         {
                             fontWeight: 'bold',
@@ -108,7 +108,7 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                     }
                     justification={KeyValueJustification.SpaceBetween}
                 />
-            </div>
+            </div> */}
             <div className={styles.viewButtonContainer}>
                 <Link
                     href={`/vault/${vault.vault_address}`}
