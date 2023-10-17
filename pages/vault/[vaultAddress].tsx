@@ -315,7 +315,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                                                     color: '#888',
                                                     fontWeight: 'bold'
                                                 }}
-                                            >{'PRICE'}</span>
+                                            >{'Price'}</span>
                                         </div>
                                         <div className={styles.fillSizeContainer}>
                                             <span
@@ -323,7 +323,7 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                                                     color: '#888',
                                                     fontWeight: 'bold'
                                                 }}
-                                            >{'SIZE'}</span>
+                                            >{'Size'}</span>
                                         </div>
                                         <div className={styles.fillSizeContainer}>
                                             <span
