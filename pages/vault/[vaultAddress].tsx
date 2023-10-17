@@ -325,6 +325,14 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
                                                 }}
                                             >{'SIZE'}</span>
                                         </div>
+                                        <div className={styles.fillSizeContainer}>
+                                            <span
+                                                style ={{
+                                                    color: '#888',
+                                                    fontWeight: 'bold'
+                                                }}
+                                            >{'Tx sig'}</span>
+                                        </div>
                                     </div>
                                     {
                                         fillTrades.map((trade, i) => {
