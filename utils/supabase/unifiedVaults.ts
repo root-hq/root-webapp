@@ -18,12 +18,12 @@ export const getAllVaults = async(): Promise<UnifiedVault[] | null> => {
     }
 }
 
-export const getVault = async(vaultAddress: string): Promise<UnifiedVault[] | null> => {
+export const getVault = async(vaultAddress: string): Promise<UnifiedVault | null> => {
     try {
         const response = await axios.get(`${process.env.DATABASE_SERVER_URL}/api/get-vault?vaultAddress=${vaultAddress}`);
 
-        if(response) {
-            return response.data as UnifiedVault[];
+        if(response && response.data && response.data.length > 0) {
+            return response.data[0] as UnifiedVault;
         }
         else {
             console.log(`Failed to retrieve data on vault:"${vaultAddress}`);

@@ -397,16 +397,21 @@ const VaultPageContainer = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, 
 export async function getServerSideProps({ params }) {
     const { vaultAddress } = params;
     
-    const vaultData = (await getVault(vaultAddress))[0];
+    const vaultData = await getVault(vaultAddress);
 
-    const baseTokenMetadata = (await getTokenMetadata(vaultData.base_token_address))[0];
-    const quoteTokenMetadata = (await getTokenMetadata(vaultData.quote_token_address))[0];
-
-    const l3UiBook = await getL3Book(vaultData.market_address, DEFAULT_ORDERBOOK_VIEW_DEPTH);
-
-    const vaultBalance = await getVaultBalance(vaultAddress);
-
-    const fillTrades = await getFillTrades();
+    const [
+        baseTokenMetadata,
+        quoteTokenMetadata,
+        l3UiBook,
+        vaultBalance,
+        fillTrades
+    ] = await Promise.all([
+        getTokenMetadata(vaultData.base_token_address),
+        getTokenMetadata(vaultData.quote_token_address),
+        getL3Book(vaultData.market_address, DEFAULT_ORDERBOOK_VIEW_DEPTH),
+        getVaultBalance(vaultAddress),
+        getFillTrades()
+    ]);
 
     return {
         props: {
