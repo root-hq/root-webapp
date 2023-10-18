@@ -15,6 +15,8 @@ export interface NewVaultPageProps {
 const NewVaultPage = ({ vaultData, baseTokenMetadata, quoteTokenMetadata }: NewVaultPageProps) => {    
     const [windowSize, setWindowSize] = useState([0,0]);
 
+    // UseEffect to handle windowSizing for custom CSS
+    // when window size changes
     useEffect(() => {
         const handleWindowResize = () => {
             setWindowSize([window.innerWidth, window.innerHeight]);
@@ -39,7 +41,9 @@ const NewVaultPage = ({ vaultData, baseTokenMetadata, quoteTokenMetadata }: NewV
                             tokenImgHeight={windowSize[0] > 425 ? 40 : 35}
                         />
                     </Row>
-                    <Row><VaultInfoRow /></Row>
+                    <Row>
+                        <VaultInfoRow />
+                    </Row>
                 </Container>
             :
                 <span className={styles.vaultNotFound}>
