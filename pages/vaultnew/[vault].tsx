@@ -31,29 +31,14 @@ const NewVaultPage = ({ vaultData, baseTokenMetadata, quoteTokenMetadata }: NewV
         
             (vaultData && baseTokenMetadata && quoteTokenMetadata) ?
                 <Container className={styles.vaultPageContainer}>
-                    <Row className={styles.vaultInfoContainer}>
-                        <TokenImageContainer 
-                            baseTokenImageMetadata={
-                                {
-                                    url: baseTokenMetadata.img_url,
-                                    width: windowSize[0] > 425 ? 45 : 35,
-                                    height: windowSize[0] > 425 ? 45 : 35,
-                                    alt: `Base token: ${baseTokenMetadata.ticker}`
-                                } as ImageMetadata
-                            }
-                            quoteTokenImageMetadata={
-                                {
-                                    url: quoteTokenMetadata.img_url,
-                                    width: windowSize[0] > 425 ? 45 : 35,
-                                    height: windowSize[0] > 425 ? 45 : 35,
-                                    alt: `Quote token: ${quoteTokenMetadata.ticker}`
-                                } as ImageMetadata
-                            }
+                    <Row>
+                        <PairInfoRow
+                            baseTokenMetadata={baseTokenMetadata}
+                            quoteTokenMetadata={quoteTokenMetadata}
+                            tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
+                            tokenImgHeight={windowSize[0] > 425 ? 40 : 35}
                         />
-                        <span className={styles.vaultPairNameContainer}>{`${baseTokenMetadata.ticker}`}</span>
-                        <span className={styles.vaultPairNameContainer}>{`${quoteTokenMetadata.ticker}`}</span>
                     </Row>
-                    <Row><PairInfoRow /></Row>
                     <Row><VaultInfoRow /></Row>
                 </Container>
             :
