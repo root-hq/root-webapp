@@ -26,3 +26,12 @@
         margin-left: 0.5rem;
     }
 }
+
+.vaultNotFound {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
