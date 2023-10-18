@@ -5,7 +5,8 @@ const nextConfig = {
     },
     env: {
         RPC_ENDPOINT: process.env.RPC_ENDPOINT,
-        DATABASE_SERVER_URL: process.env.DATABASE_SERVER_URL
+        DATABASE_SERVER_URL: process.env.DATABASE_SERVER_URL,
+        COINMARKETCAP_API_KEY: process.env.COINMARKETCAP_API_KEY,
     }
 }
 

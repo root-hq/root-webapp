@@ -8,7 +8,7 @@ export interface PairInfoRow {
 const PairInfoRow = ({ }: PairInfoRow) => {
     return (
         <div className={styles.pairInfoRowContainer}>
-            
+            <span className={styles.text}>aaaa</span>
         </div>
     );
 }

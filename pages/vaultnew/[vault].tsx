@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styles from './NewVaultPage.module.css';
 import { Col, Container, Row } from 'react-bootstrap';
+import PairInfoRow from './components/PairInfoRow';
+import VaultInfoRow from './components/VaultInfoRow';
 
 export interface NewVaultPageProps {
 }
@@ -22,7 +24,9 @@ const NewVaultPage = ({ }: NewVaultPageProps) => {
 
     return(
         <Container className={styles.vaultPageContainer}>
-            
+            <Row className={styles.vaultInfoContainer}>Yo</Row>
+            <Row><PairInfoRow /></Row>
+            <Row><VaultInfoRow /></Row>
         </Container>
     )
 }

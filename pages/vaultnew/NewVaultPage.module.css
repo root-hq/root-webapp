@@ -1,0 +1,14 @@
+.vaultPageContainer {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    /* background-color: yellow; */
+    margin: 0 auto;
+}
+
+.vaultInfoContainer {
+    /* background-color: blue; */
+    height: 120px;
+    color: white;
+}
+
