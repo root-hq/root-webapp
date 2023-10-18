@@ -34,16 +34,16 @@ const NewVaultPage = ({ vaultData, baseTokenMetadata, quoteTokenMetadata }: NewV
                     baseTokenImageMetadata={
                         {
                             url: baseTokenMetadata.img_url,
-                            width: windowSize[0] > 425 ? 50 : 35,
-                            height: windowSize[0] > 425 ? 50 : 35,
+                            width: windowSize[0] > 425 ? 45 : 35,
+                            height: windowSize[0] > 425 ? 45 : 35,
                             alt: `Base token: ${baseTokenMetadata.ticker}`
                         } as ImageMetadata
                     }
                     quoteTokenImageMetadata={
                         {
                             url: quoteTokenMetadata.img_url,
-                            width: windowSize[0] > 425 ? 50 : 35,
-                            height: windowSize[0] > 425 ? 50 : 35,
+                            width: windowSize[0] > 425 ? 45 : 35,
+                            height: windowSize[0] > 425 ? 45 : 35,
                             alt: `Quote token: ${quoteTokenMetadata.ticker}`
                         } as ImageMetadata
                     }

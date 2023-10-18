@@ -17,14 +17,12 @@
 .vaultPairNameContainer {
     font-size: 2rem;
     font-weight: bold;
-    margin-top: 0.25rem;
     margin-left: 1.5rem;
 }
 
 @media (max-width: 425px) {
     .vaultPairNameContainer {
         font-size: 1.8rem;
-        margin-top: 0rem;
         margin-left: 0.5rem;
     }
 }
