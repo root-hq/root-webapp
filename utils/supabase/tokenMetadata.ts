@@ -3,7 +3,7 @@ import { TokenMetadata } from ".";
 
 export const getAllTokenMetadata = async(): Promise<TokenMetadata[] | null> => {
     try {
-        const response = await axios.get(`${process.env.NEXT_DATABASE_SERVER_URL}/api/get-all-token-metadata`);
+        const response = await axios.get(`${process.env.DATABASE_SERVER_URL}/api/get-all-token-metadata`);
 
         if(response) {
             return response.data as TokenMetadata[];
@@ -20,7 +20,7 @@ export const getAllTokenMetadata = async(): Promise<TokenMetadata[] | null> => {
 
 export const getTokenMetadata = async(tokenMint: string): Promise<TokenMetadata[] | null> => {
     try {
-        const response = await axios.get(`${process.env.NEXT_DATABASE_SERVER_URL}/api/get-token-metadata?tokenMint=${tokenMint}`);
+        const response = await axios.get(`${process.env.DATABASE_SERVER_URL}/api/get-token-metadata?tokenMint=${tokenMint}`);
 
         if(response) {
             return response.data as TokenMetadata[];

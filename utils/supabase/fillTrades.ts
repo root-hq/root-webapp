@@ -3,7 +3,7 @@ import { FillTrade } from ".";
 
 export const getFillTrades = async(): Promise<FillTrade[] | null> => {
     try {
-        const response = await axios.get(`${process.env.NEXT_DATABASE_SERVER_URL}/api/get-fill-trades`);
+        const response = await axios.get(`${process.env.DATABASE_SERVER_URL}/api/get-fill-trades`);
 
         if(response) {
             return response.data as FillTrade[];
