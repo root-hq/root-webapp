@@ -5,17 +5,21 @@
     justify-content: space-between;
 }
 
-.userVaultContainer {
-    background-color: red;
+.leftVaultContainer {
+    width: 40%;
 }
 
-.vaultTradingContainer {
+.rightVaultContainer {
     background-color: blue;
 }
 
-@media (max-width: 425px) {
+@media (max-width: 768px) {
     .vaultInfoRowContainer {
         flex-direction: column;
         align-items: center;
+    }
+
+    .leftVaultContainer {
+        width: 100%;
     }
 }
