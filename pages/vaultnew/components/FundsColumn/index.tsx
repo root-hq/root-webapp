@@ -49,7 +49,7 @@ const FundsColumn = ({
                                 keyElement={<span>{`${baseTokenTicker} balance`}</span>}
                                 keyTextStyle={{
                                     color: `#767676`,
-
+                                    fontWeight: 'bold'
                                 }}
                                 valueElement={<span>{
                                     baseTokenBalance && typeof baseTokenBalance === 'number' ?
@@ -58,7 +58,8 @@ const FundsColumn = ({
                                         <>-</>
                                 }</span>}
                                 valueTextStyle={{
-                                    color: 'white'
+                                    color: 'white',
+                                    fontWeight: 'bold'
                                 }}
                                 justification={KeyValueJustification.SpaceBetween}
                             />
@@ -68,7 +69,7 @@ const FundsColumn = ({
                                 keyElement={<span>{`${quoteTokenTicker} balance`}</span>}
                                 keyTextStyle={{
                                     color: `#767676`,
-
+                                    fontWeight: 'bold'
                                 }}
                                 valueElement={<span>{
                                     quoteTokenBalance && typeof quoteTokenBalance === 'number' ?
@@ -77,7 +78,8 @@ const FundsColumn = ({
                                         <>-</>
                                 }</span>}
                                 valueTextStyle={{
-                                    color: 'white'
+                                    color: 'white',
+                                    fontWeight: 'bold'
                                 }}
                                 justification={KeyValueJustification.SpaceBetween}
                             />
