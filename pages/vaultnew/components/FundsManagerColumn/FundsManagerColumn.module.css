@@ -1,12 +1,15 @@
 .fundsManagerContainer {
-    display: flex;
-    flex-direction: row;
     width: 100%;
     background-color: #191919;
     padding: 1rem;
     border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 0.75rem;
     box-sizing: border-box;
+}
+
+.fundsManagerButtonContainer {
+    display: flex;
+    flex-direction: row;
 }
 
 .tabButtonContainer {
@@ -16,9 +19,63 @@
 }
 
 .tabButton {
-    color: white;
     font-size: 1.2rem;
+    cursor: pointer;
     font-weight: bold;
     background-color: transparent;
     border: none;
+}
+
+.userBalanceContainer {
+    display: flex;
+    justify-content: end;
+    margin-right: 1rem;
+}
+
+.userBalanceText {
+    color: #888;
+}
+
+.fieldContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.tokenFieldContainer {
+    margin-top: 2rem;
+}
+
+.tokenDetailsContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.tokenImage {
+    border-radius: 100%;
+}
+
+.tokenName {
+    color: #888;
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin-left: 1rem;
+}
+
+.inputFieldContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80%;
+    /* margin: 1rem; */
+}
+
+.comingSoonText {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    color: white;
+    font-weight: bold;
 }

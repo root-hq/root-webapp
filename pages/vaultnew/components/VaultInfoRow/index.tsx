@@ -26,10 +26,10 @@ const VaultInfoRow = ({
         <Container>
             <Row className={styles.vaultInfoRowContainer}>
                 <Col className={`${styles.vaultInfoColumn} ${styles.leftVaultContainer}`}>
-                    <div className={styles.fundsDisplayContainer}>
-                        {
-                            baseTokenMetadata && baseTokenMetadata.ticker && quoteTokenMetadata && quoteTokenMetadata.ticker ?
-                                <>
+                    {
+                        baseTokenMetadata && baseTokenBalance && quoteTokenMetadata && quoteTokenBalance ?
+                            <>
+                                <div className={styles.fundsDisplayContainer}>
                                     <FundsColumn
                                         baseTokenTicker = {baseTokenMetadata.ticker}
                                         quoteTokenTicker = {quoteTokenMetadata.ticker}
@@ -38,14 +38,17 @@ const VaultInfoRow = ({
                                         quoteTokenPrice = {quoteTokenPrice}
                                         quoteTokenBalance = {quoteTokenBalance}                        
                                     />
-                                </>
-                            :
-                                <></>
-                        }
-                    </div>
-                    <div className={styles.fundsManagerContainer}>
-                        <FundsManagerColumn />
-                    </div>
+                                </div>
+                                <div className={styles.fundsManagerContainer}>
+                                    <FundsManagerColumn
+                                        baseTokenMetadata = {baseTokenMetadata}
+                                        quoteTokenMetadata = {quoteTokenMetadata}
+                                    />
+                                </div>
+                            </>
+                        :
+                            <></>
+                    }
                 </Col>
                 <Col className={`${styles.vaultInfoColumn} ${styles.rightVaultContainer}`}>
                     b
