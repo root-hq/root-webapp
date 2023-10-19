@@ -3,6 +3,7 @@ import styles from './VaultInfoRow.module.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import FundsColumn from '../FundsColumn';
 import { TokenMetadata } from '../../../../utils/supabase';
+import FundsManagerColumn from '../FundsManagerColumn';
 
 export interface VaultInfoRow {
     baseTokenMetadata: TokenMetadata,
@@ -25,21 +26,26 @@ const VaultInfoRow = ({
         <Container>
             <Row className={styles.vaultInfoRowContainer}>
                 <Col className={`${styles.vaultInfoColumn} ${styles.leftVaultContainer}`}>
-                    {
-                        baseTokenMetadata && baseTokenMetadata.ticker && quoteTokenMetadata && quoteTokenMetadata.ticker ?
-                            <>
-                                <FundsColumn
-                                    baseTokenTicker = {baseTokenMetadata.ticker}
-                                    quoteTokenTicker = {quoteTokenMetadata.ticker}
-                                    baseTokenPrice = {baseTokenPrice}
-                                    baseTokenBalance = {baseTokenBalance}
-                                    quoteTokenPrice = {quoteTokenPrice}
-                                    quoteTokenBalance = {quoteTokenBalance}                        
-                                />
-                            </>
-                        :
-                            <></>
-                    }
+                    <div className={styles.fundsDisplayContainer}>
+                        {
+                            baseTokenMetadata && baseTokenMetadata.ticker && quoteTokenMetadata && quoteTokenMetadata.ticker ?
+                                <>
+                                    <FundsColumn
+                                        baseTokenTicker = {baseTokenMetadata.ticker}
+                                        quoteTokenTicker = {quoteTokenMetadata.ticker}
+                                        baseTokenPrice = {baseTokenPrice}
+                                        baseTokenBalance = {baseTokenBalance}
+                                        quoteTokenPrice = {quoteTokenPrice}
+                                        quoteTokenBalance = {quoteTokenBalance}                        
+                                    />
+                                </>
+                            :
+                                <></>
+                        }
+                    </div>
+                    <div className={styles.fundsManagerContainer}>
+                        <FundsManagerColumn />
+                    </div>
                 </Col>
                 <Col className={`${styles.vaultInfoColumn} ${styles.rightVaultContainer}`}>
                     b

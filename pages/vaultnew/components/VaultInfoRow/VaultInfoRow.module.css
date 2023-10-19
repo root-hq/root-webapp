@@ -6,7 +6,13 @@
 }
 
 .leftVaultContainer {
+    display: flex;
+    flex-direction: column;
     width: 40%;
+}
+
+.fundsManagerContainer {
+    margin-top: 2rem;
 }
 
 .rightVaultContainer {

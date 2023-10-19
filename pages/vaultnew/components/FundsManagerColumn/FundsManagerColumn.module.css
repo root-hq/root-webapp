@@ -1,0 +1,24 @@
+.fundsManagerContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    background-color: #191919;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+}
+
+.tabButtonContainer {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+.tabButton {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+}
