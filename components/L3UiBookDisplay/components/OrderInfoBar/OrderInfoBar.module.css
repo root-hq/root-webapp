@@ -6,7 +6,7 @@
 }
 
 .orderPriceContainer {
-
+color: #777777
 }
 
 .orderPrice {
@@ -14,13 +14,7 @@
 }
 
 .orderSizeContainer {
-
-}
-
-.orderSizeBar {
-
-}
-
-.orderSize {
-    
+    display: flex;
+    justify-content: end;
+    /* width: 50%; */
 }

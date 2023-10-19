@@ -12,6 +12,9 @@ const OrderInfoBar = ({ orderInfo, relativeSize }: OrderInfoBarProps) => {
 
     const [windowSize, setWindowSize] = useState([0,0]);
 
+    const BID_GRADIENT = 'linear-gradient(to right, #186c57, #18624f, #1a4c3e, #193d32, #192b26, #191919)';
+    const ASK_GRADIENT = 'linear-gradient(to right, #7f2d2d, #742929, #4d1e1d, #371a19, #2e1819, #191919)';
+
     useEffect(() => {
         const handleWindowResize = () => {
             setWindowSize([window.innerWidth, window.innerHeight]);
@@ -37,28 +40,35 @@ const OrderInfoBar = ({ orderInfo, relativeSize }: OrderInfoBarProps) => {
                     className={styles.orderPrice}
                     style = {
                         {
-                            color: orderInfo && isSideBid(orderInfo) ? '#237a55' : isSideAsk(orderInfo) ? '#c34c49' : 'grey',
+                            color: orderInfo && isSideBid(orderInfo) ? '#1c886d' : isSideAsk(orderInfo) ? '#9a2f2f' : 'grey',
                         }
                     }
                 >{orderInfo.price}</span>
             </div>
-            <div className={styles.orderSizeContainer}>
-                <div
-                    className={styles.orderSizeBar}
-                    style={
-                        {
-                            backgroundColor: orderInfo && isSideBid(orderInfo) ? '#154536' : isSideAsk(orderInfo) ? '#56272a' : 'grey',
-                            fontWeight: 'bold',
-                            color: orderInfo.makerPubkey === MAKER_PUBKEY ? '#477df2' : 'white',
-                            padding: `0.2rem`,
-                            paddingLeft: `3rem`,
-                            paddingRight: '1rem',
-                            overflow: 'hidden',
-                            textAlign: 'right',
-                        }
+            <div
+                className={styles.orderSizeContainer}
+                style={
+                    {
+                        background: orderInfo && isSideBid(orderInfo) ? `${BID_GRADIENT}` : isSideAsk(orderInfo) ? `${ASK_GRADIENT}` : 'grey',
+                        fontWeight: 'bold',
+                        color: orderInfo.makerPubkey === MAKER_PUBKEY ? '#477df2' : 'white',
+                        padding: `0.2rem`,
+                        paddingLeft: `3rem`,
+                        paddingRight: '1rem',
+                        overflow: 'hidden',
+                        textAlign: 'right',
+                        width: `${5 + relativeSize}%`
                     }
+                }
+            >
+                <div className={styles.orderSize}
+                    style = {{
+                        color: orderInfo.makerPubkey === MAKER_PUBKEY ? '#477df2' : '#888',
+                        fontWeight: 'bold',
+
+                    }}
                 >
-                    <span className={styles.orderSize}>{`${orderInfo.size}`}</span>
+                    <span className={styles.orderSize}>{`${orderInfo.size.toFixed(3)}`}</span>
                 </div>
             </div>
         </div>

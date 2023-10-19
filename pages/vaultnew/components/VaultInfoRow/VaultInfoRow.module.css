@@ -1,5 +1,4 @@
 .vaultInfoRowContainer {
-    background-color: green;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -16,7 +15,9 @@
 }
 
 .rightVaultContainer {
-    background-color: blue;
+    display: flex;
+    flex-direction: column;
+    width: 40%;
 }
 
 @media (max-width: 768px) {
@@ -27,5 +28,10 @@
 
     .leftVaultContainer {
         width: 100%;
+    }
+
+    .rightVaultContainer {
+        width: 100%;
+        margin-top: 2rem;
     }
 }

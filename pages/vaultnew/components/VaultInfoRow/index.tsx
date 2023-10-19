@@ -4,6 +4,8 @@ import { Container, Row, Col } from 'react-bootstrap';
 import FundsColumn from '../FundsColumn';
 import { TokenMetadata } from '../../../../utils/supabase';
 import FundsManagerColumn from '../FundsManagerColumn';
+import { L3UiBook } from '@ellipsis-labs/phoenix-sdk';
+import L3UiBookDisplay from '../../../../components/L3UiBookDisplay';
 
 export interface VaultInfoRow {
     baseTokenMetadata: TokenMetadata,
@@ -11,7 +13,8 @@ export interface VaultInfoRow {
     baseTokenPrice: number,
     baseTokenBalance: number,
     quoteTokenPrice: number,
-    quoteTokenBalance: number
+    quoteTokenBalance: number,
+    l3UiBook: L3UiBook
 }
 
 const VaultInfoRow = ({
@@ -20,7 +23,8 @@ const VaultInfoRow = ({
     baseTokenPrice,
     baseTokenBalance,
     quoteTokenPrice,
-    quoteTokenBalance
+    quoteTokenBalance,
+    l3UiBook
 }: VaultInfoRow) => {
     return (
         <Container>
@@ -51,7 +55,9 @@ const VaultInfoRow = ({
                     }
                 </Col>
                 <Col className={`${styles.vaultInfoColumn} ${styles.rightVaultContainer}`}>
-                    b
+                    <div className={styles.bookContainer}>
+                        <L3UiBookDisplay l3UiBook = {l3UiBook} />
+                    </div>
                 </Col>
             </Row>
         </Container>
