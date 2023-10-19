@@ -19,10 +19,9 @@ export interface NewVaultPageProps {
     baseTokenBalance: number,
     quoteTokenPrice: number,
     quoteTokenBalance: number,
-    l3UiBook: L3UiBook
 }
 
-const NewVaultPage = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTokenPrice, baseTokenBalance, quoteTokenPrice, quoteTokenBalance, l3UiBook }: NewVaultPageProps) => {    
+const NewVaultPage = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTokenPrice, baseTokenBalance, quoteTokenPrice, quoteTokenBalance }: NewVaultPageProps) => {    
     const [windowSize, setWindowSize] = useState([0,0]);
 
     // UseEffect to handle windowSizing for custom CSS
@@ -53,13 +52,13 @@ const NewVaultPage = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTo
                     </Row>
                     <Row>
                         <VaultInfoRow
+                            vaultData = {vaultData}
                             baseTokenMetadata={baseTokenMetadata}
                             quoteTokenMetadata={quoteTokenMetadata}
                             baseTokenPrice = {baseTokenPrice}
                             baseTokenBalance = {baseTokenBalance}
                             quoteTokenPrice = {quoteTokenPrice}
                             quoteTokenBalance = {quoteTokenBalance}
-                            l3UiBook= {l3UiBook}
                         />
                     </Row>
                 </Container>
@@ -79,19 +78,16 @@ export async function getServerSideProps({ params }) {
     let vaultBalance: VaultBalance = null;
     let baseTokenPrice: number = null;
     let quoteTokenPrice: number = null;
-    let l3UiBook: L3UiBook = null;
     
     if(vaultData && vaultData.base_token_address && vaultData.quote_token_address) {
         [
             baseTokenMetadata,
             quoteTokenMetadata,
             vaultBalance,
-            l3UiBook
         ] = await Promise.all([
             getTokenMetadata(vaultData.base_token_address),
             getTokenMetadata(vaultData.quote_token_address),
             getVaultBalance(vault),
-            getL3Book(vaultData.market_address, DEFAULT_ORDERBOOK_VIEW_DEPTH)
         ]);
 
         if(baseTokenMetadata && baseTokenMetadata.ticker) {
@@ -112,7 +108,6 @@ export async function getServerSideProps({ params }) {
             baseTokenBalance: vaultBalance.baseTokenBalance ? vaultBalance.baseTokenBalance : null,
             quoteTokenPrice: quoteTokenPrice ? quoteTokenPrice : null,
             quoteTokenBalance: vaultBalance.quoteTokenBalance ? vaultBalance.quoteTokenBalance : null,
-            l3UiBook: l3UiBook ? l3UiBook : null
         }
     }
 }

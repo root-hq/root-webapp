@@ -7,7 +7,7 @@
 .leftVaultContainer {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 45%;
 }
 
 .fundsManagerContainer {
@@ -17,7 +17,7 @@
 .rightVaultContainer {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 45%;
 }
 
 @media (max-width: 768px) {

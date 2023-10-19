@@ -63,8 +63,8 @@ const OrderInfoBar = ({ orderInfo, relativeSize }: OrderInfoBarProps) => {
             >
                 <div className={styles.orderSize}
                     style = {{
-                        color: orderInfo.makerPubkey === MAKER_PUBKEY ? '#477df2' : '#888',
-                        fontWeight: 'bold',
+                        color: orderInfo.makerPubkey === MAKER_PUBKEY ? '#477df2' : '#ccc',
+                        // fontWeight: 'bold',
 
                     }}
                 >
