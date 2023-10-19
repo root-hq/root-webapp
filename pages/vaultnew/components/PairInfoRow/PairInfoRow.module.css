@@ -1,7 +1,7 @@
-.pairInfoRowContainer {
+.pairInfoContainer {
     display: flex;
     flex-direction: row;
-    height: 100px;
+    /* height: 100px; */
     color: white;
 }
 
@@ -11,9 +11,30 @@
     margin-left: 1.5rem;
 }
 
+.exchangeTextContainer {
+    width: 45%;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.exchangeTextKey {
+    color: #888;
+    font-weight: bold;
+}
+
+.exchangeTextValue {
+    margin-left: 2rem;
+    color: white;
+    font-weight: bold;
+}
+
 @media (max-width: 425px) {
     .pairNameContainer {
         font-size: 1.8rem;
+        margin-left: 0.5rem;
+    }
+
+    .exchangeTextValue {
         margin-left: 0.5rem;
     }
 }

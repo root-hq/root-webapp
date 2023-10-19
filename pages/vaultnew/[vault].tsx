@@ -44,6 +44,7 @@ const NewVaultPage = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTo
                 <Container className={styles.vaultPageContainer}>
                     <Row>
                         <PairInfoRow
+                            vaultData={vaultData}
                             baseTokenMetadata={baseTokenMetadata}
                             quoteTokenMetadata={quoteTokenMetadata}
                             tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
