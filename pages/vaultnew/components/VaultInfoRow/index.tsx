@@ -25,14 +25,21 @@ const VaultInfoRow = ({
         <Container>
             <Row className={styles.vaultInfoRowContainer}>
                 <Col className={`${styles.vaultInfoColumn} ${styles.leftVaultContainer}`}>
-                    <FundsColumn
-                        baseTokenTicker = {baseTokenMetadata.ticker}
-                        quoteTokenTicker = {quoteTokenMetadata.ticker}
-                        baseTokenPrice = {baseTokenPrice}
-                        baseTokenBalance = {baseTokenBalance}
-                        quoteTokenPrice = {quoteTokenPrice}
-                        quoteTokenBalance = {quoteTokenBalance}                        
-                    />
+                    {
+                        baseTokenMetadata && baseTokenMetadata.ticker && quoteTokenMetadata && quoteTokenMetadata.ticker ?
+                            <>
+                                <FundsColumn
+                                    baseTokenTicker = {baseTokenMetadata.ticker}
+                                    quoteTokenTicker = {quoteTokenMetadata.ticker}
+                                    baseTokenPrice = {baseTokenPrice}
+                                    baseTokenBalance = {baseTokenBalance}
+                                    quoteTokenPrice = {quoteTokenPrice}
+                                    quoteTokenBalance = {quoteTokenBalance}                        
+                                />
+                            </>
+                        :
+                            <></>
+                    }
                 </Col>
                 <Col className={`${styles.vaultInfoColumn} ${styles.rightVaultContainer}`}>
                     b

@@ -19,49 +19,73 @@ const FundsColumn = ({
     quoteTokenPrice,
     quoteTokenBalance
 }: FundsColumnProps) => {
+
+    if(!baseTokenPrice) {
+        baseTokenPrice = 0;
+    }
+
+    if(!baseTokenBalance) {
+        baseTokenBalance = 0;
+    }
+
+    if(!quoteTokenPrice) {
+        quoteTokenPrice = 0;
+    }
+
+    if(!quoteTokenBalance) {
+        quoteTokenBalance = 0;
+    }
+
     return (
         <div className={styles.userFundsContainer}>
             <div className={styles.vaultDepositContainer}>
                 <span className={styles.vaultDepositTitle}>Vault Deposits</span>
             </div>
-            <div className={styles.keyValueContainer}>
-                <KeyValueComponent
-                    keyElement={<span>{`${baseTokenTicker} balance`}</span>}
-                    keyTextStyle={{
-                        color: `#767676`,
+            {
+                baseTokenTicker && quoteTokenTicker ?
+                    <>
+                        <div className={styles.keyValueContainer}>
+                            <KeyValueComponent
+                                keyElement={<span>{`${baseTokenTicker} balance`}</span>}
+                                keyTextStyle={{
+                                    color: `#767676`,
 
-                    }}
-                    valueElement={<span>{
-                        baseTokenBalance && typeof baseTokenBalance === 'number' ?
-                            <>{`${baseTokenBalance.toFixed(4)} ($${(baseTokenPrice * baseTokenBalance).toFixed(4)})`}</>
-                        :
-                            <>-</>
-                    }</span>}
-                    valueTextStyle={{
-                        color: 'white'
-                    }}
-                    justification={KeyValueJustification.SpaceBetween}
-                />
-            </div>
-            <div className={styles.keyValueContainer}>
-                <KeyValueComponent
-                    keyElement={<span>{`${quoteTokenTicker} balance`}</span>}
-                    keyTextStyle={{
-                        color: `#767676`,
+                                }}
+                                valueElement={<span>{
+                                    baseTokenBalance && typeof baseTokenBalance === 'number' ?
+                                        <>{`${baseTokenBalance.toFixed(4)} ($${(baseTokenPrice * baseTokenBalance).toFixed(4)})`}</>
+                                    :
+                                        <>-</>
+                                }</span>}
+                                valueTextStyle={{
+                                    color: 'white'
+                                }}
+                                justification={KeyValueJustification.SpaceBetween}
+                            />
+                        </div>
+                        <div className={styles.keyValueContainer}>
+                            <KeyValueComponent
+                                keyElement={<span>{`${quoteTokenTicker} balance`}</span>}
+                                keyTextStyle={{
+                                    color: `#767676`,
 
-                    }}
-                    valueElement={<span>{
-                        quoteTokenBalance && typeof quoteTokenBalance === 'number' ?
-                            <>{`${quoteTokenBalance.toFixed(4)} ($${(quoteTokenPrice * quoteTokenBalance).toFixed(4)})`}</>
-                        :
-                            <>-</>
-                    }</span>}
-                    valueTextStyle={{
-                        color: 'white'
-                    }}
-                    justification={KeyValueJustification.SpaceBetween}
-                />
-            </div>
+                                }}
+                                valueElement={<span>{
+                                    quoteTokenBalance && typeof quoteTokenBalance === 'number' ?
+                                        <>{`${quoteTokenBalance.toFixed(4)} ($${(quoteTokenPrice * quoteTokenBalance).toFixed(4)})`}</>
+                                    :
+                                        <>-</>
+                                }</span>}
+                                valueTextStyle={{
+                                    color: 'white'
+                                }}
+                                justification={KeyValueJustification.SpaceBetween}
+                            />
+                        </div>
+                    </>
+                :
+                    <></>
+            }
         </div>
     );
 }
