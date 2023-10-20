@@ -81,8 +81,10 @@ const FundsManagerColumn = ({ baseTokenMetadata, quoteTokenMetadata }: FundsMana
                         </Form>
                     </div>
                 </div> */}
-                <div className={styles.comingSoonText}>
-                    <span>Coming Soon</span>
+                <div className={styles.joinWaitlistContainer}>
+                    <Button
+                        className={styles.joinWaitlistButton}
+                    >JOIN   WAITLIST</Button>
                 </div>
             </div>
         </div>
