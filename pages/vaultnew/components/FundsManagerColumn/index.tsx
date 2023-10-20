@@ -23,21 +23,33 @@ const FundsManagerColumn = ({ baseTokenMetadata, quoteTokenMetadata }: FundsMana
     return(
         <div className={styles.fundsManagerContainer}>
             <div className={styles.fundsManagerButtonContainer}>
-                <div className={styles.tabButtonContainer}>
+                <div
+                    className={styles.tabButtonContainer}
+                    onClick={() => handleTabSelect(DEPOSIT_TAB)}
+                    style = {{
+                        color: activeTab === DEPOSIT_TAB ? 'white' : '#888',
+                        border: activeTab === DEPOSIT_TAB ? `1px solid rgba(255, 255, 255, 1)` : `1px solid rgba(255, 255, 255, 0.5)`
+                    }}
+                >
                     <Button
                         className={styles.tabButton}
-                        onClick={() => handleTabSelect(DEPOSIT_TAB)}
                         style = {{
-                            color: activeTab === DEPOSIT_TAB ? 'white' : '#888'
+                            color: activeTab === DEPOSIT_TAB ? 'white' : '#888',
                         }}
                     >
                         Deposit
                     </Button>
                 </div>
-                <div className={styles.tabButtonContainer}>
+                <div
+                    className={styles.tabButtonContainer}
+                    onClick={() => handleTabSelect(WITHDRAW_TAB)}
+                    style = {{
+                        // color: activeTab === DEPOSIT_TAB ? 'white' : '#888',
+                        border: activeTab === WITHDRAW_TAB ? `1px solid rgba(255, 255, 255, 1)` : `1px solid rgba(255, 255, 255, 0.5)`
+                    }}
+                >
                     <Button
                         className={styles.tabButton}
-                        onClick={() => handleTabSelect('Withdraw')}
                         style = {{
                             color: activeTab === WITHDRAW_TAB ? 'white' : '#888'
                         }}   

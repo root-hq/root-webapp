@@ -16,6 +16,11 @@
     width: 50%;
     display: flex;
     justify-content: center;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding: 0.5rem;
 }
 
 .tabButton {
