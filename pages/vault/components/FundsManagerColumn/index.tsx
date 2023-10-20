@@ -81,12 +81,12 @@ const FundsManagerColumn = ({ baseTokenMetadata, quoteTokenMetadata }: FundsMana
                         </Form>
                     </div>
                 </div> */}
-                <div className={styles.joinWaitlistContainer}>
+            </div>
+            <div className={styles.joinWaitlistContainer}>
                     <Button
                         className={styles.joinWaitlistButton}
                     >JOIN   WAITLIST</Button>
                 </div>
-            </div>
         </div>
     );
 }

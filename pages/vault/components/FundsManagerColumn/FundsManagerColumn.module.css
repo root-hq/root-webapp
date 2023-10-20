@@ -85,6 +85,12 @@
     font-weight: bold;
 }
 
+.joinWaitlistContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .joinWaitlistButton {
     background-color: #EEE;
     width: 50%;
