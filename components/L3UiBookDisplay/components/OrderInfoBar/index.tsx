@@ -63,12 +63,20 @@ const OrderInfoBar = ({ orderInfo, relativeSize }: OrderInfoBarProps) => {
             >
                 <div className={styles.orderSize}
                     style = {{
-                        color: orderInfo.makerPubkey === MAKER_PUBKEY ? '#477df2' : '#ccc',
-                        // fontWeight: 'bold',
+                        color: '#ccc',
+                        fontWeight: 'bold',
 
                     }}
                 >
-                    <span className={styles.orderSize}>{`${orderInfo.size.toFixed(3)}`}</span>
+                    <span className={styles.orderSizeText}>{`${orderInfo.size.toFixed(3)}`}</span>
+                    {
+                        orderInfo.makerPubkey === MAKER_PUBKEY ?
+                            <div className={styles.makerOrderIndicator}>
+                                <span>◀</span>
+                            </div>
+                        :
+                            <></>
+                    }
                 </div>
             </div>
         </div>

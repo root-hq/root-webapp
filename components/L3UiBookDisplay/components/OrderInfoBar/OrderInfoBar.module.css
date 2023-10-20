@@ -18,3 +18,19 @@ color: #777777
     justify-content: flex-end;
     /* width: 50%; */
 }
+
+.orderSize {
+    display: flex;
+}
+
+.orderSizeText {
+    margin-right: 0.75rem;
+}
+
+
+.makerOrderIndicator {
+    font-size: 0.75rem;
+    font-weight: bolder;
+    color: #477df2;
+    margin-top: 0.15rem;
+}
