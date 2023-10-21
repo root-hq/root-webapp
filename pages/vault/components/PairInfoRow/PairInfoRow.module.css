@@ -1,76 +1,76 @@
 .pairInfoContainer {
-    margin-bottom: 1rem;    
+  margin-bottom: 1rem;
 }
 
 .vaultPairDetailsContainer {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .pairDetailsContainer {
-    display: flex;
+  display: flex;
 }
 
 .aprDetailsContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: white;
 }
 
 .aprKey {
-    font-size: 1rem;
+  font-size: 1rem;
 }
 
 .aprValue {
-    font-size: 2rem;
-    font-weight: bold;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 .vaultDetailsContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .vaultBasicDetailsContainer {
-    width: 45%;
+  width: 45%;
 }
 
 .vaultDetail {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .vaultPriceChartContainer {
-    width: 45%;
+  width: 45%;
 }
 
 .pairNameContainer {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-left: 1.5rem;
-    color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-left: 1.5rem;
+  color: white;
 }
 
 @media (max-width: 425px) {
-    .pairNameContainer {
-        font-size: 1.8rem;
-        margin-left: 0.5rem;
-    }
+  .pairNameContainer {
+    font-size: 1.8rem;
+    margin-left: 0.5rem;
+  }
 
-    .vaultDetailsContainer {
-        display: flex;
-        flex-direction: column;
-    }
+  .vaultDetailsContainer {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .vaultBasicDetailsContainer {
-        width: 100%;
-    }
-    
-    .vaultPriceChartContainer {
-        width: 100%;
-    }
+  .vaultBasicDetailsContainer {
+    width: 100%;
+  }
+
+  .vaultPriceChartContainer {
+    width: 100%;
+  }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const Logo = () => {
   return (
@@ -6,10 +6,10 @@ const Logo = () => {
       src="/images/root-logo.png"
       alt="Logo"
       style={{
-        width: '25%',
-        height: 'auto',
-        maxWidth: '200px',
-        margin: '1rem'
+        width: "25%",
+        height: "auto",
+        maxWidth: "200px",
+        margin: "1rem",
       }}
     />
   );

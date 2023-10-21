@@ -1,37 +1,37 @@
 .vaultInfoRowContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .leftVaultContainer {
-    display: flex;
-    flex-direction: column;
-    width: 45%;
+  display: flex;
+  flex-direction: column;
+  width: 45%;
 }
 
 .fundsManagerContainer {
-    /* margin-top: 2rem; */
+  /* margin-top: 2rem; */
 }
 
 .rightVaultContainer {
-    display: flex;
-    flex-direction: column;
-    width: 45%;
+  display: flex;
+  flex-direction: column;
+  width: 45%;
 }
 
 @media (max-width: 768px) {
-    .vaultInfoRowContainer {
-        flex-direction: column;
-        align-items: center;
-    }
+  .vaultInfoRowContainer {
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .leftVaultContainer {
-        width: 100%;
-    }
+  .leftVaultContainer {
+    width: 100%;
+  }
 
-    .rightVaultContainer {
-        width: 100%;
-        margin-top: 2rem;
-    }
+  .rightVaultContainer {
+    width: 100%;
+    margin-top: 2rem;
+  }
 }

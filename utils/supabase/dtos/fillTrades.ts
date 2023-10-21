@@ -1,6 +1,6 @@
 export interface FillTrade {
-    price: number,
-    size: number,
-    isBid: boolean,
-    tx: string,
+  price: number;
+  size: number;
+  isBid: boolean;
+  tx: string;
 }

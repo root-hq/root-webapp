@@ -1,10 +1,10 @@
 .keyValueContainer {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 @media (max-width: 375px) {
-    .keyValueContainer {
-        flex-direction: column;
-    }
+  .keyValueContainer {
+    flex-direction: column;
+  }
 }
