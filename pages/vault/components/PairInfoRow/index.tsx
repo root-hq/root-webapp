@@ -68,6 +68,9 @@ const PairInfoRow = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTok
                                             fontWeight: 'bold'
                                         }}
                                         justification={KeyValueJustification.SpaceBetween}
+                                        valueElementContainerStyle={{
+                                            textAlign: 'right'
+                                        }}
                                     />
                                 </div>
                                 <div className={`${styles.baseTokenDepositsContainer} ${styles.vaultDetail}`}>
@@ -83,6 +86,9 @@ const PairInfoRow = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTok
                                             fontWeight: 'bold'
                                         }}
                                         justification={KeyValueJustification.SpaceBetween}
+                                        valueElementContainerStyle={{
+                                            textAlign: 'right'
+                                        }}
                                     />
                                 </div>
                                 <div className={`${styles.quoteTokenDepositsContainer} ${styles.vaultDetail}`}>
@@ -98,6 +104,9 @@ const PairInfoRow = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTok
                                             fontWeight: 'bold',
                                         }}
                                         justification={KeyValueJustification.SpaceBetween}
+                                        valueElementContainerStyle={{
+                                            textAlign: 'right'
+                                        }}
                                     />
                                 </div>
                             </div>

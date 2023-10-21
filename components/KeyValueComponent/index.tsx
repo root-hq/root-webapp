@@ -12,9 +12,11 @@ export interface KeyValueComponentProps {
     valueElement: React.JSX.Element,
     valueElementStyle: React.CSSProperties,
     justification: KeyValueJustification,
+    keyElementContainerStyle?: React.CSSProperties,
+    valueElementContainerStyle?: React.CSSProperties,
 }
 
-export const KeyValueComponent = ({keyElement, keyElementStyle,  valueElement, valueElementStyle, justification}: KeyValueComponentProps) => {
+export const KeyValueComponent = ({keyElement, keyElementStyle,  valueElement, valueElementStyle, justification, keyElementContainerStyle, valueElementContainerStyle}: KeyValueComponentProps) => {
     return (
         <div
             className={styles.keyValueContainer}
@@ -24,10 +26,16 @@ export const KeyValueComponent = ({keyElement, keyElementStyle,  valueElement, v
                 }
             }
         >
-            <div className={styles.keyTextContainer}>
+            <div
+                className={styles.keyTextContainer}
+                style = {keyElementContainerStyle ? keyElementContainerStyle : {}}
+            >
                 <span style = {keyElementStyle}>{keyElement}</span>
             </div>
-            <div className={styles.valueTextContainer}>
+            <div
+                className={styles.valueTextContainer}
+                style = {valueElementContainerStyle ? valueElementContainerStyle : {}}
+            >
                 <span style = {valueElementStyle}>{valueElement}</span>
             </div>
         </div>
