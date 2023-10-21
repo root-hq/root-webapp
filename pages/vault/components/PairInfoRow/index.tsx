@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './PairInfoRow.module.css';
 import { TokenMetadata, UnifiedVault } from '../../../../utils/supabase';
 import TokenImageContainer, { ImageMetadata } from '../../../../components/TokenImageContainer';
 import KeyValueComponent, { KeyValueJustification } from '../../../../components/KeyValueComponent';
+import { ApexOptions } from 'apexcharts';
+import dynamic from 'next/dynamic';
+import { PRICE_CHART_OPTIONS } from '../../../../constants/config';
+const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export interface PairInfoRow {
     vaultData: UnifiedVault,
@@ -17,6 +21,13 @@ export interface PairInfoRow {
 }
 
 const PairInfoRow = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTokenBalance, quoteTokenBalance, baseTokenDepositsValue, quoteTokenDepositsValue, tokenImgWidth, tokenImgHeight }: PairInfoRow) => {
+
+    const [priceSeries, setPriceSeries] = useState([
+        {
+            data: [31, 40, 28, 51, 42, 109, 100]
+        }
+    ]);
+    
     return (
         <div className={styles.pairInfoContainer}>
             {
@@ -118,7 +129,7 @@ const PairInfoRow = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTok
                             </div>
                         </div>
                         <div className={styles.vaultPriceChartContainer}>
-                            <span>yo</span>
+                        <ReactApexChart type='area' height= {150} options={PRICE_CHART_OPTIONS} series={priceSeries} className={`chart`}/>
                         </div>
                     </div>
                 :

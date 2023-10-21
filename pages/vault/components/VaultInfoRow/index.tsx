@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './VaultInfoRow.module.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import { TokenMetadata, UnifiedVault } from '../../../../utils/supabase';
-import FundsManagerColumn from '../FundsManagerColumn';
+import FundsManagerColumn from './components/FundsManagerColumn';
 import { L3UiBook } from '@ellipsis-labs/phoenix-sdk';
 import L3UiBookDisplay from '../../../../components/L3UiBookDisplay';
 import { getL3Book } from '../../../../utils/phoenix';
@@ -54,16 +54,6 @@ const VaultInfoRow = ({
                     {
                         baseTokenMetadata && baseTokenBalance && quoteTokenMetadata && quoteTokenBalance ?
                             <>
-                                {/* <div className={styles.fundsDisplayContainer}>
-                                    <FundsColumn
-                                        baseTokenTicker = {baseTokenMetadata.ticker}
-                                        quoteTokenTicker = {quoteTokenMetadata.ticker}
-                                        baseTokenPrice = {baseTokenPrice}
-                                        baseTokenBalance = {baseTokenBalance}
-                                        quoteTokenPrice = {quoteTokenPrice}
-                                        quoteTokenBalance = {quoteTokenBalance}                        
-                                    />
-                                </div> */}
                                 <div className={styles.fundsManagerContainer}>
                                     <FundsManagerColumn
                                         baseTokenMetadata = {baseTokenMetadata}

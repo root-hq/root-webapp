@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./FundsManagerColumn.module.css";
 import { Tabs, Tab, Row, Col, Container, Button, Form } from "react-bootstrap";
-import { TokenMetadata } from "../../../../utils/supabase";
+import { TokenMetadata } from "../../../../../../utils/supabase";
 import Image from "next/image";
 
 export interface FundsManagerColumnProps {
