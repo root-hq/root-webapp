@@ -1,7 +1,7 @@
 .vaultPageContainer {
     display: flex;
     flex-direction: column;
-    width: 80%;
+    width: 70%;
     /* background-color: yellow; */
     margin: 0 auto;
 }

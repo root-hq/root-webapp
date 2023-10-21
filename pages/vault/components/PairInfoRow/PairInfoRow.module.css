@@ -15,6 +15,7 @@
     width: 45%;
     margin-top: 1rem;
     margin-bottom: 2rem;
+    margin-left: 0.25rem;
 }
 
 .exchangeTextKey {
@@ -23,7 +24,7 @@
 }
 
 .exchangeTextValue {
-    margin-left: 1.5rem;
+    margin-left: 1.25rem;
     color: white;
     font-weight: bold;
 }
