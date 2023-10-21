@@ -3,8 +3,31 @@
 }
 
 .vaultPairDetailsContainer {
+    width: 100%;
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     margin-bottom: 1rem;
+}
+
+.pairDetailsContainer {
+    display: flex;
+}
+
+.aprDetailsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: white;
+}
+
+.aprKey {
+    font-size: 1rem;
+}
+
+.aprValue {
+    font-size: 2rem;
+    font-weight: bold;
 }
 
 .vaultDetailsContainer {

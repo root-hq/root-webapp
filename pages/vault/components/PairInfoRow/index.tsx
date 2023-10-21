@@ -29,29 +29,35 @@ const PairInfoRow = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTok
                     <div className={styles.vaultDetailsContainer}>                        
                         <div className={styles.vaultBasicDetailsContainer}>
                             <div className={styles.vaultPairDetailsContainer}>
-                                <div className={styles.pairImageContainer}>
-                                    <TokenImageContainer 
-                                        baseTokenImageMetadata={
-                                            {
-                                                url: baseTokenMetadata.img_url,
-                                                width: tokenImgWidth,
-                                                height: tokenImgHeight,
-                                                alt: `Base token: ${baseTokenMetadata.ticker}`
-                                            } as ImageMetadata
-                                        }
-                                        quoteTokenImageMetadata={
-                                            {
-                                                url: quoteTokenMetadata.img_url,
-                                                width: tokenImgWidth,
-                                                height: tokenImgHeight,
-                                                alt: `Quote token: ${quoteTokenMetadata.ticker}`
-                                            } as ImageMetadata
-                                        }
-                                    />
+                                <div className={styles.pairDetailsContainer}>
+                                    <div className={styles.pairImageContainer}>
+                                        <TokenImageContainer 
+                                            baseTokenImageMetadata={
+                                                {
+                                                    url: baseTokenMetadata.img_url,
+                                                    width: tokenImgWidth,
+                                                    height: tokenImgHeight,
+                                                    alt: `Base token: ${baseTokenMetadata.ticker}`
+                                                } as ImageMetadata
+                                            }
+                                            quoteTokenImageMetadata={
+                                                {
+                                                    url: quoteTokenMetadata.img_url,
+                                                    width: tokenImgWidth,
+                                                    height: tokenImgHeight,
+                                                    alt: `Quote token: ${quoteTokenMetadata.ticker}`
+                                                } as ImageMetadata
+                                            }
+                                        />
+                                    </div>
+                                    <div>
+                                        <span className={styles.pairNameContainer}>{`${baseTokenMetadata.ticker}`}</span>
+                                        <span className={styles.pairNameContainer}>{`${quoteTokenMetadata.ticker}`}</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span className={styles.pairNameContainer}>{`${baseTokenMetadata.ticker}`}</span>
-                                    <span className={styles.pairNameContainer}>{`${quoteTokenMetadata.ticker}`}</span>
+                                <div className={styles.aprDetailsContainer}>
+                                    {/* <span className={styles.aprKey}>APR</span>
+                                    <span className={styles.aprValue}>300%</span> */}
                                 </div>
                             </div>
                             <div className={styles.vaultStatusDetailsContainer}>
