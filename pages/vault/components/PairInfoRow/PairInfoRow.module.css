@@ -1,32 +1,36 @@
 .pairInfoContainer {
+    margin-bottom: 2rem;    
+}
+
+.vaultPairDetailsContainer {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.vaultDetailsContainer {
     display: flex;
     flex-direction: row;
-    /* height: 100px; */
-    color: white;
+    justify-content: space-between;
+}
+
+.vaultBasicDetailsContainer {
+    width: 45%;
+}
+
+.vaultDetail {
+    margin-bottom: 0.5rem;
+}
+
+.vaultPriceDetailsContainer {
+    width: 45%;
+    background-color: green;
 }
 
 .pairNameContainer {
     font-size: 2rem;
     font-weight: bold;
     margin-left: 1.5rem;
-}
-
-.exchangeTextContainer {
-    width: 45%;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-    margin-left: 0.25rem;
-}
-
-.exchangeTextKey {
-    color: #888;
-    font-weight: bold;
-}
-
-.exchangeTextValue {
-    margin-left: 1.25rem;
     color: white;
-    font-weight: bold;
 }
 
 @media (max-width: 425px) {
@@ -35,7 +39,16 @@
         margin-left: 0.5rem;
     }
 
-    .exchangeTextValue {
-        margin-left: 0.5rem;
+    .vaultDetailsContainer {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .vaultBasicDetailsContainer {
+        width: 100%;
+    }
+    
+    .vaultPriceDetailsContainer {
+        width: 100%;
     }
 }

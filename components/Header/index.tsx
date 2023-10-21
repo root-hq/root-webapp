@@ -11,8 +11,14 @@ const Header = () => {
         //   maxWidth: '1200px'
         // }}
     >
-      <div>
-        <Logo />
+      <div className={styles.logoContainer}>
+        <div className={styles.logo}>
+          <Link
+            href="/"
+          >
+            <Logo />
+          </Link>
+        </div>
       </div>
       <div className={styles.socialButtonContainer}>
         <div className={styles.socialButton}>

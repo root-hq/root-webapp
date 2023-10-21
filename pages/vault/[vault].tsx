@@ -4,12 +4,8 @@ import { Col, Container, Row } from 'react-bootstrap';
 import PairInfoRow from './components/PairInfoRow';
 import VaultInfoRow from './components/VaultInfoRow';
 import { TokenMetadata, UnifiedVault, getTokenMetadata, getVault } from '../../utils/supabase';
-import TokenImageContainer, { ImageMetadata } from '../../components/TokenImageContainer';
 import { VaultBalance, getVaultBalance } from '../../utils/root/utils';
 import { getTokenPrice } from '../../utils/token';
-import { L3UiBook } from '@ellipsis-labs/phoenix-sdk';
-import { getL3Book } from '../../utils/phoenix';
-import { DEFAULT_ORDERBOOK_VIEW_DEPTH } from '../../constants';
 
 export interface NewVaultPageProps {
     vaultData: UnifiedVault,
@@ -47,6 +43,10 @@ const NewVaultPage = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTo
                             vaultData={vaultData}
                             baseTokenMetadata={baseTokenMetadata}
                             quoteTokenMetadata={quoteTokenMetadata}
+                            baseTokenBalance={baseTokenBalance}
+                            quoteTokenBalance={quoteTokenBalance}
+                            baseTokenDepositsValue={baseTokenBalance * baseTokenPrice}
+                            quoteTokenDepositsValue={quoteTokenBalance * quoteTokenPrice}
                             tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
                             tokenImgHeight={windowSize[0] > 425 ? 40 : 35}
                         />
