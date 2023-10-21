@@ -58,12 +58,12 @@ const PairInfoRow = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTok
                                 <div className={`${styles.exchangeContainer} ${styles.vaultDetail}`}>
                                     <KeyValueComponent
                                         keyElement={<span>{`Exchange`}</span>}
-                                        keyTextStyle={{
+                                        keyElementStyle={{
                                             color: '#888',
                                             fontWeight: 'bold'
                                         }}
                                         valueElement={<span>{`${vaultData.exchange}`}</span>}
-                                        valueTextStyle={{
+                                        valueElementStyle={{
                                             color: 'white',
                                             fontWeight: 'bold'
                                         }}
@@ -73,12 +73,12 @@ const PairInfoRow = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTok
                                 <div className={`${styles.baseTokenDepositsContainer} ${styles.vaultDetail}`}>
                                     <KeyValueComponent
                                         keyElement={<span>{`${baseTokenMetadata.ticker} balance`}</span>}
-                                        keyTextStyle={{
+                                        keyElementStyle={{
                                             color: '#888',
                                             fontWeight: 'bold'
                                         }}
                                         valueElement={<span>{`${baseTokenBalance.toFixed(3)} ($${baseTokenDepositsValue.toFixed(3)})`}</span>}
-                                        valueTextStyle={{
+                                        valueElementStyle={{
                                             color: 'white',
                                             fontWeight: 'bold'
                                         }}
@@ -88,12 +88,12 @@ const PairInfoRow = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, baseTok
                                 <div className={`${styles.quoteTokenDepositsContainer} ${styles.vaultDetail}`}>
                                     <KeyValueComponent
                                         keyElement={<span>{`${quoteTokenMetadata.ticker} balance`}</span>}
-                                        keyTextStyle={{
+                                        keyElementStyle={{
                                             color: '#888',
                                             fontWeight: 'bold'
                                         }}
                                         valueElement={<span>{`${quoteTokenBalance.toFixed(3)} ($${quoteTokenDepositsValue.toFixed(3)})`}</span>}
-                                        valueTextStyle={{
+                                        valueElementStyle={{
                                             color: 'white',
                                             fontWeight: 'bold',
                                         }}

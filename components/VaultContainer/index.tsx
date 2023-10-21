@@ -70,7 +70,7 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
             <div className={styles.depositDetailsContainer}>
                 <KeyValueComponent
                     keyElement={<span>{`Total Deposits`}</span>}
-                    keyTextStyle={
+                    keyElementStyle={
                         {
                             fontWeight: 'bold',
                             fontSize: windowSize[0] > 425 ? `1.25rem` : `1rem`,
@@ -78,7 +78,7 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                         }
                     }
                     valueElement={<span>{`$100`}</span>}
-                    valueTextStyle={
+                    valueElementStyle={
                         {
                             fontWeight: 'bold',
                             fontSize: windowSize[0] > 425 ? `1.25rem` : `1rem`,
@@ -88,27 +88,6 @@ const VaultContainer = ({ vault, baseToken, quoteToken }: VaultContainerProps) =
                     justification={KeyValueJustification.SpaceBetween}
                 />
             </div>
-            {/* <div className={styles.earningDetailsContainer}>
-                <KeyValueComponent
-                    keyElement={<span>{`24h fee`}</span>}
-                    keyTextStyle={
-                        {
-                            fontWeight: 'bold',
-                            fontSize: windowSize[0] > 425 ? `1.25rem` : `1rem`,
-                            color: '#999'
-                        }
-                    }
-                    valueElement={<span>{`$0.97`}</span>}
-                    valueTextStyle={
-                        {
-                            fontWeight: 'bold',
-                            fontSize: windowSize[0] > 425 ? `1.25rem` : `1rem`,
-                            color: 'white'
-                        }
-                    }
-                    justification={KeyValueJustification.SpaceBetween}
-                />
-            </div> */}
             <div className={styles.viewButtonContainer}>
                 <Link
                     href={`/vault/${vault.vault_address}`}

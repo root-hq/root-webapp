@@ -8,13 +8,13 @@ export enum KeyValueJustification {
 
 export interface KeyValueComponentProps {
     keyElement: React.JSX.Element,
-    keyTextStyle: React.CSSProperties,
+    keyElementStyle: React.CSSProperties,
     valueElement: React.JSX.Element,
-    valueTextStyle: React.CSSProperties,
+    valueElementStyle: React.CSSProperties,
     justification: KeyValueJustification,
 }
 
-export const KeyValueComponent = ({keyElement, keyTextStyle,  valueElement, valueTextStyle, justification}: KeyValueComponentProps) => {
+export const KeyValueComponent = ({keyElement, keyElementStyle,  valueElement, valueElementStyle, justification}: KeyValueComponentProps) => {
     return (
         <div
             className={styles.keyValueContainer}
@@ -25,10 +25,10 @@ export const KeyValueComponent = ({keyElement, keyTextStyle,  valueElement, valu
             }
         >
             <div className={styles.keyTextContainer}>
-                <span style = {keyTextStyle}>{keyElement}</span>
+                <span style = {keyElementStyle}>{keyElement}</span>
             </div>
             <div className={styles.valueTextContainer}>
-                <span style = {valueTextStyle}>{valueElement}</span>
+                <span style = {valueElementStyle}>{valueElement}</span>
             </div>
         </div>
     );
