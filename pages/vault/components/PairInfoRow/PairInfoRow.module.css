@@ -64,6 +64,17 @@
   color: white;
 }
 
+.loadingPricesContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingPricesText {
+  color: white;
+}
+
 @media (max-width: 768px) {
   .pairNameContainer {
     font-size: 1.8rem;

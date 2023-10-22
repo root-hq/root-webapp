@@ -219,17 +219,24 @@ const PairInfoRow = ({
               <span className={styles.vaultPrice}>{`${newPrice} ${quoteTokenMetadata.ticker}`}</span>
             </div>
             <div className={styles.vaultPriceChartContainer}>
-              <ReactApexChart
-                type="area"
-                height={150}
-                options={PRICE_CHART_OPTIONS}
-                series={[
-                  {
-                    data: priceSeries
-                  }
-                ]}
-                className={`chart`}
-              />
+              {
+                priceSeries.length > 0 ?
+                  <ReactApexChart
+                    type="area"
+                    height={150}
+                    options={PRICE_CHART_OPTIONS}
+                    series={[
+                      {
+                        data: priceSeries
+                      }
+                    ]}
+                    className={`chart`}
+                  />
+                :
+                  <div className={styles.loadingPricesContainer}>
+                    <span className={styles.loadingPricesText}>Loading prices...</span>
+                  </div>
+              }
             </div>
           </div>
         </div>
