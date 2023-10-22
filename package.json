@@ -16,6 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@solana/web3.js": "^1.87.1",
     "@squarerootlabs/root-market-maker": "^1.0.9",
+    "@tanem/react-nprogress": "^5.0.51",
     "axios": "^1.5.1",
     "next": "13.5.4",
     "prettier": "^3.0.3",
