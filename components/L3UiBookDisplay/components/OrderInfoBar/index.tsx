@@ -12,9 +12,9 @@ const OrderInfoBar = ({ orderInfo, relativeSize }: OrderInfoBarProps) => {
   const [windowSize, setWindowSize] = useState([0, 0]);
 
   const BID_GRADIENT =
-    "linear-gradient(to right, #186c57, #18624f, #1a4c3e, #193d32, #192b26, #191919)";
+    "linear-gradient(to right, #35c674, #2fb067, #2b9f5d, #299457, #278e54, #25824d, #206d42, #1b5e38, #174f2f, #134126, #103720, #0e2f1c, #191919)";
   const ASK_GRADIENT =
-    "linear-gradient(to right, #7f2d2d, #742929, #4d1e1d, #371a19, #2e1819, #191919)";
+    "linear-gradient(to right, #ca3329, #b52f26, #ad2c23, #9c2820, #8d251e, #7d211b, #6d1d18, #5a1915, #4a1411, #3b100e, #2a0b0a, #191919)";
 
   useEffect(() => {
     const handleWindowResize = () => {
@@ -42,9 +42,9 @@ const OrderInfoBar = ({ orderInfo, relativeSize }: OrderInfoBarProps) => {
           style={{
             color:
               orderInfo && isSideBid(orderInfo)
-                ? "#1c886d"
+                ? "#35c674"
                 : isSideAsk(orderInfo)
-                ? "#9a2f2f"
+                ? "#ca3329"
                 : "grey",
           }}
         >

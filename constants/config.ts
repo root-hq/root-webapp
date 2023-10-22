@@ -47,7 +47,7 @@ export const PRICE_CHART_OPTIONS = {
     // SHORT
     // colors: ['#ca3329'],
     gradient: {
-      opacityFrom: 1,
+      opacityFrom: 0.7,
       opacityTo: 0,
     },
   },

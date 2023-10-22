@@ -42,3 +42,22 @@ export const getL3Book = async (
     };
   }
 };
+
+export const getMarketMidPrice = async(
+  marketAddress: string
+): Promise<number> => {
+  try {
+    const endpoint = process.env.RPC_ENDPOINT;
+    const connection = new web3.Connection(endpoint, {
+      commitment: "processed",
+    });
+
+    const client = await Client.create(connection);
+    const l1Book = client.getUiLadder(marketAddress, 1);
+    const midPrice = ((l1Book.bids[0].price) + (l1Book.asks[0].price)) / 2;
+    return midPrice;
+  } catch (err) {
+    console.log("Error fetching fresh market mid price on Pheonix: ", err);
+    return 0;
+  }
+}

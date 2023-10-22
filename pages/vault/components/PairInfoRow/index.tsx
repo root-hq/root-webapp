@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styles from "./PairInfoRow.module.css";
-import { TokenMetadata, UnifiedVault } from "../../../../utils/supabase";
+import { TokenMetadata, TokenPrice, UnifiedVault } from "../../../../utils/supabase";
 import TokenImageContainer, {
   ImageMetadata,
 } from "../../../../components/TokenImageContainer";
 import KeyValueComponent, {
   KeyValueJustification,
 } from "../../../../components/KeyValueComponent";
-import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 import { PRICE_CHART_OPTIONS } from "../../../../constants";
+import { getTokenPriceDataWithDate } from "../../../../utils/supabase/tokenPrice";
+import { getMarketMidPrice } from "../../../../utils/phoenix";
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
@@ -37,11 +38,60 @@ const PairInfoRow = ({
   tokenImgWidth,
   tokenImgHeight,
 }: PairInfoRow) => {
-  const [priceSeries, setPriceSeries] = useState([
-    {
-      data: [31, 40, 28, 51, 42, 109, 100],
-    },
-  ]);
+  const [priceSeries, setPriceSeries] = useState([] as number[]);
+  const [newPrice, setNewPrice] = useState(0);
+  const [previousPrice, setPreviousPrice] = useState(0);
+  const [midPriceChangeDirection, setMidPriceChangeDirection] = useState('');
+
+  useEffect(() => {
+    const refreshPriceData = async () => {
+      try {
+        const today = new Date();
+        const day = String(today.getUTCDate()).padStart(2, '0');
+        const month = String(today.getUTCMonth() + 1).padStart(2, '0');
+        const year = String(today.getUTCFullYear());
+        const formattedDate = day + month + year;
+
+        const fileName = `${vaultData.market_address}-${formattedDate}.json`
+ 
+        const freshPrices = (await getTokenPriceDataWithDate(fileName)).map((val: TokenPrice) => val.price);
+
+        const newMidPrice = parseFloat((await getMarketMidPrice(vaultData.market_address)).toFixed(3));
+
+        setNewPrice((prevPrice) => newMidPrice);
+
+        if(newMidPrice >= previousPrice) {
+          setMidPriceChangeDirection((previousChange) => '▲');
+        }
+        else {
+          setMidPriceChangeDirection((previousChange) => '▼');
+        }
+
+        setPreviousPrice((prevPrice2) => newMidPrice);
+
+        if(priceSeries.length === 0) {
+          setPriceSeries((prevPrices) => [...freshPrices]);
+        }
+        else {
+          setPriceSeries((prevPrices) => [...prevPrices.slice(1), newMidPrice]);
+        }
+      } catch (error) {
+        console.error('Error fetching price data:', error);
+      }
+    };
+
+    // Fetch price data initially
+    refreshPriceData();
+
+    // Set up an interval to fetch price data every 5 seconds (adjust as needed)
+    const intervalId = setInterval(() => {
+      refreshPriceData();
+    }, 1000);
+
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array to run the effect only once on mount
+
 
   return (
     <div className={styles.pairInfoContainer}>
@@ -164,14 +214,23 @@ const PairInfoRow = ({
               </div>
             </div>
           </div>
-          <div className={styles.vaultPriceChartContainer}>
-            <ReactApexChart
-              type="area"
-              height={150}
-              options={PRICE_CHART_OPTIONS}
-              series={priceSeries}
-              className={`chart`}
-            />
+          <div className={styles.vaultPriceInfoContainer}>
+            <div className={styles.vaultPriceContainer}>
+              <span className={styles.vaultPrice}>{`${newPrice} ${quoteTokenMetadata.ticker}`}</span>
+            </div>
+            <div className={styles.vaultPriceChartContainer}>
+              <ReactApexChart
+                type="area"
+                height={150}
+                options={PRICE_CHART_OPTIONS}
+                series={[
+                  {
+                    data: priceSeries
+                  }
+                ]}
+                className={`chart`}
+              />
+            </div>
           </div>
         </div>
       ) : (
