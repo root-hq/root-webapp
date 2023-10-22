@@ -49,20 +49,22 @@ const NewVaultPage = ({
 
   return vaultData && baseTokenMetadata && quoteTokenMetadata ? (
     <Container className={styles.vaultPageContainer}>
-      <Row>
-        <PairInfoRow
-          vaultData={vaultData}
-          baseTokenMetadata={baseTokenMetadata}
-          quoteTokenMetadata={quoteTokenMetadata}
-          baseTokenBalance={baseTokenBalance}
-          quoteTokenBalance={quoteTokenBalance}
-          baseTokenDepositsValue={baseTokenBalance * baseTokenPrice}
-          quoteTokenDepositsValue={quoteTokenBalance * quoteTokenPrice}
-          tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
-          tokenImgHeight={windowSize[0] > 425 ? 40 : 35}
-        />
+      <Row className={styles.highLevelPairInfoContainer}>
+        <Col className={styles.lowLevelPairInfoContainer}>
+          <PairInfoRow
+            vaultData={vaultData}
+            baseTokenMetadata={baseTokenMetadata}
+            quoteTokenMetadata={quoteTokenMetadata}
+            baseTokenBalance={baseTokenBalance}
+            quoteTokenBalance={quoteTokenBalance}
+            baseTokenDepositsValue={baseTokenBalance * baseTokenPrice}
+            quoteTokenDepositsValue={quoteTokenBalance * quoteTokenPrice}
+            tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
+            tokenImgHeight={windowSize[0] > 425 ? 40 : 35}
+          />
+        </Col>
       </Row>
-      <Row>
+      <Row className={styles.highLevelVaultInfoContainer}>
         <VaultInfoRow
           vaultData={vaultData}
           baseTokenMetadata={baseTokenMetadata}
