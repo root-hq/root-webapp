@@ -9,6 +9,9 @@ export const PRICE_CHART_OPTIONS = {
   },
   yaxis: {
     show: true,
+    labels: {
+      formatter: (val) => val.toFixed(3)
+    }
   },
   chart: {
     type: "area",

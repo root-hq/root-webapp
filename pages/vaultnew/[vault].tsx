@@ -46,8 +46,7 @@ const VaultPage = ({
         window.removeEventListener("resize", handleWindowResize);
         };
     }, []);
-
-    const [priceSeries, setPriceSeries] = useState([] as number[]);
+    const [priceSeries, setPriceSeries] = useState([] as number[][]);
     const [newPrice, setNewPrice] = useState(0);
     const [previousPrice, setPreviousPrice] = useState(0);
     const [midPriceChangeDirection, setMidPriceChangeDirection] = useState('');  
@@ -69,12 +68,12 @@ const VaultPage = ({
     
             setPreviousPrice((prevPrice2) => newMidPrice);  
             if(priceSeries.length === 0) {
-              const freshPrices = (await getTokenPriceDataWithDate(vaultData.market_address, today)).map((val: TokenPrice) => val.price);
+              const freshPrices = (await getTokenPriceDataWithDate(vaultData.market_address, today)).map((val: TokenPrice) => [val.timestamp, val.price]);
 
               setPriceSeries((prevPrices) => [...freshPrices]);
             }
             else {
-              setPriceSeries((prevPrices) => [...prevPrices.slice(1), newMidPrice]);
+              setPriceSeries((prevPrices) => [...prevPrices.slice(1), [Date.now(), newMidPrice]]);
             }
           } catch (error) {
             console.error('Error fetching price data:', error);

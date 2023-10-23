@@ -12,7 +12,7 @@ export interface VaultProps {
     vaultData: UnifiedVault,
     baseTokenMetadata: TokenMetadata,
     quoteTokenMetadata: TokenMetadata,
-    priceSeries: number[],
+    priceSeries: number[][],
     midPrice: number,
     priceChangeDirection: string,
     tokenImgWidth: number,
