@@ -5,8 +5,12 @@
 }
 
 .vaultDataContainer {
-    background-color: red;
     width: 70%;
+    border: 1px solid #575757;
+    box-sizing: border-box;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin: 2rem;
 }
 
 .userDataContainer {
@@ -17,10 +21,12 @@
 @media (max-width: 768px) {
     .vaultPageContainer {
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
     
     .vaultDataContainer {
-        width: 100%;
+        width: 90%;
     }
 
     .userDataContainer {

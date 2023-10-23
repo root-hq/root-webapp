@@ -1,0 +1,66 @@
+.vaultContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.levelOneContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.vaultPairDataContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.vaultPairNameContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.vaultPairName {
+    margin-left: 1rem;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.vaultPrice {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.vaultExchangeDataContainer {
+    margin-top: 0.5rem;
+}
+
+.exchangeName {
+    color: #505050;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .vaultPairName {
+      font-size: 1.8rem;
+      margin-left: 0.5rem;
+    }
+
+    .vaultPrice {
+        font-size: 1.8rem;
+        margin-left: 0.5rem;
+    }
+}
+
+@media (max-width: 425px) {
+    .vaultPairName {
+      font-size: 1.4rem;
+      margin-left: 0.5rem;
+    }
+
+    .vaultPrice {
+        font-size: 1.4rem;
+        margin-left: 0.5rem;
+    }
+}
+  
