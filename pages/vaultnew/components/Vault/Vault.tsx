@@ -92,7 +92,7 @@ const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, 
             </div>
             <div className={styles.levelTwoContainer}>
                 {
-                    priceSeries.length > 0 ?
+                    priceSeries && priceSeries.length > 0 ?
                     <ReactApexChart
                         type="area"
                         height={400}
