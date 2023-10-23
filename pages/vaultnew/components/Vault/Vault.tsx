@@ -91,24 +91,29 @@ const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, 
                 </div>
             </div>
             <div className={styles.levelTwoContainer}>
-                {
-                    priceSeries && priceSeries.length > 0 ?
-                    <ReactApexChart
-                        type="area"
-                        height={400}
-                        options={PRICE_CHART_OPTIONS}
-                        series={[
-                        {
-                            data: priceSeries
-                        }
-                        ]}
-                        className={`chart`}
-                    />
-                    :
-                    <div className={styles.loadingPricesContainer}>
-                        <span className={styles.loadingPricesText}>Loading prices...</span>
-                    </div>
-                }
+                <div className={styles.priceChartContainer}>
+                    {
+                        priceSeries && priceSeries.length > 0 ?
+                        <ReactApexChart
+                            type="area"
+                            height={400}
+                            options={PRICE_CHART_OPTIONS}
+                            series={[
+                            {
+                                data: priceSeries
+                            }
+                            ]}
+                            className={`chart`}
+                        />
+                        :
+                        <div className={styles.loadingPricesContainer}>
+                            <span className={styles.loadingPricesText}>Loading prices...</span>
+                        </div>
+                    }
+                </div>
+                <div className={styles.openOrdersContainer}>
+                    <span>Open orders</span>
+                </div>
             </div>
         </div>
     )

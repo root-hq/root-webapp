@@ -36,8 +36,20 @@
 }
 
 .exchangeName {
-    color: #505050;
-    font-weight: bold;
+    color: white;
+}
+
+.levelTwoContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.priceChartContainer {
+    width: 85%
+}
+
+.openOrdersContainer {
+    width: 15%;
 }
 
 @media (max-width: 768px) {

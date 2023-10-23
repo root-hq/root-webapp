@@ -17,6 +17,7 @@ export const getTokenPriceDataWithDate = async (
   
       if (response && response.data && response.data.length) {
         if(response.data.length < PRICE_CHART_MINIMUM_DATA_SAMPLES) {
+          console.log("Missing ", (PRICE_CHART_MINIMUM_DATA_SAMPLES - response.data.length), " entries so taking from previous day");
           const oneDayPrior = new Date(today);
           oneDayPrior.setDate(today.getDate() - 1);
 
