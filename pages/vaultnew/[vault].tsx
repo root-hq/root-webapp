@@ -56,15 +56,6 @@ const VaultPage = ({
         const refreshPriceData = async () => {
           try {
             const today = new Date();
-            const day = String(today.getUTCDate()).padStart(2, '0');
-            const month = String(today.getUTCMonth() + 1).padStart(2, '0');
-            const year = String(today.getUTCFullYear());
-            const formattedDate = day + month + year;
-    
-            const fileName = `${vaultData.market_address}-${formattedDate}.json`
-     
-            const freshPrices = (await getTokenPriceDataWithDate(fileName)).map((val: TokenPrice) => val.price);
-    
             const newMidPrice = parseFloat((await getMarketMidPrice(vaultData.market_address)).toFixed(3));
 
             setNewPrice((prevPrice) => newMidPrice);
@@ -76,10 +67,10 @@ const VaultPage = ({
               setMidPriceChangeDirection((previousChange) => '▼');
             }
     
-            setPreviousPrice((prevPrice2) => newMidPrice);
-            
-
+            setPreviousPrice((prevPrice2) => newMidPrice);  
             if(priceSeries.length === 0) {
+              const freshPrices = (await getTokenPriceDataWithDate(vaultData.market_address, today)).map((val: TokenPrice) => val.price);
+
               setPriceSeries((prevPrices) => [...freshPrices]);
             }
             else {
@@ -96,11 +87,11 @@ const VaultPage = ({
         // Set up an interval to fetch price data every 5 seconds (adjust as needed)
         const intervalId = setInterval(() => {
           refreshPriceData();
-        }, 1000);
+        }, 500);
     
         // Cleanup function to clear the interval when the component unmounts
         return () => clearInterval(intervalId);
-    }, [previousPrice, priceSeries]); // Empty dependency array to run the effect only once on mount
+    }, [previousPrice]); // Empty dependency array to run the effect only once on mount
 
     return(
         <div className={styles.vaultPageContainer}>

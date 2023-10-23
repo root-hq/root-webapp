@@ -23,9 +23,10 @@ export const PRICE_CHART_OPTIONS = {
     curve: "smooth",
     width: 2,
     // LONG
-    colors: ["#35c674"],
+    // colors: ["#35c674"],
     // SHORT
     // colors: ['#ca3329'],
+    colors: ['#477df2']
   },
   xaxis: {
     labels: {
@@ -43,11 +44,12 @@ export const PRICE_CHART_OPTIONS = {
   },
   fill: {
     // LONG
-    colors: ["#35c674"],
+    // colors: ["#35c674"],
     // SHORT
     // colors: ['#ca3329'],
+    colors: ['#0043d4'],
     gradient: {
-      opacityFrom: 0.7,
+      opacityFrom: 0.5,
       opacityTo: 0,
     },
   },
