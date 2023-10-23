@@ -2,18 +2,24 @@ import React from "react";
 import styles from "./Vault.module.css";
 import { TokenMetadata, UnifiedVault } from "../../../../utils/supabase";
 import TokenImageContainer, { ImageMetadata } from "../../../../components/TokenImageContainer";
-
+import dynamic from "next/dynamic";
+import { PRICE_CHART_OPTIONS } from "../../../../constants";
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+    ssr: false,
+  });
+  
 export interface VaultProps {
     vaultData: UnifiedVault,
     baseTokenMetadata: TokenMetadata,
     quoteTokenMetadata: TokenMetadata,
+    priceSeries: number[],
     midPrice: number,
     priceChangeDirection: string,
     tokenImgWidth: number,
     tokenImgHeight: number
 }
 
-const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, midPrice, priceChangeDirection, tokenImgWidth, tokenImgHeight }: VaultProps) => {
+const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, midPrice, priceChangeDirection, tokenImgWidth, tokenImgHeight }: VaultProps) => {
     return (
         <div className={styles.vaultContainer}>
             <div className={styles.levelOneContainer}>
@@ -85,6 +91,24 @@ const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, midPrice, pri
                 </div>
             </div>
             <div className={styles.levelTwoContainer}>
+                {
+                    priceSeries.length > 0 ?
+                    <ReactApexChart
+                        type="area"
+                        height={400}
+                        options={PRICE_CHART_OPTIONS}
+                        series={[
+                        {
+                            data: priceSeries
+                        }
+                        ]}
+                        className={`chart`}
+                    />
+                    :
+                    <div className={styles.loadingPricesContainer}>
+                        <span className={styles.loadingPricesText}>Loading prices...</span>
+                    </div>
+                }
             </div>
         </div>
     )

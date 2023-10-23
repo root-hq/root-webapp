@@ -67,17 +67,12 @@ const VaultPage = ({
     
             const newMidPrice = parseFloat((await getMarketMidPrice(vaultData.market_address)).toFixed(3));
 
-            console.log("previousPrice: ", previousPrice);
-            console.log("newPrice: ", newPrice);
-
             setNewPrice((prevPrice) => newMidPrice);
 
             if(newMidPrice >= previousPrice) {
-                console.log("change: up");
               setMidPriceChangeDirection((previousChange) => '▲');
             }
             else {
-                console.log("change: down");
               setMidPriceChangeDirection((previousChange) => '▼');
             }
     
@@ -105,7 +100,7 @@ const VaultPage = ({
     
         // Cleanup function to clear the interval when the component unmounts
         return () => clearInterval(intervalId);
-    }, [previousPrice]); // Empty dependency array to run the effect only once on mount
+    }, [previousPrice, priceSeries]); // Empty dependency array to run the effect only once on mount
 
     return(
         <div className={styles.vaultPageContainer}>
@@ -118,6 +113,7 @@ const VaultPage = ({
                                 baseTokenMetadata={baseTokenMetadata}
                                 quoteTokenMetadata={quoteTokenMetadata}
                                 midPrice={previousPrice}
+                                priceSeries={priceSeries}
                                 priceChangeDirection={midPriceChangeDirection}
                                 tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
                                 tokenImgHeight={windowSize[0] > 425 ? 40 : 35}
