@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styles from "./VaultPage.module.css";
 import { Container, Row, Col } from 'react-bootstrap';
-import { TokenMetadata, UnifiedVault, getTokenMetadata, getVault } from '../../utils/supabase';
+import { TokenMetadata, TokenPrice, UnifiedVault, getTokenMetadata, getVault } from '../../utils/supabase';
 import Vault from './components/Vault/Vault';
 import User from './components/User/User';
 import { VaultBalance, getVaultBalance } from '../../utils/root/utils';
 import { getTokenPrice } from '../../utils/token';
+import { getTokenPriceDataWithDate } from '../../utils/supabase/tokenPrice';
+import { getMarketMidPrice } from '../../utils/phoenix';
 
 export interface VaultPageProps {
     vaultData: UnifiedVault;
@@ -45,6 +47,66 @@ const VaultPage = ({
         };
     }, []);
 
+    const [priceSeries, setPriceSeries] = useState([] as number[]);
+    const [newPrice, setNewPrice] = useState(0);
+    const [previousPrice, setPreviousPrice] = useState(0);
+    const [midPriceChangeDirection, setMidPriceChangeDirection] = useState('');  
+
+    useEffect(() => {
+        const refreshPriceData = async () => {
+          try {
+            const today = new Date();
+            const day = String(today.getUTCDate()).padStart(2, '0');
+            const month = String(today.getUTCMonth() + 1).padStart(2, '0');
+            const year = String(today.getUTCFullYear());
+            const formattedDate = day + month + year;
+    
+            const fileName = `${vaultData.market_address}-${formattedDate}.json`
+     
+            const freshPrices = (await getTokenPriceDataWithDate(fileName)).map((val: TokenPrice) => val.price);
+    
+            const newMidPrice = parseFloat((await getMarketMidPrice(vaultData.market_address)).toFixed(3));
+
+            console.log("previousPrice: ", previousPrice);
+            console.log("newPrice: ", newPrice);
+
+            setNewPrice((prevPrice) => newMidPrice);
+
+            if(newMidPrice >= previousPrice) {
+                console.log("change: up");
+              setMidPriceChangeDirection((previousChange) => '▲');
+            }
+            else {
+                console.log("change: down");
+              setMidPriceChangeDirection((previousChange) => '▼');
+            }
+    
+            setPreviousPrice((prevPrice2) => newMidPrice);
+            
+
+            if(priceSeries.length === 0) {
+              setPriceSeries((prevPrices) => [...freshPrices]);
+            }
+            else {
+              setPriceSeries((prevPrices) => [...prevPrices.slice(1), newMidPrice]);
+            }
+          } catch (error) {
+            console.error('Error fetching price data:', error);
+          }
+        };
+    
+        // Fetch price data initially
+        refreshPriceData();
+    
+        // Set up an interval to fetch price data every 5 seconds (adjust as needed)
+        const intervalId = setInterval(() => {
+          refreshPriceData();
+        }, 1000);
+    
+        // Cleanup function to clear the interval when the component unmounts
+        return () => clearInterval(intervalId);
+    }, [previousPrice]); // Empty dependency array to run the effect only once on mount
+
     return(
         <div className={styles.vaultPageContainer}>
             {
@@ -55,8 +117,10 @@ const VaultPage = ({
                                 vaultData={vaultData}
                                 baseTokenMetadata={baseTokenMetadata}
                                 quoteTokenMetadata={quoteTokenMetadata}
-                                tokenImgWidth={windowSize[0] > 425 ? 40 : 30}
-                                tokenImgHeight={windowSize[0] > 425 ? 40 : 30}
+                                midPrice={previousPrice}
+                                priceChangeDirection={midPriceChangeDirection}
+                                tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
+                                tokenImgHeight={windowSize[0] > 425 ? 40 : 35}
                             />
                         </div>
                         <div className={styles.userDataContainer}>

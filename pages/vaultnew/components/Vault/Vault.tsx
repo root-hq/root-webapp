@@ -7,11 +7,13 @@ export interface VaultProps {
     vaultData: UnifiedVault,
     baseTokenMetadata: TokenMetadata,
     quoteTokenMetadata: TokenMetadata,
+    midPrice: number,
+    priceChangeDirection: string,
     tokenImgWidth: number,
     tokenImgHeight: number
 }
 
-const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, tokenImgWidth, tokenImgHeight }: VaultProps) => {
+const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, midPrice, priceChangeDirection, tokenImgWidth, tokenImgHeight }: VaultProps) => {
     return (
         <div className={styles.vaultContainer}>
             <div className={styles.levelOneContainer}>
@@ -68,7 +70,18 @@ const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, tokenImgWidth
                     </div>
                 </div>
                 <div className={styles.vaultPriceContainer}>
-                    <span className={styles.vaultPrice}>29.77</span>
+                    {
+                        midPrice ?
+                            <span className={styles.vaultPrice}
+                                style={{
+                                    color: priceChangeDirection === '▲' ? '#35c674' : '#ca3329'
+                                }}
+                            >
+                                {`${midPrice}`}
+                            </span>
+                        :
+                            <></>
+                    }
                 </div>
             </div>
             <div className={styles.levelTwoContainer}>
