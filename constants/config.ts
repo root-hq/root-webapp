@@ -8,7 +8,7 @@ export const PRICE_CHART_OPTIONS = {
     show: false,
   },
   yaxis: {
-    show: false,
+    show: true,
   },
   chart: {
     type: "area",

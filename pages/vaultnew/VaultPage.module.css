@@ -12,6 +12,7 @@
     padding: 1rem;
     margin-left: 2rem;
     margin-right: 2rem;
+    background: linear-gradient(to bottom, #191919, #181818, #171717, #161616, #151515, #141414, #131313, #121212, #111111, #101010, #0f0f0f);
 }
 
 .userDataContainer {
