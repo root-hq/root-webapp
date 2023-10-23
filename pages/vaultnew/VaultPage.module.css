@@ -1,0 +1,29 @@
+.vaultPageContainer {
+    color: white;
+    display: flex;
+    flex-direction: row;
+}
+
+.vaultDataContainer {
+    background-color: red;
+    width: 70%;
+}
+
+.userDataContainer {
+    background-color: green;
+    width: 30%;
+}
+
+@media (max-width: 768px) {
+    .vaultPageContainer {
+        flex-direction: column;
+    }
+    
+    .vaultDataContainer {
+        width: 100%;
+    }
+
+    .userDataContainer {
+        width: 100%;
+    }
+}
