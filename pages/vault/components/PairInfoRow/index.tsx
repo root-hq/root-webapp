@@ -47,14 +47,8 @@ const PairInfoRow = ({
     const refreshPriceData = async () => {
       try {
         const today = new Date();
-        const day = String(today.getUTCDate()).padStart(2, '0');
-        const month = String(today.getUTCMonth() + 1).padStart(2, '0');
-        const year = String(today.getUTCFullYear());
-        const formattedDate = day + month + year;
-
-        const fileName = `${vaultData.market_address}-${formattedDate}.json`
  
-        const freshPrices = (await getTokenPriceDataWithDate(fileName)).map((val: TokenPrice) => val.price);
+        const freshPrices = (await getTokenPriceDataWithDate(vaultData.market_address, today)).map((val: TokenPrice) => val.price);
 
         const newMidPrice = parseFloat((await getMarketMidPrice(vaultData.market_address)).toFixed(3));
 
