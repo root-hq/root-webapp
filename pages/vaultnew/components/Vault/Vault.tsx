@@ -96,7 +96,7 @@ const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, 
                         priceSeries && priceSeries.length > 0 ?
                         <ReactApexChart
                             type="area"
-                            height={400}
+                            height={500}
                             options={PRICE_CHART_OPTIONS}
                             series={[
                             {
@@ -110,9 +110,6 @@ const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, 
                             <span className={styles.loadingPricesText}>Loading prices...</span>
                         </div>
                     }
-                </div>
-                <div className={styles.openOrdersContainer}>
-                    <span>Open orders</span>
                 </div>
             </div>
         </div>

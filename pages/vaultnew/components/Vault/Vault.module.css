@@ -45,11 +45,7 @@
 }
 
 .priceChartContainer {
-    width: 85%
-}
-
-.openOrdersContainer {
-    width: 15%;
+    width: 100%
 }
 
 @media (max-width: 768px) {
