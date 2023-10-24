@@ -28,7 +28,7 @@ export const getTokenPriceDataWithDate = async (
             return [...(await previousPrices).slice(-1 * leftForThreshold), ...response.data] as TokenPrice[];
           }
         }
-        return response.data as TokenPrice[];
+        return response.data.slice(-1 * PRICE_CHART_MINIMUM_DATA_SAMPLES) as TokenPrice[];
       } else {
         console.log(`Failed to retrieve data on token price for file:"${fileName}`);
         return [{
