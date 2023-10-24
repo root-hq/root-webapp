@@ -1,6 +1,11 @@
+import { L3UiBook } from "@ellipsis-labs/phoenix-sdk";
 import { ApexOptions } from "apexcharts";
+import { MAKER_PUBKEY } from ".";
 
 export const PRICE_CHART_OPTIONS = {
+  annotations: {
+    yaxis: []
+  },
   grid: {
     show: false,
   },
@@ -14,7 +19,7 @@ export const PRICE_CHART_OPTIONS = {
     }
   },
   chart: {
-    type: "area",
+    // type: "area",
     toolbar: {
       show: false,
     },
@@ -57,3 +62,49 @@ export const PRICE_CHART_OPTIONS = {
     },
   },
 } as ApexOptions;
+
+export const getChartOptionsWithAnnotations = (
+  l3UiBook: L3UiBook
+): YAxisAnnotations[] => {
+  const bidAnnotations = l3UiBook.bids.map((order) => {
+    if(order.makerPubkey === MAKER_PUBKEY) {
+      return {
+        y: order.price,
+        borderColor: '#00E396',
+        label: {
+          position: 'left',
+          offsetX: 130,
+          borderColor: '#00E396',
+          style: {
+            color: '#0f0f0f',
+            background: '#00E396'
+          },
+          text: `BUY ${order.size} at ${order.price}`
+        }
+      } as YAxisAnnotations
+    }
+  });
+
+  const askAnnotations = l3UiBook.asks.map((order) => {
+    if(order.makerPubkey === MAKER_PUBKEY) {
+      return {
+        y: order.price,
+        borderColor: '#FF4560',
+        label: {
+          position: 'left',
+          offsetX: 130,
+          borderColor: '#FF4560',
+          style: {
+            color: '#0f0f0f',
+            background: '#FF4560'
+          },
+          text: `SELL ${order.size} at ${order.price.toFixed(3)}`
+        }
+      } as YAxisAnnotations
+    }
+  });
+  return [
+    ...askAnnotations,
+    ...bidAnnotations
+  ] as YAxisAnnotations[];
+}

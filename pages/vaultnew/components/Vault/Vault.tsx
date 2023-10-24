@@ -13,13 +13,19 @@ export interface VaultProps {
     baseTokenMetadata: TokenMetadata,
     quoteTokenMetadata: TokenMetadata,
     priceSeries: number[][],
+    annotations: YAxisAnnotations[],
     midPrice: number,
     priceChangeDirection: string,
     tokenImgWidth: number,
     tokenImgHeight: number
 }
 
-const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, midPrice, priceChangeDirection, tokenImgWidth, tokenImgHeight }: VaultProps) => {
+const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, annotations, midPrice, priceChangeDirection, tokenImgWidth, tokenImgHeight }: VaultProps) => {
+    const options = PRICE_CHART_OPTIONS;
+    options.annotations = {
+        yaxis: annotations
+    };
+
     return (
         <div className={styles.vaultContainer}>
             <div className={styles.levelOneContainer}>
@@ -96,8 +102,8 @@ const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, 
                         priceSeries && priceSeries.length > 0 ?
                         <ReactApexChart
                             type="area"
-                            height={500}
-                            options={PRICE_CHART_OPTIONS}
+                            height={499}
+                            options={options}
                             series={[
                             {
                                 data: priceSeries
@@ -110,6 +116,15 @@ const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, 
                             <span className={styles.loadingPricesText}>Loading prices...</span>
                         </div>
                     }
+                </div>
+                <div className={styles.liveTradingTitleContainer}>
+                    <svg height="25" width="25" className={styles.blinking}>
+                        <circle cx="10" cy="10" r="6" fill="#aaa" />
+                        Sorry, your browser does not support inline SVG.  
+                    </svg>
+                    <div className={styles.liveTradingText}>
+                        <span>Live trading</span>
+                    </div>
                 </div>
             </div>
         </div>
