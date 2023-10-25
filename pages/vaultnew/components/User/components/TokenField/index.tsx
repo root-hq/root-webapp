@@ -14,12 +14,25 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
   const [inputText, setInputText] = useState<string>('');
   const [inputAmount, setInputAmount] = useState<number>(0);
 
+  const removeCommas = (value) => {
+    return value.replace(/,/g, '');
+  }
+
+  const formatWithCommas = (value) => {
+    const withoutCommas = removeCommas(value);
+
+    const parts = withoutCommas.split('.');
+    const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const formattedValue = parts.length > 1 ? `${integerPart}.${parts[1]}` : integerPart;
+    return formattedValue;
+  };
+
   const handleAmountChange = (
     e: React.ChangeEvent<any>,
   ) => {
       e.preventDefault();
 
-      const amount = e.target.value;
+      const amount = removeCommas(e.target.value);
 
       if (amount === '') {
         setInputText('');
@@ -27,9 +40,9 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
       }
 
       if (amount.match(/^[+]?[0-9]+(\.[0-9]*)?$/)) {
-        
-        setInputText(amount);
-        setInputAmount(Number(amount));
+        const formattedAgain = formatWithCommas(amount);
+        setInputText(formattedAgain);
+        setInputAmount(Number(formattedAgain));
       }
   };
 
