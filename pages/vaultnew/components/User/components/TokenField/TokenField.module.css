@@ -17,6 +17,7 @@
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
+  box-sizing: border-box;
   border-radius: 0.75rem;
 }
 
@@ -45,7 +46,7 @@
 }
 
 .tokenName {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
 }
 
@@ -60,10 +61,11 @@
 
 @media (max-width: 1440px) {
   .tokenDetailsContainer {
-    width: 40%;
+    width: 42%;
   }
 
   .inputFieldContainer {
-    width: 60%;
+    width: 58%;
+    align-items: flex-end;
   }
 }

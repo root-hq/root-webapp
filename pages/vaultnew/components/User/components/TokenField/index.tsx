@@ -50,7 +50,6 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
               <Form.Group controlId="formInput">
                 <Form.Control
                   type="number"
-                  // placeholder="Enter a positive real number"
                   style={{
                     backgroundColor: 'transparent',
                     fontSize: '1.1rem',
