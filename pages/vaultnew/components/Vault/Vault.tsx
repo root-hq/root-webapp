@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Vault.module.css";
 import { TokenMetadata, UnifiedVault } from "../../../../utils/supabase";
 import TokenImageContainer, { ImageMetadata } from "../../../../components/TokenImageContainer";
 import dynamic from "next/dynamic";
-import { PRICE_CHART_OPTIONS } from "../../../../constants";
+import { ANNOTATIONS_CHART_OPTIONS, PRICE_CHART_OPTIONS, getChartAnnotations } from "../../../../constants";
+import { ApexOptions } from "apexcharts";
+import { L3UiBook } from "@ellipsis-labs/phoenix-sdk";
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
     ssr: false,
   });
@@ -13,19 +15,30 @@ export interface VaultProps {
     baseTokenMetadata: TokenMetadata,
     quoteTokenMetadata: TokenMetadata,
     priceSeries: number[][],
-    annotations: YAxisAnnotations[],
     midPrice: number,
+    l3UiBook: L3UiBook,
     priceChangeDirection: string,
     tokenImgWidth: number,
     tokenImgHeight: number
 }
 
-const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, annotations, midPrice, priceChangeDirection, tokenImgWidth, tokenImgHeight }: VaultProps) => {
-    const options = PRICE_CHART_OPTIONS;
-    options.annotations = {
-        yaxis: annotations
-    };
+const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, l3UiBook, midPrice, priceChangeDirection, tokenImgWidth, tokenImgHeight }: VaultProps) => {
 
+    const [annotatedChartOptions, setAnnotatedChartOptions] = useState<ApexOptions>(ANNOTATIONS_CHART_OPTIONS);
+    const [chartKey, setChartKey] = useState(0);
+
+    useEffect(() => {
+        let annotations = getChartAnnotations(l3UiBook);
+        let newOptions = ANNOTATIONS_CHART_OPTIONS;
+
+        newOptions.annotations = {
+            yaxis: annotations
+        };
+
+        setAnnotatedChartOptions(prev => newOptions);
+        setChartKey(key => key + 1);
+    }, [l3UiBook]);
+    
     return (
         <div className={styles.vaultContainer}>
             <div className={styles.levelOneContainer}>
@@ -97,25 +110,47 @@ const Vault = ({ vaultData, baseTokenMetadata, quoteTokenMetadata, priceSeries, 
                 </div>
             </div>
             <div className={styles.levelTwoContainer}>
-                <div className={styles.priceChartContainer}>
-                    {
-                        priceSeries && priceSeries.length > 0 ?
-                        <ReactApexChart
-                            type="area"
-                            height={499}
-                            options={options}
-                            series={[
-                            {
-                                data: priceSeries
-                            }
-                            ]}
-                            className={`chart`}
-                        />
-                        :
-                        <div className={styles.loadingPricesContainer}>
-                            <span className={styles.loadingPricesText}>Loading prices...</span>
-                        </div>
-                    }
+                <div className={styles.chartsContainer}>
+                    <div className={styles.priceChartContainer}>
+                        {
+                            priceSeries && priceSeries.length > 0 ?
+                            <ReactApexChart
+                                type="area"
+                                height={500}
+                                options={PRICE_CHART_OPTIONS}
+                                series={[
+                                {
+                                    data: priceSeries
+                                }
+                                ]}
+                                className={`chart`}
+                            />
+                            :
+                            <div className={styles.loadingPricesContainer}>
+                                <span className={styles.loadingPricesText}>Loading prices...</span>
+                            </div>
+                        }
+                    </div>
+                    <div className={styles.annotationsContainer}>
+                        {
+                            priceSeries && priceSeries.length > 0 ?
+                            <ReactApexChart
+                                key={chartKey}
+                                height={500}
+                                options={annotatedChartOptions}
+                                series={[
+                                {
+                                    data: priceSeries
+                                }
+                                ]}
+                                className={`chart`}
+                            />
+                            :
+                            <div className={styles.loadingPricesContainer}>
+                                <span className={styles.loadingPricesText}>Loading orders...</span>
+                            </div>
+                        }
+                    </div>
                 </div>
                 <div className={styles.liveTradingTitleContainer}>
                     <svg height="25" width="25" className={styles.blinking}>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styles from "./VaultPage.module.css";
-import { Container, Row, Col } from 'react-bootstrap';
 import { TokenMetadata, TokenPrice, UnifiedVault, getTokenMetadata, getVault } from '../../utils/supabase';
 import Vault from './components/Vault/Vault';
 import User from './components/User/User';
@@ -9,7 +8,7 @@ import { getTokenPrice } from '../../utils/token';
 import { getTokenPriceDataWithDate } from '../../utils/supabase/tokenPrice';
 import { getL3Book, getMarketMidPrice } from '../../utils/phoenix';
 import { L3UiBook } from '@ellipsis-labs/phoenix-sdk';
-import { DEFAULT_ORDERBOOK_VIEW_DEPTH, getChartOptionsWithAnnotations } from '../../constants';
+import { DEFAULT_ORDERBOOK_VIEW_DEPTH } from '../../constants';
 
 export interface VaultPageProps {
     vaultData: UnifiedVault;
@@ -52,9 +51,11 @@ const VaultPage = ({
     }, []);
 
     const [priceSeries, setPriceSeries] = useState([] as number[][]);
-    const [myAnnotations, setMyAnnotations] = useState<YAxisAnnotations[]>([] as YAxisAnnotations[]);
-
-    const [l3UiBookState, setL3UiBookState] = useState(l3UiBook);
+    
+    const [l3UiBookState, setL3UiBookState] = useState({
+      bids: [],
+      asks: []
+    });
     const [newPrice, setNewPrice] = useState(0);
     const [previousPrice, setPreviousPrice] = useState(0);
     const [midPriceChangeDirection, setMidPriceChangeDirection] = useState('');  
@@ -94,7 +95,7 @@ const VaultPage = ({
         // Set up an interval to fetch price data every 5 seconds (adjust as needed)
         const intervalId = setInterval(() => {
           refreshPriceData();
-        }, 10000);
+        }, 2000);
     
         // Cleanup function to clear the interval when the component unmounts
         return () => clearInterval(intervalId);
@@ -103,20 +104,17 @@ const VaultPage = ({
     useEffect(() => {
       const refreshBook = async() => {
         const newBook = await getL3Book(vaultData.market_address, DEFAULT_ORDERBOOK_VIEW_DEPTH);
-        setL3UiBookState((prevBook) => newBook);
-
-        const newAnnotations = getChartOptionsWithAnnotations(l3UiBookState);
-        setMyAnnotations((options) => [...newAnnotations]);
+        setL3UiBookState(prevBook => newBook);
       };
 
       refreshBook();
     
       const intervalId = setInterval(() => {
         refreshBook();
-      }, 10000);
+      }, 2000);
   
       return () => clearInterval(intervalId);
-    }, [l3UiBookState]);
+    }, [vaultData.market_address]);
 
     return(
         <div className={styles.vaultPageContainer}>
@@ -130,7 +128,7 @@ const VaultPage = ({
                                 quoteTokenMetadata={quoteTokenMetadata}
                                 midPrice={previousPrice}
                                 priceSeries={priceSeries}
-                                annotations={myAnnotations}
+                                l3UiBook={l3UiBookState}
                                 priceChangeDirection={midPriceChangeDirection}
                                 tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
                                 tokenImgHeight={windowSize[0] > 425 ? 40 : 35}

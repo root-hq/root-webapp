@@ -39,8 +39,17 @@
     color: white;
 }
 
+.chartsContainer {
+  display: flex;
+  flex-direction: row;
+}
+
 .priceChartContainer {
-    width: 100%
+    width: 85%;
+}
+
+.annotationsContainer {
+  width: 15%;
 }
 
 .liveTradingTitleContainer {
@@ -62,7 +71,15 @@
         font-size: 1.8rem;
         margin-left: 0.5rem;
     }
-
+    
+    .priceChartContainer {
+        width: 80%
+    }
+    
+    .annotationsContainer {
+      width: 20%;
+    }
+    
     .liveTradingText {
         font-size: 0.8rem;
     }
@@ -78,6 +95,15 @@
         font-size: 1.4rem;
         margin-left: 0.5rem;
     }
+
+    .priceChartContainer {
+      width: 60%
+    }
+    
+    .annotationsContainer {
+      width: 40%;
+    }
+
 }
 
 
