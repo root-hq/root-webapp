@@ -121,10 +121,10 @@ export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
         borderColor: "#00E396",
         label: {
           position: "right",
-          borderColor: "#00E396",
+          borderColor: 'transparent',
           style: {
-            color: "#0f0f0f",
-            background: "#00E396",
+            color: "#00E396",
+            background: "transparent",
             fontWeight: "bold",
           },
           text: `BUY ${order.size} at ${order.price}`,
@@ -149,10 +149,10 @@ export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
         borderColor: "#FF4560",
         label: {
           position: "right",
-          borderColor: "#FF4560",
+          borderColor: "transparent",
           style: {
-            color: "#0f0f0f",
-            background: "#FF4560",
+            color: "#FF4560",
+            background: "transparent",
             fontWeight: "bold",
           },
           text: `SELL ${order.size} at ${order.price.toFixed(3)}`,

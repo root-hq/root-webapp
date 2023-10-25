@@ -122,7 +122,7 @@ const VaultPage = ({
 
     const intervalId = setInterval(() => {
       refreshBook();
-    }, 3000);
+    }, 1000);
 
     return () => clearInterval(intervalId);
   }, [vaultData.market_address]);
@@ -145,7 +145,12 @@ const VaultPage = ({
             />
           </div>
           <div className={styles.userDataContainer}>
-            <User />
+            <User
+              baseTokenMetadata={baseTokenMetadata}
+              baseTokenBalance={baseTokenBalance}
+              quoteTokenMetadata={quoteTokenMetadata}
+              quoteTokenBalance={quoteTokenBalance}
+            />
           </div>
         </>
       ) : (
