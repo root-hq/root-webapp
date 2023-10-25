@@ -103,7 +103,7 @@ const VaultPage = ({
     // Set up an interval to fetch price data every 5 seconds (adjust as needed)
     const intervalId = setInterval(() => {
       refreshPriceData();
-    }, 1000);
+    }, 2000);
 
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(intervalId);
@@ -122,7 +122,7 @@ const VaultPage = ({
 
     const intervalId = setInterval(() => {
       refreshBook();
-    }, 1000);
+    }, 3000);
 
     return () => clearInterval(intervalId);
   }, [vaultData.market_address]);

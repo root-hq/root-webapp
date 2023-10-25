@@ -1,3 +1,8 @@
+.tokenFieldWithBalanceContainer {
+  width: 100%;
+  margin-top: 1rem;
+}
+
 .userBalanceContainer {
   display: flex;
   flex-direction: row;
@@ -5,16 +10,14 @@
   margin: 0.25rem;
   color: #888888;
   font-size: 0.85rem;
-  /* font-weight: bold; */
 }
 
 .tokenFieldContainer {
-  width: 100%;
   display: flex;
+  width: 100%;
   flex-direction: row;
   justify-content: space-between;
   border-radius: 0.75rem;
-  box-sizing: border-box;
 }
 
 .tokenDetailsContainer {

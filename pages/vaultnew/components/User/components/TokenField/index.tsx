@@ -47,8 +47,25 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
         <div className={styles.inputFieldContainer}>
           <div className={styles.inputField}>
             <Form>
-              <Form.Group>
-                <Form.Control type="text-area" />
+              <Form.Group controlId="formInput">
+                <Form.Control
+                  type="number"
+                  // placeholder="Enter a positive real number"
+                  style={{
+                    backgroundColor: 'transparent',
+                    fontSize: '1.1rem',
+                    fontWeight: 'bold',
+                    textAlign: 'right',
+                    color: '#ddd',
+                    border: 'none',
+                    caretColor: 'red',
+                    caret: 'green',
+                    appearance: 'textfield'
+                  }}
+                  min="0"
+                  step="any" // Allow any decimal value
+                  className={styles.customInputField}
+                />
               </Form.Group>
             </Form>
           </div>
