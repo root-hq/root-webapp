@@ -1,6 +1,6 @@
 import { L3UiBook } from "@ellipsis-labs/phoenix-sdk";
 import { ApexOptions } from "apexcharts";
-import { MAKER_PUBKEY } from ".";
+import { MAKER_PUBKEY, OPEN_ORDERS_MINIMUM_PRICE_SPACING } from ".";
 
 export const PRICE_CHART_OPTIONS = {
   annotations: {
@@ -105,7 +105,16 @@ export const ANNOTATIONS_CHART_OPTIONS = {
 } as ApexOptions;
 
 export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
-  const bidAnnotations = l3UiBook.bids.map((order) => {
+  const filteredBids = l3UiBook.bids.filter((product, index, array) => {
+    if (index > 0 && product.price - array[index - 1].price < OPEN_ORDERS_MINIMUM_PRICE_SPACING) {
+      return false;
+    }
+  
+    // Otherwise, return true.
+    return true;
+  });
+
+  const bidAnnotations = filteredBids.map((order) => {
     if (order.makerPubkey === MAKER_PUBKEY) {
       return {
         y: order.price,
@@ -124,7 +133,16 @@ export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
     }
   });
 
-  const askAnnotations = l3UiBook.asks.map((order) => {
+  const filteredAsks = l3UiBook.asks.filter((product, index, array) => {
+    if (index > 0 && product.price - array[index - 1].price < OPEN_ORDERS_MINIMUM_PRICE_SPACING) {
+      return false;
+    }
+  
+    // Otherwise, return true.
+    return true;
+  });
+
+  const askAnnotations = filteredAsks.map((order) => {
     if (order.makerPubkey === MAKER_PUBKEY) {
       return {
         y: order.price,
