@@ -5,21 +5,28 @@ import { TokenMetadata } from "../../../../utils/supabase";
 
 export interface UserProps {
   baseTokenMetadata: TokenMetadata;
-  baseTokenBalance: number,
+  baseTokenBalance: number;
   quoteTokenMetadata: TokenMetadata;
-  quoteTokenBalance: number,
+  quoteTokenBalance: number;
 }
-const User = ({ baseTokenMetadata, baseTokenBalance, quoteTokenMetadata, quoteTokenBalance}: UserProps) => {
-  return <div className={styles.userContainer}>
-    <div className={styles.depositContainer}>
-      <FundsManagerColumn
-        baseTokenMetadata={baseTokenMetadata}
-        baseTokenBalance={baseTokenBalance}
-        quoteTokenMetadata={quoteTokenMetadata}
-        quoteTokenBalance={quoteTokenBalance}
-      />
+const User = ({
+  baseTokenMetadata,
+  baseTokenBalance,
+  quoteTokenMetadata,
+  quoteTokenBalance,
+}: UserProps) => {
+  return (
+    <div className={styles.userContainer}>
+      <div className={styles.depositContainer}>
+        <FundsManagerColumn
+          baseTokenMetadata={baseTokenMetadata}
+          baseTokenBalance={baseTokenBalance}
+          quoteTokenMetadata={quoteTokenMetadata}
+          quoteTokenBalance={quoteTokenBalance}
+        />
+      </div>
     </div>
-  </div>;
+  );
 };
 
 export default User;

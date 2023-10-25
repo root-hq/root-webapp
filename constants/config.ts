@@ -106,10 +106,13 @@ export const ANNOTATIONS_CHART_OPTIONS = {
 
 export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
   const filteredBids = l3UiBook.bids.filter((product, index, array) => {
-    if (index > 0 && product.price - array[index - 1].price < OPEN_ORDERS_MINIMUM_PRICE_SPACING) {
+    if (
+      index > 0 &&
+      product.price - array[index - 1].price < OPEN_ORDERS_MINIMUM_PRICE_SPACING
+    ) {
       return false;
     }
-  
+
     // Otherwise, return true.
     return true;
   });
@@ -121,7 +124,7 @@ export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
         borderColor: "#00E396",
         label: {
           position: "right",
-          borderColor: 'transparent',
+          borderColor: "transparent",
           style: {
             color: "#00E396",
             background: "transparent",
@@ -134,10 +137,13 @@ export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
   });
 
   const filteredAsks = l3UiBook.asks.filter((product, index, array) => {
-    if (index > 0 && product.price - array[index - 1].price < OPEN_ORDERS_MINIMUM_PRICE_SPACING) {
+    if (
+      index > 0 &&
+      product.price - array[index - 1].price < OPEN_ORDERS_MINIMUM_PRICE_SPACING
+    ) {
       return false;
     }
-  
+
     // Otherwise, return true.
     return true;
   });

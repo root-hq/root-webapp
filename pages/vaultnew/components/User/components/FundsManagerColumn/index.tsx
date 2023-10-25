@@ -7,16 +7,16 @@ import TokenField from "../TokenField";
 
 export interface FundsManagerColumnProps {
   baseTokenMetadata: TokenMetadata;
-  baseTokenBalance: number,
+  baseTokenBalance: number;
   quoteTokenMetadata: TokenMetadata;
-  quoteTokenBalance: number,
+  quoteTokenBalance: number;
 }
 
 const FundsManagerColumn = ({
   baseTokenMetadata,
   baseTokenBalance,
   quoteTokenMetadata,
-  quoteTokenBalance
+  quoteTokenBalance,
 }: FundsManagerColumnProps) => {
   const DEPOSIT_TAB = "Deposit";
   const WITHDRAW_TAB = "Withdraw";
