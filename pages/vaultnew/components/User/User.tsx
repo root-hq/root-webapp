@@ -17,6 +17,9 @@ const User = ({
 }: UserProps) => {
   return (
     <div className={styles.userContainer}>
+      <div className={styles.vaultAPRContainer}>
+        <span>APR: 69.420%</span>
+      </div>
       <div className={styles.depositContainer}>
         <FundsManagerColumn
           baseTokenMetadata={baseTokenMetadata}

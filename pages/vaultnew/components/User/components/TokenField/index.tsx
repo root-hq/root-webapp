@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./TokenField.module.css";
 import { TokenMetadata } from "../../../../../../utils/supabase";
 import Image from "next/image";
@@ -10,6 +10,29 @@ export interface TokenFieldProps {
 }
 
 const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
+  
+  const [inputText, setInputText] = useState<string>('');
+  const [inputAmount, setInputAmount] = useState<number>(0);
+
+  const handleAmountChange = (
+    e: React.ChangeEvent<any>,
+  ) => {
+      e.preventDefault();
+
+      const amount = e.target.value;
+
+      if (amount === '') {
+        setInputText('');
+        setInputAmount(0);
+      }
+
+      if (amount.match(/^[+]?[0-9]+(\.[0-9]*)?$/)) {
+        
+        setInputText(amount);
+        setInputAmount(Number(amount));
+      }
+  };
+
   return (
     <div className={styles.tokenFieldWithBalanceContainer}>
       <div className={styles.userBalanceContainer}>
@@ -46,10 +69,9 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
         </div>
         <div className={styles.inputFieldContainer}>
           <div className={styles.inputField}>
-            <Form>
+            {/* <Form>
               <Form.Group controlId="formInput">
                 <Form.Control
-                  type="number"
                   style={{
                     backgroundColor: 'transparent',
                     fontSize: '1.1rem',
@@ -57,13 +79,33 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
                     textAlign: 'right',
                     color: '#ddd',
                     border: 'none',
-                    caretColor: 'red',
-                    caret: 'green',
-                    appearance: 'textfield'
+                    caretColor: '#ddd',
                   }}
                   min="0"
-                  step="any" // Allow any decimal value
                   className={styles.customInputField}
+                  onChange={(e) => handleAmountChange(e)}
+                  value={inputText}
+                />
+              </Form.Group>
+            </Form> */}
+            <Form>
+              <Form.Group controlId="formInput">
+                <Form.Control
+                  placeholder="0.00"
+                  style={{
+                    backgroundColor: 'transparent',
+                    fontSize: '1.1rem',
+                    fontWeight: 'bold',
+                    textAlign: 'right',
+                    color: '#ddd',
+                    border: 'none',
+                    caretColor: '#ddd',
+                  }}
+                  min="0"
+                  step="0.01" // Allow any decimal value
+                  className={styles.customInputField}
+                  onChange={(e) => handleAmountChange(e)}
+                  value={inputText} // Use inputText instead of inputAmount to show the decimal value
                 />
               </Form.Group>
             </Form>
