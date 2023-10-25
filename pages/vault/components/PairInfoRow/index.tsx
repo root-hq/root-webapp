@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styles from "./PairInfoRow.module.css";
-import { TokenMetadata, TokenPrice, UnifiedVault } from "../../../../utils/supabase";
+import {
+  TokenMetadata,
+  TokenPrice,
+  UnifiedVault,
+} from "../../../../utils/supabase";
 import TokenImageContainer, {
   ImageMetadata,
 } from "../../../../components/TokenImageContainer";
@@ -41,36 +45,38 @@ const PairInfoRow = ({
   const [priceSeries, setPriceSeries] = useState([] as number[]);
   const [newPrice, setNewPrice] = useState(0);
   const [previousPrice, setPreviousPrice] = useState(0);
-  const [midPriceChangeDirection, setMidPriceChangeDirection] = useState('');
+  const [midPriceChangeDirection, setMidPriceChangeDirection] = useState("");
 
   useEffect(() => {
     const refreshPriceData = async () => {
       try {
         const today = new Date();
- 
-        const freshPrices = (await getTokenPriceDataWithDate(vaultData.market_address, today)).map((val: TokenPrice) => val.price);
 
-        const newMidPrice = parseFloat((await getMarketMidPrice(vaultData.market_address)).toFixed(3));
+        const freshPrices = (
+          await getTokenPriceDataWithDate(vaultData.market_address, today)
+        ).map((val: TokenPrice) => val.price);
+
+        const newMidPrice = parseFloat(
+          (await getMarketMidPrice(vaultData.market_address)).toFixed(3),
+        );
 
         setNewPrice((prevPrice) => newMidPrice);
 
-        if(newMidPrice >= previousPrice) {
-          setMidPriceChangeDirection((previousChange) => '▲');
-        }
-        else {
-          setMidPriceChangeDirection((previousChange) => '▼');
+        if (newMidPrice >= previousPrice) {
+          setMidPriceChangeDirection((previousChange) => "▲");
+        } else {
+          setMidPriceChangeDirection((previousChange) => "▼");
         }
 
         setPreviousPrice((prevPrice2) => newMidPrice);
 
-        if(priceSeries.length === 0) {
+        if (priceSeries.length === 0) {
           setPriceSeries((prevPrices) => [...freshPrices]);
-        }
-        else {
+        } else {
           setPriceSeries((prevPrices) => [...prevPrices.slice(1), newMidPrice]);
         }
       } catch (error) {
-        console.error('Error fetching price data:', error);
+        console.error("Error fetching price data:", error);
       }
     };
 
@@ -85,7 +91,6 @@ const PairInfoRow = ({
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []); // Empty dependency array to run the effect only once on mount
-
 
   return (
     <div className={styles.pairInfoContainer}>
@@ -210,27 +215,30 @@ const PairInfoRow = ({
           </div>
           <div className={styles.vaultPriceInfoContainer}>
             <div className={styles.vaultPriceContainer}>
-              <span className={styles.vaultPrice}>{`${newPrice} ${quoteTokenMetadata.ticker}`}</span>
+              <span
+                className={styles.vaultPrice}
+              >{`${newPrice} ${quoteTokenMetadata.ticker}`}</span>
             </div>
             <div className={styles.vaultPriceChartContainer}>
-              {
-                priceSeries.length > 0 ?
-                  <ReactApexChart
-                    type="area"
-                    height={150}
-                    options={PRICE_CHART_OPTIONS}
-                    series={[
-                      {
-                        data: priceSeries
-                      }
-                    ]}
-                    className={`chart`}
-                  />
-                :
-                  <div className={styles.loadingPricesContainer}>
-                    <span className={styles.loadingPricesText}>Loading prices...</span>
-                  </div>
-              }
+              {priceSeries.length > 0 ? (
+                <ReactApexChart
+                  type="area"
+                  height={150}
+                  options={PRICE_CHART_OPTIONS}
+                  series={[
+                    {
+                      data: priceSeries,
+                    },
+                  ]}
+                  className={`chart`}
+                />
+              ) : (
+                <div className={styles.loadingPricesContainer}>
+                  <span className={styles.loadingPricesText}>
+                    Loading prices...
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>

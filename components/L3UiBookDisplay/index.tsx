@@ -25,11 +25,9 @@ const L3UiBookDisplay = ({ l3UiBook }: L3UiBookDisplayProps) => {
         <span>Live trading</span>
       </div>
       <div className={styles.orderBookContainer}>
-        {
-          l3UiBook.asks.length > 0 && l3UiBook.bids.length > 0 ?
+        {l3UiBook.asks.length > 0 && l3UiBook.bids.length > 0 ? (
           <div>
-            {
-              l3UiBook.asks
+            {l3UiBook.asks
               .sort((a, b) => -1)
               .map((orderInfo) => {
                 return (
@@ -39,10 +37,8 @@ const L3UiBookDisplay = ({ l3UiBook }: L3UiBookDisplayProps) => {
                     relativeSize={getRelativeSize(orderInfo)}
                   />
                 );
-              })
-            }
-            {
-              l3UiBook.bids
+              })}
+            {l3UiBook.bids
               .sort((a, b) => 1)
               .map((orderInfo) => {
                 return (
@@ -52,14 +48,15 @@ const L3UiBookDisplay = ({ l3UiBook }: L3UiBookDisplayProps) => {
                     relativeSize={getRelativeSize(orderInfo)}
                   />
                 );
-              })
-            }
+              })}
           </div>
-        :
+        ) : (
           <div className={styles.loadingOrderbookContainer}>
-            <span className={styles.loadingOrderbookText}>Loading orderbook...</span>
+            <span className={styles.loadingOrderbookText}>
+              Loading orderbook...
+            </span>
           </div>
-        }
+        )}
       </div>
     </div>
   );

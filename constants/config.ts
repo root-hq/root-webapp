@@ -4,7 +4,7 @@ import { MAKER_PUBKEY } from ".";
 
 export const PRICE_CHART_OPTIONS = {
   annotations: {
-    yaxis: []
+    yaxis: [],
   },
   grid: {
     show: false,
@@ -15,8 +15,8 @@ export const PRICE_CHART_OPTIONS = {
   yaxis: {
     show: true,
     labels: {
-      formatter: (val) => val.toFixed(3)
-    }
+      formatter: (val) => val.toFixed(3),
+    },
   },
   chart: {
     // type: "area",
@@ -34,7 +34,7 @@ export const PRICE_CHART_OPTIONS = {
     // colors: ["#35c674"],
     // SHORT
     // colors: ['#ca3329'],
-    colors: ['#477df2']
+    colors: ["#477df2"],
   },
   xaxis: {
     labels: {
@@ -55,7 +55,7 @@ export const PRICE_CHART_OPTIONS = {
     // colors: ["#35c674"],
     // SHORT
     // colors: ['#ca3329'],
-    colors: ['#0043d4'],
+    colors: ["#0043d4"],
     gradient: {
       opacityFrom: 0.5,
       opacityTo: 0,
@@ -65,7 +65,7 @@ export const PRICE_CHART_OPTIONS = {
 
 export const ANNOTATIONS_CHART_OPTIONS = {
   annotations: {
-    yaxis: []
+    yaxis: [],
   },
   grid: {
     show: false,
@@ -101,51 +101,46 @@ export const ANNOTATIONS_CHART_OPTIONS = {
   },
   tooltip: {
     enabled: false,
-  }
+  },
 } as ApexOptions;
 
-export const getChartAnnotations = (
-  l3UiBook: L3UiBook
-): YAxisAnnotations[] => {
+export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
   const bidAnnotations = l3UiBook.bids.map((order) => {
-    if(order.makerPubkey === MAKER_PUBKEY) {
+    if (order.makerPubkey === MAKER_PUBKEY) {
       return {
         y: order.price,
-        borderColor: '#00E396',
+        borderColor: "#00E396",
         label: {
-          position: 'right',
-          borderColor: '#00E396',
+          position: "right",
+          borderColor: "#00E396",
           style: {
-            color: '#0f0f0f',
-            background: '#00E396',
-            fontWeight: 'bold'
+            color: "#0f0f0f",
+            background: "#00E396",
+            fontWeight: "bold",
           },
-          text: `BUY ${order.size} at ${order.price}`
-        }
-      } as YAxisAnnotations
+          text: `BUY ${order.size} at ${order.price}`,
+        },
+      } as YAxisAnnotations;
     }
   });
 
   const askAnnotations = l3UiBook.asks.map((order) => {
-    if(order.makerPubkey === MAKER_PUBKEY) {
+    if (order.makerPubkey === MAKER_PUBKEY) {
       return {
         y: order.price,
-        borderColor: '#FF4560',
+        borderColor: "#FF4560",
         label: {
-          position: 'right',
-          borderColor: '#FF4560',
+          position: "right",
+          borderColor: "#FF4560",
           style: {
-            color: '#0f0f0f',
-            background: '#FF4560',
-            fontWeight: 'bold'
+            color: "#0f0f0f",
+            background: "#FF4560",
+            fontWeight: "bold",
           },
-          text: `SELL ${order.size} at ${order.price.toFixed(3)}`
-        }
-      } as YAxisAnnotations
+          text: `SELL ${order.size} at ${order.price.toFixed(3)}`,
+        },
+      } as YAxisAnnotations;
     }
   });
-  return [
-    ...askAnnotations,
-    ...bidAnnotations
-  ] as YAxisAnnotations[];
-}
+  return [...askAnnotations, ...bidAnnotations] as YAxisAnnotations[];
+};

@@ -1,37 +1,50 @@
 .vaultPageContainer {
-    color: white;
-    display: flex;
-    flex-direction: row;
+  color: white;
+  display: flex;
+  flex-direction: row;
 }
 
 .vaultDataContainer {
-    width: 70%;
-    border: 1px solid #575757;
-    box-sizing: border-box;
-    border-radius: 0.75rem;
-    padding: 1rem;
-    margin-left: 2rem;
-    margin-right: 2rem;
-    background: linear-gradient(to bottom, #191919, #181818, #171717, #161616, #151515, #141414, #131313, #121212, #111111, #101010, #0f0f0f);
+  width: 70%;
+  border: 1px solid #575757;
+  box-sizing: border-box;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  background: linear-gradient(
+    to bottom,
+    #191919,
+    #181818,
+    #171717,
+    #161616,
+    #151515,
+    #141414,
+    #131313,
+    #121212,
+    #111111,
+    #101010,
+    #0f0f0f
+  );
 }
 
 .userDataContainer {
-    background-color: green;
-    width: 30%;
+  background-color: green;
+  width: 30%;
 }
 
 @media (max-width: 768px) {
-    .vaultPageContainer {
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .vaultDataContainer {
-        width: 90%;
-    }
+  .vaultPageContainer {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 
-    .userDataContainer {
-        width: 100%;
-    }
+  .vaultDataContainer {
+    width: 90%;
+  }
+
+  .userDataContainer {
+    width: 100%;
+  }
 }

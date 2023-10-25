@@ -1,5 +1,5 @@
 export interface TokenPrice {
-    marketAddress: string,
-    price: number,
-    timestamp: number,
+  marketAddress: string;
+  price: number;
+  timestamp: number;
 }
