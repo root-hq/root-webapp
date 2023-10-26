@@ -18,16 +18,9 @@ const Header = () => {
           </Link>
         </div>
       </div>
-      <div className={styles.socialButtonContainer}>
-        <div className={styles.socialButton}>
-          <Link href={`https://twitter.com/roothq_`} target="_blank">
-            <i className="fa-brands fa-twitter"></i>
-          </Link>
-        </div>
-        <div className={styles.socialButton}>
-          <Link href={`https://github.com/root-hq`} target="_blank">
-            <i className="fa-brands fa-github"></i>
-          </Link>
+      <div className={styles.walletButtonContainer}>
+        <div className={styles.walletButton}>
+          <span className={styles.walletButtonText}>Account</span>
         </div>
       </div>
     </div>

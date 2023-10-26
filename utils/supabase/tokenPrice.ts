@@ -15,32 +15,30 @@ export const getTokenPriceDataWithDate = async (
     );
 
     if (response && response.data && response.data.length) {
-      if (response.data.length < PRICE_CHART_DATA_SAMPLES) {
-        console.log(
-          "Missing ",
-          PRICE_CHART_DATA_SAMPLES - response.data.length,
-          " entries so taking from previous day",
-        );
-        const oneDayPrior = new Date(today);
-        oneDayPrior.setDate(today.getDate() - 1);
+      // if (response.data.length < PRICE_CHART_DATA_SAMPLES) {
+      //   console.log(
+      //     "Missing ",
+      //     PRICE_CHART_DATA_SAMPLES - response.data.length,
+      //     " entries so taking from previous day",
+      //   );
+      //   const oneDayPrior = new Date(today);
+      //   oneDayPrior.setDate(today.getDate() - 1);
 
-        const previousPrices = getTokenPriceDataWithDate(
-          marketAddress,
-          oneDayPrior,
-        );
+      //   const previousPrices = getTokenPriceDataWithDate(
+      //     marketAddress,
+      //     oneDayPrior,
+      //   );
 
-        if (previousPrices && (await previousPrices).length > 0) {
-          const leftForThreshold =
-          PRICE_CHART_DATA_SAMPLES - response.data.length;
-          return [
-            ...(await previousPrices).slice(-1 * leftForThreshold),
-            ...response.data,
-          ] as TokenPrice[];
-        }
-      }
-      return response.data.slice(
-        -1 * PRICE_CHART_DATA_SAMPLES,
-      ) as TokenPrice[];
+      //   if (previousPrices && (await previousPrices).length > 0) {
+      //     const leftForThreshold =
+      //     PRICE_CHART_DATA_SAMPLES - response.data.length;
+      //     return [
+      //       ...(await previousPrices).slice(-1 * leftForThreshold),
+      //       ...response.data,
+      //     ] as TokenPrice[];
+      //   }
+      // }
+      return response.data as TokenPrice[];
     } else {
       console.log(
         `Failed to retrieve data on token price for file:"${fileName}`,
