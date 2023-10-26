@@ -24,6 +24,7 @@ export interface VaultProps {
   midPrice: number;
   l3UiBook: L3UiBook;
   priceChangeDirection: string;
+  chartHeight: number;
   tokenImgWidth: number;
   tokenImgHeight: number;
 }
@@ -36,6 +37,7 @@ const Vault = ({
   l3UiBook,
   midPrice,
   priceChangeDirection,
+  chartHeight,
   tokenImgWidth,
   tokenImgHeight,
 }: VaultProps) => {
@@ -134,7 +136,7 @@ const Vault = ({
             {priceSeries && priceSeries.length > 0 ? (
               <ReactApexChart
                 type="area"
-                height={500}
+                height={chartHeight}
                 options={PRICE_CHART_OPTIONS}
                 series={[
                   {
@@ -155,7 +157,7 @@ const Vault = ({
             {priceSeries && priceSeries.length > 0 ? (
               <ReactApexChart
                 key={chartKey}
-                height={500}
+                height={chartHeight}
                 options={annotatedChartOptions}
                 series={[
                   {

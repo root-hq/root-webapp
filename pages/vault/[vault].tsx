@@ -14,7 +14,7 @@ import { getTokenPrice } from "../../utils/token";
 import { getTokenPriceDataWithDate } from "../../utils/supabase/tokenPrice";
 import { getL3Book, getMarketMidPrice } from "../../utils/phoenix";
 import { L3UiBook } from "@ellipsis-labs/phoenix-sdk";
-import { DEFAULT_ORDERBOOK_VIEW_DEPTH } from "../../constants";
+import { CHART_MOVING_AVERAGE_WINDOW_SIZE, DEFAULT_ORDERBOOK_VIEW_DEPTH, OPEN_ORDERS_REFRESH_FREQUENCY_IN_MS, PRICE_REFRESH_FREQUENCY_IN_MS } from "../../constants";
 
 export interface VaultPageProps {
   vaultData: UnifiedVault;
@@ -53,6 +53,46 @@ const VaultPage = ({
     };
   }, []);
 
+  function calculateMovingAverage(data, windowSize) {
+    var result = [];
+    
+    if(windowSize === 0) {
+      return data;
+    }
+    
+    for (var i = 0; i < data.length; i++) {
+      var timestamp = data[i][0];
+      var price = data[i][1];
+  
+      if (price !== null && price !== undefined) {
+        var start = Math.max(0, i - windowSize + 1);
+        var end = i + 1;
+        var sum = 0;
+        var count = 0;
+  
+        for (var j = start; j < end; j++) {
+          var currentValue = data[j] && data[j][1];
+          if (currentValue !== null && currentValue !== undefined) {
+            sum += currentValue;
+            count++;
+          }
+        }
+  
+        if (count > 0) {
+          var avg = sum / count;
+          result.push([timestamp, avg]);
+        } else {
+          // Handle case where all values in the window are null or undefined
+          result.push([timestamp, null]);
+        }
+      } else {
+        // Handle case where the current value is null or undefined
+        result.push([timestamp, null]);
+      }
+    }
+    return result;
+  }  
+  
   const [priceSeries, setPriceSeries] = useState([] as number[][]);
 
   const [l3UiBookState, setL3UiBookState] = useState({
@@ -85,12 +125,12 @@ const VaultPage = ({
             await getTokenPriceDataWithDate(vaultData.market_address, today)
           ).map((val: TokenPrice) => [val.timestamp, val.price]);
 
-          setPriceSeries((prevPrices) => [...freshPrices]);
+          const movingAverages = calculateMovingAverage(freshPrices, CHART_MOVING_AVERAGE_WINDOW_SIZE);
+          setPriceSeries((prevPrices) => [...movingAverages]);
         } else {
-          setPriceSeries((prevPrices) => [
-            ...prevPrices.slice(1),
-            [Date.now(), newMidPrice],
-          ]);
+          const movingAverages = calculateMovingAverage([...priceSeries.slice(1), [Date.now(), newMidPrice]], CHART_MOVING_AVERAGE_WINDOW_SIZE);
+
+          setPriceSeries((prevPrices) => [...movingAverages]);
         }
       } catch (error) {
         console.error("Error fetching price data:", error);
@@ -103,7 +143,7 @@ const VaultPage = ({
     // Set up an interval to fetch price data every 5 seconds (adjust as needed)
     const intervalId = setInterval(() => {
       refreshPriceData();
-    }, 2000);
+    }, PRICE_REFRESH_FREQUENCY_IN_MS);
 
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(intervalId);
@@ -122,7 +162,7 @@ const VaultPage = ({
 
     const intervalId = setInterval(() => {
       refreshBook();
-    }, 3000);
+    }, OPEN_ORDERS_REFRESH_FREQUENCY_IN_MS);
 
     return () => clearInterval(intervalId);
   }, [vaultData.market_address]);
@@ -140,6 +180,7 @@ const VaultPage = ({
               priceSeries={priceSeries}
               l3UiBook={l3UiBookState}
               priceChangeDirection={midPriceChangeDirection}
+              chartHeight={windowSize[0] > 425 ? 500 : 300}
               tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
               tokenImgHeight={windowSize[0] > 425 ? 40 : 35}
             />

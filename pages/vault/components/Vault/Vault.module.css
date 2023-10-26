@@ -73,11 +73,11 @@
   }
 
   .priceChartContainer {
-    width: 80%;
+    width: 70%;
   }
 
   .annotationsContainer {
-    width: 20%;
+    width: 30%;
   }
 
   .liveTradingText {
@@ -97,11 +97,11 @@
   }
 
   .priceChartContainer {
-    width: 60%;
+    width: 50%;
   }
 
   .annotationsContainer {
-    width: 40%;
+    width: 50%;
   }
 }
 

@@ -1,6 +1,6 @@
 import { L3UiBook } from "@ellipsis-labs/phoenix-sdk";
 import { ApexOptions } from "apexcharts";
-import { MAKER_PUBKEY, OPEN_ORDERS_MINIMUM_PRICE_SPACING } from ".";
+import { BID_ASK_SPACING_CHART, MAKER_PUBKEY, OPEN_ORDERS_MINIMUM_PRICE_SPACING, STROKE_DASH_ARRAY } from ".";
 
 export const PRICE_CHART_OPTIONS = {
   annotations: {
@@ -30,10 +30,6 @@ export const PRICE_CHART_OPTIONS = {
   stroke: {
     curve: "smooth",
     width: 2,
-    // LONG
-    // colors: ["#35c674"],
-    // SHORT
-    // colors: ['#ca3329'],
     colors: ["#477df2"],
   },
   xaxis: {
@@ -51,10 +47,6 @@ export const PRICE_CHART_OPTIONS = {
     enabled: false,
   },
   fill: {
-    // LONG
-    // colors: ["#35c674"],
-    // SHORT
-    // colors: ['#ca3329'],
     colors: ["#0043d4"],
     gradient: {
       opacityFrom: 0.5,
@@ -120,7 +112,8 @@ export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
   const bidAnnotations = filteredBids.map((order) => {
     if (order.makerPubkey === MAKER_PUBKEY) {
       return {
-        y: order.price,
+        y: order.price - BID_ASK_SPACING_CHART,
+        strokeDashArray: STROKE_DASH_ARRAY,
         borderColor: "#00E396",
         label: {
           position: "right",
@@ -129,7 +122,7 @@ export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
             color: "#00E396",
             background: "transparent",
             fontWeight: "bold",
-            fontSize: "0.75rem",
+            fontSize: "0.85rem",
           },
           text: `BUY ${order.size} at ${order.price}`,
         },
@@ -152,7 +145,8 @@ export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
   const askAnnotations = filteredAsks.map((order) => {
     if (order.makerPubkey === MAKER_PUBKEY) {
       return {
-        y: order.price,
+        y: order.price + BID_ASK_SPACING_CHART,
+        strokeDashArray: STROKE_DASH_ARRAY,
         borderColor: "#FF4560",
         label: {
           position: "right",
@@ -161,7 +155,7 @@ export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
             color: "#FF4560",
             background: "transparent",
             fontWeight: "bold",
-            fontSize: "0.75rem",
+            fontSize: "0.85rem",
           },
           text: `SELL ${order.size} at ${order.price.toFixed(3)}`,
         },

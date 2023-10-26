@@ -1,6 +1,6 @@
 import axios from "axios";
 import { TokenPrice } from ".";
-import { PRICE_CHART_MINIMUM_DATA_SAMPLES } from "../../constants";
+import { PRICE_CHART_DATA_SAMPLES } from "../../constants";
 
 export const getTokenPriceDataWithDate = async (
   marketAddress: string,
@@ -15,10 +15,10 @@ export const getTokenPriceDataWithDate = async (
     );
 
     if (response && response.data && response.data.length) {
-      if (response.data.length < PRICE_CHART_MINIMUM_DATA_SAMPLES) {
+      if (response.data.length < PRICE_CHART_DATA_SAMPLES) {
         console.log(
           "Missing ",
-          PRICE_CHART_MINIMUM_DATA_SAMPLES - response.data.length,
+          PRICE_CHART_DATA_SAMPLES - response.data.length,
           " entries so taking from previous day",
         );
         const oneDayPrior = new Date(today);
@@ -31,7 +31,7 @@ export const getTokenPriceDataWithDate = async (
 
         if (previousPrices && (await previousPrices).length > 0) {
           const leftForThreshold =
-            PRICE_CHART_MINIMUM_DATA_SAMPLES - response.data.length;
+          PRICE_CHART_DATA_SAMPLES - response.data.length;
           return [
             ...(await previousPrices).slice(-1 * leftForThreshold),
             ...response.data,
@@ -39,7 +39,7 @@ export const getTokenPriceDataWithDate = async (
         }
       }
       return response.data.slice(
-        -1 * PRICE_CHART_MINIMUM_DATA_SAMPLES,
+        -1 * PRICE_CHART_DATA_SAMPLES,
       ) as TokenPrice[];
     } else {
       console.log(
