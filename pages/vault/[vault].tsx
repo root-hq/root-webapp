@@ -180,7 +180,7 @@ const VaultPage = ({
               priceSeries={priceSeries}
               l3UiBook={l3UiBookState}
               priceChangeDirection={midPriceChangeDirection}
-              chartHeight={windowSize[0] > 425 ? 500 : 300}
+              chartHeight={(windowSize[0] > 0 && windowSize[0] <= 425) ? 300 : 500}
               tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
               tokenImgHeight={windowSize[0] > 425 ? 40 : 35}
             />
