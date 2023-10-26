@@ -173,20 +173,19 @@ const Vault = ({
             )}
           </div>
         </div>
-        {
-          priceSeries && priceSeries.length > 0 ?
-            <div className={styles.liveTradingTitleContainer}>
-              <svg height="25" width="25" className={styles.blinking}>
-                <circle cx="10" cy="10" r="6" fill="#aaa" />
-                Sorry, your browser does not support inline SVG.
-              </svg>
-              <div className={styles.liveTradingText}>
-                <span>Live trading</span>
-              </div>
+        {priceSeries && priceSeries.length > 0 ? (
+          <div className={styles.liveTradingTitleContainer}>
+            <svg height="25" width="25" className={styles.blinking}>
+              <circle cx="10" cy="10" r="6" fill="#aaa" />
+              Sorry, your browser does not support inline SVG.
+            </svg>
+            <div className={styles.liveTradingText}>
+              <span>Live trading</span>
             </div>
-          :
-            <></>
-        }
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

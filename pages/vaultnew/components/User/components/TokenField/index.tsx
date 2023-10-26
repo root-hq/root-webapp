@@ -10,40 +10,38 @@ export interface TokenFieldProps {
 }
 
 const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
-  
-  const [inputText, setInputText] = useState<string>('');
+  const [inputText, setInputText] = useState<string>("");
   const [inputAmount, setInputAmount] = useState<number>(0);
 
   const removeCommas = (value) => {
-    return value.replace(/,/g, '');
-  }
+    return value.replace(/,/g, "");
+  };
 
   const formatWithCommas = (value) => {
     const withoutCommas = removeCommas(value);
 
-    const parts = withoutCommas.split('.');
+    const parts = withoutCommas.split(".");
     const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    const formattedValue = parts.length > 1 ? `${integerPart}.${parts[1]}` : integerPart;
+    const formattedValue =
+      parts.length > 1 ? `${integerPart}.${parts[1]}` : integerPart;
     return formattedValue;
   };
 
-  const handleAmountChange = (
-    e: React.ChangeEvent<any>,
-  ) => {
-      e.preventDefault();
+  const handleAmountChange = (e: React.ChangeEvent<any>) => {
+    e.preventDefault();
 
-      const amount = removeCommas(e.target.value);
+    const amount = removeCommas(e.target.value);
 
-      if (amount === '') {
-        setInputText('');
-        setInputAmount(0);
-      }
+    if (amount === "") {
+      setInputText("");
+      setInputAmount(0);
+    }
 
-      if (amount.match(/^[+]?[0-9]+(\.[0-9]*)?$/)) {
-        const formattedAgain = formatWithCommas(amount);
-        setInputText(formattedAgain);
-        setInputAmount(Number(formattedAgain));
-      }
+    if (amount.match(/^[+]?[0-9]+(\.[0-9]*)?$/)) {
+      const formattedAgain = formatWithCommas(amount);
+      setInputText(formattedAgain);
+      setInputAmount(Number(formattedAgain));
+    }
   };
 
   return (
@@ -106,13 +104,13 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
                 <Form.Control
                   placeholder="0.00"
                   style={{
-                    backgroundColor: 'transparent',
-                    fontSize: '1.1rem',
-                    fontWeight: 'bold',
-                    textAlign: 'right',
-                    color: '#ddd',
-                    border: 'none',
-                    caretColor: '#ddd',
+                    backgroundColor: "transparent",
+                    fontSize: "1.1rem",
+                    fontWeight: "bold",
+                    textAlign: "right",
+                    color: "#ddd",
+                    border: "none",
+                    caretColor: "#ddd",
                   }}
                   min="0"
                   step="0.01" // Allow any decimal value
