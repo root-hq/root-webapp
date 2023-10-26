@@ -15,7 +15,7 @@ export interface FundsManagerColumnProps {
 const feeInfoTooltip = (
   <Tooltip id="tooltip">
     <div className={styles.feeTooltipContainer}>
-      <span>We charge a performance fee of 15% on all profits earned</span>
+      <span>We charge a performance fee of 20% on all profits earned</span>
     </div>
   </Tooltip>
 );
