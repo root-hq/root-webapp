@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./User.module.css";
 import FundsManagerColumn from "./components/FundsManagerColumn";
 import { TokenMetadata } from "../../../../utils/supabase";
+import PerformanceContainer from "./components/PerformanceContainer";
 
 export interface UserProps {
   baseTokenMetadata: TokenMetadata;
@@ -17,8 +18,8 @@ const User = ({
 }: UserProps) => {
   return (
     <div className={styles.userContainer}>
-      <div className={styles.vaultAPRContainer}>
-        <span>APR: 69.420%</span>
+      <div className={styles.performanceContainer}>
+        <PerformanceContainer />
       </div>
       <div className={styles.depositContainer}>
         <FundsManagerColumn

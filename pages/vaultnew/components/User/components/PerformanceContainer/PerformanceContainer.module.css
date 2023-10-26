@@ -1,0 +1,52 @@
+.performanceContainer {
+    width: 100%;
+    padding: 1rem;
+    border: 0.75px solid rgba(255, 255, 255, 0.5);
+    border-radius: 0.75rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background-color: #191919;
+}
+
+.optionsContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.durationSelectorContainer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.durationSelector {
+    background: transparent;
+    border: none;
+    color: #888888;
+    margin-right: 0.5rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.durationSelector:hover {
+    color: white;
+}
+
+.metric {
+    font-size: 1.25rem;
+}
+
+.metricValueContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.metricValue {
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: #35c674;
+}
