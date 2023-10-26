@@ -1,3 +1,17 @@
+.feeTooltipContainer {
+  padding: 0.5rem;
+  background-color: white;
+  color: #0f0f0f;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: left;
+}
+
 .fundsManagerContainer {
   width: 100%;
   padding: 1rem;
@@ -8,6 +22,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: #101010;
 }
 
 .fundsManagerButtonContainer {
@@ -43,6 +58,44 @@
 .tokenField {
   width: 100%;
   box-sizing: border-box;
+}
+
+.actionButtonContainer {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 2rem;
+}
+
+.actionButton {
+  width: 100%;
+  background-color: #ddd;
+  color: #0f0f0f;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.feeTextContainer {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: left;
+  width: 100%;
+}
+
+.feeText {
+  color: #888;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.feeText:hover {
+  color: #ddd;
 }
 
 @media (max-width: 425px) {

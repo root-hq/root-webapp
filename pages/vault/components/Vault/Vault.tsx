@@ -12,6 +12,7 @@ import {
 } from "../../../../constants";
 import { ApexOptions } from "apexcharts";
 import { L3UiBook } from "@ellipsis-labs/phoenix-sdk";
+import KeyValueComponent, { KeyValueJustification } from "../../../../components/KeyValueComponent";
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
@@ -109,7 +110,19 @@ const Vault = ({
           </div>
           <div className={styles.vaultExchangeDataContainer}>
             {vaultData && vaultData.exchange ? (
-              <span className={styles.exchangeName}>{vaultData.exchange}</span>
+              <KeyValueComponent
+                keyElement={<span>Exchange</span>}
+                keyElementStyle={{
+                  color: '#888',
+                  fontWeight: 'bold'
+                }}
+                valueElement={<span>{vaultData.exchange}</span>}
+                valueElementStyle={{
+                  color: '#ddd',
+                  fontWeight: 'bold'
+                }}
+                justification={KeyValueJustification.SpaceBetween}
+              />
             ) : (
               <></>
             )}

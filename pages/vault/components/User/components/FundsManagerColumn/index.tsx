@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./FundsManagerColumn.module.css";
-import { Button } from "react-bootstrap";
+import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { TokenMetadata } from "../../../../../../utils/supabase";
 import Image from "next/image";
 import TokenField from "../TokenField";
@@ -11,6 +11,14 @@ export interface FundsManagerColumnProps {
   quoteTokenMetadata: TokenMetadata;
   quoteTokenBalance: number;
 }
+
+const feeInfoTooltip = (
+  <Tooltip id="tooltip">
+    <div className={styles.feeTooltipContainer}>
+      <span>We charge a performance fee of 15% on all profits earned</span>
+    </div>
+  </Tooltip>
+);
 
 const FundsManagerColumn = ({
   baseTokenMetadata,
@@ -34,11 +42,18 @@ const FundsManagerColumn = ({
           className={styles.tabButtonContainer}
           onClick={() => handleTabSelect(DEPOSIT_TAB)}
           style={{
-            color: activeTab === DEPOSIT_TAB ? "white" : "#888",
+            backgroundColor: activeTab === WITHDRAW_TAB ?
+              '#1a1a1a'
+            :
+              'transparent',
             border:
               activeTab === DEPOSIT_TAB
                 ? `1px solid rgba(255, 255, 255, 1)`
                 : `1px solid rgba(255, 255, 255, 0.5)`,
+            opacity:
+              activeTab === WITHDRAW_TAB ?
+              '0.6'
+              : '1'
           }}
         >
           <Button
@@ -54,11 +69,18 @@ const FundsManagerColumn = ({
           className={styles.tabButtonContainer}
           onClick={() => handleTabSelect(WITHDRAW_TAB)}
           style={{
-            // color: activeTab === DEPOSIT_TAB ? 'white' : '#888',
+            backgroundColor: activeTab === DEPOSIT_TAB ?
+              '#1a1a1a'
+            :
+              'transparent',
             border:
               activeTab === WITHDRAW_TAB
                 ? `1px solid rgba(255, 255, 255, 1)`
                 : `1px solid rgba(255, 255, 255, 0.5)`,
+            opacity:
+              activeTab === DEPOSIT_TAB ?
+              '0.6'
+              : '1'
           }}
         >
           <Button
@@ -84,6 +106,21 @@ const FundsManagerColumn = ({
             tokenBalance={quoteTokenBalance}
           />
         </div>
+      </div>
+      <div className={styles.actionButtonContainer}>
+        <Button className={styles.actionButton}>
+          {
+            activeTab === DEPOSIT_TAB ?
+              <span className={styles.actionButtonText}>Deposit</span>
+            :
+              <span className={styles.actionButtonText}>Withdraw all funds</span>
+          }
+        </Button>
+      </div>
+      <div className={styles.feeTextContainer}>
+          <OverlayTrigger placement="top" overlay={feeInfoTooltip}>
+            <span className={styles.feeText}><u>How fees work?</u></span>
+          </OverlayTrigger>
       </div>
     </div>
   );
