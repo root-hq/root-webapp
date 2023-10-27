@@ -2,6 +2,11 @@ import React from "react";
 import Logo from "../Logo";
 import styles from "./Header.module.css";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+const WalletMultiButtonDynamic = dynamic(
+  async () => (await import('../Wallet')).WalletMultiButton,
+  { ssr: false }
+);
 
 const Header = () => {
   return (
@@ -20,7 +25,7 @@ const Header = () => {
       </div>
       <div className={styles.walletButtonContainer}>
         <div className={styles.walletButton}>
-          <span className={styles.walletButtonText}>Account</span>
+          <WalletMultiButtonDynamic />
         </div>
       </div>
     </div>

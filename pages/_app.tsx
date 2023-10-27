@@ -3,11 +3,43 @@ import Head from "next/head";
 import type { FC } from "react";
 import React from "react";
 import Header from "../components/Header";
+import {
+  ConnectionProvider,
+  WalletProvider,
+} from "@solana/wallet-adapter-react";
+import { useMemo } from "react";
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+  CoinbaseWalletAdapter,
+  LedgerWalletAdapter,
+  WalletConnectWalletAdapter,
+  WalletConnectWalletAdapterConfig
+} from "@solana/wallet-adapter-wallets";
+import { clusterApiUrl } from "@solana/web3.js";
+import { WalletModalProvider } from "../components/Wallet"
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 // Use require instead of import since order matters
+require('../styles/wallet.css');
 require("../styles/globals.css");
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
+  const endpoint = useMemo(() => clusterApiUrl("mainnet-beta"), []);
+
+  const wallets = useMemo(
+    () => [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
+      new LedgerWalletAdapter(),
+      new CoinbaseWalletAdapter(),
+      new WalletConnectWalletAdapter({
+        network: WalletAdapterNetwork.Mainnet
+      } as WalletConnectWalletAdapterConfig)
+    ],
+    []
+  );
+
   return (
     <>
       <Head>
@@ -17,10 +49,16 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         <link rel="icon" href="/images/root-logo.png" />
       </Head>
 
-      <div>
-        <Header />
-      </div>
-      <Component {...pageProps} />
+      <ConnectionProvider endpoint={endpoint}>
+        <WalletProvider wallets={wallets}>
+          <WalletModalProvider>
+            <div>
+              <Header />
+            </div>
+            <Component {...pageProps} />
+          </WalletModalProvider>
+        </WalletProvider>
+      </ConnectionProvider>
 
       <link
         rel="stylesheet"
