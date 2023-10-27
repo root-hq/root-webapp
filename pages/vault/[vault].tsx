@@ -26,7 +26,6 @@ import { getTokenAccountBalance } from "../../utils/token/balance";
 
 export interface VaultPageProps {
   vaultData: UnifiedVault;
-  l3UiBook: L3UiBook;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
   baseTokenPrice: number;
@@ -75,7 +74,6 @@ function calculateMovingAverage(data, windowSize) {
 
 const VaultPage = ({
   vaultData,
-  l3UiBook,
   baseTokenMetadata,
   quoteTokenMetadata,
   baseTokenPrice,
@@ -252,10 +250,6 @@ export async function getServerSideProps({ params }) {
   const vaultData = await getVault(vault);
   let baseTokenMetadata: TokenMetadata = null;
   let quoteTokenMetadata: TokenMetadata = null;
-  let l3UiBook = {
-    bids: [],
-    asks: [],
-  } as L3UiBook;
   let vaultBalance: VaultBalance = null;
   let baseTokenPrice: number = null;
   let quoteTokenPrice: number = null;
@@ -265,11 +259,10 @@ export async function getServerSideProps({ params }) {
     vaultData.base_token_address &&
     vaultData.quote_token_address
   ) {
-    [baseTokenMetadata, quoteTokenMetadata, l3UiBook, vaultBalance] =
+    [baseTokenMetadata, quoteTokenMetadata, vaultBalance] =
       await Promise.all([
         getTokenMetadata(vaultData.base_token_address),
         getTokenMetadata(vaultData.quote_token_address),
-        getL3Book(vaultData.market_address, DEFAULT_ORDERBOOK_VIEW_DEPTH),
         getVaultBalance(vault),
       ]);
 
@@ -287,7 +280,6 @@ export async function getServerSideProps({ params }) {
       vaultData: vaultData ? vaultData : null,
       baseTokenMetadata: baseTokenMetadata ? baseTokenMetadata : null,
       quoteTokenMetadata: quoteTokenMetadata ? quoteTokenMetadata : null,
-      l3UiBook: l3UiBook ? l3UiBook : null,
       baseTokenPrice: baseTokenPrice ? baseTokenPrice : null,
       baseTokenBalance: vaultBalance.baseTokenBalance
         ? vaultBalance.baseTokenBalance

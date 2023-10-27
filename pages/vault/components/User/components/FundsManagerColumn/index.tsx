@@ -106,7 +106,12 @@ const FundsManagerColumn = ({
           />
         </div>
       </div>
-      <div className={styles.actionButtonContainer}>
+      <div
+        className={styles.actionButtonContainer}
+        style = {{
+          marginTop: walletState.connected ? '2rem' : '1rem'
+        }}
+      >
         {walletState.connected ? (
           <Button className={styles.actionButton}>
             {activeTab === DEPOSIT_TAB ? (

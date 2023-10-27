@@ -14,6 +14,20 @@
   justify-content: space-between;
 }
 
+.metricSelectorContainer {
+  display: flex;
+  width: 100%;
+}
+
+.metricSelector {
+  background: transparent;
+  border: none;
+  color: #888888;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
 .durationSelectorContainer {
   display: flex;
   justify-content: flex-end;

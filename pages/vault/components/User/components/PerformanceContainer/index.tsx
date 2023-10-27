@@ -10,9 +10,15 @@ enum SelectedDuration {
   Year,
 }
 
+enum SelectedMetric {
+  Apr,
+  Markout,
+  Volume
+}
+
 const PerformanceContainer = () => {
   const [selectedDuration, setSelectedDuration] = useState<SelectedDuration>(
-    SelectedDuration.Day,
+    SelectedDuration.Week,
   );
 
   const handleDurationChange = (e) => {
@@ -26,11 +32,68 @@ const PerformanceContainer = () => {
     }
   };
 
+  const handleMetricChange = (e) => {
+    const metric = e.target.value;
+    if (metric === "Apr") {
+      setSelectedMetric((prev) => SelectedMetric.Apr);
+    } else if (metric === "Markout") {
+      setSelectedMetric((prev) => SelectedMetric.Markout);
+    } else if (metric === "Volume") {
+      setSelectedMetric((prev) => SelectedMetric.Volume);
+    }
+  };
+
+  const [selectedMetric, setSelectedMetric] = useState<SelectedMetric>(SelectedMetric.Apr);
+
   return (
     <div className={styles.performanceContainer}>
       <div className={styles.optionsContainer}>
-        <div className={styles.metricContainer}>
-          <span className={styles.metric}>APR</span>
+        <div className={styles.metricSelectorContainer}>
+          <Button
+            className={styles.metricSelector}
+            onClick={(e) => {
+              handleMetricChange(e);
+            }}
+            value={"Apr"}
+            style={{
+              color:
+                selectedMetric === SelectedMetric.Apr ? "#ddd" : "#888",
+              fontWeight:
+                selectedMetric === SelectedMetric.Apr ? "bold" : "normal",
+            }}
+          >
+            APR
+          </Button>
+          <Button
+            className={styles.metricSelector}
+            onClick={(e) => {
+              handleMetricChange(e);
+            }}
+            value={"Volume"}
+            style={{
+              color:
+                selectedMetric === SelectedMetric.Volume ? "#ddd" : "#888",
+              fontWeight:
+                selectedMetric === SelectedMetric.Volume ? "bold" : "normal",
+            }}
+          >
+            Volume
+          </Button>
+          {/* <Button
+            className={styles.metricSelector}
+            onClick={(e) => {
+              handleMetricChange(e);
+            }}
+            value={"Markout"}
+            style={{
+              color:
+                selectedMetric === SelectedMetric.Markout ? "#ddd" : "#888",
+              fontWeight:
+                selectedMetric === SelectedMetric.Markout ? "bold" : "normal",
+            }}
+          >
+            MARKOUTS
+          </Button> */}
         </div>
         <div className={styles.durationSelectorContainer}>
           <Button
@@ -47,36 +110,6 @@ const PerformanceContainer = () => {
             }}
           >
             24h
-          </Button>
-          <Button
-            className={styles.durationSelector}
-            onClick={(e) => {
-              handleDurationChange(e);
-            }}
-            value={"7d"}
-            style={{
-              color:
-                selectedDuration === SelectedDuration.Week ? "#ddd" : "#888",
-              fontWeight:
-                selectedDuration === SelectedDuration.Week ? "bold" : "normal",
-            }}
-          >
-            7d
-          </Button>
-          <Button
-            className={styles.durationSelector}
-            onClick={(e) => {
-              handleDurationChange(e);
-            }}
-            value={"1y"}
-            style={{
-              color:
-                selectedDuration === SelectedDuration.Year ? "#ddd" : "#888",
-              fontWeight:
-                selectedDuration === SelectedDuration.Year ? "bold" : "normal",
-            }}
-          >
-            1y
           </Button>
         </div>
       </div>
