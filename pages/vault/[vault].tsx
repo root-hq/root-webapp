@@ -186,8 +186,6 @@ const VaultPage = ({
         setQuoteTokenUserBalance((prev) => 0);
       } else {
         try {
-          console.log("new state: ", walletState);
-
           const userBaseTokenBalance = await getTokenAccountBalance(
             walletState.publicKey,
             new web3.PublicKey(vaultData.base_token_address),

@@ -38,7 +38,6 @@ const FundsManagerColumn = ({
   const [activeTab, setActiveTab] = useState("Deposit");
 
   const handleTabSelect = (selectedTab) => {
-    console.log("doing: ", selectedTab);
     setActiveTab(selectedTab);
   };
 
