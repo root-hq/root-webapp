@@ -19,6 +19,7 @@ import {
 import { clusterApiUrl } from "@solana/web3.js";
 import { WalletModalProvider } from "../components/Wallet";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { OKXWalletAdapter } from "../components/Wallet/OKXWalletAdapter";
 
 // Use require instead of import since order matters
 require("../styles/wallet.css");
@@ -31,6 +32,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
     () => [
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter(),
+      new OKXWalletAdapter(),
       new LedgerWalletAdapter(),
       new CoinbaseWalletAdapter(),
       new WalletConnectWalletAdapter({
