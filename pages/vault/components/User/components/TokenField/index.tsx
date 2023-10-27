@@ -5,14 +5,27 @@ import Image from "next/image";
 import { Form } from "react-bootstrap";
 import { useWallet } from "@solana/wallet-adapter-react";
 
+export interface TokenFieldStateUtils {
+  inputText: string,
+  setInputText: React.Dispatch<React.SetStateAction<string>>,
+  inputAmount: number,
+  setInputAmount: React.Dispatch<React.SetStateAction<number>>
+}
+
 export interface TokenFieldProps {
   tokenMetadata: TokenMetadata;
   tokenBalance: number;
+  tokenFieldStateUtils: TokenFieldStateUtils;
+  oppositeStateUtils: TokenFieldStateUtils;
+  isBaseTokenField: boolean;
 }
 
-const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
-  const [inputText, setInputText] = useState<string>("");
-  const [inputAmount, setInputAmount] = useState<number>(0);
+const TokenField = ({ tokenMetadata, tokenBalance, tokenFieldStateUtils, oppositeStateUtils, isBaseTokenField }: TokenFieldProps) => {
+
+  let inputText = tokenFieldStateUtils.inputText;
+  let setInputText = tokenFieldStateUtils.setInputText;
+  let inputAmount = tokenFieldStateUtils.inputAmount;
+  let setInputAmount = tokenFieldStateUtils.setInputAmount;
 
   const walletState = useWallet();
   const removeCommas = (value) => {

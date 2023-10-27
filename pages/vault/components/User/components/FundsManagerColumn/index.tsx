@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./FundsManagerColumn.module.css";
 import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { TokenMetadata } from "../../../../../../utils/supabase";
-import TokenField from "../TokenField";
+import TokenField, { TokenFieldStateUtils } from "../TokenField";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
 const WalletMultiButtonDynamic = dynamic(
@@ -42,6 +42,26 @@ const FundsManagerColumn = ({
   };
 
   const walletState = useWallet();
+
+  const [baseInputText, setBaseInputText] = useState<string>("");
+  const [baseInputAmount, setBaseInputAmount] = useState<number>(0);
+
+  const baseTokenFieldStateUtils = {
+    inputText: baseInputText,
+    inputAmount: baseInputAmount,
+    setInputText: setBaseInputText,
+    setInputAmount: setBaseInputAmount
+  } as TokenFieldStateUtils;
+
+  const [quoteInputText, setQuoteInputText] = useState<string>("");
+  const [quoteInputAmount, setQuoteInputAmount] = useState<number>(0);
+
+  const quoteTokenFieldStateUtils = {
+    inputText: quoteInputText,
+    inputAmount: quoteInputAmount,
+    setInputText: setQuoteInputText,
+    setInputAmount: setQuoteInputAmount
+  } as TokenFieldStateUtils;
 
   return (
     <div className={styles.fundsManagerContainer}>
@@ -96,12 +116,18 @@ const FundsManagerColumn = ({
           <TokenField
             tokenMetadata={baseTokenMetadata}
             tokenBalance={baseTokenBalance}
+            tokenFieldStateUtils={baseTokenFieldStateUtils}
+            oppositeStateUtils={quoteTokenFieldStateUtils}
+            isBaseTokenField={true}
           />
         </div>
         <div className={styles.tokenField}>
           <TokenField
             tokenMetadata={quoteTokenMetadata}
             tokenBalance={quoteTokenBalance}
+            tokenFieldStateUtils={quoteTokenFieldStateUtils}
+            oppositeStateUtils={baseTokenFieldStateUtils}
+            isBaseTokenField={false}
           />
         </div>
       </div>
