@@ -182,26 +182,30 @@ const VaultPage = ({
   const walletState = useWallet();
 
   useEffect(() => {
-    const updateBalances = async() => {
-      if(!walletState.connected || walletState.disconnecting) {
+    const updateBalances = async () => {
+      if (!walletState.connected || walletState.disconnecting) {
         setBaseTokenUserBalance((prev) => 0);
         setQuoteTokenUserBalance((prev) => 0);
-      }
-      else {
+      } else {
         try {
           console.log("new state: ", walletState);
-          
-          const userBaseTokenBalance = await getTokenAccountBalance(walletState.publicKey, new web3.PublicKey(vaultData.base_token_address));
-          const userQuoteTokenBalance = await getTokenAccountBalance(walletState.publicKey, new web3.PublicKey(vaultData.quote_token_address));
-          
+
+          const userBaseTokenBalance = await getTokenAccountBalance(
+            walletState.publicKey,
+            new web3.PublicKey(vaultData.base_token_address),
+          );
+          const userQuoteTokenBalance = await getTokenAccountBalance(
+            walletState.publicKey,
+            new web3.PublicKey(vaultData.quote_token_address),
+          );
+
           setBaseTokenUserBalance((prev) => userBaseTokenBalance);
           setQuoteTokenUserBalance((prev) => userQuoteTokenBalance);
-        }
-        catch(err) {
+        } catch (err) {
           console.log(`Something went wrong updating balances: ${err}`);
         }
       }
-    }
+    };
 
     updateBalances();
   }, [walletState]);

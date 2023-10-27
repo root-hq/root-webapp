@@ -48,22 +48,19 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
 
   return (
     <div className={styles.tokenFieldWithBalanceContainer}>
-      {
-        tokenBalance > 0 ?
-          <div className={styles.userBalanceContainer}>
-            <span>
-              <i className="fa-solid fa-wallet fa-2xs"></i>
-              {` `}
-              {`${tokenBalance}`}
-            </span>
-          </div>
-        :
-          <div className={styles.userBalanceContainer}>
-            <span>
-              {` `}
-            </span>
-          </div>
-      }
+      {tokenBalance > 0 ? (
+        <div className={styles.userBalanceContainer}>
+          <span>
+            <i className="fa-solid fa-wallet fa-2xs"></i>
+            {` `}
+            {`${tokenBalance}`}
+          </span>
+        </div>
+      ) : (
+        <div className={styles.userBalanceContainer}>
+          <span>{` `}</span>
+        </div>
+      )}
       <div className={styles.tokenFieldContainer}>
         <div className={styles.tokenDetailsContainer}>
           {tokenMetadata && tokenMetadata.img_url ? (
@@ -95,7 +92,7 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
               <Form.Group controlId="formInput">
                 <Form.Control
                   placeholder="0.00"
-                  disabled = {!walletState.connected}
+                  disabled={!walletState.connected}
                   style={{
                     backgroundColor: "transparent",
                     fontSize: "1.1rem",

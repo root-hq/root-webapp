@@ -6,7 +6,8 @@ import TokenField from "../TokenField";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
 const WalletMultiButtonDynamic = dynamic(
-  async () => (await import("../../../../../../components/Wallet")).WalletMultiButton,
+  async () =>
+    (await import("../../../../../../components/Wallet")).WalletMultiButton,
   { ssr: false },
 );
 
@@ -106,20 +107,21 @@ const FundsManagerColumn = ({
         </div>
       </div>
       <div className={styles.actionButtonContainer}>
-        {
-          walletState.connected ?
-            <Button className={styles.actionButton}>
-              {activeTab === DEPOSIT_TAB ? (
-                <span className={styles.actionButtonText}>Deposit</span>
-              ) : (
-                <span className={styles.actionButtonText}>Withdraw all funds</span>
-              )}
-            </Button>
-          :
-            <div className={styles.connectButtonContainer}>
-              <WalletMultiButtonDynamic />
-            </div>
-        }
+        {walletState.connected ? (
+          <Button className={styles.actionButton}>
+            {activeTab === DEPOSIT_TAB ? (
+              <span className={styles.actionButtonText}>Deposit</span>
+            ) : (
+              <span className={styles.actionButtonText}>
+                Withdraw all funds
+              </span>
+            )}
+          </Button>
+        ) : (
+          <div className={styles.connectButtonContainer}>
+            <WalletMultiButtonDynamic />
+          </div>
+        )}
       </div>
       <div className={styles.feeTextContainer}>
         <OverlayTrigger placement="top" overlay={feeInfoTooltip}>
