@@ -1,6 +1,11 @@
 import { L3UiBook } from "@ellipsis-labs/phoenix-sdk";
 import { ApexOptions } from "apexcharts";
-import { BID_ASK_SPACING_CHART, MAKER_PUBKEY, OPEN_ORDERS_MINIMUM_PRICE_SPACING, STROKE_DASH_ARRAY } from ".";
+import {
+  BID_ASK_SPACING_CHART,
+  MAKER_PUBKEY,
+  OPEN_ORDERS_MINIMUM_PRICE_SPACING,
+  STROKE_DASH_ARRAY,
+} from ".";
 
 export const PRICE_CHART_OPTIONS = {
   annotations: {

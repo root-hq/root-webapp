@@ -14,14 +14,14 @@ import {
   CoinbaseWalletAdapter,
   LedgerWalletAdapter,
   WalletConnectWalletAdapter,
-  WalletConnectWalletAdapterConfig
+  WalletConnectWalletAdapterConfig,
 } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
-import { WalletModalProvider } from "../components/Wallet"
+import { WalletModalProvider } from "../components/Wallet";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 // Use require instead of import since order matters
-require('../styles/wallet.css');
+require("../styles/wallet.css");
 require("../styles/globals.css");
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
@@ -34,10 +34,10 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
       new LedgerWalletAdapter(),
       new CoinbaseWalletAdapter(),
       new WalletConnectWalletAdapter({
-        network: WalletAdapterNetwork.Mainnet
-      } as WalletConnectWalletAdapterConfig)
+        network: WalletAdapterNetwork.Mainnet,
+      } as WalletConnectWalletAdapterConfig),
     ],
-    []
+    [],
   );
 
   return (

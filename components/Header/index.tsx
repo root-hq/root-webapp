@@ -4,8 +4,8 @@ import styles from "./Header.module.css";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 const WalletMultiButtonDynamic = dynamic(
-  async () => (await import('../Wallet')).WalletMultiButton,
-  { ssr: false }
+  async () => (await import("../Wallet")).WalletMultiButton,
+  { ssr: false },
 );
 
 const Header = () => {

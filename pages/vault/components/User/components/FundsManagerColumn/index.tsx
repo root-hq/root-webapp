@@ -42,18 +42,13 @@ const FundsManagerColumn = ({
           className={styles.tabButtonContainer}
           onClick={() => handleTabSelect(DEPOSIT_TAB)}
           style={{
-            backgroundColor: activeTab === WITHDRAW_TAB ?
-              '#1a1a1a'
-            :
-              'transparent',
+            backgroundColor:
+              activeTab === WITHDRAW_TAB ? "#1a1a1a" : "transparent",
             border:
               activeTab === DEPOSIT_TAB
                 ? `1px solid rgba(255, 255, 255, 1)`
                 : `1px solid rgba(255, 255, 255, 0.5)`,
-            opacity:
-              activeTab === WITHDRAW_TAB ?
-              '0.6'
-              : '1'
+            opacity: activeTab === WITHDRAW_TAB ? "0.6" : "1",
           }}
         >
           <Button
@@ -69,18 +64,13 @@ const FundsManagerColumn = ({
           className={styles.tabButtonContainer}
           onClick={() => handleTabSelect(WITHDRAW_TAB)}
           style={{
-            backgroundColor: activeTab === DEPOSIT_TAB ?
-              '#1a1a1a'
-            :
-              'transparent',
+            backgroundColor:
+              activeTab === DEPOSIT_TAB ? "#1a1a1a" : "transparent",
             border:
               activeTab === WITHDRAW_TAB
                 ? `1px solid rgba(255, 255, 255, 1)`
                 : `1px solid rgba(255, 255, 255, 0.5)`,
-            opacity:
-              activeTab === DEPOSIT_TAB ?
-              '0.6'
-              : '1'
+            opacity: activeTab === DEPOSIT_TAB ? "0.6" : "1",
           }}
         >
           <Button
@@ -109,18 +99,19 @@ const FundsManagerColumn = ({
       </div>
       <div className={styles.actionButtonContainer}>
         <Button className={styles.actionButton}>
-          {
-            activeTab === DEPOSIT_TAB ?
-              <span className={styles.actionButtonText}>Deposit</span>
-            :
-              <span className={styles.actionButtonText}>Withdraw all funds</span>
-          }
+          {activeTab === DEPOSIT_TAB ? (
+            <span className={styles.actionButtonText}>Deposit</span>
+          ) : (
+            <span className={styles.actionButtonText}>Withdraw all funds</span>
+          )}
         </Button>
       </div>
       <div className={styles.feeTextContainer}>
-          <OverlayTrigger placement="top" overlay={feeInfoTooltip}>
-            <span className={styles.feeText}><u>How fees work?</u></span>
-          </OverlayTrigger>
+        <OverlayTrigger placement="top" overlay={feeInfoTooltip}>
+          <span className={styles.feeText}>
+            <u>How fees work?</u>
+          </span>
+        </OverlayTrigger>
       </div>
     </div>
   );

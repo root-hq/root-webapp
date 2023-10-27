@@ -14,7 +14,12 @@ import { getTokenPrice } from "../../utils/token";
 import { getTokenPriceDataWithDate } from "../../utils/supabase/tokenPrice";
 import { getL3Book, getMarketMidPrice } from "../../utils/phoenix";
 import { L3UiBook } from "@ellipsis-labs/phoenix-sdk";
-import { CHART_MOVING_AVERAGE_WINDOW_SIZE, DEFAULT_ORDERBOOK_VIEW_DEPTH, OPEN_ORDERS_REFRESH_FREQUENCY_IN_MS, PRICE_REFRESH_FREQUENCY_IN_MS } from "../../constants";
+import {
+  CHART_MOVING_AVERAGE_WINDOW_SIZE,
+  DEFAULT_ORDERBOOK_VIEW_DEPTH,
+  OPEN_ORDERS_REFRESH_FREQUENCY_IN_MS,
+  PRICE_REFRESH_FREQUENCY_IN_MS,
+} from "../../constants";
 
 export interface VaultPageProps {
   vaultData: UnifiedVault;
@@ -55,21 +60,21 @@ const VaultPage = ({
 
   function calculateMovingAverage(data, windowSize) {
     var result = [];
-    
-    if(windowSize === 0) {
+
+    if (windowSize === 0) {
       return data;
     }
-    
+
     for (var i = 0; i < data.length; i++) {
       var timestamp = data[i][0];
       var price = data[i][1];
-  
+
       if (price !== null && price !== undefined) {
         var start = Math.max(0, i - windowSize + 1);
         var end = i + 1;
         var sum = 0;
         var count = 0;
-  
+
         for (var j = start; j < end; j++) {
           var currentValue = data[j] && data[j][1];
           if (currentValue !== null && currentValue !== undefined) {
@@ -77,7 +82,7 @@ const VaultPage = ({
             count++;
           }
         }
-  
+
         if (count > 0) {
           var avg = sum / count;
           result.push([timestamp, avg]);
@@ -91,8 +96,8 @@ const VaultPage = ({
       }
     }
     return result;
-  }  
-  
+  }
+
   const [priceSeries, setPriceSeries] = useState([] as number[][]);
 
   const [l3UiBookState, setL3UiBookState] = useState({
@@ -125,10 +130,16 @@ const VaultPage = ({
             await getTokenPriceDataWithDate(vaultData.market_address, today)
           ).map((val: TokenPrice) => [val.timestamp, val.price]);
 
-          const movingAverages = calculateMovingAverage(freshPrices, CHART_MOVING_AVERAGE_WINDOW_SIZE);
+          const movingAverages = calculateMovingAverage(
+            freshPrices,
+            CHART_MOVING_AVERAGE_WINDOW_SIZE,
+          );
           setPriceSeries((prevPrices) => [...movingAverages]);
         } else {
-          const movingAverages = calculateMovingAverage([...priceSeries.slice(1), [Date.now(), newMidPrice]], CHART_MOVING_AVERAGE_WINDOW_SIZE);
+          const movingAverages = calculateMovingAverage(
+            [...priceSeries.slice(1), [Date.now(), newMidPrice]],
+            CHART_MOVING_AVERAGE_WINDOW_SIZE,
+          );
 
           setPriceSeries((prevPrices) => [...movingAverages]);
         }
@@ -180,7 +191,9 @@ const VaultPage = ({
               priceSeries={priceSeries}
               l3UiBook={l3UiBookState}
               priceChangeDirection={midPriceChangeDirection}
-              chartHeight={(windowSize[0] > 0 && windowSize[0] <= 425) ? 300 : 500}
+              chartHeight={
+                windowSize[0] > 0 && windowSize[0] <= 425 ? 300 : 500
+              }
               tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
               tokenImgHeight={windowSize[0] > 425 ? 40 : 35}
             />
