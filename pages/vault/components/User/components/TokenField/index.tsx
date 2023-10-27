@@ -26,15 +26,30 @@ export interface TokenFieldProps {
 
 const TokenField = ({ vaultAddress, vaultTokenBalance, tokenMetadata, oppositeTokenMetadata, tokenBalance, tokenFieldStateUtils, oppositeStateUtils, isBaseTokenField }: TokenFieldProps) => {
 
-  let inputText = tokenFieldStateUtils.inputText;
-  let setInputText = tokenFieldStateUtils.setInputText;
-  let inputAmount = tokenFieldStateUtils.inputAmount;
-  let setInputAmount = tokenFieldStateUtils.setInputAmount;
+  let inputText: string;
+  let setInputText: React.Dispatch<React.SetStateAction<string>>;
+  let inputAmount: number;
+  let setInputAmount: React.Dispatch<React.SetStateAction<number>>;
+ 
+  if(tokenFieldStateUtils) {
+    inputText = tokenFieldStateUtils.inputText;
+    setInputText = tokenFieldStateUtils.setInputText;
+    inputAmount = tokenFieldStateUtils.inputAmount;
+    setInputAmount = tokenFieldStateUtils.setInputAmount;  
+  }
 
-  let oppositeInputText = oppositeStateUtils.inputText;
-  let setOppositeInputText = oppositeStateUtils.setInputText;
-  let oppositeInputAmount = oppositeStateUtils.inputAmount;
-  let setOppositeInputAmount = oppositeStateUtils.setInputAmount;
+  let oppositeInputText: string;
+  let setOppositeInputText: React.Dispatch<React.SetStateAction<string>>;
+  let oppositeInputAmount: number;
+  let setOppositeInputAmount: React.Dispatch<React.SetStateAction<number>>;
+
+
+  if(oppositeStateUtils) {
+    oppositeInputText = oppositeStateUtils.inputText;
+    setOppositeInputText = oppositeStateUtils.setInputText;
+    oppositeInputAmount = oppositeStateUtils.inputAmount;
+    setOppositeInputAmount = oppositeStateUtils.setInputAmount;
+  }
 
   const walletState = useWallet();
   const removeCommas = (value) => {
