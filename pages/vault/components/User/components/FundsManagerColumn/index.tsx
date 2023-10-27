@@ -12,6 +12,7 @@ const WalletMultiButtonDynamic = dynamic(
 );
 
 export interface FundsManagerColumnProps {
+  vaultAddress: string,
   baseTokenMetadata: TokenMetadata;
   baseTokenBalance: number;
   quoteTokenMetadata: TokenMetadata;
@@ -27,6 +28,7 @@ const feeInfoTooltip = (
 );
 
 const FundsManagerColumn = ({
+  vaultAddress,
   baseTokenMetadata,
   baseTokenBalance,
   quoteTokenMetadata,
@@ -114,6 +116,7 @@ const FundsManagerColumn = ({
       <div className={styles.tokenFieldsContainer}>
         <div className={styles.tokenField}>
           <TokenField
+            vaultAddress={vaultAddress}
             tokenMetadata={baseTokenMetadata}
             tokenBalance={baseTokenBalance}
             tokenFieldStateUtils={baseTokenFieldStateUtils}
@@ -123,6 +126,7 @@ const FundsManagerColumn = ({
         </div>
         <div className={styles.tokenField}>
           <TokenField
+            vaultAddress={vaultAddress}
             tokenMetadata={quoteTokenMetadata}
             tokenBalance={quoteTokenBalance}
             tokenFieldStateUtils={quoteTokenFieldStateUtils}

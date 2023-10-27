@@ -108,24 +108,18 @@ export const calculateTokenDeposit = async(
   vaultAddr: string,
   maxTokenDeposit: number,
   isDepositBase: boolean
-): Promise<AdjustedDepositRatio> => {
+): Promise<number> => {
 
   const { baseTokenBalance, quoteTokenBalance } = await getVaultBalance(vaultAddr);
 
   if(isDepositBase) {
     let quoteTokenDeposit = (quoteTokenBalance * maxTokenDeposit) / baseTokenBalance;
 
-    return  {
-      baseTokenQuantity: maxTokenDeposit,
-      quoteTokenQuantity: quoteTokenDeposit
-    }
+    return quoteTokenDeposit;
   }
   else {
     let baseTokenDeposit = (baseTokenBalance * maxTokenDeposit) / quoteTokenBalance;
 
-    return  {
-      baseTokenQuantity: baseTokenDeposit,
-      quoteTokenQuantity: maxTokenDeposit
-    }
+    return baseTokenDeposit;
   }
 }

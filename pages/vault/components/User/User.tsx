@@ -7,12 +7,14 @@ import UserFunds from "./components/UserFunds";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 export interface UserProps {
+  vaultAddress: string,
   baseTokenMetadata: TokenMetadata;
   baseTokenBalance: number;
   quoteTokenMetadata: TokenMetadata;
   quoteTokenBalance: number;
 }
 const User = ({
+  vaultAddress,
   baseTokenMetadata,
   baseTokenBalance,
   quoteTokenMetadata,
@@ -28,6 +30,7 @@ const User = ({
       </div>
       <div className={styles.depositContainer}>
         <FundsManagerColumn
+          vaultAddress={vaultAddress}
           baseTokenMetadata={baseTokenMetadata}
           baseTokenBalance={baseTokenBalance}
           quoteTokenMetadata={quoteTokenMetadata}

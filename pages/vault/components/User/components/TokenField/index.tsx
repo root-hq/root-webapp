@@ -4,6 +4,7 @@ import { TokenMetadata } from "../../../../../../utils/supabase";
 import Image from "next/image";
 import { Form } from "react-bootstrap";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { calculateTokenDeposit } from "../../../../../../utils/root/utils";
 
 export interface TokenFieldStateUtils {
   inputText: string,
@@ -13,6 +14,7 @@ export interface TokenFieldStateUtils {
 }
 
 export interface TokenFieldProps {
+  vaultAddress: string;
   tokenMetadata: TokenMetadata;
   tokenBalance: number;
   tokenFieldStateUtils: TokenFieldStateUtils;
@@ -20,12 +22,17 @@ export interface TokenFieldProps {
   isBaseTokenField: boolean;
 }
 
-const TokenField = ({ tokenMetadata, tokenBalance, tokenFieldStateUtils, oppositeStateUtils, isBaseTokenField }: TokenFieldProps) => {
+const TokenField = ({ vaultAddress, tokenMetadata, tokenBalance, tokenFieldStateUtils, oppositeStateUtils, isBaseTokenField }: TokenFieldProps) => {
 
   let inputText = tokenFieldStateUtils.inputText;
   let setInputText = tokenFieldStateUtils.setInputText;
   let inputAmount = tokenFieldStateUtils.inputAmount;
   let setInputAmount = tokenFieldStateUtils.setInputAmount;
+
+  let oppositeInputText = oppositeStateUtils.inputText;
+  let setOppositeInputText = oppositeStateUtils.setInputText;
+  let oppositeInputAmount = oppositeStateUtils.inputAmount;
+  let setOppositeInputAmount = oppositeStateUtils.setInputAmount;
 
   const walletState = useWallet();
   const removeCommas = (value) => {
@@ -42,21 +49,46 @@ const TokenField = ({ tokenMetadata, tokenBalance, tokenFieldStateUtils, opposit
     return formattedValue;
   };
 
-  const handleAmountChange = (e: React.ChangeEvent<any>) => {
+  const handleStateUpdate = (amount: string, isForOppositeToken: boolean) => {
+    if(!isForOppositeToken) {
+      if (amount === "") {
+        setInputText("");
+        setInputAmount(0);
+      }
+  
+      if (amount.match(/^[+]?[0-9]+(\.[0-9]*)?$/)) {
+        const formattedAgain = formatWithCommas(amount);
+        setInputText(formattedAgain);
+        setInputAmount(Number(formattedAgain));
+      }
+    }
+    else {
+      if (amount === "") {
+        setOppositeInputText("");
+        setOppositeInputAmount(0);
+      }
+  
+      if (amount.match(/^[+]?[0-9]+(\.[0-9]*)?$/)) {
+        const formattedAgain = formatWithCommas(amount);
+        setOppositeInputText(formattedAgain);
+        setOppositeInputAmount(Number(formattedAgain));
+      }
+    }
+  }
+
+  const handleAmountChange = async (e: React.ChangeEvent<any>) => {
     e.preventDefault();
 
     const amount = removeCommas(e.target.value);
 
-    if (amount === "") {
-      setInputText("");
-      setInputAmount(0);
-    }
+    const otherAmount = await calculateTokenDeposit(
+      vaultAddress,
+      amount,
+      isBaseTokenField
+    );
 
-    if (amount.match(/^[+]?[0-9]+(\.[0-9]*)?$/)) {
-      const formattedAgain = formatWithCommas(amount);
-      setInputText(formattedAgain);
-      setInputAmount(Number(formattedAgain));
-    }
+    handleStateUpdate(amount, false);
+    handleStateUpdate(otherAmount.toString(), true);
   };
 
   return (

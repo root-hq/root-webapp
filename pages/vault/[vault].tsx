@@ -228,6 +228,7 @@ const VaultPage = ({
           </div>
           <div className={styles.userDataContainer}>
             <User
+              vaultAddress={vaultData.vault_address}
               baseTokenMetadata={baseTokenMetadata}
               baseTokenBalance={baseTokenUserBalance}
               quoteTokenMetadata={quoteTokenMetadata}
