@@ -114,7 +114,12 @@ const PerformanceContainer = () => {
         </div>
       </div>
       <div className={styles.metricValueContainer}>
-        <span className={styles.metricValue}>29.31%</span>
+        {
+          selectedMetric === SelectedMetric.Apr ?
+            <span className={styles.metricValue}>29.31%</span>
+          :
+            <span className={styles.metricValue}>$ 313,990</span>
+        }
       </div>
     </div>
   );
