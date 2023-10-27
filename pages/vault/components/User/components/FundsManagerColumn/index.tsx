@@ -5,6 +5,7 @@ import { TokenMetadata } from "../../../../../../utils/supabase";
 import TokenField, { TokenFieldStateUtils } from "../TokenField";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
+import { VaultBalance } from "../../../../../../utils/root/utils";
 const WalletMultiButtonDynamic = dynamic(
   async () =>
     (await import("../../../../../../components/Wallet")).WalletMultiButton,
@@ -13,6 +14,7 @@ const WalletMultiButtonDynamic = dynamic(
 
 export interface FundsManagerColumnProps {
   vaultAddress: string,
+  vaultTokenBalance: VaultBalance;
   baseTokenMetadata: TokenMetadata;
   baseTokenBalance: number;
   quoteTokenMetadata: TokenMetadata;
@@ -29,6 +31,7 @@ const feeInfoTooltip = (
 
 const FundsManagerColumn = ({
   vaultAddress,
+  vaultTokenBalance,
   baseTokenMetadata,
   baseTokenBalance,
   quoteTokenMetadata,
@@ -117,7 +120,9 @@ const FundsManagerColumn = ({
         <div className={styles.tokenField}>
           <TokenField
             vaultAddress={vaultAddress}
+            vaultTokenBalance={vaultTokenBalance}
             tokenMetadata={baseTokenMetadata}
+            oppositeTokenMetadata={quoteTokenMetadata}
             tokenBalance={baseTokenBalance}
             tokenFieldStateUtils={baseTokenFieldStateUtils}
             oppositeStateUtils={quoteTokenFieldStateUtils}
@@ -127,7 +132,9 @@ const FundsManagerColumn = ({
         <div className={styles.tokenField}>
           <TokenField
             vaultAddress={vaultAddress}
+            vaultTokenBalance={vaultTokenBalance}
             tokenMetadata={quoteTokenMetadata}
+            oppositeTokenMetadata={baseTokenMetadata}
             tokenBalance={quoteTokenBalance}
             tokenFieldStateUtils={quoteTokenFieldStateUtils}
             oppositeStateUtils={baseTokenFieldStateUtils}

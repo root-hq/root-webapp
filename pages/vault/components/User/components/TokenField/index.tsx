@@ -4,7 +4,7 @@ import { TokenMetadata } from "../../../../../../utils/supabase";
 import Image from "next/image";
 import { Form } from "react-bootstrap";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { calculateTokenDeposit } from "../../../../../../utils/root/utils";
+import { VaultBalance, calculateTokenDeposit } from "../../../../../../utils/root/utils";
 
 export interface TokenFieldStateUtils {
   inputText: string,
@@ -15,14 +15,16 @@ export interface TokenFieldStateUtils {
 
 export interface TokenFieldProps {
   vaultAddress: string;
+  vaultTokenBalance: VaultBalance;
   tokenMetadata: TokenMetadata;
+  oppositeTokenMetadata: TokenMetadata;
   tokenBalance: number;
   tokenFieldStateUtils: TokenFieldStateUtils;
   oppositeStateUtils: TokenFieldStateUtils;
   isBaseTokenField: boolean;
 }
 
-const TokenField = ({ vaultAddress, tokenMetadata, tokenBalance, tokenFieldStateUtils, oppositeStateUtils, isBaseTokenField }: TokenFieldProps) => {
+const TokenField = ({ vaultAddress, vaultTokenBalance, tokenMetadata, oppositeTokenMetadata, tokenBalance, tokenFieldStateUtils, oppositeStateUtils, isBaseTokenField }: TokenFieldProps) => {
 
   let inputText = tokenFieldStateUtils.inputText;
   let setInputText = tokenFieldStateUtils.setInputText;
@@ -76,13 +78,13 @@ const TokenField = ({ vaultAddress, tokenMetadata, tokenBalance, tokenFieldState
     }
   }
 
-  const handleAmountChange = async (e: React.ChangeEvent<any>) => {
+  const handleAmountChange = (e: React.ChangeEvent<any>) => {
     e.preventDefault();
 
     const amount = removeCommas(e.target.value);
 
-    const otherAmount = await calculateTokenDeposit(
-      vaultAddress,
+    const otherAmount = calculateTokenDeposit(
+      vaultTokenBalance,
       amount,
       isBaseTokenField
     );

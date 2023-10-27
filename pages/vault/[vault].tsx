@@ -28,6 +28,7 @@ export interface VaultPageProps {
   vaultData: UnifiedVault;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
+  vaultTokenBalance: VaultBalance;
   baseTokenPrice: number;
   quoteTokenPrice: number;
 }
@@ -78,6 +79,7 @@ const VaultPage = ({
   quoteTokenMetadata,
   baseTokenPrice,
   quoteTokenPrice,
+  vaultTokenBalance
 }: VaultPageProps) => {
   const [windowSize, setWindowSize] = useState([0, 0]);
 
@@ -229,6 +231,7 @@ const VaultPage = ({
           <div className={styles.userDataContainer}>
             <User
               vaultAddress={vaultData.vault_address}
+              vaultTokenBalance={vaultTokenBalance}
               baseTokenMetadata={baseTokenMetadata}
               baseTokenBalance={baseTokenUserBalance}
               quoteTokenMetadata={quoteTokenMetadata}
@@ -287,6 +290,7 @@ export async function getServerSideProps({ params }) {
       quoteTokenBalance: vaultBalance.quoteTokenBalance
         ? vaultBalance.quoteTokenBalance
         : null,
+      vaultTokenBalance: vaultBalance ? vaultBalance : null
     },
   };
 }

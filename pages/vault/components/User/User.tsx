@@ -5,9 +5,11 @@ import { TokenMetadata } from "../../../../utils/supabase";
 import PerformanceContainer from "./components/PerformanceContainer";
 import UserFunds from "./components/UserFunds";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { VaultBalance } from "../../../../utils/root/utils";
 
 export interface UserProps {
   vaultAddress: string,
+  vaultTokenBalance: VaultBalance;
   baseTokenMetadata: TokenMetadata;
   baseTokenBalance: number;
   quoteTokenMetadata: TokenMetadata;
@@ -15,6 +17,7 @@ export interface UserProps {
 }
 const User = ({
   vaultAddress,
+  vaultTokenBalance,
   baseTokenMetadata,
   baseTokenBalance,
   quoteTokenMetadata,
@@ -31,6 +34,7 @@ const User = ({
       <div className={styles.depositContainer}>
         <FundsManagerColumn
           vaultAddress={vaultAddress}
+          vaultTokenBalance={vaultTokenBalance}
           baseTokenMetadata={baseTokenMetadata}
           baseTokenBalance={baseTokenBalance}
           quoteTokenMetadata={quoteTokenMetadata}

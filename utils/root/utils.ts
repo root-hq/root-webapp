@@ -104,14 +104,13 @@ export const matchDepositRatios = async(
   }
 }
 
-export const calculateTokenDeposit = async(
-  vaultAddr: string,
+export const calculateTokenDeposit = (
+  vaultTokenBalance: VaultBalance,
   maxTokenDeposit: number,
   isDepositBase: boolean
-): Promise<number> => {
+): number => {
 
-  const { baseTokenBalance, quoteTokenBalance } = await getVaultBalance(vaultAddr);
-
+  const { baseTokenBalance, quoteTokenBalance } = vaultTokenBalance;
   if(isDepositBase) {
     let quoteTokenDeposit = (quoteTokenBalance * maxTokenDeposit) / baseTokenBalance;
 
