@@ -3,6 +3,7 @@ import styles from "./TokenField.module.css";
 import { TokenMetadata } from "../../../../../../utils/supabase";
 import Image from "next/image";
 import { Form } from "react-bootstrap";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export interface TokenFieldProps {
   tokenMetadata: TokenMetadata;
@@ -13,6 +14,7 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
   const [inputText, setInputText] = useState<string>("");
   const [inputAmount, setInputAmount] = useState<number>(0);
 
+  const walletState = useWallet();
   const removeCommas = (value) => {
     return value.replace(/,/g, "");
   };
@@ -46,13 +48,22 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
 
   return (
     <div className={styles.tokenFieldWithBalanceContainer}>
-      <div className={styles.userBalanceContainer}>
-        <span>
-          <i className="fa-solid fa-wallet fa-2xs"></i>
-          {` `}
-          {`${tokenBalance}`}
-        </span>
-      </div>
+      {
+        tokenBalance > 0 ?
+          <div className={styles.userBalanceContainer}>
+            <span>
+              <i className="fa-solid fa-wallet fa-2xs"></i>
+              {` `}
+              {`${tokenBalance}`}
+            </span>
+          </div>
+        :
+          <div className={styles.userBalanceContainer}>
+            <span>
+              {` `}
+            </span>
+          </div>
+      }
       <div className={styles.tokenFieldContainer}>
         <div className={styles.tokenDetailsContainer}>
           {tokenMetadata && tokenMetadata.img_url ? (
@@ -80,29 +91,11 @@ const TokenField = ({ tokenMetadata, tokenBalance }: TokenFieldProps) => {
         </div>
         <div className={styles.inputFieldContainer}>
           <div className={styles.inputField}>
-            {/* <Form>
-              <Form.Group controlId="formInput">
-                <Form.Control
-                  style={{
-                    backgroundColor: 'transparent',
-                    fontSize: '1.1rem',
-                    fontWeight: 'bold',
-                    textAlign: 'right',
-                    color: '#ddd',
-                    border: 'none',
-                    caretColor: '#ddd',
-                  }}
-                  min="0"
-                  className={styles.customInputField}
-                  onChange={(e) => handleAmountChange(e)}
-                  value={inputText}
-                />
-              </Form.Group>
-            </Form> */}
             <Form>
               <Form.Group controlId="formInput">
                 <Form.Control
                   placeholder="0.00"
+                  disabled = {!walletState.connected}
                   style={{
                     backgroundColor: "transparent",
                     fontSize: "1.1rem",

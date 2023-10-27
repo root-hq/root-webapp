@@ -60,6 +60,14 @@
   box-sizing: border-box;
 }
 
+.connectButtonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%
+}
+
 .actionButtonContainer {
   width: 100%;
   box-sizing: border-box;

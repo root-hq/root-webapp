@@ -2,8 +2,13 @@ import React, { useState } from "react";
 import styles from "./FundsManagerColumn.module.css";
 import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { TokenMetadata } from "../../../../../../utils/supabase";
-import Image from "next/image";
 import TokenField from "../TokenField";
+import { useWallet } from "@solana/wallet-adapter-react";
+import dynamic from "next/dynamic";
+const WalletMultiButtonDynamic = dynamic(
+  async () => (await import("../../../../../../components/Wallet")).WalletMultiButton,
+  { ssr: false },
+);
 
 export interface FundsManagerColumnProps {
   baseTokenMetadata: TokenMetadata;
@@ -35,6 +40,9 @@ const FundsManagerColumn = ({
     console.log("doing: ", selectedTab);
     setActiveTab(selectedTab);
   };
+
+  const walletState = useWallet();
+
   return (
     <div className={styles.fundsManagerContainer}>
       <div className={styles.fundsManagerButtonContainer}>
@@ -98,13 +106,20 @@ const FundsManagerColumn = ({
         </div>
       </div>
       <div className={styles.actionButtonContainer}>
-        <Button className={styles.actionButton}>
-          {activeTab === DEPOSIT_TAB ? (
-            <span className={styles.actionButtonText}>Deposit</span>
-          ) : (
-            <span className={styles.actionButtonText}>Withdraw all funds</span>
-          )}
-        </Button>
+        {
+          walletState.connected ?
+            <Button className={styles.actionButton}>
+              {activeTab === DEPOSIT_TAB ? (
+                <span className={styles.actionButtonText}>Deposit</span>
+              ) : (
+                <span className={styles.actionButtonText}>Withdraw all funds</span>
+              )}
+            </Button>
+          :
+            <div className={styles.connectButtonContainer}>
+              <WalletMultiButtonDynamic />
+            </div>
+        }
       </div>
       <div className={styles.feeTextContainer}>
         <OverlayTrigger placement="top" overlay={feeInfoTooltip}>

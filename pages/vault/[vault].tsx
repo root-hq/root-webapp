@@ -20,6 +20,9 @@ import {
   OPEN_ORDERS_REFRESH_FREQUENCY_IN_MS,
   PRICE_REFRESH_FREQUENCY_IN_MS,
 } from "../../constants";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { web3 } from "@coral-xyz/anchor";
+import { getTokenAccountBalance } from "../../utils/token/balance";
 
 export interface VaultPageProps {
   vaultData: UnifiedVault;
@@ -27,9 +30,47 @@ export interface VaultPageProps {
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
   baseTokenPrice: number;
-  baseTokenBalance: number;
   quoteTokenPrice: number;
-  quoteTokenBalance: number;
+}
+
+function calculateMovingAverage(data, windowSize) {
+  var result = [];
+
+  if (windowSize === 0) {
+    return data;
+  }
+
+  for (var i = 0; i < data.length; i++) {
+    var timestamp = data[i][0];
+    var price = data[i][1];
+
+    if (price !== null && price !== undefined) {
+      var start = Math.max(0, i - windowSize + 1);
+      var end = i + 1;
+      var sum = 0;
+      var count = 0;
+
+      for (var j = start; j < end; j++) {
+        var currentValue = data[j] && data[j][1];
+        if (currentValue !== null && currentValue !== undefined) {
+          sum += currentValue;
+          count++;
+        }
+      }
+
+      if (count > 0) {
+        var avg = sum / count;
+        result.push([timestamp, avg]);
+      } else {
+        // Handle case where all values in the window are null or undefined
+        result.push([timestamp, null]);
+      }
+    } else {
+      // Handle case where the current value is null or undefined
+      result.push([timestamp, null]);
+    }
+  }
+  return result;
 }
 
 const VaultPage = ({
@@ -38,9 +79,7 @@ const VaultPage = ({
   baseTokenMetadata,
   quoteTokenMetadata,
   baseTokenPrice,
-  baseTokenBalance,
   quoteTokenPrice,
-  quoteTokenBalance,
 }: VaultPageProps) => {
   const [windowSize, setWindowSize] = useState([0, 0]);
 
@@ -57,46 +96,6 @@ const VaultPage = ({
       window.removeEventListener("resize", handleWindowResize);
     };
   }, []);
-
-  function calculateMovingAverage(data, windowSize) {
-    var result = [];
-
-    if (windowSize === 0) {
-      return data;
-    }
-
-    for (var i = 0; i < data.length; i++) {
-      var timestamp = data[i][0];
-      var price = data[i][1];
-
-      if (price !== null && price !== undefined) {
-        var start = Math.max(0, i - windowSize + 1);
-        var end = i + 1;
-        var sum = 0;
-        var count = 0;
-
-        for (var j = start; j < end; j++) {
-          var currentValue = data[j] && data[j][1];
-          if (currentValue !== null && currentValue !== undefined) {
-            sum += currentValue;
-            count++;
-          }
-        }
-
-        if (count > 0) {
-          var avg = sum / count;
-          result.push([timestamp, avg]);
-        } else {
-          // Handle case where all values in the window are null or undefined
-          result.push([timestamp, null]);
-        }
-      } else {
-        // Handle case where the current value is null or undefined
-        result.push([timestamp, null]);
-      }
-    }
-    return result;
-  }
 
   const [priceSeries, setPriceSeries] = useState([] as number[][]);
 
@@ -178,6 +177,35 @@ const VaultPage = ({
     return () => clearInterval(intervalId);
   }, [vaultData.market_address]);
 
+  const [baseTokenUserBalance, setBaseTokenUserBalance] = useState(0);
+  const [quoteTokenUserBalance, setQuoteTokenUserBalance] = useState(0);
+  const walletState = useWallet();
+
+  useEffect(() => {
+    const updateBalances = async() => {
+      if(!walletState.connected || walletState.disconnecting) {
+        setBaseTokenUserBalance((prev) => 0);
+        setQuoteTokenUserBalance((prev) => 0);
+      }
+      else {
+        try {
+          console.log("new state: ", walletState);
+          
+          const userBaseTokenBalance = await getTokenAccountBalance(walletState.publicKey, new web3.PublicKey(vaultData.base_token_address));
+          const userQuoteTokenBalance = await getTokenAccountBalance(walletState.publicKey, new web3.PublicKey(vaultData.quote_token_address));
+          
+          setBaseTokenUserBalance((prev) => userBaseTokenBalance);
+          setQuoteTokenUserBalance((prev) => userQuoteTokenBalance);
+        }
+        catch(err) {
+          console.log(`Something went wrong updating balances: ${err}`);
+        }
+      }
+    }
+
+    updateBalances();
+  }, [walletState]);
+
   return (
     <div className={styles.vaultPageContainer}>
       {vaultData ? (
@@ -201,9 +229,9 @@ const VaultPage = ({
           <div className={styles.userDataContainer}>
             <User
               baseTokenMetadata={baseTokenMetadata}
-              baseTokenBalance={baseTokenBalance}
+              baseTokenBalance={baseTokenUserBalance}
               quoteTokenMetadata={quoteTokenMetadata}
-              quoteTokenBalance={quoteTokenBalance}
+              quoteTokenBalance={quoteTokenUserBalance}
             />
           </div>
         </>
