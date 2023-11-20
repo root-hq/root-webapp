@@ -11,7 +11,7 @@ export const getTokenPriceDataWithDate = async (
 
   try {
     const response = await axios.get(
-      `${process.env.DATABASE_SERVER_URL}/api/read-token-price-file?fileName=${fileName}`,
+      `${process.env.DATABASE_SERVER_URL}/api/price/phoenix/get-historical-price?fileName=${fileName}`,
     );
 
     if (response && response.data && response.data.length) {

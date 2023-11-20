@@ -4,7 +4,7 @@ import { UnifiedVault } from ".";
 export const getAllVaults = async (): Promise<UnifiedVault[] | null> => {
   try {
     const response = await axios.get(
-      `${process.env.DATABASE_SERVER_URL}/api/get-all-vaults`,
+      `${process.env.DATABASE_SERVER_URL}/api/vault/get-all-vaults`,
     );
 
     if (response) {
@@ -23,7 +23,7 @@ export const getVault = async (
 ): Promise<UnifiedVault | null> => {
   try {
     const response = await axios.get(
-      `${process.env.DATABASE_SERVER_URL}/api/get-vault?vaultAddress=${vaultAddress}`,
+      `${process.env.DATABASE_SERVER_URL}/api/vault/get-vault?vaultAddress=${vaultAddress}`,
     );
 
     if (response && response.data && response.data.length > 0) {

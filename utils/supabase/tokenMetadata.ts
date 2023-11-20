@@ -6,7 +6,7 @@ export const getAllTokenMetadata = async (): Promise<
 > => {
   try {
     const response = await axios.get(
-      `${process.env.DATABASE_SERVER_URL}/api/get-all-token-metadata`,
+      `${process.env.DATABASE_SERVER_URL}/api/token/get-all-token-metadata`,
     );
 
     if (response) {
@@ -25,7 +25,7 @@ export const getTokenMetadata = async (
 ): Promise<TokenMetadata | null> => {
   try {
     const response = await axios.get(
-      `${process.env.DATABASE_SERVER_URL}/api/get-token-metadata?tokenMint=${tokenMint}`,
+      `${process.env.DATABASE_SERVER_URL}/api/token/get-token-metadata?tokenMint=${tokenMint}`,
     );
 
     if (response && response.data && response.data.length) {
