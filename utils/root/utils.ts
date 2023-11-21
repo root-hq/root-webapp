@@ -44,16 +44,23 @@ export const getVaultBalance = async (
 
 export const isVaultOnDowntime = async (
   vaultAddress: String
-): Promise<boolean> => {
+): Promise<boolean> => {  
   const vaultAc = await getVaultAccount(new web3.PublicKey(vaultAddress), process.env.RPC_ENDPOINT);
 
   const connection = new web3.Connection(process.env.RPC_ENDPOINT);
-  const currentSlot: BN = new BN((await connection.getSlot({ commitment: 'processed'})));
 
-  if(currentSlot.gte(vaultAc.downtimeStartSlot) && currentSlot.lt(vaultAc.downtimeEndSlot)) {
-    return true;
+  if(vaultAc) {
+    const currentSlot: BN = new BN((await connection.getSlot({ commitment: 'processed'})));
+
+    console.log("Current slot: ", currentSlot.toString());
+    console.log("downtimeStart: ", vaultAc.downtimeStartSlot.toString());
+    console.log("downtimeEnd: ", vaultAc.downtimeEndSlot.toString());
+    console.log("status: ", currentSlot.gte(vaultAc.downtimeStartSlot) && currentSlot.lt(vaultAc.downtimeEndSlot));
+
+    if(currentSlot.gte(vaultAc.downtimeStartSlot) && currentSlot.lt(vaultAc.downtimeEndSlot)) {
+      return true;
+    }
   }
-
   return false;
 }
 

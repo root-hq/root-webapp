@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./FundsManagerColumn.module.css";
 import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { TokenMetadata } from "../../../../../../utils/supabase";
 import TokenField, { TokenFieldStateUtils } from "../TokenField";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
-import { VaultBalance } from "../../../../../../utils/root/utils";
+import { VaultBalance, isVaultOnDowntime } from "../../../../../../utils/root/utils";
+import { DOWNTIME_CHECK_FREQUENCY_IN_MS } from "../../../../../../constants";
 const WalletMultiButtonDynamic = dynamic(
   async () =>
     (await import("../../../../../../components/Wallet")).WalletMultiButton,
@@ -50,6 +51,24 @@ const FundsManagerColumn = ({
 
   const [baseInputText, setBaseInputText] = useState<string>("");
   const [baseInputAmount, setBaseInputAmount] = useState<number>(0);
+
+  const [downtimeStatus, setDowntimeStatus] = useState(true);
+
+  useEffect(() => {
+    const refreshDowntimeStatus = async () => {
+      const status = await isVaultOnDowntime(vaultAddress);
+
+      setDowntimeStatus(() => status);
+    };
+
+    refreshDowntimeStatus();
+
+    const intervalId = setInterval(() => {
+      refreshDowntimeStatus();
+    }, DOWNTIME_CHECK_FREQUENCY_IN_MS);
+
+    return () => clearInterval(intervalId);
+  }, [vaultAddress]);
 
   const baseTokenFieldStateUtils = {
     inputText: baseInputText,
@@ -148,21 +167,32 @@ const FundsManagerColumn = ({
           marginTop: walletState.connected ? '2rem' : '1rem'
         }}
       >
-        {walletState.connected ? (
-          <Button className={styles.actionButton}>
-            {activeTab === DEPOSIT_TAB ? (
-              <span className={styles.actionButtonText}>Deposit</span>
-            ) : (
-              <span className={styles.actionButtonText}>
-                Withdraw all funds
-              </span>
-            )}
-          </Button>
-        ) : (
-          <div className={styles.connectButtonContainer}>
-            <WalletMultiButtonDynamic />
-          </div>
-        )}
+        {
+          !downtimeStatus ?
+            <div
+              style={{color: 'white'}}
+            >
+              Downtime is OFF
+            </div>
+          :
+            <>
+              {walletState.connected ? (
+                <Button className={styles.actionButton}>
+                  {activeTab === DEPOSIT_TAB ? (
+                    <span className={styles.actionButtonText}>Deposit</span>
+                  ) : (
+                    <span className={styles.actionButtonText}>
+                      Withdraw all funds
+                    </span>
+                  )}
+                </Button>
+              ) : (
+                <div className={styles.connectButtonContainer}>
+                  <WalletMultiButtonDynamic />
+                </div>
+              )}
+            </>
+        }
       </div>
       <div className={styles.feeTextContainer}>
         <OverlayTrigger placement="top" overlay={feeInfoTooltip}>

@@ -20,7 +20,7 @@
     "@solana/wallet-adapter-react-ui": "^0.9.34",
     "@solana/wallet-adapter-wallets": "^0.19.23",
     "@solana/web3.js": "^1.87.1",
-    "@squarerootlabs/root-market-maker": "^1.0.16",
+    "@squarerootlabs/root-market-maker": "^1.0.20",
     "@tanem/react-nprogress": "^5.0.51",
     "axios": "^1.5.1",
     "lightweight-charts": "^4.1.1",

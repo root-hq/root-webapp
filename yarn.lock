@@ -2527,10 +2527,10 @@
     eventemitter3 "^5.0.1"
     uuid "^9.0.0"
 
-"@squarerootlabs/root-market-maker@^1.0.16":
-  version "1.0.16"
-  resolved "https://registry.npmjs.org/@squarerootlabs/root-market-maker/-/root-market-maker-1.0.16.tgz"
-  integrity sha512-ty7POQdWeXgpWb3BedEMoBnJq5BMvHReKixKpMFJvn2jHVptVzShaQ8+GPtOZn8GoAOXjF+ya53gzeyIRTWsmQ==
+"@squarerootlabs/root-market-maker@^1.0.20":
+  version "1.0.20"
+  resolved "https://registry.npmjs.org/@squarerootlabs/root-market-maker/-/root-market-maker-1.0.20.tgz"
+  integrity sha512-FzdR3/yo+Z83TPQ7fvKpKRve9MXaE/mMhqJpkIxO+DM5teYsEGFr3OvFUeO2g0FAXpWrMFNsEUxmAQOCDnBD/A==
   dependencies:
     "@coral-xyz/anchor" "^0.27.0"
     "@ellipsis-labs/phoenix-sdk" "^2.0.2"
