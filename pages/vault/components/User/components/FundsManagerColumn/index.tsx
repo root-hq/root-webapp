@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./FundsManagerColumn.module.css";
 import { Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { TokenMetadata } from "../../../../../../utils/supabase";

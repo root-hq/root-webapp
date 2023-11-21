@@ -1,7 +1,8 @@
-import { web3 } from "@coral-xyz/anchor";
+import { BN, web3 } from "@coral-xyz/anchor";
 import {
   getBaseTokenVaultAddress,
   getQuoteTokenVaultAddress,
+  getVaultAccount
 } from "@squarerootlabs/root-market-maker";
 import assert from "assert";
 
@@ -44,7 +45,16 @@ export const getVaultBalance = async (
 export const isVaultOnDowntime = async (
   vaultAddress: String
 ): Promise<boolean> => {
-  return true;
+  const vaultAc = await getVaultAccount(new web3.PublicKey(vaultAddress), process.env.RPC_ENDPOINT);
+
+  const connection = new web3.Connection(process.env.RPC_ENDPOINT);
+  const currentSlot: BN = new BN((await connection.getSlot({ commitment: 'processed'})));
+
+  if(currentSlot.gte(vaultAc.downtimeStartSlot) && currentSlot.lt(vaultAc.downtimeEndSlot)) {
+    return true;
+  }
+
+  return false;
 }
 
 // Function to calculate the greatest common divisor (gcd) using Euclid's algorithm
