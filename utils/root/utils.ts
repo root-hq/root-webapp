@@ -41,6 +41,12 @@ export const getVaultBalance = async (
   }
 };
 
+export const isVaultOnDowntime = async (
+  vaultAddress: String
+): Promise<boolean> => {
+  return true;
+}
+
 // Function to calculate the greatest common divisor (gcd) using Euclid's algorithm
 const calculateGCD = (a: number, b: number): number => {
   while(b != 0) {

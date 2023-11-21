@@ -7,7 +7,7 @@ export const getTokenPriceDataWithDate = async (
   today: Date,
 ): Promise<TokenPrice[]> => {
   const formattedDate = toStringDate(today);
-  const fileName = `${marketAddress}-${formattedDate}.json`;
+  const fileName = `phoenix/${marketAddress}-${formattedDate}.json`;
 
   try {
     const response = await axios.get(
