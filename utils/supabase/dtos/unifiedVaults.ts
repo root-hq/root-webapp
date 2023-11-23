@@ -6,4 +6,6 @@ export interface UnifiedVault {
   owner_address: string;
   base_token_address: string;
   quote_token_address: string;
+  is_base_deposit_practiced: boolean;
+  is_quote_deposit_practiced: boolean;
 }

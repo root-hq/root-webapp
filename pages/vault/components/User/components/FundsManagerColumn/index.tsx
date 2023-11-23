@@ -15,6 +15,8 @@ const WalletMultiButtonDynamic = dynamic(
 
 export interface FundsManagerColumnProps {
   vaultAddress: string,
+  isBaseDepositPracticed: boolean;
+  isQuoteDepositPracticed: boolean;
   vaultTokenBalance: VaultBalance;
   baseTokenMetadata: TokenMetadata;
   baseTokenBalance: number;
@@ -32,6 +34,8 @@ const feeInfoTooltip = (
 
 const FundsManagerColumn = ({
   vaultAddress,
+  isBaseDepositPracticed,
+  isQuoteDepositPracticed,
   vaultTokenBalance,
   baseTokenMetadata,
   baseTokenBalance,
@@ -137,28 +141,42 @@ const FundsManagerColumn = ({
       </div>
       <div className={styles.tokenFieldsContainer}>
         <div className={styles.tokenField}>
-          <TokenField
-            vaultAddress={vaultAddress}
-            vaultTokenBalance={vaultTokenBalance}
-            tokenMetadata={baseTokenMetadata}
-            oppositeTokenMetadata={quoteTokenMetadata}
-            tokenBalance={baseTokenBalance}
-            tokenFieldStateUtils={baseTokenFieldStateUtils}
-            oppositeStateUtils={quoteTokenFieldStateUtils}
-            isBaseTokenField={true}
-          />
+         {
+          isBaseDepositPracticed ?
+          <>
+              <TokenField
+                vaultAddress={vaultAddress}
+                vaultTokenBalance={vaultTokenBalance}
+                tokenMetadata={baseTokenMetadata}
+                oppositeTokenMetadata={quoteTokenMetadata}
+                tokenBalance={baseTokenBalance}
+                tokenFieldStateUtils={baseTokenFieldStateUtils}
+                oppositeStateUtils={quoteTokenFieldStateUtils}
+                isBaseTokenField={true}
+              />
+          </>
+          :
+          <></>
+         }
         </div>
         <div className={styles.tokenField}>
-          <TokenField
-            vaultAddress={vaultAddress}
-            vaultTokenBalance={vaultTokenBalance}
-            tokenMetadata={quoteTokenMetadata}
-            oppositeTokenMetadata={baseTokenMetadata}
-            tokenBalance={quoteTokenBalance}
-            tokenFieldStateUtils={quoteTokenFieldStateUtils}
-            oppositeStateUtils={baseTokenFieldStateUtils}
-            isBaseTokenField={false}
-          />
+          {
+            isQuoteDepositPracticed ?
+            <>
+              <TokenField
+                vaultAddress={vaultAddress}
+                vaultTokenBalance={vaultTokenBalance}
+                tokenMetadata={quoteTokenMetadata}
+                oppositeTokenMetadata={baseTokenMetadata}
+                tokenBalance={quoteTokenBalance}
+                tokenFieldStateUtils={quoteTokenFieldStateUtils}
+                oppositeStateUtils={baseTokenFieldStateUtils}
+                isBaseTokenField={false}
+              />
+            </>
+            :
+            <></>
+          }
         </div>
       </div>
       <div

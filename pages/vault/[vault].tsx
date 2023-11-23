@@ -231,6 +231,8 @@ const VaultPage = ({
           <div className={styles.userDataContainer}>
             <User
               vaultAddress={vaultData.vault_address}
+              isBaseDepositPracticed={vaultData.is_base_deposit_practiced}
+              isQuoteDepositPracticed={vaultData.is_quote_deposit_practiced}
               vaultTokenBalance={vaultTokenBalance}
               baseTokenMetadata={baseTokenMetadata}
               baseTokenBalance={baseTokenUserBalance}

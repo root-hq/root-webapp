@@ -9,6 +9,8 @@ import { VaultBalance } from "../../../../utils/root/utils";
 
 export interface UserProps {
   vaultAddress: string,
+  isBaseDepositPracticed: boolean;
+  isQuoteDepositPracticed: boolean;
   vaultTokenBalance: VaultBalance;
   baseTokenMetadata: TokenMetadata;
   baseTokenBalance: number;
@@ -17,6 +19,8 @@ export interface UserProps {
 }
 const User = ({
   vaultAddress,
+  isBaseDepositPracticed,
+  isQuoteDepositPracticed,
   vaultTokenBalance,
   baseTokenMetadata,
   baseTokenBalance,
@@ -34,6 +38,8 @@ const User = ({
       <div className={styles.depositContainer}>
         <FundsManagerColumn
           vaultAddress={vaultAddress}
+          isBaseDepositPracticed={isBaseDepositPracticed}
+          isQuoteDepositPracticed={isQuoteDepositPracticed}
           vaultTokenBalance={vaultTokenBalance}
           baseTokenMetadata={baseTokenMetadata}
           baseTokenBalance={baseTokenBalance}
