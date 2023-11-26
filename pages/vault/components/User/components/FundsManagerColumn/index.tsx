@@ -198,7 +198,7 @@ const FundsManagerColumn = ({
           !downtimeStatus ?
             <>
             {
-              downtimeStartIn < 0 ?
+              downtimeStartIn > 0 ?
               <div
                 className={styles.downtimeTextContainer}
               >
