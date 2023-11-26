@@ -68,6 +68,14 @@
   width: 100%;
 }
 
+.downtimeTextContainer {
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .actionButtonContainer {
   width: 100%;
   box-sizing: border-box;

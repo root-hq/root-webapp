@@ -5,7 +5,7 @@ import { TokenMetadata } from "../../../../../../utils/supabase";
 import TokenField, { TokenFieldStateUtils } from "../TokenField";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
-import { VaultBalance, isVaultOnDowntime } from "../../../../../../utils/root/utils";
+import { VaultBalance, isVaultOnDowntime, getTimeToDowntime } from "../../../../../../utils/root/utils";
 import { DOWNTIME_CHECK_FREQUENCY_IN_MS } from "../../../../../../constants";
 const WalletMultiButtonDynamic = dynamic(
   async () =>
@@ -57,6 +57,7 @@ const FundsManagerColumn = ({
   const [baseInputAmount, setBaseInputAmount] = useState<number>(0);
 
   const [downtimeStatus, setDowntimeStatus] = useState(true);
+  const [downtimeStartIn, setDowntimeStartIn] = useState(0);
 
   useEffect(() => {
     const refreshDowntimeStatus = async () => {
@@ -65,10 +66,18 @@ const FundsManagerColumn = ({
       setDowntimeStatus(() => status);
     };
 
+    const refreshTimeToDowntime = async () => {
+      const timeLeft = await getTimeToDowntime(vaultAddress);
+
+      setDowntimeStartIn(() => timeLeft);
+    }
+
     refreshDowntimeStatus();
+    refreshTimeToDowntime();
 
     const intervalId = setInterval(() => {
       refreshDowntimeStatus();
+      refreshTimeToDowntime();
     }, DOWNTIME_CHECK_FREQUENCY_IN_MS);
 
     return () => clearInterval(intervalId);
@@ -187,11 +196,22 @@ const FundsManagerColumn = ({
       >
         {
           !downtimeStatus ?
-            <div
-              style={{color: 'white'}}
-            >
-              Downtime is OFF
-            </div>
+            <>
+            {
+              downtimeStartIn < 0 ?
+              <div
+                className={styles.downtimeTextContainer}
+              >
+                {`OPENS IN ${parseInt((downtimeStartIn*0.4).toString())} seconds`}
+              </div>
+              :
+              <div
+                className={styles.downtimeTextContainer}
+              >
+                {`Stale vault. Please contact the Root team`}
+              </div>
+            }
+            </>
           :
             <>
               {walletState.connected ? (
