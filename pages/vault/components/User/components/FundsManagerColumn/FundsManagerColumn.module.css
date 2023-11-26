@@ -69,6 +69,7 @@
 }
 
 .downtimeTextContainer {
+  margin-top: 1rem;
   color: white;
   display: flex;
   flex-direction: row;
@@ -95,7 +96,7 @@
 }
 
 .feeTextContainer {
-  margin-top: 1rem;
+  margin-top: 2rem;
   display: flex;
   flex-direction: row;
   justify-content: left;
