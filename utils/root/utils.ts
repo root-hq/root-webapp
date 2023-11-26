@@ -51,12 +51,7 @@ export const isVaultOnDowntime = async (
 
   if(vaultAc) {
     const currentSlot: BN = new BN((await connection.getSlot({ commitment: 'processed'})));
-
-    console.log("Current slot: ", currentSlot.toString());
-    console.log("downtimeStart: ", vaultAc.downtimeStartSlot.toString());
-    console.log("downtimeEnd: ", vaultAc.downtimeEndSlot.toString());
-    console.log("status: ", currentSlot.gte(vaultAc.downtimeStartSlot) && currentSlot.lt(vaultAc.downtimeEndSlot));
-
+    
     if(currentSlot.gte(vaultAc.downtimeStartSlot) && currentSlot.lt(vaultAc.downtimeEndSlot)) {
       return true;
     }

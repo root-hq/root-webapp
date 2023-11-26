@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./User.module.css";
 import FundsManagerColumn from "./components/FundsManagerColumn";
-import { TokenMetadata } from "../../../../utils/supabase";
+import { TokenMetadata, VolumeResult } from "../../../../utils/supabase";
 import PerformanceContainer from "./components/PerformanceContainer";
 import UserFunds from "./components/UserFunds";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -16,6 +16,7 @@ export interface UserProps {
   baseTokenBalance: number;
   quoteTokenMetadata: TokenMetadata;
   quoteTokenBalance: number;
+  marketVolume: VolumeResult;
 }
 const User = ({
   vaultAddress,
@@ -26,6 +27,7 @@ const User = ({
   baseTokenBalance,
   quoteTokenMetadata,
   quoteTokenBalance,
+  marketVolume,
 }: UserProps) => {
 
   const walletState = useWallet();
@@ -33,7 +35,7 @@ const User = ({
   return (
     <div className={styles.userContainer}>
       <div className={styles.performanceContainer}>
-        <PerformanceContainer />
+        <PerformanceContainer marketVolume={marketVolume}/>
       </div>
       <div className={styles.depositContainer}>
         <FundsManagerColumn

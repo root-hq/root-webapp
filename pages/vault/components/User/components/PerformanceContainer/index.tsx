@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import styles from "./PerformanceContainer.module.css";
 import { Button } from "react-bootstrap";
-
-export interface PerformanceContainerProps {}
+import { VolumeResult } from "../../../../../../utils/supabase";
 
 enum SelectedDuration {
   Day,
@@ -16,7 +15,13 @@ enum SelectedMetric {
   Volume
 }
 
-const PerformanceContainer = () => {
+export interface PerformanceContainerProps {
+  marketVolume: VolumeResult;
+}
+
+const PerformanceContainer = ({
+  marketVolume
+}: PerformanceContainerProps) => {
   const [selectedDuration, setSelectedDuration] = useState<SelectedDuration>(
     SelectedDuration.Week,
   );
@@ -108,6 +113,7 @@ const PerformanceContainer = () => {
               fontWeight:
                 selectedDuration === SelectedDuration.Day ? "bold" : "normal",
             }}
+            disabled={true}
           >
             24h
           </Button>
@@ -118,7 +124,7 @@ const PerformanceContainer = () => {
           selectedMetric === SelectedMetric.Apr ?
             <span className={styles.metricValue}>29.31%</span>
           :
-            <span className={styles.metricValue}>$ 313,990</span>
+            <span className={styles.metricValue}>$ {`${(marketVolume.buyVolumeInQuoteUnits + marketVolume.sellVolumeInQuoteUnits).toFixed(3)}`}</span>
         }
       </div>
     </div>

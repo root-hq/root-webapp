@@ -4,6 +4,7 @@ import {
   TokenMetadata,
   TokenPrice,
   UnifiedVault,
+  VolumeResult,
   getTokenMetadata,
   getVault,
 } from "../../utils/supabase";
@@ -23,6 +24,7 @@ import {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { web3 } from "@coral-xyz/anchor";
 import { getTokenAccountBalance } from "../../utils/token/balance";
+import { getMarketVolume } from "../../utils/supabase";
 
 export interface VaultPageProps {
   vaultData: UnifiedVault;
@@ -31,6 +33,7 @@ export interface VaultPageProps {
   vaultTokenBalance: VaultBalance;
   baseTokenPrice: number;
   quoteTokenPrice: number;
+  marketVolume: VolumeResult;
 }
 
 function calculateMovingAverage(data, windowSize) {
@@ -79,7 +82,8 @@ const VaultPage = ({
   quoteTokenMetadata,
   baseTokenPrice,
   quoteTokenPrice,
-  vaultTokenBalance
+  vaultTokenBalance,
+  marketVolume
 }: VaultPageProps) => {
   const [windowSize, setWindowSize] = useState([0, 0]);
 
@@ -238,6 +242,7 @@ const VaultPage = ({
               baseTokenBalance={baseTokenUserBalance}
               quoteTokenMetadata={quoteTokenMetadata}
               quoteTokenBalance={quoteTokenUserBalance}
+              marketVolume={marketVolume}
             />
           </div>
         </>
@@ -257,17 +262,19 @@ export async function getServerSideProps({ params }) {
   let vaultBalance: VaultBalance = null;
   let baseTokenPrice: number = null;
   let quoteTokenPrice: number = null;
+  let marketVolume: VolumeResult = null;
 
   if (
     vaultData &&
     vaultData.base_token_address &&
     vaultData.quote_token_address
   ) {
-    [baseTokenMetadata, quoteTokenMetadata, vaultBalance] =
+    [baseTokenMetadata, quoteTokenMetadata, vaultBalance, marketVolume] =
       await Promise.all([
         getTokenMetadata(vaultData.base_token_address),
         getTokenMetadata(vaultData.quote_token_address),
         getVaultBalance(vault),
+        getMarketVolume(vaultData.market_address)
       ]);
 
     if (baseTokenMetadata && baseTokenMetadata.ticker) {
@@ -292,7 +299,8 @@ export async function getServerSideProps({ params }) {
       quoteTokenBalance: vaultBalance.quoteTokenBalance
         ? vaultBalance.quoteTokenBalance
         : null,
-      vaultTokenBalance: vaultBalance ? vaultBalance : null
+      vaultTokenBalance: vaultBalance ? vaultBalance : null,
+      marketVolume: marketVolume ? marketVolume : null,
     },
   };
 }
