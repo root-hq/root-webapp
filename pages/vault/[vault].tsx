@@ -115,11 +115,11 @@ const VaultPage = ({
     const refreshPriceData = async () => {
       try {
         const today = new Date();
-        const newMidPrice = parseFloat(
+        let newMidPrice = parseFloat(
           (await getMarketMidPrice(vaultData.market_address)).toFixed(3),
         );
 
-        setNewPrice((prevPrice) => newMidPrice);
+        setNewPrice((prevPrice) => newMidPrice > 0 ? newMidPrice : prevPrice);
 
         if (newMidPrice >= previousPrice) {
           setMidPriceChangeDirection((previousChange) => "▲");
