@@ -4,13 +4,16 @@ import { TokenMetadata } from "../../../../../../utils/supabase";
 import Image from "next/image";
 import { Form } from "react-bootstrap";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { VaultBalance, calculateTokenDeposit } from "../../../../../../utils/root/utils";
+import {
+  VaultBalance,
+  calculateTokenDeposit,
+} from "../../../../../../utils/root/utils";
 
 export interface TokenFieldStateUtils {
-  inputText: string,
-  setInputText: React.Dispatch<React.SetStateAction<string>>,
-  inputAmount: number,
-  setInputAmount: React.Dispatch<React.SetStateAction<number>>
+  inputText: string;
+  setInputText: React.Dispatch<React.SetStateAction<string>>;
+  inputAmount: number;
+  setInputAmount: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export interface TokenFieldProps {
@@ -24,18 +27,26 @@ export interface TokenFieldProps {
   isBaseTokenField: boolean;
 }
 
-const TokenField = ({ vaultAddress, vaultTokenBalance, tokenMetadata, oppositeTokenMetadata, tokenBalance, tokenFieldStateUtils, oppositeStateUtils, isBaseTokenField }: TokenFieldProps) => {
-
+const TokenField = ({
+  vaultAddress,
+  vaultTokenBalance,
+  tokenMetadata,
+  oppositeTokenMetadata,
+  tokenBalance,
+  tokenFieldStateUtils,
+  oppositeStateUtils,
+  isBaseTokenField,
+}: TokenFieldProps) => {
   let inputText: string;
   let setInputText: React.Dispatch<React.SetStateAction<string>>;
   let inputAmount: number;
   let setInputAmount: React.Dispatch<React.SetStateAction<number>>;
- 
-  if(tokenFieldStateUtils) {
+
+  if (tokenFieldStateUtils) {
     inputText = tokenFieldStateUtils.inputText;
     setInputText = tokenFieldStateUtils.setInputText;
     inputAmount = tokenFieldStateUtils.inputAmount;
-    setInputAmount = tokenFieldStateUtils.setInputAmount;  
+    setInputAmount = tokenFieldStateUtils.setInputAmount;
   }
 
   let oppositeInputText: string;
@@ -43,8 +54,7 @@ const TokenField = ({ vaultAddress, vaultTokenBalance, tokenMetadata, oppositeTo
   let oppositeInputAmount: number;
   let setOppositeInputAmount: React.Dispatch<React.SetStateAction<number>>;
 
-
-  if(oppositeStateUtils) {
+  if (oppositeStateUtils) {
     oppositeInputText = oppositeStateUtils.inputText;
     setOppositeInputText = oppositeStateUtils.setInputText;
     oppositeInputAmount = oppositeStateUtils.inputAmount;
@@ -67,31 +77,30 @@ const TokenField = ({ vaultAddress, vaultTokenBalance, tokenMetadata, oppositeTo
   };
 
   const handleStateUpdate = (amount: string, isForOppositeToken: boolean) => {
-    if(!isForOppositeToken) {
+    if (!isForOppositeToken) {
       if (amount === "") {
         setInputText("");
         setInputAmount(0);
       }
-  
+
       if (amount.match(/^[+]?[0-9]+(\.[0-9]*)?$/)) {
         const formattedAgain = formatWithCommas(amount);
         setInputText(formattedAgain);
         setInputAmount(Number(formattedAgain));
       }
-    }
-    else {
+    } else {
       if (amount === "") {
         setOppositeInputText("");
         setOppositeInputAmount(0);
       }
-  
+
       if (amount.match(/^[+]?[0-9]+(\.[0-9]*)?$/)) {
         const formattedAgain = formatWithCommas(amount);
         setOppositeInputText(formattedAgain);
         setOppositeInputAmount(Number(formattedAgain));
       }
     }
-  }
+  };
 
   const handleAmountChange = (e: React.ChangeEvent<any>) => {
     e.preventDefault();
@@ -101,7 +110,7 @@ const TokenField = ({ vaultAddress, vaultTokenBalance, tokenMetadata, oppositeTo
     const otherAmount = calculateTokenDeposit(
       vaultTokenBalance,
       amount,
-      isBaseTokenField
+      isBaseTokenField,
     );
 
     handleStateUpdate(amount, false);

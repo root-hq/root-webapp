@@ -12,16 +12,14 @@ enum SelectedDuration {
 enum SelectedMetric {
   Apr,
   Markout,
-  Volume
+  Volume,
 }
 
 export interface PerformanceContainerProps {
   marketVolume: VolumeResult;
 }
 
-const PerformanceContainer = ({
-  marketVolume
-}: PerformanceContainerProps) => {
+const PerformanceContainer = ({ marketVolume }: PerformanceContainerProps) => {
   const [selectedDuration, setSelectedDuration] = useState<SelectedDuration>(
     SelectedDuration.Week,
   );
@@ -48,7 +46,9 @@ const PerformanceContainer = ({
     }
   };
 
-  const [selectedMetric, setSelectedMetric] = useState<SelectedMetric>(SelectedMetric.Apr);
+  const [selectedMetric, setSelectedMetric] = useState<SelectedMetric>(
+    SelectedMetric.Apr,
+  );
 
   return (
     <div className={styles.performanceContainer}>
@@ -61,8 +61,7 @@ const PerformanceContainer = ({
             }}
             value={"Apr"}
             style={{
-              color:
-                selectedMetric === SelectedMetric.Apr ? "#ddd" : "#888",
+              color: selectedMetric === SelectedMetric.Apr ? "#ddd" : "#888",
               fontWeight:
                 selectedMetric === SelectedMetric.Apr ? "bold" : "normal",
             }}
@@ -76,8 +75,7 @@ const PerformanceContainer = ({
             }}
             value={"Volume"}
             style={{
-              color:
-                selectedMetric === SelectedMetric.Volume ? "#ddd" : "#888",
+              color: selectedMetric === SelectedMetric.Volume ? "#ddd" : "#888",
               fontWeight:
                 selectedMetric === SelectedMetric.Volume ? "bold" : "normal",
             }}
@@ -120,12 +118,17 @@ const PerformanceContainer = ({
         </div>
       </div>
       <div className={styles.metricValueContainer}>
-        {
-          selectedMetric === SelectedMetric.Apr ?
-            <span className={styles.metricValue}>29.31%</span>
-          :
-            <span className={styles.metricValue}>$ {`${(marketVolume.buyVolumeInQuoteUnits + marketVolume.sellVolumeInQuoteUnits).toFixed(3)}`}</span>
-        }
+        {selectedMetric === SelectedMetric.Apr ? (
+          <span className={styles.metricValue}>29.31%</span>
+        ) : (
+          <span className={styles.metricValue}>
+            ${" "}
+            {`${(
+              marketVolume.buyVolumeInQuoteUnits +
+              marketVolume.sellVolumeInQuoteUnits
+            ).toFixed(3)}`}
+          </span>
+        )}
       </div>
     </div>
   );

@@ -5,7 +5,11 @@ import { TokenMetadata } from "../../../../../../utils/supabase";
 import TokenField, { TokenFieldStateUtils } from "../TokenField";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
-import { VaultBalance, isVaultOnDowntime, getTimeToDowntime } from "../../../../../../utils/root/utils";
+import {
+  VaultBalance,
+  isVaultOnDowntime,
+  getTimeToDowntime,
+} from "../../../../../../utils/root/utils";
 import { DOWNTIME_CHECK_FREQUENCY_IN_MS } from "../../../../../../constants";
 const WalletMultiButtonDynamic = dynamic(
   async () =>
@@ -14,7 +18,7 @@ const WalletMultiButtonDynamic = dynamic(
 );
 
 export interface FundsManagerColumnProps {
-  vaultAddress: string,
+  vaultAddress: string;
   isBaseDepositPracticed: boolean;
   isQuoteDepositPracticed: boolean;
   vaultTokenBalance: VaultBalance;
@@ -70,7 +74,7 @@ const FundsManagerColumn = ({
       const timeLeft = await getTimeToDowntime(vaultAddress);
 
       setDowntimeStartIn(() => timeLeft);
-    }
+    };
 
     refreshDowntimeStatus();
     refreshTimeToDowntime();
@@ -87,7 +91,7 @@ const FundsManagerColumn = ({
     inputText: baseInputText,
     inputAmount: baseInputAmount,
     setInputText: setBaseInputText,
-    setInputAmount: setBaseInputAmount
+    setInputAmount: setBaseInputAmount,
   } as TokenFieldStateUtils;
 
   const [quoteInputText, setQuoteInputText] = useState<string>("");
@@ -97,7 +101,7 @@ const FundsManagerColumn = ({
     inputText: quoteInputText,
     inputAmount: quoteInputAmount,
     setInputText: setQuoteInputText,
-    setInputAmount: setQuoteInputAmount
+    setInputAmount: setQuoteInputAmount,
   } as TokenFieldStateUtils;
 
   return (
@@ -150,9 +154,8 @@ const FundsManagerColumn = ({
       </div>
       <div className={styles.tokenFieldsContainer}>
         <div className={styles.tokenField}>
-         {
-          isBaseDepositPracticed ?
-          <>
+          {isBaseDepositPracticed ? (
+            <>
               <TokenField
                 vaultAddress={vaultAddress}
                 vaultTokenBalance={vaultTokenBalance}
@@ -163,14 +166,13 @@ const FundsManagerColumn = ({
                 oppositeStateUtils={quoteTokenFieldStateUtils}
                 isBaseTokenField={true}
               />
-          </>
-          :
-          <></>
-         }
+            </>
+          ) : (
+            <></>
+          )}
         </div>
         <div className={styles.tokenField}>
-          {
-            isQuoteDepositPracticed ?
+          {isQuoteDepositPracticed ? (
             <>
               <TokenField
                 vaultAddress={vaultAddress}
@@ -183,54 +185,50 @@ const FundsManagerColumn = ({
                 isBaseTokenField={false}
               />
             </>
-            :
+          ) : (
             <></>
-          }
+          )}
         </div>
       </div>
       <div
         className={styles.actionButtonContainer}
-        style = {{
-          marginTop: walletState.connected ? '2rem' : '1rem'
+        style={{
+          marginTop: walletState.connected ? "2rem" : "1rem",
         }}
       >
-        {
-          !downtimeStatus ?
-            <>
-            {
-              downtimeStartIn >= 0 ?
-              <div
-                className={styles.downtimeTextContainer}
-              >
-                {`OPENS IN ${parseInt((downtimeStartIn*0.4).toString())} seconds`}
+        {!downtimeStatus ? (
+          <>
+            {downtimeStartIn >= 0 ? (
+              <div className={styles.downtimeTextContainer}>
+                {`OPENS IN ${parseInt(
+                  (downtimeStartIn * 0.4).toString(),
+                )} seconds`}
               </div>
-              :
-              <div
-                className={styles.downtimeTextContainer}
-              >
+            ) : (
+              <div className={styles.downtimeTextContainer}>
                 {`Stale vault. Please contact the Root team`}
               </div>
-            }
-            </>
-          :
-            <>
-              {walletState.connected ? (
-                <Button className={styles.actionButton}>
-                  {activeTab === DEPOSIT_TAB ? (
-                    <span className={styles.actionButtonText}>Deposit</span>
-                  ) : (
-                    <span className={styles.actionButtonText}>
-                      Withdraw all funds
-                    </span>
-                  )}
-                </Button>
-              ) : (
-                <div className={styles.connectButtonContainer}>
-                  <WalletMultiButtonDynamic />
-                </div>
-              )}
-            </>
-        }
+            )}
+          </>
+        ) : (
+          <>
+            {walletState.connected ? (
+              <Button className={styles.actionButton}>
+                {activeTab === DEPOSIT_TAB ? (
+                  <span className={styles.actionButtonText}>Deposit</span>
+                ) : (
+                  <span className={styles.actionButtonText}>
+                    Withdraw all funds
+                  </span>
+                )}
+              </Button>
+            ) : (
+              <div className={styles.connectButtonContainer}>
+                <WalletMultiButtonDynamic />
+              </div>
+            )}
+          </>
+        )}
       </div>
       <div className={styles.feeTextContainer}>
         <OverlayTrigger placement="top" overlay={feeInfoTooltip}>

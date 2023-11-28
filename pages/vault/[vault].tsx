@@ -83,7 +83,7 @@ const VaultPage = ({
   baseTokenPrice,
   quoteTokenPrice,
   vaultTokenBalance,
-  marketVolume
+  marketVolume,
 }: VaultPageProps) => {
   const [windowSize, setWindowSize] = useState([0, 0]);
 
@@ -119,7 +119,7 @@ const VaultPage = ({
           (await getMarketMidPrice(vaultData.market_address)).toFixed(3),
         );
 
-        setNewPrice((prevPrice) => newMidPrice > 0 ? newMidPrice : prevPrice);
+        setNewPrice((prevPrice) => (newMidPrice > 0 ? newMidPrice : prevPrice));
 
         if (newMidPrice >= previousPrice) {
           setMidPriceChangeDirection((previousChange) => "▲");
@@ -274,7 +274,7 @@ export async function getServerSideProps({ params }) {
         getTokenMetadata(vaultData.base_token_address),
         getTokenMetadata(vaultData.quote_token_address),
         getVaultBalance(vault),
-        getMarketVolume(vaultData.market_address)
+        getMarketVolume(vaultData.market_address),
       ]);
 
     if (baseTokenMetadata && baseTokenMetadata.ticker) {

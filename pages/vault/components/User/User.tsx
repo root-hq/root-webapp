@@ -8,7 +8,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { VaultBalance } from "../../../../utils/root/utils";
 
 export interface UserProps {
-  vaultAddress: string,
+  vaultAddress: string;
   isBaseDepositPracticed: boolean;
   isQuoteDepositPracticed: boolean;
   vaultTokenBalance: VaultBalance;
@@ -29,13 +29,12 @@ const User = ({
   quoteTokenBalance,
   marketVolume,
 }: UserProps) => {
-
   const walletState = useWallet();
 
   return (
     <div className={styles.userContainer}>
       <div className={styles.performanceContainer}>
-        <PerformanceContainer marketVolume={marketVolume}/>
+        <PerformanceContainer marketVolume={marketVolume} />
       </div>
       <div className={styles.depositContainer}>
         <FundsManagerColumn
@@ -50,15 +49,14 @@ const User = ({
         />
       </div>
       <div className={styles.userPortfolioContainer}>
-        {
-          walletState.connected ?
-            <UserFunds
-              baseTokenMetadata={baseTokenMetadata}
-              quoteTokenMetadata={quoteTokenMetadata}
-            />
-          :
-            <></>
-        }
+        {walletState.connected ? (
+          <UserFunds
+            baseTokenMetadata={baseTokenMetadata}
+            quoteTokenMetadata={quoteTokenMetadata}
+          />
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
