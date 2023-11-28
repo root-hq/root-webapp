@@ -105,7 +105,7 @@ export const getChartAnnotations = (l3UiBook: L3UiBook): YAxisAnnotations[] => {
   const filteredBids = l3UiBook.bids.filter((product, index, array) => {
     if (
       index > 0 &&
-      product.price - array[index - 1].price < OPEN_ORDERS_MINIMUM_PRICE_SPACING
+      array[index - 1].price - product.price < OPEN_ORDERS_MINIMUM_PRICE_SPACING
     ) {
       return false;
     }
