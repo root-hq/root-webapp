@@ -1,1 +1,1 @@
-export const MAKER_PUBKEY = "4Yz2Drfv1m9EurjipyjC5bHfu1NjTPYCumzZjMb9uwZA";
+export const MAKER_PUBKEY = "LUKAzPV8dDbVykTVT14pCGKzFfNcgZgRbAXB8AGdKx3";
