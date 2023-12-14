@@ -119,7 +119,7 @@ const PerformanceContainer = ({ marketVolume }: PerformanceContainerProps) => {
       </div>
       <div className={styles.metricValueContainer}>
         {selectedMetric === SelectedMetric.Apr ? (
-          <span className={styles.metricValue}>29.31%</span>
+          <span className={styles.metricValue}>112.76%</span>
         ) : (
           <span className={styles.metricValue}>
             ${" "}
