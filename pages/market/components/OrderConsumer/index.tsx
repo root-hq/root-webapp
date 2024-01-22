@@ -10,6 +10,9 @@ const OrderConsumer = () => {
             <div className={styles.tradingViewChartContainer}>
                 <p>Trading View chart</p>
             </div>
+            <div className={styles.orderManagerContainer}>
+                <p>Order Manager</p>
+            </div>
         </div>
     )
 }
