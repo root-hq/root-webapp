@@ -1,7 +1,7 @@
 .feeTooltipContainer {
   padding: 0.5rem;
   background-color: white;
-  color: #0f0f0f;
+  color: #0a0b0e;
   border: none;
   border-radius: 0.5rem;
   font-size: 0.85rem;
@@ -86,7 +86,7 @@
 .actionButton {
   width: 100%;
   background-color: #ddd;
-  color: #0f0f0f;
+  color: #0a0b0e;
   border: none;
   border-radius: 0.5rem;
   padding: 0.75rem;

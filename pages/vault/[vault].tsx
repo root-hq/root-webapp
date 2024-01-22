@@ -217,7 +217,7 @@ const VaultPage = ({
       {vaultData ? (
         <>
           <div className={styles.vaultDataContainer}>
-            <Vault
+            {/* <Vault
               vaultData={vaultData}
               baseTokenMetadata={baseTokenMetadata}
               quoteTokenMetadata={quoteTokenMetadata}
@@ -230,7 +230,7 @@ const VaultPage = ({
               }
               tokenImgWidth={windowSize[0] > 425 ? 40 : 35}
               tokenImgHeight={windowSize[0] > 425 ? 40 : 35}
-            />
+            /> */}
           </div>
           <div className={styles.userDataContainer}>
             <User

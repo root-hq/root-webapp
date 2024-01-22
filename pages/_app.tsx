@@ -32,12 +32,12 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
     () => [
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter(),
-      new OKXWalletAdapter(),
-      new LedgerWalletAdapter(),
-      new CoinbaseWalletAdapter(),
-      new WalletConnectWalletAdapter({
-        network: WalletAdapterNetwork.Mainnet,
-      } as WalletConnectWalletAdapterConfig),
+      // new OKXWalletAdapter(),
+      // new LedgerWalletAdapter(),
+      // new CoinbaseWalletAdapter(),
+      // new WalletConnectWalletAdapter({
+      //   network: WalletAdapterNetwork.Mainnet,
+      // } as WalletConnectWalletAdapterConfig),
     ],
     [],
   );

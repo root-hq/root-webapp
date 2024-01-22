@@ -1,0 +1,15 @@
+.marketPageContainer {
+    /* background-color: red; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /* width: 100%; */
+}
+
+.orderProducerContainer {
+    width: 25%;
+}
+
+.orderConsumerContainer {
+    width: 75%;
+}
