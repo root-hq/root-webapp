@@ -20,8 +20,18 @@ const OrderConsumer = ({
         <div className={styles.orderConsumerContainer}>
             <div className={styles.marketInfoContainer}>
                 <div>
-                    <p>Base token: {baseTokenMetadata.name}</p>
-                    <p>Quote token: {quoteTokenMetadata.name}</p>
+                    {
+                        baseTokenMetadata ?
+                            <p>Base token: {baseTokenMetadata.name}</p>
+                            :
+                            <></>
+                    }
+                    {
+                        quoteTokenMetadata ?
+                            <p>Quote token: {quoteTokenMetadata.name}</p>
+                            :
+                            <></>
+                    }
                 </div>
             </div>
             <div className={styles.tradingViewChartContainer}>
