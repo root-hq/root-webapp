@@ -2,23 +2,29 @@ import React from "react";
 import styles from "./MarketPage.module.css";
 import OrderConsumer from "./components/OrderConsumer";
 import OrderProducer from "./components/OrderProducer";
-import axios from "axios";
-import { SpotGridMarket } from "../../utils/supabase";
+import { SpotGridMarket, TokenMetadata, getTokenMetadata } from "../../utils/supabase";
+import { getAllMarkets, getMarket, getMarketForPhoenixMarket } from "../../utils/supabase/SpotGridMarket";
 
 export interface MarketPageProps {
-    spotGridMarket: SpotGridMarket
+    selectedSpotGridMarket: SpotGridMarket,
+    allSpotGridMarkets: SpotGridMarket[],
+    baseTokenMetadata: TokenMetadata,
+    quoteTokenMetadata: TokenMetadata
 };
 
 const MarketPage = ({
-    spotGridMarket
+    allSpotGridMarkets,
+    selectedSpotGridMarket,
+    baseTokenMetadata,
+    quoteTokenMetadata
 }: MarketPageProps) => {
     return (
         <div className={styles.marketPageContainer}>
             <div className={styles.orderConsumerContainer}>
-                <OrderConsumer />
+                <OrderConsumer selectedSpotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata}/>
             </div>
             <div className={styles.orderProducerContainer}>
-                <OrderProducer />
+                <OrderProducer spotGridMarket={selectedSpotGridMarket} />
             </div>
         </div>
     )
@@ -27,13 +33,26 @@ const MarketPage = ({
 export const getServerSideProps = async ({ params }) => {
     const { market } = params;
 
-    const response = await axios.get(`https://spot-grid-db-utils.vercel.app/api/market/get-market?phoenixMarketAddress=${market}`);
+    const spotGridMarketMetadata = await getMarketForPhoenixMarket(market);
 
-    const data = response.data as SpotGridMarket[];
+    let baseTokenMetadata: TokenMetadata = null;
+    let quoteTokenMetadata: TokenMetadata = null;
+    let allSpotGridMarkets: SpotGridMarket[] = [];
+
+    if(spotGridMarketMetadata) {
+        [baseTokenMetadata, quoteTokenMetadata, allSpotGridMarkets] = await Promise.all([
+            getTokenMetadata(spotGridMarketMetadata.base_token_mint.toString()),
+            getTokenMetadata(spotGridMarketMetadata.quote_token_mint.toString()),
+            getAllMarkets()
+        ]);    
+    }
 
     return {
         props: {
-            spotGridMarket: data[0]
+            selectedSpotGridMarket: spotGridMarketMetadata,
+            allSpotGridMarkets,
+            baseTokenMetadata,
+            quoteTokenMetadata
         }
     };
 }
