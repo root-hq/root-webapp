@@ -51,30 +51,50 @@ const MarketSelectorDropdown = ({
         <div className={styles.tokenPairContainer}>
           <div className={styles.imageContainer}>
             <div className={styles.tokenImageContainer}>
-              <Image
-                src={baseMetadata.img_url}
-                width={35}
-                height={35}
-                alt={`${baseMetadata.ticker} img`}
-                className={styles.tokenImage}
-              />
+              {
+                baseMetadata && baseMetadata.img_url ?
+                  <Image
+                    src={baseMetadata.img_url}
+                    width={35}
+                    height={35}
+                    alt={`${baseMetadata.ticker} img`}
+                    className={styles.tokenImage}
+                  />
+                :
+                  <></>
+              }
             </div>
             <div className={styles.tokenImageContainer}>
-              <Image
-                src={quoteMetadata.img_url}
-                width={35}
-                height={35}
-                alt={`${quoteMetadata.ticker} img`}
-                className={styles.tokenImage}
-              />
+              {
+                quoteMetadata && quoteMetadata.img_url ?
+                  <Image
+                    src={quoteMetadata.img_url}
+                    width={35}
+                    height={35}
+                    alt={`${quoteMetadata.ticker} img`}
+                    className={styles.tokenImage}
+                  />
+                :
+                  <></>
+              }
             </div>
           </div>
           <div className={styles.marketTickerContainer}>
             <div className={styles.tickerText}>
-              <span>{`${baseMetadata.ticker}`}</span>
+              {
+                baseMetadata && baseMetadata.ticker ?
+                  <span>{`${baseMetadata.ticker}`}</span>
+                :
+                  <></>
+              }
             </div>
             <div className={styles.tickerText}>
-              <span>{`${quoteMetadata.ticker}`}</span>
+              {
+                quoteMetadata && quoteMetadata.ticker ?
+                  <span>{`${quoteMetadata.ticker}`}</span>
+                :
+                  <></>
+              }
             </div>
           </div>
           {
