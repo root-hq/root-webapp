@@ -75,34 +75,35 @@ export const getServerSideProps = async ({ params }) => {
       getAllMarkets(),
     ]);
 
-  if (allTokenMetadata.length > 0) {
-  }
-
-  allSpotGridMarkets.forEach((market) => {
-    let baseMetadata = allTokenMetadata.find((value) => {
-      return value.mint === market.base_token_mint.toString();
-    });
-
-    let quoteMetadata = allTokenMetadata.find((value) => {
-      return value.mint === market.quote_token_mint.toString();
-    });
-
-    if(market.spot_grid_market_address === spotGridMarketOnPage.spot_grid_market_address) {
-      baseTokenMetadata = allTokenMetadata.find((value) => {
-        return value.mint === spotGridMarketOnPage.base_token_mint.toString();
+  if (allTokenMetadata && allTokenMetadata.length > 0) {
+    allSpotGridMarkets.forEach((market) => {
+      let baseMetadata = allTokenMetadata.find((value) => {
+        return value.mint === market.base_token_mint.toString();
       });
   
-      quoteTokenMetadata = allTokenMetadata.find((value) => {
-        return value.mint === spotGridMarketOnPage.quote_token_mint.toString();
-      });  
-    }
+      let quoteMetadata = allTokenMetadata.find((value) => {
+        return value.mint === market.quote_token_mint.toString();
+      });
+  
+      if(market.spot_grid_market_address === spotGridMarketOnPage.spot_grid_market_address) {
+        baseTokenMetadata = allTokenMetadata.find((value) => {
+          return value.mint === spotGridMarketOnPage.base_token_mint.toString();
+        });
+    
+        quoteTokenMetadata = allTokenMetadata.find((value) => {
+          return value.mint === spotGridMarketOnPage.quote_token_mint.toString();
+        });  
+      }
+  
+      enumeratedMarkets.push({
+        spotGridMarket: market,
+        baseTokenMetadata: baseMetadata,
+        quoteTokenMetadata: quoteMetadata
+      } as EnumeratedMarketToMetadata);
+    });
+  }
 
-    enumeratedMarkets.push({
-      spotGridMarket: market,
-      baseTokenMetadata: baseMetadata,
-      quoteTokenMetadata: quoteMetadata
-    } as EnumeratedMarketToMetadata);
-  });
+  
 
   return {
     props: {
