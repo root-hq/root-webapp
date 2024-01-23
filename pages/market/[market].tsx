@@ -14,18 +14,22 @@ import {
   getMarketForPhoenixMarket,
 } from "../../utils/supabase/SpotGridMarket";
 
+export interface EnumeratedMarketToMetadata {
+  spotGridMarket: SpotGridMarket;
+  baseTokenMetadata: TokenMetadata;
+  quoteTokenMetadata: TokenMetadata; 
+}
+
 export interface MarketPageProps {
+  enumeratedMarkets: EnumeratedMarketToMetadata[];
   spotGridMarketOnPage: SpotGridMarket;
-  allSpotGridMarkets: SpotGridMarket[];
-  allTokenMetadata: TokenMetadata[];
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
 }
 
 const MarketPage = ({
+  enumeratedMarkets,
   spotGridMarketOnPage,
-  allSpotGridMarkets,
-  allTokenMetadata,
   baseTokenMetadata,
   quoteTokenMetadata,
 }: MarketPageProps) => {
@@ -41,9 +45,8 @@ const MarketPage = ({
     <div className={styles.marketPageContainer}>
       <div className={styles.orderConsumerContainer}>
         <OrderConsumer
-          allSpotGridMarkets={allSpotGridMarkets}
+          enumeratedMarkets={enumeratedMarkets}
           selectedSpotGridMarket={selectedSpotGridMarket}
-          allTokenMetadata={allTokenMetadata}
           baseTokenMetadata={baseTokenMetadata}
           quoteTokenMetadata={quoteTokenMetadata}
         />
@@ -63,6 +66,7 @@ export const getServerSideProps = async ({ params }) => {
   let baseTokenMetadata: TokenMetadata = null;
   let quoteTokenMetadata: TokenMetadata = null;
   let allSpotGridMarkets: SpotGridMarket[] = [];
+  let enumeratedMarkets: EnumeratedMarketToMetadata[] = [];
 
   [spotGridMarketOnPage, allTokenMetadata, allSpotGridMarkets] =
     await Promise.all([
@@ -72,20 +76,38 @@ export const getServerSideProps = async ({ params }) => {
     ]);
 
   if (allTokenMetadata.length > 0) {
-    baseTokenMetadata = allTokenMetadata.find((value) => {
-      return value.mint === spotGridMarketOnPage.base_token_mint.toString();
+  }
+
+  allSpotGridMarkets.forEach((market) => {
+    let baseMetadata = allTokenMetadata.find((value) => {
+      return value.mint === market.base_token_mint.toString();
     });
 
-    quoteTokenMetadata = allTokenMetadata.find((value) => {
-      return value.mint === spotGridMarketOnPage.quote_token_mint.toString();
+    let quoteMetadata = allTokenMetadata.find((value) => {
+      return value.mint === market.quote_token_mint.toString();
     });
-  }
+
+    if(market.spot_grid_market_address === spotGridMarketOnPage.spot_grid_market_address) {
+      baseTokenMetadata = allTokenMetadata.find((value) => {
+        return value.mint === spotGridMarketOnPage.base_token_mint.toString();
+      });
+  
+      quoteTokenMetadata = allTokenMetadata.find((value) => {
+        return value.mint === spotGridMarketOnPage.quote_token_mint.toString();
+      });  
+    }
+
+    enumeratedMarkets.push({
+      spotGridMarket: market,
+      baseTokenMetadata: baseMetadata,
+      quoteTokenMetadata: quoteMetadata
+    } as EnumeratedMarketToMetadata);
+  });
 
   return {
     props: {
       spotGridMarketOnPage: spotGridMarketOnPage,
-      allSpotGridMarkets,
-      allTokenMetadata,
+      enumeratedMarkets,
       baseTokenMetadata:
         baseTokenMetadata === undefined ? null : baseTokenMetadata,
       quoteTokenMetadata:

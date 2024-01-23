@@ -4,20 +4,18 @@ import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import axios from "axios";
 import { useEffect } from "react";
 import MarketSelectorDropdown from "./components/MarketSelectorDropdown";
-// import 'bootstrap/dist/css/bootstrap.css';
+import { EnumeratedMarketToMetadata } from "../../[market]";
 
 export interface OrderConsumerProps {
-  allSpotGridMarkets: SpotGridMarket[];
+  enumeratedMarkets: EnumeratedMarketToMetadata[];
   selectedSpotGridMarket: SpotGridMarket;
-  allTokenMetadata: TokenMetadata[];
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
 }
 
 const OrderConsumer = ({
-  allSpotGridMarkets,
+  enumeratedMarkets,
   selectedSpotGridMarket,
-  allTokenMetadata,
   baseTokenMetadata,
   quoteTokenMetadata,
 }: OrderConsumerProps) => {
@@ -25,8 +23,7 @@ const OrderConsumer = ({
     <div className={styles.orderConsumerContainer}>
       <div className={styles.marketInfoContainer}>
         <MarketSelectorDropdown
-          allMarkets={allSpotGridMarkets}
-          allTokenMetadata={allTokenMetadata}
+          enumeratedMarkets={enumeratedMarkets}
           selectedMarket={selectedSpotGridMarket}
           selectedBaseTokenMetadata={baseTokenMetadata}
           selectedQuoteTokenMetadata={quoteTokenMetadata}
