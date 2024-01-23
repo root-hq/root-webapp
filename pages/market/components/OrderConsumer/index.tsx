@@ -5,6 +5,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import MarketSelectorDropdown from "./components/MarketSelectorDropdown";
 import { EnumeratedMarketToMetadata } from "../../[market]";
+import LightweightChart from "./components/LightweightChart";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -31,8 +32,8 @@ const OrderConsumer = ({
           />
         </div>
       </div>
-      <div className={styles.tradingViewChartContainer}>
-        <p>Trading View chart</p>
+      <div className={styles.lightweightChartContainer}>
+        <LightweightChart />
       </div>
       <div className={styles.orderManagerContainer}>
         <p>Order Manager</p>

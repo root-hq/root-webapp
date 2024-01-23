@@ -14,6 +14,15 @@
   display: flex;
   flex-direction: row;
   justify-content: left;
+  background-color: red;
+  width: 100%;
+}
+
+.lightweightChartContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: yellow;
   width: 100%;
 }
 
