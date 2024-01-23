@@ -6,6 +6,7 @@ import { useEffect } from "react";
 
 export interface OrderConsumerProps {
     selectedSpotGridMarket: SpotGridMarket,
+    allTokenMetadata: TokenMetadata[],
     baseTokenMetadata: TokenMetadata,
     quoteTokenMetadata: TokenMetadata
 }
