@@ -75,7 +75,7 @@ export const getServerSideProps = async ({ params }) => {
       getAllMarkets(),
     ]);
 
-  if (allTokenMetadata && allTokenMetadata.length > 0) {
+  if (allSpotGridMarkets && allSpotGridMarkets.length > 0) {
     allSpotGridMarkets.forEach((market) => {
       let baseMetadata = allTokenMetadata.find((value) => {
         return value.mint === market.base_token_mint.toString();
