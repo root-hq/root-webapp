@@ -1,32 +1,38 @@
 .marketDropdown {
   position: relative;
   display: inline-block;
+  width: 100%;
 }
 
 .dropdownButton {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
+  background-color: #0a0b0f;
+  border: 1px solid rgba(89, 84, 84, 0.65);
   border-radius: 4px;
+  width: 100%;
 }
 
 .dropdownContent {
   position: absolute;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-top: none;
-  border-radius: 0 0 4px 4px;
+  background-color: #0a0b0f;
+  border: 1px solid rgba(89, 84, 84, 0.65);
+  border-radius: 0.25rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 10;
+  width: 100%;
 }
 
 .tokenPairContainer {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  width: 100%;
 }
 
 .imageContainer {
@@ -37,6 +43,24 @@
 
 .tokenImage {
   border-radius: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.5)
+}
+
+.marketTickerContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.tickerText {
+  margin: 0.25rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.caretContainer {
+  color: #fff;
 }
 
 .dropdownContent div {
@@ -45,8 +69,8 @@
   cursor: pointer;
 }
 
-.dropdownContent div:hover {
-  background-color: #f0f0f0;
+.otherMarketRowContainer:hover {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 

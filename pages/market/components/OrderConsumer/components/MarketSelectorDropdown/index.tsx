@@ -46,15 +46,15 @@ const MarketSelectorDropdown = ({
     setDropdownOpen(!isDropdownOpen);
   };
 
-  const getTokenPair = (baseMetadata: TokenMetadata, quoteMetadata: TokenMetadata) => {
+  const getTokenPair = (baseMetadata: TokenMetadata, quoteMetadata: TokenMetadata, isMainItem: boolean) => {
     return (
         <div className={styles.tokenPairContainer}>
           <div className={styles.imageContainer}>
             <div className={styles.tokenImageContainer}>
               <Image
                 src={baseMetadata.img_url}
-                width={30}
-                height={30}
+                width={35}
+                height={35}
                 alt={`${baseMetadata.ticker} img`}
                 className={styles.tokenImage}
               />
@@ -62,29 +62,49 @@ const MarketSelectorDropdown = ({
             <div className={styles.tokenImageContainer}>
               <Image
                 src={quoteMetadata.img_url}
-                width={30}
-                height={30}
+                width={35}
+                height={35}
                 alt={`${quoteMetadata.ticker} img`}
                 className={styles.tokenImage}
               />
             </div>
           </div>
-          <span>{`${baseMetadata.ticker} - ${quoteMetadata.ticker}`}</span>
+          <div className={styles.marketTickerContainer}>
+            <div className={styles.tickerText}>
+              <span>{`${baseMetadata.ticker}`}</span>
+            </div>
+            <div className={styles.tickerText}>
+              <span>{`${quoteMetadata.ticker}`}</span>
+            </div>
+          </div>
+          {
+            isMainItem ?
+              <div className={styles.caretContainer}>
+                {
+                  isDropdownOpen ?
+                    <i className="fa-solid fa-caret-up"></i>
+                  :
+                    <i className="fa-solid fa-caret-down"></i>
+                }
+              </div>
+            :
+              <></>
+          }
         </div>
     );
   }
 
   return (
-    <div className={styles.MarketDropdown}>
+    <div className={styles.marketDropdown}>
       <button className={styles.dropdownButton} onClick={toggleDropdown}>
-        {getTokenPair(activeBaseTokenMetadata, activeQuoteTokenMetadata)}
+        {getTokenPair(activeBaseTokenMetadata, activeQuoteTokenMetadata, true)}
         
       </button>
       {isDropdownOpen && (
         <div className={styles.dropdownContent}>
           {enumeratedMarkets.map((enumeratedMarket, index) => (
-            <div key={index} onClick={() => handleMarketChange(enumeratedMarket.spotGridMarket, enumeratedMarket.baseTokenMetadata, enumeratedMarket.quoteTokenMetadata)}>
-              {getTokenPair(enumeratedMarket.baseTokenMetadata, enumeratedMarket.quoteTokenMetadata)}
+            <div className={styles.otherMarketRowContainer} key={index} onClick={() => handleMarketChange(enumeratedMarket.spotGridMarket, enumeratedMarket.baseTokenMetadata, enumeratedMarket.quoteTokenMetadata)}>
+              {getTokenPair(enumeratedMarket.baseTokenMetadata, enumeratedMarket.quoteTokenMetadata, false)}
             </div>
           ))}
         </div>

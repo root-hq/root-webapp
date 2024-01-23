@@ -5,8 +5,18 @@
   flex-direction: column;
   /* width: 100%; */
   margin-bottom: 1rem;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  padding: 1rem;
-  background-color: red;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  /* background-color: red; */
+}
+
+.marketInfoContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  width: 100%;
+}
+
+.marketSelectorContainer {
+  min-width: 250px;
 }

@@ -22,12 +22,14 @@ const OrderConsumer = ({
   return (
     <div className={styles.orderConsumerContainer}>
       <div className={styles.marketInfoContainer}>
-        <MarketSelectorDropdown
-          enumeratedMarkets={enumeratedMarkets}
-          selectedMarket={selectedSpotGridMarket}
-          selectedBaseTokenMetadata={baseTokenMetadata}
-          selectedQuoteTokenMetadata={quoteTokenMetadata}
-        />
+        <div className={styles.marketSelectorContainer}>
+          <MarketSelectorDropdown
+            enumeratedMarkets={enumeratedMarkets}
+            selectedMarket={selectedSpotGridMarket}
+            selectedBaseTokenMetadata={baseTokenMetadata}
+            selectedQuoteTokenMetadata={quoteTokenMetadata}
+          />
+        </div>
       </div>
       <div className={styles.tradingViewChartContainer}>
         <p>Trading View chart</p>
