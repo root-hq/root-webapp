@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import { getAllTokenMetadata, getAllVaults } from "../utils/supabase";
 import VaultContainer from "../components/VaultContainer";
 import { UnifiedVault, TokenMetadata } from "../utils/supabase";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export default function Home({ vaults, allTokenMetadata }: HomePageProps) {
@@ -12,7 +12,7 @@ export default function Home({ vaults, allTokenMetadata }: HomePageProps) {
 
   useEffect(() => {
     // Default address value
-    const defaultAddress = '4DoNfFBfF7UokCC2FQzriy7yHK6DY6NVdYpuekQ5pRgg';
+    const defaultAddress = "4DoNfFBfF7UokCC2FQzriy7yHK6DY6NVdYpuekQ5pRgg";
 
     // Redirect to the /market/[address] route with the default address
     router.replace(`/market/${defaultAddress}`);

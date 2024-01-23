@@ -202,9 +202,8 @@ const FundsManagerColumn = ({
               <div className={styles.downtimeTextContainer}>
                 {/* {`OPENS IN ${parseInt(
                   (downtimeStartIn * 0.4).toString(),
-                )} seconds`} */}{
-                  `OPENS IN 5 DAYS`
-                }
+                )} seconds`} */}
+                {`OPENS IN 5 DAYS`}
               </div>
             ) : (
               <div className={styles.downtimeTextContainer}>

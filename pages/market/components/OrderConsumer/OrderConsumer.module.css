@@ -1,12 +1,12 @@
 .orderConsumerContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    /* width: 100%; */
-    margin-bottom: 1rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    padding: 1rem;
-    background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* width: 100%; */
+  margin-bottom: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding: 1rem;
+  background-color: red;
 }
