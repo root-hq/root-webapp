@@ -55,7 +55,7 @@ const OrderConsumer = ({
     }, PRICE_REFRESH_FREQUENCY_IN_MS);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [selectedSpotGridMarket, baseTokenMetadata, quoteTokenMetadata]);
 
   const canvasOptions: DeepPartial<ChartOptions> = {
     layout: {

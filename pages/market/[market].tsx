@@ -38,7 +38,6 @@ const MarketPage = ({
 
   useEffect(() => {
     setSelectedSpotGridMarket((prev) => spotGridMarketOnPage);
-    console.log("set hai");
   }, [spotGridMarketOnPage]);
 
   return (
@@ -102,8 +101,6 @@ export const getServerSideProps = async ({ params }) => {
       } as EnumeratedMarketToMetadata);
     });
   }
-
-  
 
   return {
     props: {
