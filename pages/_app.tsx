@@ -65,10 +65,6 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         crossOrigin="anonymous"
         referrerPolicy="no-referrer"
       />
-      <script
-        type="text/javascript"
-        src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"
-      ></script>
 
     </>
   );

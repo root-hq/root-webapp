@@ -34,7 +34,7 @@ const OrderConsumer = ({
     { time: '2018-12-31', value: 22.617 },
   ];
 
-  const chartProps = {
+  const chartOptions = {
     
   };
 
@@ -68,7 +68,7 @@ const OrderConsumer = ({
         </div>
       </div>
       <div className={styles.lightweightChartContainer}>
-        <LightweightChart data ={initialData} chartProps={chartProps} gridOptions={gridOptions} layoutOptions={layoutOptions} height={height}/>
+        <LightweightChart data ={initialData} chartOptions={chartOptions} gridOptions={gridOptions} layoutOptions={layoutOptions} height={height}/>
       </div>
       <div className={styles.orderManagerContainer}>
         <p>Order Manager</p>

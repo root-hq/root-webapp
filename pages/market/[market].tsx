@@ -39,7 +39,7 @@ const MarketPage = ({
   useEffect(() => {
     setSelectedSpotGridMarket((prev) => spotGridMarketOnPage);
     console.log("set hai");
-  }, []);
+  }, [spotGridMarketOnPage]);
 
   return (
     <div className={styles.marketPageContainer}>

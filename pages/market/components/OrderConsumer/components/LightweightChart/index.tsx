@@ -5,7 +5,7 @@ import styles from "./LightweightChart.module.css";
 
 export interface LightweightChartProps {
 	data: SeriesDataItemTypeMap<Time>[SeriesType][],
-	chartProps: AreaSeriesPartialOptions,
+	chartOptions: AreaSeriesPartialOptions,
 	layoutOptions: DeepPartial<LayoutOptions>,
 	gridOptions: DeepPartial<GridOptions>
 	width?: number,
@@ -14,7 +14,7 @@ export interface LightweightChartProps {
 
 const LightweightChart = ({
 	data,
-	chartProps,
+	chartOptions,
 	layoutOptions,
 	gridOptions,
 	width,
@@ -36,7 +36,7 @@ const LightweightChart = ({
 		});
 		chart.timeScale().fitContent();
 
-		const newSeries = chart.addAreaSeries(chartProps);
+		const newSeries = chart.addAreaSeries(chartOptions);
 		newSeries.setData(data);
 
 		window.addEventListener('resize', handleResize);
@@ -47,7 +47,7 @@ const LightweightChart = ({
 			chart.remove();
 		};
 
-	}, [data, chartProps, width, height]);
+	}, [data, chartOptions, layoutOptions, gridOptions, width, height]);
 	
 	return (
 		<div className={styles.lightweightChartContainer} ref={chartContainerRef}>

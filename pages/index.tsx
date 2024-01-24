@@ -16,7 +16,7 @@ export default function Home({ vaults, allTokenMetadata }: HomePageProps) {
 
     // Redirect to the /market/[address] route with the default address
     router.replace(`/market/${defaultAddress}`);
-  }, []);
+  }, [router]);
 
   return (
     <div className={styles.appContainer}>
