@@ -46,7 +46,7 @@ const LightweightChart = ({
 			chart.remove();
 		};
 
-	}, [data, chartOptions, width, height]);
+	}, [data, canvasOptions, chartOptions, width, height]);
 	
 	return (
 		<div className={styles.lightweightChartContainer} ref={chartContainerRef}>
