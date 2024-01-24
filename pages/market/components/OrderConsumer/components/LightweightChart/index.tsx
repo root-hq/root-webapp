@@ -1,5 +1,5 @@
 
-import { createChart, ColorType, SeriesDataItemTypeMap, Time, SeriesType, CandlestickSeriesPartialOptions, DeepPartial, LayoutOptions, AreaSeriesPartialOptions, GridOptions, ChartOptions } from 'lightweight-charts';
+import { createChart, ColorType, SeriesDataItemTypeMap, Time, SeriesType, CandlestickSeriesPartialOptions, DeepPartial, LayoutOptions, AreaSeriesPartialOptions, GridOptions, ChartOptions, ISeriesApi, AreaData, WhitespaceData, AreaSeriesOptions, AreaStyleOptions, SeriesOptionsCommon } from 'lightweight-charts';
 import React, { useEffect, useRef, useState } from 'react';
 import styles from "./LightweightChart.module.css";
 import { SpotGridMarket, TokenMetadata, TokenPrice } from '../../../../../../utils/supabase';
@@ -13,6 +13,8 @@ export interface LightweightChartProps {
 	quoteTokenMetadata: TokenMetadata;
 }
 
+export type SeriesManagerInstance = ISeriesApi<"Area", Time, AreaData<Time> | WhitespaceData<Time>, AreaSeriesOptions, DeepPartial<AreaStyleOptions & SeriesOptionsCommon>>;
+
 const LightweightChart = ({
 	selectedSpotGridMarket,
 	baseTokenMetadata,
@@ -20,7 +22,8 @@ const LightweightChart = ({
 }: LightweightChartProps) => {
 	const [chartData, setChartData] = useState([]);
 
-  let initialLoad = false;
+  const initialLoad = useRef<boolean>(false);
+  const chartContainerRef = useRef<HTMLDivElement>();
 
   useEffect(() => {
     const refreshPriceData = async () => {
@@ -29,7 +32,7 @@ const LightweightChart = ({
         return;
       }
 
-      if(!initialLoad) {
+      if(!initialLoad.current) {
         var date = new Date();
         date.setDate(date.getDate());
 
@@ -47,7 +50,7 @@ const LightweightChart = ({
         });
   
         setChartData(prev => trueData);
-        initialLoad = true;
+        initialLoad.current = true;
       }
       else {
         let newMidPrice = parseFloat(
@@ -96,7 +99,6 @@ const LightweightChart = ({
     bottomColor: 'rgba(54, 115, 245, 0.0)'
   };
 
-	const chartContainerRef = useRef<HTMLDivElement>();
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -123,7 +125,7 @@ const LightweightChart = ({
 			chart.remove();
 		};
 
-	}, [chartData, canvasOptions, chartOptions]);
+	}, [chartData]);
 	
 	return (
 		<div className={styles.lightweightChartContainer} ref={chartContainerRef}>
