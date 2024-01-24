@@ -1,5 +1,5 @@
 
-import { createChart, ColorType, SeriesDataItemTypeMap, Time, SeriesType, CandlestickSeriesPartialOptions, DeepPartial, LayoutOptions, AreaSeriesPartialOptions, GridOptions, ChartOptions, ISeriesApi, AreaData, WhitespaceData, AreaSeriesOptions, AreaStyleOptions, SeriesOptionsCommon } from 'lightweight-charts';
+import { createChart, ColorType, SeriesDataItemTypeMap, Time, SeriesType, CandlestickSeriesPartialOptions, DeepPartial, LayoutOptions, AreaSeriesPartialOptions, GridOptions, ChartOptions, ISeriesApi, AreaData, WhitespaceData, AreaSeriesOptions, AreaStyleOptions, SeriesOptionsCommon, CreatePriceLineOptions } from 'lightweight-charts';
 import React, { useEffect, useRef, useState } from 'react';
 import styles from "./LightweightChart.module.css";
 import { SpotGridMarket, TokenMetadata, TokenPrice } from '../../../../../../utils/supabase';
@@ -24,6 +24,7 @@ const LightweightChart = ({
 
   const initialLoad = useRef<boolean>(false);
   const chartContainerRef = useRef<HTMLDivElement>();
+  const [seriesManager, setSeriesManager] = useState<SeriesManagerInstance>(null);
 
   useEffect(() => {
     const refreshPriceData = async () => {
@@ -55,13 +56,18 @@ const LightweightChart = ({
       else {
         let newMidPrice = parseFloat(
           (await getMarketMidPrice(selectedSpotGridMarket.phoenix_market_address.toString())).toFixed(3),
-        );
+        ); 
 
         if(newMidPrice) {
-          setChartData(prev => [...prev, {
-            time: Math.floor(Date.now() / 1000),
+		  console.log("Series manager data length: {}", seriesManager.data().length);
+        //   setChartData(prev => [...prev, {
+        //     time: Math.floor(Date.now() / 1000),
+        //     value: newMidPrice
+        //   }]);
+		  seriesManager.update({
+            time: Math.floor(Date.now() / 1000) as Time,
             value: newMidPrice
-          }]);
+          });
         }
       }
     };
@@ -75,31 +81,6 @@ const LightweightChart = ({
     return () => clearInterval(intervalId);
   }, [selectedSpotGridMarket, baseTokenMetadata, quoteTokenMetadata]);
 
-  const canvasOptions: DeepPartial<ChartOptions> = {
-    layout: {
-      background: { type: ColorType.Solid, color: 'transparent' },
-      textColor: 'white',
-    },
-    grid: {
-      horzLines: {
-        visible: false,
-      },
-      vertLines: {
-        visible: false
-      }
-    },
-    timeScale: {
-      visible: false
-    },
-  }
-
-  const chartOptions = {
-    lineColor: '#3673f5',
-    topColor: 'rgba(54, 115, 245, 0.4)',
-    bottomColor: 'rgba(54, 115, 245, 0.0)'
-  };
-
-
 	useEffect(() => {
 		const handleResize = () => {
 			chart.applyOptions({
@@ -108,13 +89,35 @@ const LightweightChart = ({
 		}
 
 		const chart = createChart(chartContainerRef.current, {
-			...canvasOptions,
+			layout: {
+			  background: { type: ColorType.Solid, color: 'transparent' },
+			  textColor: 'white',
+			},
+			grid: {
+			  horzLines: {
+				visible: false,
+			  },
+			  vertLines: {
+				visible: false
+			  }
+			},
+			timeScale: {
+			  visible: false
+			},
 			width: chartContainerRef.current.clientWidth,
-			height: 500,
-		});
+			height: 500
+		  });
 		chart.timeScale().fitContent();
 
-		const newSeries = chart.addAreaSeries(chartOptions);
+		console.log("Added new chart")
+		const newSeries = chart.addAreaSeries({
+			lineColor: '#3673f5',
+			topColor: 'rgba(54, 115, 245, 0.4)',
+			bottomColor: 'rgba(54, 115, 245, 0.0)'
+		  });
+		if(seriesManager === null) {
+			setSeriesManager(prev => newSeries);
+		}
 		newSeries.setData(chartData);
 
 		window.addEventListener('resize', handleResize);
