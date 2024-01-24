@@ -30,8 +30,6 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
 
   const wallets = useMemo(
     () => [
-      new PhantomWalletAdapter(),
-      new SolflareWalletAdapter(),
       // new OKXWalletAdapter(),
       // new LedgerWalletAdapter(),
       // new CoinbaseWalletAdapter(),
@@ -67,6 +65,11 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         crossOrigin="anonymous"
         referrerPolicy="no-referrer"
       />
+      <script
+        type="text/javascript"
+        src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"
+      ></script>
+
     </>
   );
 };
