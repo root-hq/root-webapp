@@ -25,7 +25,9 @@ const LightweightChart = ({
 
 	useEffect(() => {
 		const handleResize = () => {
-			chart.applyOptions({ width: chartContainerRef.current.clientWidth });
+			chart.applyOptions({
+				width: chartContainerRef.current.clientWidth,
+			});
 		}
 
 		const chart = createChart(chartContainerRef.current, {

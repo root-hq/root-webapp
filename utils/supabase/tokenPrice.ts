@@ -4,9 +4,9 @@ import { PRICE_CHART_DATA_SAMPLES } from "../../constants";
 
 export const getTokenPriceDataWithDate = async (
   marketAddress: string,
-  today: Date,
+  date: Date,
 ): Promise<TokenPrice[]> => {
-  const formattedDate = toStringDate(today);
+  const formattedDate = toStringDate(date);
   const fileName = `phoenix/${marketAddress}-${formattedDate}.json`;
 
   try {
