@@ -24,7 +24,7 @@ const LightweightChart = ({
 
   const initialLoad = useRef<boolean>(false);
   const chartContainerRef = useRef<HTMLDivElement>();
-  const [seriesManager, setSeriesManager] = useState<SeriesManagerInstance>(null);
+  const seriesManager = useRef<SeriesManagerInstance>(null);
 
   useEffect(() => {
     const refreshPriceData = async () => {
@@ -59,12 +59,8 @@ const LightweightChart = ({
         ); 
 
         if(newMidPrice) {
-		  console.log("Series manager data length: {}", seriesManager.data().length);
-        //   setChartData(prev => [...prev, {
-        //     time: Math.floor(Date.now() / 1000),
-        //     value: newMidPrice
-        //   }]);
-		  seriesManager.update({
+		  console.log("series manager: ", seriesManager);
+		  seriesManager.current.update({
             time: Math.floor(Date.now() / 1000) as Time,
             value: newMidPrice
           });
@@ -109,16 +105,12 @@ const LightweightChart = ({
 		  });
 		chart.timeScale().fitContent();
 
-		console.log("Added new chart")
-		const newSeries = chart.addAreaSeries({
+		seriesManager.current = chart.addAreaSeries({
 			lineColor: '#3673f5',
 			topColor: 'rgba(54, 115, 245, 0.4)',
 			bottomColor: 'rgba(54, 115, 245, 0.0)'
 		  });
-		if(seriesManager === null) {
-			setSeriesManager(prev => newSeries);
-		}
-		newSeries.setData(chartData);
+		seriesManager.current.setData(chartData);
 
 		window.addEventListener('resize', handleResize);
 
