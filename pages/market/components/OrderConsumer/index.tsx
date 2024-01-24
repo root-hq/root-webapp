@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import MarketSelectorDropdown from "./components/MarketSelectorDropdown";
 import { EnumeratedMarketToMetadata } from "../../[market]";
 import LightweightChart from "./components/LightweightChart";
+import { ColorType } from "lightweight-charts";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -22,17 +23,37 @@ const OrderConsumer = ({
 }: OrderConsumerProps) => {
 
   const initialData = [
-    { time: '2018-12-22', value: 32.51 },
-    { time: '2018-12-23', value: 31.11 },
-    { time: '2018-12-24', value: 27.02 },
-    { time: '2018-12-25', value: 27.32 },
-    { time: '2018-12-26', value: 25.17 },
-    { time: '2018-12-27', value: 28.89 },
-    { time: '2018-12-28', value: 25.46 },
-    { time: '2018-12-29', value: 23.92 },
-    { time: '2018-12-30', value: 22.68 },
-    { time: '2018-12-31', value: 22.67 },
+    { time: '2018-12-22', value: 32.513 },
+    { time: '2018-12-23', value: 31.131 },
+    { time: '2018-12-24', value: 27.023 },
+    { time: '2018-12-25', value: 27.3442 },
+    { time: '2018-12-26', value: 25.1349 },
+    { time: '2018-12-28', value: 25.446 },
+    { time: '2018-12-29', value: 23.932 },
+    { time: '2018-12-30', value: 22.628 },
+    { time: '2018-12-31', value: 22.617 },
   ];
+
+  const chartProps = {
+    
+  };
+
+  const gridOptions = {
+    horzLines: {
+      visible: false,
+    },
+    vertLines: {
+      visible: false
+    }
+  }
+
+  const layoutOptions = {
+    background: { type: ColorType.Solid, color: 'transparent' },
+    textColor: 'white',
+  };
+
+  const width = 500;
+  const height = 300;
 
   return (
     <div className={styles.orderConsumerContainer}>
@@ -47,7 +68,7 @@ const OrderConsumer = ({
         </div>
       </div>
       <div className={styles.lightweightChartContainer}>
-        <LightweightChart data ={initialData} />
+        <LightweightChart data ={initialData} chartProps={chartProps} gridOptions={gridOptions} layoutOptions={layoutOptions} height={height}/>
       </div>
       <div className={styles.orderManagerContainer}>
         <p>Order Manager</p>
