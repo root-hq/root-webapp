@@ -27,6 +27,8 @@ const OrderConsumer = ({
 
   const [chartData, setChartData] = useState([]);
 
+  let initialLoad = false;
+
   useEffect(() => {
     const refreshPriceData = async () => {
 
@@ -34,19 +36,7 @@ const OrderConsumer = ({
         return;
       }
 
-      if(chartData && chartData.length > 0) {
-        let newMidPrice = parseFloat(
-          (await getMarketMidPrice(selectedSpotGridMarket.phoenix_market_address.toString())).toFixed(3),
-        );
-
-        if(newMidPrice) {
-          setChartData(prev => [...prev, {
-            time: Math.floor(Date.now() / 1000),
-            value: newMidPrice
-          }]);
-        }
-      }
-      else {
+      if(!initialLoad) {
         var date = new Date();
         date.setDate(date.getDate());
 
@@ -63,7 +53,20 @@ const OrderConsumer = ({
           };
         });
   
-        setChartData(prev => trueData);  
+        setChartData(prev => trueData);
+        initialLoad = true;
+      }
+      else {
+        let newMidPrice = parseFloat(
+          (await getMarketMidPrice(selectedSpotGridMarket.phoenix_market_address.toString())).toFixed(3),
+        );
+
+        if(newMidPrice) {
+          setChartData(prev => [...prev, {
+            time: Math.floor(Date.now() / 1000),
+            value: newMidPrice
+          }]);
+        }
       }
     };
 
