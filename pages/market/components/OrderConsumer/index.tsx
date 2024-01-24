@@ -47,7 +47,9 @@ const OrderConsumer = ({
   }, []);
 
   const chartOptions = {
-    
+    lineColor: '#3673f5',
+    topColor: 'rgba(54, 115, 245, 0.4)',
+    bottomColor: 'rgba(54, 115, 245, 0.0)'
   };
 
   const gridOptions = {

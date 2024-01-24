@@ -1,9 +1,7 @@
 .marketPageContainer {
-  /* background-color: red; */
   display: flex;
   flex-direction: row;
   justify-content: center;
-  /* width: 100%; */
 }
 
 .orderProducerContainer {
@@ -12,4 +10,22 @@
 
 .orderConsumerContainer {
   width: 75%;
+}
+
+@media (max-width: 1024px) {
+  .marketPageContainer {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .orderConsumerContainer {
+    width: 90%;
+    margin: 0;
+  }
+
+  .orderProducerContainer {
+    margin-top: 2rem;
+    width: 90%;
+  }
 }

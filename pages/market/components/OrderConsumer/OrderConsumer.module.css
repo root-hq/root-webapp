@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: row;
   justify-content: left;
-  background-color: red;
+  /* background-color: red; */
   width: 100%;
 }
 
