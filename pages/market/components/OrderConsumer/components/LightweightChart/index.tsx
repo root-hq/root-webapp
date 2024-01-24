@@ -1,23 +1,100 @@
 
 import { createChart, ColorType, SeriesDataItemTypeMap, Time, SeriesType, CandlestickSeriesPartialOptions, DeepPartial, LayoutOptions, AreaSeriesPartialOptions, GridOptions, ChartOptions } from 'lightweight-charts';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from "./LightweightChart.module.css";
+import { SpotGridMarket, TokenMetadata, TokenPrice } from '../../../../../../utils/supabase';
+import { getTokenPriceDataWithDate } from '../../../../../../utils/supabase/tokenPrice';
+import { getMarketMidPrice } from '../../../../../../utils/phoenix';
+import { PRICE_REFRESH_FREQUENCY_IN_MS } from '../../../../../../constants';
 
 export interface LightweightChartProps {
-	data: SeriesDataItemTypeMap<Time>[SeriesType][],
-	canvasOptions: DeepPartial<ChartOptions>,
-	chartOptions: AreaSeriesPartialOptions,
-	width?: number,
-	height?: number
+	selectedSpotGridMarket: SpotGridMarket;
+	baseTokenMetadata: TokenMetadata;
+	quoteTokenMetadata: TokenMetadata;
 }
 
 const LightweightChart = ({
-	data,
-	canvasOptions,
-	chartOptions,
-	width,
-	height
+	selectedSpotGridMarket,
+	baseTokenMetadata,
+	quoteTokenMetadata
 }: LightweightChartProps) => {
+	const [chartData, setChartData] = useState([]);
+
+  let initialLoad = false;
+
+  useEffect(() => {
+    const refreshPriceData = async () => {
+
+      if(!selectedSpotGridMarket) {
+        return;
+      }
+
+      if(!initialLoad) {
+        var date = new Date();
+        date.setDate(date.getDate());
+
+        let rawData: TokenPrice[] = [];
+  
+        if(selectedSpotGridMarket) {
+          rawData = await getTokenPriceDataWithDate(selectedSpotGridMarket.phoenix_market_address.toString(), date);
+        }
+  
+        const trueData = rawData.map((dataPoint) => {
+          return {
+            time: Math.floor(dataPoint.timestamp / 1000),
+            value: dataPoint.price
+          };
+        });
+  
+        setChartData(prev => trueData);
+        initialLoad = true;
+      }
+      else {
+        let newMidPrice = parseFloat(
+          (await getMarketMidPrice(selectedSpotGridMarket.phoenix_market_address.toString())).toFixed(3),
+        );
+
+        if(newMidPrice) {
+          setChartData(prev => [...prev, {
+            time: Math.floor(Date.now() / 1000),
+            value: newMidPrice
+          }]);
+        }
+      }
+    };
+
+    refreshPriceData();
+
+    const intervalId = setInterval(() => {
+      refreshPriceData();
+    }, PRICE_REFRESH_FREQUENCY_IN_MS);
+
+    return () => clearInterval(intervalId);
+  }, [selectedSpotGridMarket, baseTokenMetadata, quoteTokenMetadata]);
+
+  const canvasOptions: DeepPartial<ChartOptions> = {
+    layout: {
+      background: { type: ColorType.Solid, color: 'transparent' },
+      textColor: 'white',
+    },
+    grid: {
+      horzLines: {
+        visible: false,
+      },
+      vertLines: {
+        visible: false
+      }
+    },
+    timeScale: {
+      visible: false
+    },
+  }
+
+  const chartOptions = {
+    lineColor: '#3673f5',
+    topColor: 'rgba(54, 115, 245, 0.4)',
+    bottomColor: 'rgba(54, 115, 245, 0.0)'
+  };
 
 	const chartContainerRef = useRef<HTMLDivElement>();
 
@@ -30,13 +107,13 @@ const LightweightChart = ({
 
 		const chart = createChart(chartContainerRef.current, {
 			...canvasOptions,
-			width: width ? width : chartContainerRef.current.clientWidth,
-			height: height ? height : chartContainerRef.current.clientHeight,
+			width: chartContainerRef.current.clientWidth,
+			height: 500,
 		});
 		chart.timeScale().fitContent();
 
 		const newSeries = chart.addAreaSeries(chartOptions);
-		newSeries.setData(data);
+		newSeries.setData(chartData);
 
 		window.addEventListener('resize', handleResize);
 
@@ -46,7 +123,7 @@ const LightweightChart = ({
 			chart.remove();
 		};
 
-	}, [data, canvasOptions, chartOptions, width, height]);
+	}, [chartData, canvasOptions, chartOptions]);
 	
 	return (
 		<div className={styles.lightweightChartContainer} ref={chartContainerRef}>

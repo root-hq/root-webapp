@@ -25,86 +25,6 @@ const OrderConsumer = ({
   quoteTokenMetadata,
 }: OrderConsumerProps) => {
 
-  const [chartData, setChartData] = useState([]);
-
-  let initialLoad = false;
-
-  useEffect(() => {
-    const refreshPriceData = async () => {
-
-      if(!selectedSpotGridMarket) {
-        return;
-      }
-
-      if(!initialLoad) {
-        var date = new Date();
-        date.setDate(date.getDate());
-
-        let rawData: TokenPrice[] = [];
-  
-        if(selectedSpotGridMarket) {
-          rawData = await getTokenPriceDataWithDate(selectedSpotGridMarket.phoenix_market_address.toString(), date);
-        }
-  
-        const trueData = rawData.map((dataPoint) => {
-          return {
-            time: Math.floor(dataPoint.timestamp / 1000),
-            value: dataPoint.price
-          };
-        });
-  
-        setChartData(prev => trueData);
-        initialLoad = true;
-      }
-      else {
-        let newMidPrice = parseFloat(
-          (await getMarketMidPrice(selectedSpotGridMarket.phoenix_market_address.toString())).toFixed(3),
-        );
-
-        if(newMidPrice) {
-          setChartData(prev => [...prev, {
-            time: Math.floor(Date.now() / 1000),
-            value: newMidPrice
-          }]);
-        }
-      }
-    };
-
-    refreshPriceData();
-
-    const intervalId = setInterval(() => {
-      refreshPriceData();
-    }, PRICE_REFRESH_FREQUENCY_IN_MS);
-
-    return () => clearInterval(intervalId);
-  }, [selectedSpotGridMarket, baseTokenMetadata, quoteTokenMetadata]);
-
-  const canvasOptions: DeepPartial<ChartOptions> = {
-    layout: {
-      background: { type: ColorType.Solid, color: 'transparent' },
-      textColor: 'white',
-    },
-    grid: {
-      horzLines: {
-        visible: false,
-      },
-      vertLines: {
-        visible: false
-      }
-    },
-    timeScale: {
-      visible: false
-    },
-  }
-
-  const height = 500;
-
-  const chartOptions = {
-    lineColor: '#3673f5',
-    topColor: 'rgba(54, 115, 245, 0.4)',
-    bottomColor: 'rgba(54, 115, 245, 0.0)'
-  };
-
   return (
     <div className={styles.orderConsumerContainer}>
       <div className={styles.marketInfoContainer}>
@@ -118,7 +38,7 @@ const OrderConsumer = ({
         </div>
       </div>
       <div className={styles.lightweightChartContainer}>
-        <LightweightChart data ={chartData} canvasOptions={canvasOptions} chartOptions={chartOptions} height={height}/>
+        <LightweightChart selectedSpotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata}/>
       </div>
       <div className={styles.orderManagerContainer}>
         <p>Order Manager</p>
