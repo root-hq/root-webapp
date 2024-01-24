@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./OrderConsumer.module.css";
-import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
+import { SpotGridMarket, TokenMetadata, TokenPrice } from "../../../../utils/supabase";
 import axios from "axios";
 import { useEffect } from "react";
 import MarketSelectorDropdown from "./components/MarketSelectorDropdown";
 import { EnumeratedMarketToMetadata } from "../../[market]";
 import LightweightChart from "./components/LightweightChart";
-import { ColorType } from "lightweight-charts";
+import { ChartOptions, ColorType, DeepPartial } from "lightweight-charts";
 import { getTokenPriceDataWithDate } from "../../../../utils/supabase/tokenPrice";
+import { PRICE_REFRESH_FREQUENCY_IN_MS } from "../../../../constants";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -26,12 +27,16 @@ const OrderConsumer = ({
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
-    const doStuff = async () => {
-      var date = new Date();
-      date.setDate(date.getDate() - 2);
+    const refreshPriceData = async () => {
 
-      const rawData = await getTokenPriceDataWithDate("4DoNfFBfF7UokCC2FQzriy7yHK6DY6NVdYpuekQ5pRgg", date);
-      console.log("Raw data: ", rawData);
+      var date = new Date();
+      date.setDate(date.getDate());
+
+      let rawData: TokenPrice[] = [];
+
+      if(selectedSpotGridMarket) {
+        rawData = await getTokenPriceDataWithDate(selectedSpotGridMarket.phoenix_market_address.toString(), date);
+      }
 
       const trueData = rawData.map((dataPoint) => {
         return {
@@ -43,31 +48,40 @@ const OrderConsumer = ({
       setChartData(prev => trueData);
     };
 
-    doStuff();
+    refreshPriceData();
+
+    const intervalId = setInterval(() => {
+      refreshPriceData();
+    }, PRICE_REFRESH_FREQUENCY_IN_MS);
+
+    return () => clearInterval(intervalId);
   }, []);
+
+  const canvasOptions: DeepPartial<ChartOptions> = {
+    layout: {
+      background: { type: ColorType.Solid, color: 'transparent' },
+      textColor: 'white',
+    },
+    grid: {
+      horzLines: {
+        visible: false,
+      },
+      vertLines: {
+        visible: false
+      }
+    },
+    timeScale: {
+      visible: false
+    },
+  }
+
+  const height = 500;
 
   const chartOptions = {
     lineColor: '#3673f5',
     topColor: 'rgba(54, 115, 245, 0.4)',
     bottomColor: 'rgba(54, 115, 245, 0.0)'
   };
-
-  const gridOptions = {
-    horzLines: {
-      visible: false,
-    },
-    vertLines: {
-      visible: false
-    }
-  }
-
-  const layoutOptions = {
-    background: { type: ColorType.Solid, color: 'transparent' },
-    textColor: 'white',
-  };
-
-  const width = 500;
-  const height = 300;
 
   return (
     <div className={styles.orderConsumerContainer}>
@@ -82,7 +96,7 @@ const OrderConsumer = ({
         </div>
       </div>
       <div className={styles.lightweightChartContainer}>
-        <LightweightChart data ={chartData} chartOptions={chartOptions} gridOptions={gridOptions} layoutOptions={layoutOptions} height={height}/>
+        <LightweightChart data ={chartData} canvasOptions={canvasOptions} chartOptions={chartOptions} height={height}/>
       </div>
       <div className={styles.orderManagerContainer}>
         <p>Order Manager</p>

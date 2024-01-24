@@ -1,22 +1,20 @@
 
-import { createChart, ColorType, SeriesDataItemTypeMap, Time, SeriesType, CandlestickSeriesPartialOptions, DeepPartial, LayoutOptions, AreaSeriesPartialOptions, GridOptions } from 'lightweight-charts';
+import { createChart, ColorType, SeriesDataItemTypeMap, Time, SeriesType, CandlestickSeriesPartialOptions, DeepPartial, LayoutOptions, AreaSeriesPartialOptions, GridOptions, ChartOptions } from 'lightweight-charts';
 import React, { useEffect, useRef } from 'react';
 import styles from "./LightweightChart.module.css";
 
 export interface LightweightChartProps {
 	data: SeriesDataItemTypeMap<Time>[SeriesType][],
+	canvasOptions: DeepPartial<ChartOptions>,
 	chartOptions: AreaSeriesPartialOptions,
-	layoutOptions: DeepPartial<LayoutOptions>,
-	gridOptions: DeepPartial<GridOptions>
 	width?: number,
 	height?: number
 }
 
 const LightweightChart = ({
 	data,
+	canvasOptions,
 	chartOptions,
-	layoutOptions,
-	gridOptions,
 	width,
 	height
 }: LightweightChartProps) => {
@@ -31,10 +29,9 @@ const LightweightChart = ({
 		}
 
 		const chart = createChart(chartContainerRef.current, {
-			layout: layoutOptions,
-			grid: gridOptions,
+			...canvasOptions,
 			width: width ? width : chartContainerRef.current.clientWidth,
-			height: height ? height : 500,
+			height: height ? height : chartContainerRef.current.clientHeight,
 		});
 		chart.timeScale().fitContent();
 
@@ -49,7 +46,7 @@ const LightweightChart = ({
 			chart.remove();
 		};
 
-	}, [data, chartOptions, layoutOptions, gridOptions, width, height]);
+	}, [data, chartOptions, width, height]);
 	
 	return (
 		<div className={styles.lightweightChartContainer} ref={chartContainerRef}>
