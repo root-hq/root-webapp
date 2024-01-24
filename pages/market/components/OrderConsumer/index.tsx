@@ -9,6 +9,7 @@ import LightweightChart from "./components/LightweightChart";
 import { ChartOptions, ColorType, DeepPartial } from "lightweight-charts";
 import { getTokenPriceDataWithDate } from "../../../../utils/supabase/tokenPrice";
 import { PRICE_REFRESH_FREQUENCY_IN_MS } from "../../../../constants";
+import { getMarketMidPrice } from "../../../../utils/phoenix";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -29,23 +30,41 @@ const OrderConsumer = ({
   useEffect(() => {
     const refreshPriceData = async () => {
 
-      var date = new Date();
-      date.setDate(date.getDate());
-
-      let rawData: TokenPrice[] = [];
-
-      if(selectedSpotGridMarket) {
-        rawData = await getTokenPriceDataWithDate(selectedSpotGridMarket.phoenix_market_address.toString(), date);
+      if(!selectedSpotGridMarket) {
+        return;
       }
 
-      const trueData = rawData.map((dataPoint) => {
-        return {
-          time: Math.floor(dataPoint.timestamp / 1000),
-          value: dataPoint.price
-        };
-      });
+      if(chartData && chartData.length > 0) {
+        let newMidPrice = parseFloat(
+          (await getMarketMidPrice(selectedSpotGridMarket.phoenix_market_address.toString())).toFixed(3),
+        );
 
-      setChartData(prev => trueData);
+        if(newMidPrice) {
+          setChartData(prev => [...prev, {
+            time: Math.floor(Date.now() / 1000),
+            value: newMidPrice
+          }]);
+        }
+      }
+      else {
+        var date = new Date();
+        date.setDate(date.getDate());
+
+        let rawData: TokenPrice[] = [];
+  
+        if(selectedSpotGridMarket) {
+          rawData = await getTokenPriceDataWithDate(selectedSpotGridMarket.phoenix_market_address.toString(), date);
+        }
+  
+        const trueData = rawData.map((dataPoint) => {
+          return {
+            time: Math.floor(dataPoint.timestamp / 1000),
+            value: dataPoint.price
+          };
+        });
+  
+        setChartData(prev => trueData);  
+      }
     };
 
     refreshPriceData();
