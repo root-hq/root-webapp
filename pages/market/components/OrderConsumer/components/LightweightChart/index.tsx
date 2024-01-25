@@ -9,6 +9,9 @@ import {
   AreaSeriesOptions,
   AreaStyleOptions,
   SeriesOptionsCommon,
+  CreatePriceLineOptions,
+  LineStyle,
+  IPriceLine,
 } from "lightweight-charts";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./LightweightChart.module.css";
@@ -18,8 +21,8 @@ import {
   TokenPrice,
 } from "../../../../../../utils/supabase";
 import { getTokenPriceDataWithDate } from "../../../../../../utils/supabase/tokenPrice";
-import { getMarketMidPrice } from "../../../../../../utils/phoenix";
-import { PRICE_REFRESH_FREQUENCY_IN_MS } from "../../../../../../constants";
+import { getL3Book, getMarketMidPrice } from "../../../../../../utils/phoenix";
+import { DEFAULT_ORDERBOOK_VIEW_DEPTH, NUM_ORDERS_VISIBLE_PER_SIDE, OPEN_ORDERS_REFRESH_FREQUENCY_IN_MS, PRICE_REFRESH_FREQUENCY_IN_MS } from "../../../../../../constants";
 
 export interface LightweightChartProps {
   selectedSpotGridMarket: SpotGridMarket;
@@ -45,6 +48,7 @@ const LightweightChart = ({
   const initialLoad = useRef<boolean>(false);
   const chartContainerRef = useRef<HTMLDivElement>();
   const seriesManager = useRef<SeriesManagerInstance>(null);
+  const ordersDisplay = useRef<IPriceLine[]>([]);
 
   useEffect(() => {
     const refreshPriceData = async () => {
@@ -74,6 +78,69 @@ const LightweightChart = ({
     }, PRICE_REFRESH_FREQUENCY_IN_MS);
 
     return () => clearInterval(intervalId);
+  }, [chartData]);
+
+  useEffect(() => {
+    const refreshOrders = async () => {
+
+      if(!selectedSpotGridMarket) {
+        return;
+      }
+
+      if(ordersDisplay.current.length > 0) {
+        ordersDisplay.current.forEach((line) => {
+          seriesManager.current.removePriceLine(line);
+        });
+      }
+
+      const book = await getL3Book(selectedSpotGridMarket.phoenix_market_address.toString(), DEFAULT_ORDERBOOK_VIEW_DEPTH);
+
+      let bidCounter = 0;
+      book.bids.forEach((value, index) => {
+        if(value.makerPubkey === "LUKAzPV8dDbVykTVT14pCGKzFfNcgZgRbAXB8AGdKx3") {
+          if(bidCounter < NUM_ORDERS_VISIBLE_PER_SIDE) {
+            let line = seriesManager.current.createPriceLine({
+              price: value.price,
+              id: value.orderSequenceNumber.toString(),
+              color: 'green',
+              lineWidth: 2,
+              lineStyle: LineStyle.Dashed,
+              axisLabelVisible: true,
+              title: `${value.size}`
+            } as CreatePriceLineOptions);
+            ordersDisplay.current.push(line);
+            bidCounter++;
+          }
+        }
+      });
+
+      let askCounter = 0;
+      book.asks.forEach((value, index) => {
+        if(value.makerPubkey === "LUKAzPV8dDbVykTVT14pCGKzFfNcgZgRbAXB8AGdKx3") {
+          if(askCounter < NUM_ORDERS_VISIBLE_PER_SIDE) {
+            let line = seriesManager.current.createPriceLine({
+              price: value.price,
+              id: value.orderSequenceNumber.toString(),
+              color: 'red',
+              lineWidth: 2,
+              lineStyle: LineStyle.Dashed,
+              axisLabelVisible: true,
+              title: `${value.size}`
+            } as CreatePriceLineOptions);
+            ordersDisplay.current.push(line);
+            askCounter++;
+          }
+        }
+      });
+    };
+
+    refreshOrders();
+
+    // const intervalId = setInterval(() => {
+    //   refreshOrders();
+    // }, OPEN_ORDERS_REFRESH_FREQUENCY_IN_MS);
+
+    // return () => clearInterval(intervalId);
   }, [chartData]);
 
   useEffect(() => {
