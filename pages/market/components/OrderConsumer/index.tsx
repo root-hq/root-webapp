@@ -18,9 +18,8 @@ const OrderConsumer = ({
   baseTokenMetadata,
   quoteTokenMetadata,
 }: OrderConsumerProps) => {
-
   const [activeMarket, setActiveMarket] = useState(selectedSpotGridMarket);
-  
+
   return (
     <div className={styles.orderConsumerContainer}>
       <div className={styles.marketInfoContainer}>
@@ -35,7 +34,11 @@ const OrderConsumer = ({
         </div>
       </div>
       <div className={styles.lightweightChartContainer}>
-        <LightweightChart selectedSpotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata}/>
+        <LightweightChart
+          selectedSpotGridMarket={selectedSpotGridMarket}
+          baseTokenMetadata={baseTokenMetadata}
+          quoteTokenMetadata={quoteTokenMetadata}
+        />
       </div>
       <div className={styles.orderManagerContainer}>
         <p>Order Manager</p>

@@ -1,26 +1,54 @@
-
-import { createChart, ColorType, SeriesDataItemTypeMap, Time, SeriesType, CandlestickSeriesPartialOptions, DeepPartial, LayoutOptions, AreaSeriesPartialOptions, GridOptions, ChartOptions, ISeriesApi, AreaData, WhitespaceData, AreaSeriesOptions, AreaStyleOptions, SeriesOptionsCommon, CreatePriceLineOptions } from 'lightweight-charts';
-import React, { useEffect, useRef, useState } from 'react';
+import {
+  createChart,
+  ColorType,
+  SeriesDataItemTypeMap,
+  Time,
+  SeriesType,
+  CandlestickSeriesPartialOptions,
+  DeepPartial,
+  LayoutOptions,
+  AreaSeriesPartialOptions,
+  GridOptions,
+  ChartOptions,
+  ISeriesApi,
+  AreaData,
+  WhitespaceData,
+  AreaSeriesOptions,
+  AreaStyleOptions,
+  SeriesOptionsCommon,
+  CreatePriceLineOptions,
+} from "lightweight-charts";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./LightweightChart.module.css";
-import { SpotGridMarket, TokenMetadata, TokenPrice } from '../../../../../../utils/supabase';
-import { getTokenPriceDataWithDate } from '../../../../../../utils/supabase/tokenPrice';
-import { getMarketMidPrice } from '../../../../../../utils/phoenix';
-import { PRICE_REFRESH_FREQUENCY_IN_MS } from '../../../../../../constants';
+import {
+  SpotGridMarket,
+  TokenMetadata,
+  TokenPrice,
+} from "../../../../../../utils/supabase";
+import { getTokenPriceDataWithDate } from "../../../../../../utils/supabase/tokenPrice";
+import { getMarketMidPrice } from "../../../../../../utils/phoenix";
+import { PRICE_REFRESH_FREQUENCY_IN_MS } from "../../../../../../constants";
 
 export interface LightweightChartProps {
-	selectedSpotGridMarket: SpotGridMarket;
-	baseTokenMetadata: TokenMetadata;
-	quoteTokenMetadata: TokenMetadata;
+  selectedSpotGridMarket: SpotGridMarket;
+  baseTokenMetadata: TokenMetadata;
+  quoteTokenMetadata: TokenMetadata;
 }
 
-export type SeriesManagerInstance = ISeriesApi<"Area", Time, AreaData<Time> | WhitespaceData<Time>, AreaSeriesOptions, DeepPartial<AreaStyleOptions & SeriesOptionsCommon>>;
+export type SeriesManagerInstance = ISeriesApi<
+  "Area",
+  Time,
+  AreaData<Time> | WhitespaceData<Time>,
+  AreaSeriesOptions,
+  DeepPartial<AreaStyleOptions & SeriesOptionsCommon>
+>;
 
 const LightweightChart = ({
-	selectedSpotGridMarket,
-	baseTokenMetadata,
-	quoteTokenMetadata
+  selectedSpotGridMarket,
+  baseTokenMetadata,
+  quoteTokenMetadata,
 }: LightweightChartProps) => {
-	const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState([]);
 
   const initialLoad = useRef<boolean>(false);
   const chartContainerRef = useRef<HTMLDivElement>();
@@ -28,22 +56,25 @@ const LightweightChart = ({
 
   useEffect(() => {
     const refreshPriceData = async () => {
-
-      if(!selectedSpotGridMarket) {
+      if (!selectedSpotGridMarket) {
         return;
       }
 
       let newMidPrice = parseFloat(
-		(await getMarketMidPrice(selectedSpotGridMarket.phoenix_market_address.toString())).toFixed(3),
-	  ); 
+        (
+          await getMarketMidPrice(
+            selectedSpotGridMarket.phoenix_market_address.toString(),
+          )
+        ).toFixed(3),
+      );
 
-	  if(newMidPrice) {
-		console.log("series manager: ", seriesManager);
-		seriesManager.current.update({
-		  time: Math.floor(Date.now() / 1000) as Time,
-		  value: newMidPrice
-		});
-	  }
+      if (newMidPrice) {
+        console.log("series manager: ", seriesManager);
+        seriesManager.current.update({
+          time: Math.floor(Date.now() / 1000) as Time,
+          value: newMidPrice,
+        });
+      }
     };
 
     refreshPriceData();
@@ -55,79 +86,83 @@ const LightweightChart = ({
     return () => clearInterval(intervalId);
   }, [chartData]);
 
-	useEffect(() => {
-		const loadInitialData = async () => {
-			var date = new Date();
-			date.setDate(date.getDate());
+  useEffect(() => {
+    const loadInitialData = async () => {
+      var date = new Date();
+      date.setDate(date.getDate());
 
-			let rawData: TokenPrice[] = [];
-	
-			if(selectedSpotGridMarket) {
-			rawData = await getTokenPriceDataWithDate(selectedSpotGridMarket.phoenix_market_address.toString(), date);
-			}
-	
-			const trueData = rawData.map((dataPoint) => {
-			return {
-				time: Math.floor(dataPoint.timestamp / 1000),
-				value: dataPoint.price
-			};
-			});
-	
-			setChartData(prev => trueData);
-		}
+      let rawData: TokenPrice[] = [];
 
-		loadInitialData();
-	}, [selectedSpotGridMarket, baseTokenMetadata, quoteTokenMetadata]);
+      if (selectedSpotGridMarket) {
+        rawData = await getTokenPriceDataWithDate(
+          selectedSpotGridMarket.phoenix_market_address.toString(),
+          date,
+        );
+      }
 
-	useEffect(() => {
-		const handleResize = () => {
-			chart.applyOptions({
-				width: chartContainerRef.current.clientWidth,
-			});
-		}
+      const trueData = rawData.map((dataPoint) => {
+        return {
+          time: Math.floor(dataPoint.timestamp / 1000),
+          value: dataPoint.price,
+        };
+      });
 
-		const chart = createChart(chartContainerRef.current, {
-			layout: {
-			  background: { type: ColorType.Solid, color: 'transparent' },
-			  textColor: 'white',
-			},
-			grid: {
-			  horzLines: {
-				visible: false,
-			  },
-			  vertLines: {
-				visible: false
-			  }
-			},
-			timeScale: {
-			  visible: false
-			},
-			width: chartContainerRef.current.clientWidth,
-			height: 500
-		  });
-		chart.timeScale().fitContent();
+      setChartData((prev) => trueData);
+    };
 
-		seriesManager.current = chart.addAreaSeries({
-			lineColor: '#3673f5',
-			topColor: 'rgba(54, 115, 245, 0.4)',
-			bottomColor: 'rgba(54, 115, 245, 0.0)'
-		  });
-		seriesManager.current.setData(chartData);
+    loadInitialData();
+  }, [selectedSpotGridMarket, baseTokenMetadata, quoteTokenMetadata]);
 
-		window.addEventListener('resize', handleResize);
+  useEffect(() => {
+    const handleResize = () => {
+      chart.applyOptions({
+        width: chartContainerRef.current.clientWidth,
+      });
+    };
 
-		return () => {
-			window.removeEventListener('resize', handleResize);
+    const chart = createChart(chartContainerRef.current, {
+      layout: {
+        background: { type: ColorType.Solid, color: "transparent" },
+        textColor: "white",
+      },
+      grid: {
+        horzLines: {
+          visible: false,
+        },
+        vertLines: {
+          visible: false,
+        },
+      },
+      timeScale: {
+        visible: false,
+      },
+      width: chartContainerRef.current.clientWidth,
+      height: 500,
+    });
+    chart.timeScale().fitContent();
 
-			chart.remove();
-		};
+    seriesManager.current = chart.addAreaSeries({
+      lineColor: "#3673f5",
+      topColor: "rgba(54, 115, 245, 0.4)",
+      bottomColor: "rgba(54, 115, 245, 0.0)",
+    });
+    seriesManager.current.setData(chartData);
 
-	}, [chartData]);
-	
-	return (
-		<div className={styles.lightweightChartContainer} ref={chartContainerRef}>
-		</div>
-	);
-}
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+
+      chart.remove();
+    };
+  }, [chartData]);
+
+  return (
+    <div
+      className={styles.lightweightChartContainer}
+      ref={chartContainerRef}
+    ></div>
+  );
+};
 
 export default LightweightChart;

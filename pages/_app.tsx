@@ -65,7 +65,6 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
         crossOrigin="anonymous"
         referrerPolicy="no-referrer"
       />
-
     </>
   );
 };

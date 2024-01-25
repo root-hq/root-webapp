@@ -17,7 +17,7 @@ import {
 export interface EnumeratedMarketToMetadata {
   spotGridMarket: SpotGridMarket;
   baseTokenMetadata: TokenMetadata;
-  quoteTokenMetadata: TokenMetadata; 
+  quoteTokenMetadata: TokenMetadata;
 }
 
 export interface MarketPageProps {
@@ -79,25 +79,30 @@ export const getServerSideProps = async ({ params }) => {
       let baseMetadata = allTokenMetadata.find((value) => {
         return value.mint === market.base_token_mint.toString();
       });
-  
+
       let quoteMetadata = allTokenMetadata.find((value) => {
         return value.mint === market.quote_token_mint.toString();
       });
-  
-      if(market.spot_grid_market_address === spotGridMarketOnPage.spot_grid_market_address) {
+
+      if (
+        market.spot_grid_market_address ===
+        spotGridMarketOnPage.spot_grid_market_address
+      ) {
         baseTokenMetadata = allTokenMetadata.find((value) => {
           return value.mint === spotGridMarketOnPage.base_token_mint.toString();
         });
-    
+
         quoteTokenMetadata = allTokenMetadata.find((value) => {
-          return value.mint === spotGridMarketOnPage.quote_token_mint.toString();
-        });  
+          return (
+            value.mint === spotGridMarketOnPage.quote_token_mint.toString()
+          );
+        });
       }
-  
+
       enumeratedMarkets.push({
         spotGridMarket: market,
         baseTokenMetadata: baseMetadata,
-        quoteTokenMetadata: quoteMetadata
+        quoteTokenMetadata: quoteMetadata,
       } as EnumeratedMarketToMetadata);
     });
   }
