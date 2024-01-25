@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [`raw.githubusercontent.com`],
+    domains: [
+      `raw.githubusercontent.com`,
+      'metadata.jito.network'
+    ],
   },
   env: {
     RPC_ENDPOINT: process.env.RPC_ENDPOINT,
