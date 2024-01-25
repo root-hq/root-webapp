@@ -1,22 +1,14 @@
 import {
   createChart,
   ColorType,
-  SeriesDataItemTypeMap,
   Time,
-  SeriesType,
-  CandlestickSeriesPartialOptions,
   DeepPartial,
-  LayoutOptions,
-  AreaSeriesPartialOptions,
-  GridOptions,
-  ChartOptions,
   ISeriesApi,
   AreaData,
   WhitespaceData,
   AreaSeriesOptions,
   AreaStyleOptions,
   SeriesOptionsCommon,
-  CreatePriceLineOptions,
 } from "lightweight-charts";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./LightweightChart.module.css";
@@ -28,7 +20,6 @@ import {
 import { getTokenPriceDataWithDate } from "../../../../../../utils/supabase/tokenPrice";
 import { getMarketMidPrice } from "../../../../../../utils/phoenix";
 import { PRICE_REFRESH_FREQUENCY_IN_MS } from "../../../../../../constants";
-import { useRouter } from "next/router";
 
 export interface LightweightChartProps {
   selectedSpotGridMarket: SpotGridMarket;
@@ -54,18 +45,12 @@ const LightweightChart = ({
   const initialLoad = useRef<boolean>(false);
   const chartContainerRef = useRef<HTMLDivElement>();
   const seriesManager = useRef<SeriesManagerInstance>(null);
-  const router = useRouter();
 
   useEffect(() => {
     const refreshPriceData = async () => {
       if (!selectedSpotGridMarket) {
         return;
       }
-
-      if(selectedSpotGridMarket.phoenix_market_address !== router.query.market) {
-        console.log("Router.query.market is different");
-      }
-
       let newMidPrice = parseFloat(
         (
           await getMarketMidPrice(
@@ -100,10 +85,6 @@ const LightweightChart = ({
       let rawData: TokenPrice[] = [];
 
       if (selectedSpotGridMarket) {
-        if(selectedSpotGridMarket.phoenix_market_address !== router.query.market) {
-          console.log("Router.query.market is different");
-        }
-
         rawData = await getTokenPriceDataWithDate(
           selectedSpotGridMarket.phoenix_market_address.toString(),
           date,
