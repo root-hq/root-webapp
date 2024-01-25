@@ -9,23 +9,25 @@ import {
 import styles from "./MarketSelectorDropdown.module.css";
 import Image from "next/image";
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
+import { Button } from "react-bootstrap";
 
 export interface MarketSelectorDropdownProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
-  selectedMarket: SpotGridMarket;
   selectedBaseTokenMetadata: TokenMetadata;
   selectedQuoteTokenMetadata: TokenMetadata;
+  topLevelActiveMarketState: SpotGridMarket;
+  setTopLevelActiveMarketState: React.Dispatch<React.SetStateAction<SpotGridMarket>>
 }
 
 const MarketSelectorDropdown = ({
   enumeratedMarkets,
-  selectedMarket,
   selectedBaseTokenMetadata,
   selectedQuoteTokenMetadata,
+  topLevelActiveMarketState,
+  setTopLevelActiveMarketState
 }: MarketSelectorDropdownProps) => {
   const router = useRouter();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [activeMarket, setActiveMarket] = useState(selectedMarket);
   const [activeBaseTokenMetadata, setActiveBaseTokenMetadata] = useState(
     selectedBaseTokenMetadata,
   );
@@ -34,7 +36,7 @@ const MarketSelectorDropdown = ({
   );
 
   const handleMarketChange = (market: SpotGridMarket, baseMetadata: TokenMetadata, quoteMetadata: TokenMetadata) => {
-    setActiveMarket(market);
+    setTopLevelActiveMarketState(market);
     setDropdownOpen(false);
     setActiveBaseTokenMetadata(baseMetadata);
     setActiveQuoteTokenMetadata(quoteMetadata);
@@ -116,10 +118,10 @@ const MarketSelectorDropdown = ({
 
   return (
     <div className={styles.marketDropdown}>
-      <button className={styles.dropdownButton} onClick={toggleDropdown}>
+      <Button className={styles.dropdownButton} onClick={toggleDropdown}>
         {getTokenPair(activeBaseTokenMetadata, activeQuoteTokenMetadata, true)}
         
-      </button>
+      </Button>
       {isDropdownOpen && (
         <div className={styles.dropdownContent}>
           {enumeratedMarkets.map((enumeratedMarket, index) => (

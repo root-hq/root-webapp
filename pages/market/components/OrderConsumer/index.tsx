@@ -1,15 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import styles from "./OrderConsumer.module.css";
-import { SpotGridMarket, TokenMetadata, TokenPrice } from "../../../../utils/supabase";
-import axios from "axios";
-import { useEffect } from "react";
+import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import MarketSelectorDropdown from "./components/MarketSelectorDropdown";
 import { EnumeratedMarketToMetadata } from "../../[market]";
 import LightweightChart from "./components/LightweightChart";
-import { ChartOptions, ColorType, DeepPartial } from "lightweight-charts";
-import { getTokenPriceDataWithDate } from "../../../../utils/supabase/tokenPrice";
-import { PRICE_REFRESH_FREQUENCY_IN_MS } from "../../../../constants";
-import { getMarketMidPrice } from "../../../../utils/phoenix";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -25,15 +19,18 @@ const OrderConsumer = ({
   quoteTokenMetadata,
 }: OrderConsumerProps) => {
 
+  const [activeMarket, setActiveMarket] = useState(selectedSpotGridMarket);
+  
   return (
     <div className={styles.orderConsumerContainer}>
       <div className={styles.marketInfoContainer}>
         <div className={styles.marketSelectorContainer}>
           <MarketSelectorDropdown
             enumeratedMarkets={enumeratedMarkets}
-            selectedMarket={selectedSpotGridMarket}
             selectedBaseTokenMetadata={baseTokenMetadata}
             selectedQuoteTokenMetadata={quoteTokenMetadata}
+            topLevelActiveMarketState={activeMarket}
+            setTopLevelActiveMarketState={setActiveMarket}
           />
         </div>
       </div>
