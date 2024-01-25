@@ -81,69 +81,6 @@ const LightweightChart = ({
   }, [chartData]);
 
   useEffect(() => {
-    const refreshOrders = async () => {
-
-      if(!selectedSpotGridMarket) {
-        return;
-      }
-
-      if(ordersDisplay.current.length > 0) {
-        ordersDisplay.current.forEach((line) => {
-          seriesManager.current.removePriceLine(line);
-        });
-      }
-
-      const book = await getL3Book(selectedSpotGridMarket.phoenix_market_address.toString(), DEFAULT_ORDERBOOK_VIEW_DEPTH);
-
-      let bidCounter = 0;
-      book.bids.forEach((value, index) => {
-        if(value.makerPubkey === "LUKAzPV8dDbVykTVT14pCGKzFfNcgZgRbAXB8AGdKx3") {
-          if(bidCounter < NUM_ORDERS_VISIBLE_PER_SIDE) {
-            let line = seriesManager.current.createPriceLine({
-              price: value.price,
-              id: value.orderSequenceNumber.toString(),
-              color: 'green',
-              lineWidth: 2,
-              lineStyle: LineStyle.Dashed,
-              axisLabelVisible: true,
-              title: `${value.size}`
-            } as CreatePriceLineOptions);
-            ordersDisplay.current.push(line);
-            bidCounter++;
-          }
-        }
-      });
-
-      let askCounter = 0;
-      book.asks.forEach((value, index) => {
-        if(value.makerPubkey === "LUKAzPV8dDbVykTVT14pCGKzFfNcgZgRbAXB8AGdKx3") {
-          if(askCounter < NUM_ORDERS_VISIBLE_PER_SIDE) {
-            let line = seriesManager.current.createPriceLine({
-              price: value.price,
-              id: value.orderSequenceNumber.toString(),
-              color: 'red',
-              lineWidth: 2,
-              lineStyle: LineStyle.Dashed,
-              axisLabelVisible: true,
-              title: `${value.size}`
-            } as CreatePriceLineOptions);
-            ordersDisplay.current.push(line);
-            askCounter++;
-          }
-        }
-      });
-    };
-
-    refreshOrders();
-
-    // const intervalId = setInterval(() => {
-    //   refreshOrders();
-    // }, OPEN_ORDERS_REFRESH_FREQUENCY_IN_MS);
-
-    // return () => clearInterval(intervalId);
-  }, [chartData]);
-
-  useEffect(() => {
     console.log("selected market fresh: ", selectedSpotGridMarket);
     const loadInitialData = async () => {
       var date = new Date();
