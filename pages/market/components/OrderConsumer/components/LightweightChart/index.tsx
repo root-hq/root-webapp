@@ -33,39 +33,17 @@ const LightweightChart = ({
         return;
       }
 
-      if(!initialLoad.current) {
-        var date = new Date();
-        date.setDate(date.getDate());
+      let newMidPrice = parseFloat(
+		(await getMarketMidPrice(selectedSpotGridMarket.phoenix_market_address.toString())).toFixed(3),
+	  ); 
 
-        let rawData: TokenPrice[] = [];
-  
-        if(selectedSpotGridMarket) {
-          rawData = await getTokenPriceDataWithDate(selectedSpotGridMarket.phoenix_market_address.toString(), date);
-        }
-  
-        const trueData = rawData.map((dataPoint) => {
-          return {
-            time: Math.floor(dataPoint.timestamp / 1000),
-            value: dataPoint.price
-          };
-        });
-  
-        setChartData(prev => trueData);
-        initialLoad.current = true;
-      }
-      else {
-        let newMidPrice = parseFloat(
-          (await getMarketMidPrice(selectedSpotGridMarket.phoenix_market_address.toString())).toFixed(3),
-        ); 
-
-        if(newMidPrice) {
-		  console.log("series manager: ", seriesManager);
-		  seriesManager.current.update({
-            time: Math.floor(Date.now() / 1000) as Time,
-            value: newMidPrice
-          });
-        }
-      }
+	  if(newMidPrice) {
+		console.log("series manager: ", seriesManager);
+		seriesManager.current.update({
+		  time: Math.floor(Date.now() / 1000) as Time,
+		  value: newMidPrice
+		});
+	  }
     };
 
     refreshPriceData();
@@ -75,7 +53,31 @@ const LightweightChart = ({
     }, PRICE_REFRESH_FREQUENCY_IN_MS);
 
     return () => clearInterval(intervalId);
-  }, [selectedSpotGridMarket, baseTokenMetadata, quoteTokenMetadata]);
+  }, [chartData]);
+
+	useEffect(() => {
+		const loadInitialData = async () => {
+			var date = new Date();
+			date.setDate(date.getDate());
+
+			let rawData: TokenPrice[] = [];
+	
+			if(selectedSpotGridMarket) {
+			rawData = await getTokenPriceDataWithDate(selectedSpotGridMarket.phoenix_market_address.toString(), date);
+			}
+	
+			const trueData = rawData.map((dataPoint) => {
+			return {
+				time: Math.floor(dataPoint.timestamp / 1000),
+				value: dataPoint.price
+			};
+			});
+	
+			setChartData(prev => trueData);
+		}
+
+		loadInitialData();
+	}, [selectedSpotGridMarket, baseTokenMetadata, quoteTokenMetadata]);
 
 	useEffect(() => {
 		const handleResize = () => {
