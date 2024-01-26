@@ -78,6 +78,15 @@ const OrderProducer = ({
     updateBalance();
   }, [walletState, baseTokenMetadata, quoteTokenMetadata]);
 
+
+  // Reset all fields
+  const resetAllFields = () => {
+    setMinPrice("");
+    setMaxPrice("");
+    setNumGrids("");
+    setAmountQuote("");
+  }
+
   // Handle change for minimum price
   const handleMinPriceChange = (e) => {
     e.preventDefault();
@@ -145,6 +154,16 @@ const OrderProducer = ({
     <div className={styles.orderProducerContainer}>
       <div className={styles.formHeaderContainer}>
         <h2>Create a new bot</h2>
+      </div>
+      <div
+        className={styles.shortcutButtonsContainer}
+      >
+        <span
+          className={styles.resetFieldsButton}
+          onClick={() => {
+            resetAllFields()
+          }}
+        >Reset</span>
       </div>
       <div className={styles.createBotForm}>
         <div className={styles.tokenFieldContainer}>

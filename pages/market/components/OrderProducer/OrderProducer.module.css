@@ -13,6 +13,22 @@
   border-radius: 0.75rem;
 }
 
+.shortcutButtonsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+}
+
+.resetFieldsButton {
+ cursor: pointer;
+ font-size: 0.85rem;
+}
+
+.resetFieldsButton:hover {
+  font-weight: 500;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 1);
+}
+
 .formLabelAndFieldContainer {
   display: flex;
   flex-direction: row;
