@@ -51,7 +51,7 @@ const MarketPage = ({
         />
       </div>
       <div className={styles.orderProducerContainer}>
-        <OrderProducer spotGridMarket={selectedSpotGridMarket} />
+        <OrderProducer spotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata} />
       </div>
     </div>
   );
