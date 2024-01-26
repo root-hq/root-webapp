@@ -52,23 +52,27 @@ const LightweightChart = ({
 
   useEffect(() => {
     const refreshPriceData = async () => {
-      if (!selectedSpotGridMarket) {
-        return;
-      }
-      let newMidPrice = parseFloat(
-        (
-          await getMarketMidPrice(
-            selectedSpotGridMarket.phoenix_market_address.toString(),
-          )
-        ).toFixed(3),
-      );
+      console.log("Triggering refresh");
+      var date = new Date();
+      date.setDate(date.getDate());
 
-      if (newMidPrice) {
-        seriesManagerHandler.current.update({
-          time: Math.floor(Date.now() / 1000) as Time,
-          value: newMidPrice,
-        });
+      let rawData: TokenPrice[] = [];
+
+      if (selectedSpotGridMarket) {
+        rawData = await getTokenPriceDataWithDate(
+          selectedSpotGridMarket.phoenix_market_address.toString(),
+          date,
+        );
       }
+
+      const trueData = rawData.map((dataPoint) => {
+        return {
+          time: Math.floor(dataPoint.timestamp / 1000),
+          value: dataPoint.price,
+        };
+      });
+
+      setChartData((prev) => trueData);
     };
 
     refreshPriceData();
@@ -78,10 +82,10 @@ const LightweightChart = ({
     }, PRICE_REFRESH_FREQUENCY_IN_MS);
 
     return () => clearInterval(intervalId);
-  }, [chartData]);
+  }, []);
 
   useEffect(() => {
-    console.log("selected market fresh: ", selectedSpotGridMarket);
+    // console.log("selected market fresh: ", selectedSpotGridMarket);
     const loadInitialData = async () => {
       var date = new Date();
       date.setDate(date.getDate());
