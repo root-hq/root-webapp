@@ -6,18 +6,12 @@
 
 .orderProducerContainer {
   width: 28%;
-  border: 1px solid #575757;
-  box-sizing: border-box;
-  border-radius: 0.75rem;
   margin-right: 2rem;
   margin-left: 1rem;
 }
 
 .orderConsumerContainer {
   width: 72%;
-  border: 1px solid #575757;
-  box-sizing: border-box;
-  border-radius: 0.75rem;
   margin-right: 1rem;
   margin-left: 2rem;
 }

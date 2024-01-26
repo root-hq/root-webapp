@@ -289,7 +289,7 @@ const OrderProducer = ({
                         </Button>
                       :
                       <div className={styles.connectButtonContainer}>
-                        <WalletMultiButtonDynamic />
+                        <WalletMultiButtonDynamic className={styles.walletMultiButton} />
                       </div>
                     }
                   </div>

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./OrderConsumer.module.css";
 import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import MarketSelectorDropdown from "./components/MarketSelectorDropdown";
 import { EnumeratedMarketToMetadata } from "../../[market]";
 import LightweightChart, { SeriesManagerInstance } from "./components/LightweightChart";
 import { IChartApi } from "lightweight-charts";
+import OrderManager from "./components/OrderManager";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -35,28 +36,30 @@ const OrderConsumer = ({
 
   return (
     <div className={styles.orderConsumerContainer}>
-      <div className={styles.marketInfoContainer}>
-        <div className={styles.marketSelectorContainer}>
-          <MarketSelectorDropdown
-            enumeratedMarkets={enumeratedMarkets}
-            selectedBaseTokenMetadata={baseTokenMetadata}
-            selectedQuoteTokenMetadata={quoteTokenMetadata}
-            topLevelActiveMarketState={activeMarket}
-            setTopLevelActiveMarketState={setActiveMarket}
+      <div className={styles.orderVisualContainer}>
+        <div className={styles.marketInfoContainer}>
+          <div className={styles.marketSelectorContainer}>
+            <MarketSelectorDropdown
+              enumeratedMarkets={enumeratedMarkets}
+              selectedBaseTokenMetadata={baseTokenMetadata}
+              selectedQuoteTokenMetadata={quoteTokenMetadata}
+              topLevelActiveMarketState={activeMarket}
+              setTopLevelActiveMarketState={setActiveMarket}
+            />
+          </div>
+        </div>
+        <div className={styles.lightweightChartContainer}>
+          <LightweightChart
+            selectedSpotGridMarket={activeMarket}
+            baseTokenMetadata={baseTokenMetadata}
+            quoteTokenMetadata={quoteTokenMetadata}
+            seriesManagerHandler={seriesManagerHandler}
+            chartManagerHandler={chartManagerHandler}
           />
         </div>
       </div>
-      <div className={styles.lightweightChartContainer}>
-        <LightweightChart
-          selectedSpotGridMarket={activeMarket}
-          baseTokenMetadata={baseTokenMetadata}
-          quoteTokenMetadata={quoteTokenMetadata}
-          seriesManagerHandler={seriesManagerHandler}
-          chartManagerHandler={chartManagerHandler}
-        />
-      </div>
       <div className={styles.orderManagerContainer}>
-        <p>Order Manager</p>
+        <OrderManager />
       </div>
     </div>
   );

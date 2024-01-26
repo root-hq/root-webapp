@@ -43,7 +43,7 @@ const LightweightChart = ({
   baseTokenMetadata,
   quoteTokenMetadata,
   seriesManagerHandler,
-  chartManagerHandler
+  chartManagerHandler,
 }: LightweightChartProps) => {
   const [chartData, setChartData] = useState([]);
 
@@ -132,7 +132,8 @@ const LightweightChart = ({
         visible: false,
       },
       width: chartContainerRef.current.clientWidth,
-      height: 400,
+      // width: 800,
+      height: 350,
     });
     chart.timeScale().fitContent();
 
