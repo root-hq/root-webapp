@@ -138,7 +138,9 @@ const LightweightChart = ({
         },
       },
       timeScale: {
-        visible: false,
+        visible: true,
+        timeVisible: true,
+        secondsVisible: true
       },
       width: chartContainerRef.current.clientWidth,
       // width: 800,
