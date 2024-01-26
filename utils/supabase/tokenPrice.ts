@@ -32,6 +32,7 @@ export const getTokenPriceDataWithDate = async (
     console.log(
       `Error fetching info on token price for file:${fileName} \n Error: ${err}`,
     );
+    return [];
   }
 };
 

@@ -10,7 +10,6 @@ import {
   AreaStyleOptions,
   SeriesOptionsCommon,
   IChartApi,
-  isBusinessDay,
 } from "lightweight-charts";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./LightweightChart.module.css";
@@ -20,7 +19,6 @@ import {
   TokenPrice,
 } from "../../../../../../utils/supabase";
 import { getTokenPriceDataWithDate } from "../../../../../../utils/supabase/tokenPrice";
-import { getMarketMidPrice } from "../../../../../../utils/phoenix";
 import { PRICE_REFRESH_FREQUENCY_IN_MS } from "../../../../../../constants";
 
 export interface LightweightChartProps {
@@ -48,11 +46,10 @@ const LightweightChart = ({
   seriesManagerHandler,
   chartManagerHandler,
   leastDisplayDate,
-  leastKnownBar
+  leastKnownBar,
 }: LightweightChartProps) => {
   const [chartData, setChartData] = useState([]);
 
-  const initialLoad = useRef<boolean>(false);
   const lastFetchTimestamp = useRef<number>(null);
   const chartContainerRef = useRef<HTMLDivElement>();
 
@@ -175,16 +172,20 @@ const LightweightChart = ({
         if(!leastKnownBar.current || leastDisplayedBar < leastKnownBar.current) {
           leastKnownBar.current = leastDisplayedBar;
           var oneLess = new Date();
-          
           oneLess.setDate(leastDisplayDate.current.getDate() - 1);
 
           let rawData: TokenPrice[] = [];
 
           if (selectedSpotGridMarket) {
-            rawData = await getTokenPriceDataWithDate(
-              selectedSpotGridMarket.phoenix_market_address.toString(),
-              oneLess,
-            );
+            try {
+              rawData = await getTokenPriceDataWithDate(
+                selectedSpotGridMarket.phoenix_market_address.toString(),
+                oneLess,
+              );
+            }
+            catch(err) {
+              rawData = [];
+            }
           }
 
           const trueData = rawData.map((dataPoint) => {
@@ -214,6 +215,9 @@ const LightweightChart = ({
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      chart.timeScale().unsubscribeSizeChange(() => {
+        console.log("timescale change unsubscribed");
+      });
 
       chart.remove();
     };
