@@ -1,6 +1,6 @@
 // components/MarketDropdown.js
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import {
   SpotGridMarket,
@@ -29,6 +29,8 @@ const MarketSelectorDropdown = ({
   setTopLevelActiveMarketState,
 }: MarketSelectorDropdownProps) => {
   const router = useRouter();
+
+  const dropdownRef = useRef(null);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [activeBaseTokenMetadata, setActiveBaseTokenMetadata] = useState(
     selectedBaseTokenMetadata,
@@ -120,8 +122,22 @@ const MarketSelectorDropdown = ({
     );
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className={styles.marketDropdown}>
+    <div className={styles.marketDropdown} ref={dropdownRef}>
       <Button className={styles.dropdownButton} onClick={toggleDropdown}>
         {getTokenPair(activeBaseTokenMetadata, activeQuoteTokenMetadata, true)}
       </Button>
