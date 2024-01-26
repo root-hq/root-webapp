@@ -66,8 +66,8 @@ const MarketSelectorDropdown = ({
             {baseMetadata && baseMetadata.img_url ? (
               <Image
                 src={baseMetadata.img_url}
-                width={35}
-                height={35}
+                width={25}
+                height={25}
                 alt={`${baseMetadata.ticker} img`}
                 className={styles.tokenImage}
               />
@@ -79,8 +79,8 @@ const MarketSelectorDropdown = ({
             {quoteMetadata && quoteMetadata.img_url ? (
               <Image
                 src={quoteMetadata.img_url}
-                width={35}
-                height={35}
+                width={25}
+                height={25}
                 alt={`${quoteMetadata.ticker} img`}
                 className={styles.tokenImage}
               />
@@ -92,18 +92,18 @@ const MarketSelectorDropdown = ({
         <div className={styles.marketTickerContainer}>
           <div className={styles.tickerText}>
             {baseMetadata && baseMetadata.ticker ? (
-              <span>{`${baseMetadata.ticker}`}</span>
+              <span>{`${baseMetadata.ticker} / ${quoteMetadata.ticker}`}</span>
             ) : (
               <></>
             )}
           </div>
-          <div className={styles.tickerText}>
+          {/* <div className={styles.tickerText}>
             {quoteMetadata && quoteMetadata.ticker ? (
               <span>{`${quoteMetadata.ticker}`}</span>
             ) : (
               <></>
             )}
-          </div>
+          </div> */}
         </div>
         {isMainItem ? (
           <div className={styles.caretContainer}>
