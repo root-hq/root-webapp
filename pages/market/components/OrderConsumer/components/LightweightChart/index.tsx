@@ -132,7 +132,7 @@ const LightweightChart = ({
         visible: false,
       },
       width: chartContainerRef.current.clientWidth,
-      height: 350,
+      height: 400,
     });
     chart.timeScale().fitContent();
 
