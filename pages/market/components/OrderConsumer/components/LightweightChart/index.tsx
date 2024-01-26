@@ -48,31 +48,35 @@ const LightweightChart = ({
   const [chartData, setChartData] = useState([]);
 
   const initialLoad = useRef<boolean>(false);
+  const lastFetchTimestamp = useRef<number>(null);
   const chartContainerRef = useRef<HTMLDivElement>();
 
   useEffect(() => {
     const refreshPriceData = async () => {
-      console.log("Triggering refresh");
-      var date = new Date();
-      date.setDate(date.getDate());
+      if(lastFetchTimestamp.current + PRICE_REFRESH_FREQUENCY_IN_MS < Date.now()) {
+        console.log("Triggering refresh");
+        var date = new Date();
+        date.setDate(date.getDate());
 
-      let rawData: TokenPrice[] = [];
+        let rawData: TokenPrice[] = [];
 
-      if (selectedSpotGridMarket) {
-        rawData = await getTokenPriceDataWithDate(
-          selectedSpotGridMarket.phoenix_market_address.toString(),
-          date,
-        );
+        if (selectedSpotGridMarket) {
+          rawData = await getTokenPriceDataWithDate(
+            selectedSpotGridMarket.phoenix_market_address.toString(),
+            date,
+          );
+        }
+
+        const trueData = rawData.map((dataPoint) => {
+          return {
+            time: Math.floor(dataPoint.timestamp / 1000),
+            value: dataPoint.price,
+          };
+        });
+
+        setChartData((prev) => trueData);
+        lastFetchTimestamp.current = Date.now();
       }
-
-      const trueData = rawData.map((dataPoint) => {
-        return {
-          time: Math.floor(dataPoint.timestamp / 1000),
-          value: dataPoint.price,
-        };
-      });
-
-      setChartData((prev) => trueData);
     };
 
     refreshPriceData();
@@ -82,7 +86,7 @@ const LightweightChart = ({
     }, PRICE_REFRESH_FREQUENCY_IN_MS);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [chartData]);
 
   useEffect(() => {
     // console.log("selected market fresh: ", selectedSpotGridMarket);
@@ -107,6 +111,7 @@ const LightweightChart = ({
       });
 
       setChartData((prev) => trueData);
+      lastFetchTimestamp.current = Date.now();
     };
 
     loadInitialData();
