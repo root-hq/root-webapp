@@ -185,7 +185,7 @@ const OrderProducer = ({
                       <span>Size</span>
                     </Form.Label>
                     <Form.Control
-                      placeholder={`0.00 ${quoteTokenMetadata.ticker}`}
+                      placeholder={`0.00 ${quoteTokenMetadata ? quoteTokenMetadata.ticker : ''}`}
                       disabled={!walletState.connected}
                       style={{
                         backgroundColor: "transparent",
