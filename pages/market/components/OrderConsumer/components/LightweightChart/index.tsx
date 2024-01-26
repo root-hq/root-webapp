@@ -136,6 +136,19 @@ const LightweightChart = ({
       height: 350,
     });
     chart.timeScale().fitContent();
+    
+    chart.applyOptions({
+      watermark: {
+        visible: true,
+        fontSize: 48,
+        horzAlign: 'center',
+        vertAlign: 'center',
+        color: 'rgba(87, 87, 87, 0.08)',
+        text: 'root.exchange',
+        fontStyle: 'bold'
+      },
+    });
+    
 
     seriesManagerHandler.current = chart.addAreaSeries({
       lineColor: "#3673f5",
