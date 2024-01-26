@@ -43,8 +43,12 @@
   border: none;
   border-radius: 1.5rem;
   cursor: pointer;
+  background-color: #ddd;
+  color: #0a0b0e;
+  opacity: 100%;
 }
 
 .createButton:hover {
-  opacity: 50%;
+  background-color: #fff;
+  opacity: 100%;
 }

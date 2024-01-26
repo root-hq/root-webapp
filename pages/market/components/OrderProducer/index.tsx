@@ -4,6 +4,12 @@ import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import { Button, Form } from "react-bootstrap";
 import Image from "next/image";
 import { useWallet } from "@solana/wallet-adapter-react";
+import dynamic from "next/dynamic";
+const WalletMultiButtonDynamic = dynamic(
+  async () =>
+    (await import("../../../../components/Wallet")).WalletMultiButton,
+  { ssr: false },
+);
 
 export interface OrderProducerProps {
   spotGridMarket: SpotGridMarket;
@@ -105,7 +111,7 @@ const OrderProducer = ({
                     </Form.Label>
                     <Form.Control
                       placeholder="0.00"
-                      disabled={!walletState.connected}
+                      // disabled={!walletState.connected}
                       style={{
                         backgroundColor: "transparent",
                         fontSize: "1.1rem",
@@ -130,7 +136,7 @@ const OrderProducer = ({
                     </Form.Label>
                     <Form.Control
                       placeholder="0.00"
-                      disabled={!walletState.connected}
+                      // disabled={!walletState.connected}
                       style={{
                         backgroundColor: "transparent",
                         fontSize: "1.1rem",
@@ -155,7 +161,7 @@ const OrderProducer = ({
                     </Form.Label>
                     <Form.Control
                       placeholder="0"
-                      disabled={!walletState.connected}
+                      // disabled={!walletState.connected}
                       style={{
                         backgroundColor: "transparent",
                         fontSize: "1.1rem",
@@ -200,9 +206,19 @@ const OrderProducer = ({
                 </Form.Group>
                 <Form.Group controlId="formInput" className={styles.formGroupContainer}>
                   <div className={styles.createButtonContainer}>
-                    <Button className={styles.createButton}>
-                        Create
-                    </Button>
+                    {
+                      walletState.connected ?
+                        <Button
+                          className={styles.createButton}
+                          disabled={!walletState.connected}
+                        >
+                          Create
+                        </Button>
+                      :
+                      <div className={styles.connectButtonContainer}>
+                        <WalletMultiButtonDynamic />
+                      </div>
+                    }
                   </div>
                 </Form.Group>
               </Form>

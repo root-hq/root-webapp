@@ -6,10 +6,20 @@
 
 .orderProducerContainer {
   width: 25%;
+  border: 1px solid #575757;
+  box-sizing: border-box;
+  border-radius: 0.75rem;
+  margin-right: 2rem;
+  margin-left: 1rem;
 }
 
 .orderConsumerContainer {
   width: 75%;
+  border: 1px solid #575757;
+  box-sizing: border-box;
+  border-radius: 0.75rem;
+  margin-right: 1rem;
+  margin-left: 2rem;
 }
 
 @media (max-width: 1024px) {
@@ -26,6 +36,9 @@
 
   .orderProducerContainer {
     margin-top: 2rem;
+    margin-left: 0rem;
+    margin-right: 0rem;
+    margin-bottom: 0rem;
     width: 90%;
   }
 }
