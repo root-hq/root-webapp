@@ -9,7 +9,6 @@ import {
 import styles from "./MarketSelectorDropdown.module.css";
 import Image from "next/image";
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
-import { Button } from "react-bootstrap";
 
 export interface MarketSelectorDropdownProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -138,9 +137,9 @@ const MarketSelectorDropdown = ({
 
   return (
     <div className={styles.marketDropdown} ref={dropdownRef}>
-      <Button className={styles.dropdownButton} onClick={toggleDropdown}>
+      <button className={styles.dropdownButton} onClick={toggleDropdown}>
         {getTokenPair(activeBaseTokenMetadata, activeQuoteTokenMetadata, true)}
-      </Button>
+      </button>
       {isDropdownOpen && (
         <div className={styles.dropdownContent}>
           {enumeratedMarkets.map((enumeratedMarket, index) => (

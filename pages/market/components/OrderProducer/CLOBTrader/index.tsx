@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import Tabs from 'react-bootstrap/Tabs';
-import Tab from 'react-bootstrap/Tab';
 import styles from "./CLOBTrader.module.css";
-import { Button } from 'react-bootstrap';
 
 const CLOBTrader = () => {
   const [isToggleBuy, setIsToggleBuy] = useState(true);
@@ -20,7 +17,7 @@ const CLOBTrader = () => {
     <div className={styles.clobTraderContainer}>
        <div className={styles.tabsContainer}>
             <div className={styles.buyTabContainer}>
-                <Button
+                <button
                     className={styles.buyButton}
                     style = {{
                         borderTop: isToggleBuy ? '2px solid green' : '',
@@ -31,10 +28,10 @@ const CLOBTrader = () => {
                     }}
                 >
                     Buy
-                </Button>
+                </button>
             </div>
             <div className={styles.sellTabContainer}>
-                <Button 
+                <button 
                     className={styles.sellButton}
                     style = {{
                         borderTop: !isToggleBuy ? '2px solid red' : '',
@@ -45,7 +42,7 @@ const CLOBTrader = () => {
                     }}
                 >
                     Sell
-                </Button>
+                </button>
             </div>
        </div>
     </div>
