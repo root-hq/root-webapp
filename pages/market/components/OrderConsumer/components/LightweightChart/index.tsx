@@ -9,9 +9,7 @@ import {
   AreaSeriesOptions,
   AreaStyleOptions,
   SeriesOptionsCommon,
-  CreatePriceLineOptions,
-  LineStyle,
-  IPriceLine,
+  IChartApi,
 } from "lightweight-charts";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./LightweightChart.module.css";
@@ -21,13 +19,15 @@ import {
   TokenPrice,
 } from "../../../../../../utils/supabase";
 import { getTokenPriceDataWithDate } from "../../../../../../utils/supabase/tokenPrice";
-import { getL3Book, getMarketMidPrice } from "../../../../../../utils/phoenix";
-import { DEFAULT_ORDERBOOK_VIEW_DEPTH, NUM_ORDERS_VISIBLE_PER_SIDE, OPEN_ORDERS_REFRESH_FREQUENCY_IN_MS, PRICE_REFRESH_FREQUENCY_IN_MS } from "../../../../../../constants";
+import { getMarketMidPrice } from "../../../../../../utils/phoenix";
+import { PRICE_REFRESH_FREQUENCY_IN_MS } from "../../../../../../constants";
 
 export interface LightweightChartProps {
   selectedSpotGridMarket: SpotGridMarket;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
+  seriesManagerHandler: React.MutableRefObject<SeriesManagerInstance>;
+  chartManagerHandler: React.MutableRefObject<IChartApi>;
 }
 
 export type SeriesManagerInstance = ISeriesApi<
@@ -42,13 +42,13 @@ const LightweightChart = ({
   selectedSpotGridMarket,
   baseTokenMetadata,
   quoteTokenMetadata,
+  seriesManagerHandler,
+  chartManagerHandler
 }: LightweightChartProps) => {
   const [chartData, setChartData] = useState([]);
 
   const initialLoad = useRef<boolean>(false);
   const chartContainerRef = useRef<HTMLDivElement>();
-  const seriesManager = useRef<SeriesManagerInstance>(null);
-  const ordersDisplay = useRef<IPriceLine[]>([]);
 
   useEffect(() => {
     const refreshPriceData = async () => {
@@ -64,7 +64,7 @@ const LightweightChart = ({
       );
 
       if (newMidPrice) {
-        seriesManager.current.update({
+        seriesManagerHandler.current.update({
           time: Math.floor(Date.now() / 1000) as Time,
           value: newMidPrice,
         });
@@ -136,12 +136,12 @@ const LightweightChart = ({
     });
     chart.timeScale().fitContent();
 
-    seriesManager.current = chart.addAreaSeries({
+    seriesManagerHandler.current = chart.addAreaSeries({
       lineColor: "#3673f5",
       topColor: "rgba(54, 115, 245, 0.4)",
       bottomColor: "rgba(54, 115, 245, 0.0)",
     });
-    seriesManager.current.setData(chartData);
+    seriesManagerHandler.current.setData(chartData);
 
     window.addEventListener("resize", handleResize);
 

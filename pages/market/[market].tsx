@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarketPage.module.css";
 import OrderConsumer from "./components/OrderConsumer";
 import OrderProducer from "./components/OrderProducer";
@@ -6,13 +6,13 @@ import {
   SpotGridMarket,
   TokenMetadata,
   getAllTokenMetadata,
-  getTokenMetadata,
 } from "../../utils/supabase";
 import {
   getAllMarkets,
-  getMarket,
   getMarketForPhoenixMarket,
 } from "../../utils/supabase/SpotGridMarket";
+import { SeriesManagerInstance } from "./components/OrderConsumer/components/LightweightChart";
+import { IChartApi } from "lightweight-charts";
 
 export interface EnumeratedMarketToMetadata {
   spotGridMarket: SpotGridMarket;
@@ -33,6 +33,10 @@ const MarketPage = ({
   baseTokenMetadata,
   quoteTokenMetadata,
 }: MarketPageProps) => {
+
+  const seriesManager = useRef<SeriesManagerInstance>(null);
+  const chartManager = useRef<IChartApi>(null);
+
   const [selectedSpotGridMarket, setSelectedSpotGridMarket] =
     useState<SpotGridMarket>();
 
@@ -48,6 +52,8 @@ const MarketPage = ({
           selectedSpotGridMarket={selectedSpotGridMarket}
           baseTokenMetadata={baseTokenMetadata}
           quoteTokenMetadata={quoteTokenMetadata}
+          seriesManagerHandler={seriesManager}
+          chartManagerHandler={chartManager}
         />
       </div>
       <div className={styles.orderProducerContainer}>
