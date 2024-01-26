@@ -22,8 +22,10 @@ import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { OKXWalletAdapter } from "../components/Wallet/OKXWalletAdapter";
 
 // Use require instead of import since order matters
+// require("bootstrap/dist/css/bootstrap.min.css");
 require("../styles/wallet.css");
 require("../styles/globals.css");
+
 
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   const endpoint = useMemo(() => clusterApiUrl("mainnet-beta"), []);
