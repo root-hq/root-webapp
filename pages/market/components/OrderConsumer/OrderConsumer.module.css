@@ -8,7 +8,7 @@
 .orderVisualContainer {
   display: flex;
   flex-direction: column;
-  border: 1px solid #575757;
+  border: 1px solid rgba(87, 87, 87, 0.25);
   box-sizing: border-box;
   border-radius: 0.75rem;
   width: 100%;
