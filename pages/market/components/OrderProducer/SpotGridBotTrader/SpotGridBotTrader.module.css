@@ -1,9 +1,6 @@
 .orderProducerContainer {
   display: flex;
   flex-direction: column;
-  /* justify-content: center;
-  align-items: center; */
-  /* width: 100%; */
   padding-bottom: 1rem;
   padding-left: 2rem;
   padding-right: 2rem;

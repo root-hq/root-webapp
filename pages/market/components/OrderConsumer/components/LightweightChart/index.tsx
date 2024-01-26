@@ -163,6 +163,13 @@ const LightweightChart = ({
         const barsInfo = seriesManagerHandler.current.barsInLogicalRange(chart.timeScale().getVisibleLogicalRange());
         let leastDisplayedBar = parseInt(barsInfo.from.toString());
 
+        if(!leastDisplayDate.current) {
+          let today = new Date();
+          today.setDate(today.getDate());
+
+          leastDisplayDate.current = today;
+        }
+
         if(!leastKnownBar.current || leastDisplayedBar < leastKnownBar.current) {
           leastKnownBar.current = leastDisplayedBar;
           var oneLess = new Date();

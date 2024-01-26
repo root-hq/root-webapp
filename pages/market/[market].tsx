@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarketPage.module.css";
 import OrderConsumer from "./components/OrderConsumer";
-import OrderProducer from "./components/OrderProducer";
+import OrderProducer from "./components/OrderProducer/SpotGridBotTrader";
+import CLOBTrader from "./components/OrderProducer/CLOBTrader";
 import {
   SpotGridMarket,
   TokenMetadata,
@@ -61,7 +62,8 @@ const MarketPage = ({
         />
       </div>
       <div className={styles.orderProducerContainer}>
-        <OrderProducer spotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata} />
+        {/* <OrderProducer spotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata} /> */}
+        <CLOBTrader />
       </div>
     </div>
   );

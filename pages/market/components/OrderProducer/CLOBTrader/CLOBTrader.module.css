@@ -1,0 +1,11 @@
+.clobTraderContainer {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    color: white;
+    border: 1px solid rgba(87, 87, 87, 0.25);
+    box-sizing: border-box;
+    border-radius: 0.75rem;
+}

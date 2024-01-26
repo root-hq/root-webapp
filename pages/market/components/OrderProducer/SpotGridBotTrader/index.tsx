@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import styles from "./OrderProducer.module.css";
-import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
+import styles from "./SpotGridBotTrader.module.css";
+import { SpotGridMarket, TokenMetadata } from "../../../../../utils/supabase";
 import { Button, Form } from "react-bootstrap";
 import Image from "next/image";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
 const WalletMultiButtonDynamic = dynamic(
   async () =>
-    (await import("../../../../components/Wallet")).WalletMultiButton,
+    (await import("../../../../../components/Wallet")).WalletMultiButton,
   { ssr: false },
 );
 import { Connection } from "@solana/web3.js";
@@ -20,7 +20,7 @@ export interface OrderProducerProps {
   quoteTokenMetadata: TokenMetadata;
 }
 
-const OrderProducer = ({ 
+const SpotGridBotTrader = ({ 
   spotGridMarket,
   baseTokenMetadata,
   quoteTokenMetadata
@@ -322,4 +322,4 @@ const OrderProducer = ({
   );
 };
 
-export default OrderProducer;
+export default SpotGridBotTrader;
