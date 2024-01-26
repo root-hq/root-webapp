@@ -257,7 +257,14 @@ const OrderProducer = ({
                   <div className={styles.tokenBalanceContainer}>
                     {walletState.connected ? (
                       <div className={styles.userBalanceContainer}>
-                        <span>
+                        <span
+                          className={styles.userBalance}
+                          onClick={
+                            () => {
+                              formatNumbersWithCommas(quoteTokenBalance.toString(), setAmountQuote);
+                            }
+                          }
+                        >
                           <i className="fa-solid fa-wallet fa-2xs"></i>
                           {` `}
                           {`${quoteTokenBalance}`}

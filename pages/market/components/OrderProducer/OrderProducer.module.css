@@ -30,8 +30,15 @@
 }
 
 .tokenBalanceContainer {
-  /* color: white; */
   margin: 0.5rem;
+}
+
+.userBalance {
+  cursor: pointer;
+}
+
+.userBalance:hover {
+  font-weight: 500;
 }
 
 .formLabelContainer {
