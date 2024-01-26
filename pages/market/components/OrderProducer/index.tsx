@@ -76,7 +76,7 @@ const OrderProducer = ({
     }
 
     updateBalance();
-  }, [walletState]);
+  }, [walletState, baseTokenMetadata, quoteTokenMetadata]);
 
   // Handle change for minimum price
   const handleMinPriceChange = (e) => {
