@@ -10,6 +10,7 @@ import {
   AreaStyleOptions,
   SeriesOptionsCommon,
   IChartApi,
+  isBusinessDay,
 } from "lightweight-charts";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./LightweightChart.module.css";
@@ -28,6 +29,8 @@ export interface LightweightChartProps {
   quoteTokenMetadata: TokenMetadata;
   seriesManagerHandler: React.MutableRefObject<SeriesManagerInstance>;
   chartManagerHandler: React.MutableRefObject<IChartApi>;
+  leastDisplayDate: React.MutableRefObject<Date>;
+  leastKnownBar: React.MutableRefObject<number>;
 }
 
 export type SeriesManagerInstance = ISeriesApi<
@@ -44,6 +47,8 @@ const LightweightChart = ({
   quoteTokenMetadata,
   seriesManagerHandler,
   chartManagerHandler,
+  leastDisplayDate,
+  leastKnownBar
 }: LightweightChartProps) => {
   const [chartData, setChartData] = useState([]);
 
@@ -75,6 +80,7 @@ const LightweightChart = ({
         });
 
         setChartData((prev) => trueData);
+        leastDisplayDate.current = date;
         lastFetchTimestamp.current = Date.now();
       }
     };
@@ -159,7 +165,43 @@ const LightweightChart = ({
         fontStyle: 'bold'
       },
     });
-    
+
+    const handleScrollChange = async () => {
+      const visibleLogicalRange = chart.timeScale().getVisibleLogicalRange();
+      if(visibleLogicalRange.from < 0) {
+        const barsInfo = seriesManagerHandler.current.barsInLogicalRange(chart.timeScale().getVisibleLogicalRange());
+        let leastDisplayedBar = parseInt(barsInfo.from.toString());
+
+        if(!leastKnownBar.current || leastDisplayedBar < leastKnownBar.current) {
+          leastKnownBar.current = leastDisplayedBar;
+          var oneLess = new Date();
+          
+          oneLess.setDate(leastDisplayDate.current.getDate() - 1);
+
+          let rawData: TokenPrice[] = [];
+
+          if (selectedSpotGridMarket) {
+            rawData = await getTokenPriceDataWithDate(
+              selectedSpotGridMarket.phoenix_market_address.toString(),
+              oneLess,
+            );
+          }
+
+          const trueData = rawData.map((dataPoint) => {
+            return {
+              time: Math.floor(dataPoint.timestamp / 1000),
+              value: dataPoint.price,
+            };
+          });
+
+          setChartData((prev) => [...trueData, ...prev]);
+          leastDisplayDate.current = oneLess;
+          lastFetchTimestamp.current = Date.now();
+        }
+      }
+    }
+
+    chart.timeScale().subscribeVisibleLogicalRangeChange(handleScrollChange);
 
     seriesManagerHandler.current = chart.addAreaSeries({
       lineColor: "#3673f5",

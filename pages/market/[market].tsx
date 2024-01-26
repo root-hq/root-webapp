@@ -36,6 +36,8 @@ const MarketPage = ({
 
   const seriesManager = useRef<SeriesManagerInstance>(null);
   const chartManager = useRef<IChartApi>(null);
+  const leastDatedata = useRef<Date>(null);
+  const leastKnownBar = useRef<number>();
 
   const [selectedSpotGridMarket, setSelectedSpotGridMarket] =
     useState<SpotGridMarket>();
@@ -54,6 +56,8 @@ const MarketPage = ({
           quoteTokenMetadata={quoteTokenMetadata}
           seriesManagerHandler={seriesManager}
           chartManagerHandler={chartManager}
+          leastDisplayDate={leastDatedata}
+          leastKnownBar={leastKnownBar}
         />
       </div>
       <div className={styles.orderProducerContainer}>

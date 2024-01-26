@@ -14,6 +14,8 @@ export interface OrderConsumerProps {
   quoteTokenMetadata: TokenMetadata;
   seriesManagerHandler: React.MutableRefObject<SeriesManagerInstance>;
   chartManagerHandler: React.MutableRefObject<IChartApi>;
+  leastDisplayDate: React.MutableRefObject<Date>;
+  leastKnownBar: React.MutableRefObject<number>;
 }
 
 const OrderConsumer = ({
@@ -22,7 +24,9 @@ const OrderConsumer = ({
   baseTokenMetadata,
   quoteTokenMetadata,
   seriesManagerHandler,
-  chartManagerHandler
+  chartManagerHandler,
+  leastDisplayDate,
+  leastKnownBar
 }: OrderConsumerProps) => {
   const [activeMarket, setActiveMarket] = useState(selectedSpotGridMarket);
 
@@ -55,6 +59,8 @@ const OrderConsumer = ({
             quoteTokenMetadata={quoteTokenMetadata}
             seriesManagerHandler={seriesManagerHandler}
             chartManagerHandler={chartManagerHandler}
+            leastDisplayDate={leastDisplayDate}
+            leastKnownBar={leastKnownBar}
           />
         </div>
       </div>
