@@ -6,6 +6,7 @@ import { Connection } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { web3 } from '@coral-xyz/anchor';
+import { formatNumbersWithCommas, removeCommas } from '../../../../../utils';
 
 export interface CLOBTraderProps {
     spotGridMarket: SpotGridMarket;
@@ -25,6 +26,9 @@ const CLOBTrader = ({
 
   const [baseTokenBalance, setBaseTokenBalance] = useState(0.0);
   const [quoteTokenBalance, setQuoteTokenBalance] = useState(0.0);
+  const [limitPrice, setLimitPrice] = useState("0.0");
+  const [sizeInBaseUnits, setSizeInBaseUnits] = useState("0.0");
+
   let connection: Connection;
   if(process.env.RPC_ENDPOINT) {
     connection = new Connection(process.env.RPC_ENDPOINT, { commitment: "processed" });
@@ -85,6 +89,23 @@ const CLOBTrader = ({
   ) => {
     
     setOrderType(_ => newOrderType);
+  };
+
+  const handleLimitPriceChange = (e) => {
+    e.preventDefault();
+
+    const limitPrice = removeCommas(e.target.value);
+
+    formatNumbersWithCommas(limitPrice, setLimitPrice);
+  };
+
+  // Handle change for maximum price
+  const handleSizeInBaseUnitsChange = (e) => {
+    e.preventDefault();
+
+    const sizeInBaseUnits = removeCommas(e.target.value);
+
+    formatNumbersWithCommas(sizeInBaseUnits, setSizeInBaseUnits);
   };
 
   const toggleOrderTypeDropdown = () => {

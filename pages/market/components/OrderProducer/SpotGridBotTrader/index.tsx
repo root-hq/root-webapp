@@ -13,6 +13,7 @@ const WalletMultiButtonDynamic = dynamic(
 import { Connection } from "@solana/web3.js";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { web3 } from "@coral-xyz/anchor";
+import { formatNumbersWithCommas, formatWithCommas, removeCommas } from "../../../../../utils";
 
 export interface OrderProducerProps {
   spotGridMarket: SpotGridMarket;
@@ -123,31 +124,6 @@ const SpotGridBotTrader = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission here
-  };
-
-  const formatNumbersWithCommas = (val: string, setter: React.Dispatch<React.SetStateAction<string>>) => {
-    if (val === "") {
-      setter("");
-    }
-
-    if (val.match(/^[+]?[0-9]+(\.[0-9]*)?$/)) {
-      const formattedAgain = formatWithCommas(val);
-      setter(formattedAgain);
-    }
-  };
-
-  const removeCommas = (value) => {
-    return value.replace(/,/g, "");
-  };
-
-  const formatWithCommas = (value) => {
-    const withoutCommas = removeCommas(value);
-
-    const parts = withoutCommas.split(".");
-    const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    const formattedValue =
-      parts.length > 1 ? `${integerPart}.${parts[1]}` : integerPart;
-    return formattedValue;
   };
 
   return (
