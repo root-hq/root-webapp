@@ -9,7 +9,7 @@ const CLOBTrader = () => {
   let allOrderTypes = getAllOrderTypes();
   
   const dropdownRef = useRef(null);
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isOrderTypeDropdownOpen, setOrderTypeDropdownOpen] = useState(false);
 
   const handleBuySellToggle = (type: string) => {
     if(type === "buy") {
@@ -27,14 +27,14 @@ const CLOBTrader = () => {
     setOrderType(_ => newOrderType);
   };
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!isDropdownOpen);
+  const toggleOrderTypeDropdown = () => {
+    setOrderTypeDropdownOpen(!isOrderTypeDropdownOpen);
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
+        setOrderTypeDropdownOpen(false);
       }
     };
 
@@ -82,7 +82,7 @@ const CLOBTrader = () => {
                 className={styles.dropdownButtonContainer}
                 onClick={
                     () => {
-                        toggleDropdown()
+                        toggleOrderTypeDropdown()
                     }
                 }
             >
@@ -90,7 +90,7 @@ const CLOBTrader = () => {
                     <div className={styles.dropdownInnerContainer}>
                         <span>{getOrderTypeText(orderType)}</span>
                         <div className={styles.caretContainer}>
-                            {isDropdownOpen ? (
+                            {isOrderTypeDropdownOpen ? (
                             <i className="fa-solid fa-caret-up"></i>
                             ) : (
                             <i className="fa-solid fa-caret-down"></i>
@@ -100,7 +100,7 @@ const CLOBTrader = () => {
                 </button>
             </div>
             {
-                isDropdownOpen ?
+                isOrderTypeDropdownOpen ?
                     <>
                         {
                             allOrderTypes.map((type) => {
@@ -108,7 +108,7 @@ const CLOBTrader = () => {
                                     return (
                                         <button className={styles.dropdownButtonSecondary} onClick={
                                             () => {
-                                                toggleDropdown()
+                                                toggleOrderTypeDropdown()
                                                 handleOrderTypeUpdate(type)
                                             }
                                         }>

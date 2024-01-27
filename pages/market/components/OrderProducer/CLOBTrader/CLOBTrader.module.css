@@ -31,7 +31,10 @@
 .buyButton {
     width: 100%;
     border-radius: 0rem;
-    border: 1px solid rgba(87, 87, 87, 0.25);
+    border: none;
+    border-top: 1px solid rgba(87, 87, 87, 0.25);
+    border-left: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
     background-color: transparent;
     color: white;
     padding: 0.5rem;
@@ -41,7 +44,10 @@
 .sellButton {
     width: 100%;
     border-radius: 0rem;
-    border: 1px solid rgba(87, 87, 87, 0.25);
+    border: none;
+    border-top: 1px solid rgba(87, 87, 87, 0.25);
+    border-right: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
     background-color: transparent;
     color: white;
     padding: 0.5rem;
