@@ -1,6 +1,8 @@
 .clobTraderContainer {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding-top: 1rem;
     padding-bottom: 1rem;
     padding-left: 2rem;
@@ -45,3 +47,51 @@
     padding: 0.5rem;
     font-size: 1rem;
 }
+
+.orderTypeChooseContainer {
+    width: 100%;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdownInnerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.75rem;
+    width: 100%;
+}
+
+.dropdownButton {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    font-size: 0.9rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    border-top: 1px solid rgba(87, 87, 87, 0.25);
+    border-left: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+    border-right: 1px solid rgba(87, 87, 87, 0.25);
+    width: 100%;
+  }
+  
+  .dropdownButtonSecondary {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    font-size: 0.9rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    border: none;
+    border-left: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+    border-right: 1px solid rgba(87, 87, 87, 0.25);
+    width: 100%;
+    z-index: 10;
+  }
