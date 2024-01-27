@@ -32,8 +32,9 @@ const CLOBTrader = ({
 
   const [baseTokenBalance, setBaseTokenBalance] = useState(0.0);
   const [quoteTokenBalance, setQuoteTokenBalance] = useState(0.0);
-  const [limitPrice, setLimitPrice] = useState();
-  const [sizeInBaseUnits, setSizeInBaseUnits] = useState();
+  const [limitPrice, setLimitPrice] = useState("");
+  const [sendUptoSize, setSendUptoSize] = useState("");
+  const [receiveUptoSize, setReceiveUptoSize] = useState("");
 
   let connection: Connection;
   if(process.env.RPC_ENDPOINT) {
@@ -79,14 +80,20 @@ const CLOBTrader = ({
     updateBalance();
   }, [walletState, baseTokenMetadata, quoteTokenMetadata]);
 
+  useEffect(() => {
+    calculateRecieveUpto()
+  }, [limitPrice, sendUptoSize]);
+
   let allOrderTypes = getAllOrderTypes();
 
   const handleBuySellToggle = (type: string) => {
     if(type === "buy") {
         setIsBuyOrder(_ => true);
+        resetAllFields()
     }
     else {
         setIsBuyOrder(_ => false);
+        resetAllFields()
     }
   }
 
@@ -106,17 +113,51 @@ const CLOBTrader = ({
   };
 
   // Handle change for maximum price
-  const handleSizeInBaseUnitsChange = (e) => {
+  const handleSendUptoSizeChange = (e) => {
     e.preventDefault();
 
-    const sizeInBaseUnits = removeCommas(e.target.value);
+    const sendUptoSize = removeCommas(e.target.value);
 
-    formatNumbersWithCommas(sizeInBaseUnits, setSizeInBaseUnits);
+    formatNumbersWithCommas(sendUptoSize, setSendUptoSize);
   };
+
+  const handleReceiveUptoSizeChange = (receivingAmount) => {
+    const formattedAmount = removeCommas(receivingAmount);
+
+    formatNumbersWithCommas(formattedAmount, setReceiveUptoSize);
+  }
 
   const toggleOrderTypeDropdown = () => {
     setOrderTypeDropdownOpen(!isOrderTypeDropdownOpen);
   };
+
+  const calculateRecieveUpto = () => {
+    if(orderType === OrderType.Limit) {
+      if(limitPrice && sendUptoSize) {
+        if(isBuyOrder) {
+          let receivingAmount = parseFloat(removeCommas(sendUptoSize)) / parseFloat(removeCommas(limitPrice));
+          handleReceiveUptoSizeChange(receivingAmount.toFixed(4))
+        }
+        else {
+          let receivingAmount = parseFloat(removeCommas(sendUptoSize)) * parseFloat(removeCommas(limitPrice));
+          handleReceiveUptoSizeChange(receivingAmount.toFixed(4))
+        }
+      }
+      else {
+        handleReceiveUptoSizeChange("")
+      }
+    }
+    else {
+      // Simulate using Phoenix orderbook
+    }
+  }
+
+  // Reset all fields
+  const resetAllFields = () => {
+    setLimitPrice("")
+    setSendUptoSize("");
+    setReceiveUptoSize("");
+  }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -164,6 +205,16 @@ const CLOBTrader = ({
                 </button>
             </div>
        </div>
+       <div
+          className={styles.shortcutButtonsContainer}
+        >
+          <span
+            className={styles.resetFieldsButton}
+            onClick={() => {
+              resetAllFields()
+            }}
+          >Reset</span>
+        </div>
        <div className={styles.orderTypeChooseContainer} ref={dropdownRef}>
             <div
                 className={styles.dropdownButtonContainer}
@@ -249,12 +300,12 @@ const CLOBTrader = ({
                   }
                 </Form.Group>
                 <Form.Group controlId="formInput" className={styles.formGroupContainer}>
-                  <div className={styles.formLabelAndFieldContainer}>
+                  <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
                     <Form.Label className={styles.formLabelContainer}>
-                      <span>Quantity</span>
+                      <span>Pay upto</span>
                     </Form.Label>
                     <Form.Control
-                      placeholder="0.00"
+                      placeholder={`0.00 ${isBuyOrder ? quoteTokenMetadata ? quoteTokenMetadata.ticker : '' : baseTokenMetadata ? baseTokenMetadata.ticker : ''}`}
                       // disabled={!walletState.connected}
                       style={{
                         backgroundColor: "transparent",
@@ -269,8 +320,56 @@ const CLOBTrader = ({
                       min="0"
                       step="0.01" // Allow any decimal value
                       className={styles.formFieldContainer}
-                      onChange={(e) => handleSizeInBaseUnitsChange(e)}
-                      value={sizeInBaseUnits} // Use inputText instead of inputAmount to show the decimal value
+                      onChange={(e) => handleSendUptoSizeChange(e)}
+                      value={sendUptoSize} // Use inputText instead of inputAmount to show the decimal value
+                    />
+                  </div>
+                  <div className={styles.tokenBalanceContainer}>
+                    {walletState.connected ? (
+                      <div className={styles.userBalanceContainer}>
+                        <span
+                          className={styles.userBalance}
+                          onClick={
+                            () => {
+                              formatNumbersWithCommas(isBuyOrder ? quoteTokenBalance.toString() : baseTokenBalance.toString(), setSendUptoSize);
+                            }
+                          }
+                        >
+                          <i className="fa-solid fa-wallet fa-2xs"></i>
+                          {` `}
+                          {` ${isBuyOrder ? quoteTokenBalance : baseTokenBalance}`}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className={styles.userBalanceContainer}>
+                        <span>{` `}</span>
+                      </div>
+                    )}
+                  </div>
+                </Form.Group>
+                <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+                  <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
+                    <Form.Label className={styles.formLabelContainer}>
+                      <span>Receive upto</span>
+                    </Form.Label>
+                    <Form.Control
+                      placeholder={`0.00 ${isBuyOrder ? baseTokenMetadata ? baseTokenMetadata.ticker : '' : quoteTokenMetadata ? quoteTokenMetadata.ticker : ''}`}
+                      // disabled={!walletState.connected}
+                      style={{
+                        backgroundColor: "transparent",
+                        fontSize: "1.1rem",
+                        fontWeight: "bold",
+                        textAlign: "right",
+                        color: "#ddd",
+                        border: "none",
+                        caretColor: "#ddd",
+                        padding: "1rem"
+                      }}
+                      min="0"
+                      step="0.01" // Allow any decimal value
+                      className={styles.formFieldContainer}
+                      // onChange={(e) => handleSizeInBaseUnitsChange(e)}
+                      value={receiveUptoSize} // Use inputText instead of inputAmount to show the decimal value
                     />
                   </div>
                 </Form.Group>

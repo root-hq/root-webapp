@@ -56,7 +56,6 @@
 
 .orderTypeChooseContainer {
     width: 100%;
-    margin-top: 2rem;
     display: flex;
     flex-direction: column;
 }
@@ -120,6 +119,24 @@
     }
   }
   
+  .shortcutButtonsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    width: 100%;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .resetFieldsButton {
+   cursor: pointer;
+   font-size: 0.85rem;
+  }
+  
+  .resetFieldsButton:hover {
+    font-weight: 500;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 1);
+  }
 
   .formLabelAndFieldContainer {
     display: flex;
@@ -128,7 +145,7 @@
     align-items: center;
     margin-top: 2rem;
     margin-bottom: 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
   }
   
   .formLabelAndFieldContainerNoBottomMargin {
@@ -137,11 +154,15 @@
     justify-content: center;
     align-items: center;
     margin-top: 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
   }
   
   .tokenBalanceContainer {
     margin: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    font-size: 0.80rem;
   }
   
   .userBalance {
