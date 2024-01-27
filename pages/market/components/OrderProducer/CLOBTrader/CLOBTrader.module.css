@@ -73,7 +73,7 @@
     display: flex;
     justify-content: space-between;
     cursor: pointer;
-    background-color: transparent;
+    background-color: #0a0b0f;
     color: white;
     font-size: 0.9rem;
     padding-left: 0.75rem;
@@ -89,7 +89,7 @@
     display: flex;
     justify-content: space-between;
     cursor: pointer;
-    background-color: transparent;
+    background-color: #0a0b0f;
     color: white;
     font-size: 0.9rem;
     padding-left: 0.75rem;
@@ -100,4 +100,89 @@
     border-right: 1px solid rgba(87, 87, 87, 0.25);
     width: 100%;
     z-index: 10;
+  }
+
+  .dropdownButtonSecondary div {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .dropdownButtonSecondary:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  @media screen and (max-width: 600px) {
+    .dropdownButtonSecondary {
+      width: 100%;
+      left: 0;
+      border-radius: 0;
+    }
+  }
+  
+
+  .formLabelAndFieldContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  
+  .formLabelAndFieldContainerNoBottomMargin {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  
+  .tokenBalanceContainer {
+    margin: 0.5rem;
+  }
+  
+  .userBalance {
+    cursor: pointer;
+  }
+  
+  .userBalance:hover {
+    font-weight: 500;
+  }
+  
+  .formLabelContainer {
+    width: 35%;
+  }
+  
+  .formFieldContainer {
+    width: 65%;
+  }
+  
+  .placeOrderButtonContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+    /* background-color: pink; */
+  }
+  
+  .placeOrderButton {
+    width: 200px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 1.5rem;
+    cursor: pointer;
+    background-color: #ddd;
+    color: #0a0b0e;
+    opacity: 100%;
+  }
+  
+  .placeOrderButton:hover {
+    background-color: #fff;
+    opacity: 100%;
   }

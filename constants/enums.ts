@@ -5,10 +5,10 @@ export enum OrderType {
 
 export const getOrderTypeText = (orderType: OrderType) => {
     if(orderType === OrderType.Market) {
-        return "Market";
+        return "Market order";
     }
     else if(orderType === OrderType.Limit) {
-        return "Limit";
+        return "Limit order";
     }
 }
 

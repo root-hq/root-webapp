@@ -7,7 +7,13 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { web3 } from '@coral-xyz/anchor';
 import { formatNumbersWithCommas, removeCommas } from '../../../../../utils';
-
+import { Button, Form } from 'react-bootstrap';
+import dynamic from "next/dynamic";
+const WalletMultiButtonDynamic = dynamic(
+  async () =>
+    (await import("../../../../../components/Wallet")).WalletMultiButton,
+  { ssr: false },
+);
 export interface CLOBTraderProps {
     spotGridMarket: SpotGridMarket;
     baseTokenMetadata: TokenMetadata;
@@ -26,8 +32,8 @@ const CLOBTrader = ({
 
   const [baseTokenBalance, setBaseTokenBalance] = useState(0.0);
   const [quoteTokenBalance, setQuoteTokenBalance] = useState(0.0);
-  const [limitPrice, setLimitPrice] = useState("0.0");
-  const [sizeInBaseUnits, setSizeInBaseUnits] = useState("0.0");
+  const [limitPrice, setLimitPrice] = useState();
+  const [sizeInBaseUnits, setSizeInBaseUnits] = useState();
 
   let connection: Connection;
   if(process.env.RPC_ENDPOINT) {
@@ -205,6 +211,90 @@ const CLOBTrader = ({
                 :
                     <></>
             }
+       </div>
+       <div className={styles.orderInputFormContainer}>
+       <div className={styles.tokenFieldContainer}>
+          <div className={styles.inputFieldContainer}>
+            <div className={styles.inputField}>
+              <Form>
+                <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+                  {
+                    orderType === OrderType.Limit ?
+                      <div className={styles.formLabelAndFieldContainer}>
+                        <Form.Label className={styles.formLabelContainer}>
+                          <span>Limit price</span>
+                        </Form.Label>
+                        <Form.Control
+                          placeholder="0.00"
+                          // disabled={!walletState.connected}
+                          style={{
+                            backgroundColor: "transparent",
+                            fontSize: "1.1rem",
+                            fontWeight: "bold",
+                            textAlign: "right",
+                            color: "#ddd",
+                            border: "none",
+                            caretColor: "#ddd",
+                            padding: "1rem"
+                          }}
+                          min="0"
+                          step="0.01" // Allow any decimal value
+                          className={styles.formFieldContainer}
+                          onChange={(e) => handleLimitPriceChange(e)}
+                          value={limitPrice} // Use inputText instead of inputAmount to show the decimal value
+                        />
+                      </div>
+                    :
+                      <></>
+                  }
+                </Form.Group>
+                <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+                  <div className={styles.formLabelAndFieldContainer}>
+                    <Form.Label className={styles.formLabelContainer}>
+                      <span>Quantity</span>
+                    </Form.Label>
+                    <Form.Control
+                      placeholder="0.00"
+                      // disabled={!walletState.connected}
+                      style={{
+                        backgroundColor: "transparent",
+                        fontSize: "1.1rem",
+                        fontWeight: "bold",
+                        textAlign: "right",
+                        color: "#ddd",
+                        border: "none",
+                        caretColor: "#ddd",
+                        padding: "1rem"
+                      }}
+                      min="0"
+                      step="0.01" // Allow any decimal value
+                      className={styles.formFieldContainer}
+                      onChange={(e) => handleSizeInBaseUnitsChange(e)}
+                      value={sizeInBaseUnits} // Use inputText instead of inputAmount to show the decimal value
+                    />
+                  </div>
+                </Form.Group>
+                <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+                  <div className={styles.placeOrderButtonContainer}>
+                    {
+                      walletState.connected ?
+                        <Button
+                          className={styles.placeOrderButton}
+                          disabled={!walletState.connected}
+                        >
+                          Place {`${isBuyOrder ? 'buy' : 'sell'}`}
+                        </Button>
+                      :
+                      <div className={styles.placeOrderButtonContainer}>
+                        <WalletMultiButtonDynamic className={styles.walletMultiButton} />
+                      </div>
+                    }
+                  </div>
+                </Form.Group>
+              </Form>
+            </div>
+          </div>
+        </div>
        </div>
     </div>
   );
