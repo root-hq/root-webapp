@@ -252,7 +252,6 @@ const CLOBTrader = ({
       else if(!isBuyOrder && parseFloat(sendUptoSize)){
         console.log("Limit sell");
         setIsPlaceOrderButtonLoading(_ => true);
-        await delay(3_000);
         let priceInTicks = new BN(phoenixClient.floatPriceToTicks(parseFloat(limitPrice), marketAddress));
         let sizeInBaseLosts = new BN(phoenixClient.baseAtomsToBaseLots(parseFloat(sendUptoSize) * Math.pow(10, baseTokenMetadata.decimals), marketAddress));
         console.log(`Selling ${sizeInBaseLosts} base lots at ${priceInTicks} price in ticks`);

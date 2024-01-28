@@ -78,11 +78,11 @@ const LightweightChart = ({
 
     refreshPriceData();
 
-    const intervalId = setInterval(() => {
-      refreshPriceData();
-    }, PRICE_REFRESH_FREQUENCY_IN_MS);
+    // const intervalId = setInterval(() => {
+    //   refreshPriceData();
+    // }, PRICE_REFRESH_FREQUENCY_IN_MS);
 
-    return () => clearInterval(intervalId);
+    // return () => clearInterval(intervalId);
   }, [chartData]);
 
   useEffect(() => {
