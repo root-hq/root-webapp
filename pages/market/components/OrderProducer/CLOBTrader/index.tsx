@@ -113,18 +113,20 @@ const CLOBTrader = ({
 
     const setupPhoenixClient = async() => {
       if(spotGridMarket) {
-        let endpoint = process.env.RPC_ENDPOINT;
-        if(!endpoint) {
-          endpoint = `https://api.mainnet-beta.solana.com`;
+        if(!phoenixClient) {
+          let endpoint = process.env.RPC_ENDPOINT;
+          if(!endpoint) {
+            endpoint = `https://api.mainnet-beta.solana.com`;
+          }
+
+          const connection = new web3.Connection(endpoint, {
+            commitment: "processed",
+          });
+
+          const client = await Client.create(connection);
+
+          setPhoenixClient(_ => client);
         }
-
-        const connection = new web3.Connection(endpoint, {
-          commitment: "processed",
-        });
-
-        const client = await Client.create(connection);
-
-        setPhoenixClient(_ => client);
       }
     }
 
