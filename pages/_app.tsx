@@ -45,7 +45,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
-        <title>Root - Automated trading bots on Solana</title>
+        <title>Root - Most efficient limit orders on Solana</title>
         <link rel="icon" href="/images/root-logo.png" />
       </Head>
 

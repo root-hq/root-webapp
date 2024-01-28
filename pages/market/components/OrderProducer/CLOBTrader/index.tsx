@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from "./CLOBTrader.module.css";
-import { MAX_BPS, OrderType, getAllOrderTypes, getOrderTypeText } from '../../../../../constants';
+import { MAX_BPS, OrderType, ROOT_PROTOCOL_FEE_BPS, getAllOrderTypes, getOrderTypeText } from '../../../../../constants';
 import { SpotGridMarket, TokenMetadata } from '../../../../../utils/supabase';
 import { Connection } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -9,6 +9,8 @@ import { web3 } from '@coral-xyz/anchor';
 import { formatNumbersWithCommas, getMarketMetadata, removeCommas } from '../../../../../utils';
 import { Button, Form } from 'react-bootstrap';
 import dynamic from "next/dynamic";
+import KeyValueComponent, { KeyValueJustification } from '../../../../../components/KeyValueComponent';
+import Image from 'next/image';
 const WalletMultiButtonDynamic = dynamic(
   async () =>
     (await import("../../../../../components/Wallet")).WalletMultiButton,
@@ -169,13 +171,13 @@ const CLOBTrader = ({
           let receivingAmount = parseFloat(removeCommas(sendUptoSize)) / parseFloat(removeCommas(limitPrice));
 
           let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
-          handleReceiveUptoSizeChange(amountPostFee.toFixed(4));
+          handleReceiveUptoSizeChange(amountPostFee.toFixed(baseTokenMetadata.decimals));
         }
         else {
           let receivingAmount = parseFloat(removeCommas(sendUptoSize)) * parseFloat(removeCommas(limitPrice));
           
           let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
-          handleReceiveUptoSizeChange(amountPostFee.toFixed(4))
+          handleReceiveUptoSizeChange(amountPostFee.toFixed(quoteTokenMetadata.decimals))
         }
       }
       else {
@@ -325,7 +327,27 @@ const CLOBTrader = ({
                 <Form.Group controlId="formInput" className={styles.formGroupContainer}>
                   <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
                     <Form.Label className={styles.formLabelContainer}>
-                      <span>{isBuyOrder ? 'Buy' : 'Sell'} size</span>
+                      <span className={styles.fieldTitleContainer}>
+                        <span>{isBuyOrder ? 'Buy' : 'Sell'} size</span>
+                        {
+                          isBuyOrder ?
+                            <Image
+                              src={quoteTokenMetadata.img_url}
+                              width={22}
+                              height={22}
+                              alt={`${quoteTokenMetadata.ticker} img`}
+                              className={styles.tokenImage}
+                            />
+                          :
+                            <Image
+                              src={baseTokenMetadata.img_url}
+                              width={22}
+                              height={22}
+                              alt={`${baseTokenMetadata.ticker} img`}
+                              className={styles.tokenImage}
+                            />
+                        }
+                      </span>
                     </Form.Label>
                     <Form.Control
                       placeholder={`0.00 ${isBuyOrder ? quoteTokenMetadata ? quoteTokenMetadata.ticker : '' : baseTokenMetadata ? baseTokenMetadata.ticker : ''}`}
@@ -373,11 +395,31 @@ const CLOBTrader = ({
                 <Form.Group controlId="formInput" className={styles.formGroupContainer}>
                   <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
                     <Form.Label className={styles.formLabelContainer}>
-                      <span>Receive upto</span>
+                      <span className={styles.fieldTitleContainer}>
+                        <span>Receive</span>
+                        {
+                          isBuyOrder ?
+                            <Image
+                              src={baseTokenMetadata.img_url}
+                              width={22}
+                              height={22}
+                              alt={`${baseTokenMetadata.ticker} img`}
+                              className={styles.tokenImage}
+                            />
+                          :
+                            <Image
+                              src={quoteTokenMetadata.img_url}
+                              width={22}
+                              height={22}
+                              alt={`${quoteTokenMetadata.ticker} img`}
+                              className={styles.tokenImage}
+                            />
+                        }
+                      </span>
                     </Form.Label>
                     <Form.Control
                       placeholder={`0.00 ${isBuyOrder ? baseTokenMetadata ? baseTokenMetadata.ticker : '' : quoteTokenMetadata ? quoteTokenMetadata.ticker : ''}`}
-                      // disabled={!walletState.connected}
+                      disabled={orderType === OrderType.Limit}
                       style={{
                         backgroundColor: "transparent",
                         fontSize: "1.1rem",
@@ -398,6 +440,40 @@ const CLOBTrader = ({
                     />
                   </div>
                 </Form.Group>
+                <div className={styles.tradeInfoContainer}>
+                  {
+                    orderType === OrderType.Limit ?
+                      <KeyValueComponent 
+                        keyElement={
+                          <p>Total fee</p>
+                        }
+                        keyElementStyle={
+                          {
+
+                          }
+                        }
+                        valueElement={
+                          marketMetadata ?
+                            <p>{`${(marketMetadata.takerFeeBps + ROOT_PROTOCOL_FEE_BPS)/100}%`}</p>
+                          :
+                            <p>{`-%`}</p>
+                        }
+                        valueElementStyle={
+                          {
+
+                          }
+                        }
+                        justification={KeyValueJustification.SpaceBetween}
+                        keyElementContainerStyle={
+                          {
+                            
+                          }
+                        }
+                      />
+                    :
+                      <></>
+                  }
+                </div>
                 <Form.Group controlId="formInput" className={styles.formGroupContainer}>
                   <div className={styles.placeOrderButtonContainer}>
                     {

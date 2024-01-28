@@ -157,6 +157,19 @@
     border-bottom: 1px solid rgba(87, 87, 87, 0.25);
   }
   
+  .fieldTitleContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: red; */
+  }
+
+  .tokenImage {
+    border-radius: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
   .tokenBalanceContainer {
     margin: 0.5rem;
     display: flex;
@@ -206,4 +219,10 @@
   .placeOrderButton:hover {
     background-color: #fff;
     opacity: 100%;
+  }
+
+  .tradeInfoContainer {
+    width: 100%;
+    font-size: 0.90rem;
+    opacity: 0.5;
   }
