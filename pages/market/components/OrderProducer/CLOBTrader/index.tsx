@@ -104,8 +104,10 @@ const CLOBTrader = ({
   useEffect(() => {
     const fetchMetadata = async() => {
       if(spotGridMarket) {
-        const metadata = await getMarketMetadata(spotGridMarket.phoenix_market_address.toString());
-        setMarketMetadata(_ => metadata);
+        if(!marketMetadata) {
+          const metadata = await getMarketMetadata(spotGridMarket.phoenix_market_address.toString());
+          setMarketMetadata(_ => metadata);
+        }
       }
     }
 
