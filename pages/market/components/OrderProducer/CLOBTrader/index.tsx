@@ -81,7 +81,7 @@ const CLOBTrader = ({
     }
 
     updateBalance();
-  }, [walletState, baseTokenMetadata, quoteTokenMetadata]);
+  }, [walletState, connection, baseTokenMetadata, quoteTokenMetadata]);
 
   useEffect(() => {
     calculateRecieveUpto()
@@ -128,7 +128,7 @@ const CLOBTrader = ({
 
     fetchMetadata();
     setupPhoenixClient();
-  }, [spotGridMarket]);
+  }, [spotGridMarket, connection]);
 
   let allOrderTypes = getAllOrderTypes();
 
