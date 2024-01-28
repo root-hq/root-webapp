@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from "./CLOBTrader.module.css";
-import { OrderType, getAllOrderTypes, getOrderTypeText } from '../../../../../constants';
+import { MAX_BPS, OrderType, getAllOrderTypes, getOrderTypeText } from '../../../../../constants';
 import { SpotGridMarket, TokenMetadata } from '../../../../../utils/supabase';
 import { Connection } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { web3 } from '@coral-xyz/anchor';
-import { formatNumbersWithCommas, removeCommas } from '../../../../../utils';
+import { formatNumbersWithCommas, getMarketMetadata, removeCommas } from '../../../../../utils';
 import { Button, Form } from 'react-bootstrap';
 import dynamic from "next/dynamic";
 const WalletMultiButtonDynamic = dynamic(
@@ -35,6 +35,7 @@ const CLOBTrader = ({
   const [limitPrice, setLimitPrice] = useState("");
   const [sendUptoSize, setSendUptoSize] = useState("");
   const [receiveUptoSize, setReceiveUptoSize] = useState("");
+  const [marketMetadata, setMarketMetadata] = useState(null);
 
   let connection: Connection;
   if(process.env.RPC_ENDPOINT) {
@@ -83,6 +84,31 @@ const CLOBTrader = ({
   useEffect(() => {
     calculateRecieveUpto()
   }, [limitPrice, sendUptoSize]);
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOrderTypeDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchMetadata = async() => {
+      if(spotGridMarket) {
+        const metadata = await getMarketMetadata(spotGridMarket.phoenix_market_address.toString());
+        setMarketMetadata(_ => metadata);
+      }
+    }
+
+    fetchMetadata();
+  }, [spotGridMarket]);
 
   let allOrderTypes = getAllOrderTypes();
 
@@ -131,16 +157,25 @@ const CLOBTrader = ({
     setOrderTypeDropdownOpen(!isOrderTypeDropdownOpen);
   };
 
-  const calculateRecieveUpto = () => {
+  const calculateRecieveUpto = async () => {
     if(orderType === OrderType.Limit) {
       if(limitPrice && sendUptoSize) {
+        let takerFeeBps = 0;
+        if(marketMetadata) {
+          takerFeeBps = marketMetadata.takerFeeBps;
+        }
+
         if(isBuyOrder) {
           let receivingAmount = parseFloat(removeCommas(sendUptoSize)) / parseFloat(removeCommas(limitPrice));
-          handleReceiveUptoSizeChange(receivingAmount.toFixed(4))
+
+          let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+          handleReceiveUptoSizeChange(amountPostFee.toFixed(4));
         }
         else {
           let receivingAmount = parseFloat(removeCommas(sendUptoSize)) * parseFloat(removeCommas(limitPrice));
-          handleReceiveUptoSizeChange(receivingAmount.toFixed(4))
+          
+          let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+          handleReceiveUptoSizeChange(amountPostFee.toFixed(4))
         }
       }
       else {
@@ -159,26 +194,13 @@ const CLOBTrader = ({
     setReceiveUptoSize("");
   }
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOrderTypeDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   return (
     <div className={styles.clobTraderContainer}>
        <div className={styles.tabsContainer}>
             <div className={styles.buyTabContainer}>
                 <button
                     className={styles.buyButton}
+                    key = {'buyButton'}
                     style = {{
                         borderTop: isBuyOrder ? '2px solid green' : '',
                         borderBottom: isBuyOrder ? 'none' : '1px solid rgba(87, 87, 87, 0.25)'
@@ -193,6 +215,7 @@ const CLOBTrader = ({
             <div className={styles.sellTabContainer}>
                 <button 
                     className={styles.sellButton}
+                    key = {'sellButton'}
                     style = {{
                         borderTop: !isBuyOrder ? '2px solid red' : '',
                         borderBottom: !isBuyOrder ? 'none' : '1px solid rgba(87, 87, 87, 0.25)'
@@ -302,7 +325,7 @@ const CLOBTrader = ({
                 <Form.Group controlId="formInput" className={styles.formGroupContainer}>
                   <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
                     <Form.Label className={styles.formLabelContainer}>
-                      <span>Pay upto</span>
+                      <span>{isBuyOrder ? 'Buy' : 'Sell'} size</span>
                     </Form.Label>
                     <Form.Control
                       placeholder={`0.00 ${isBuyOrder ? quoteTokenMetadata ? quoteTokenMetadata.ticker : '' : baseTokenMetadata ? baseTokenMetadata.ticker : ''}`}
@@ -368,7 +391,9 @@ const CLOBTrader = ({
                       min="0"
                       step="0.01" // Allow any decimal value
                       className={styles.formFieldContainer}
-                      // onChange={(e) => handleSizeInBaseUnitsChange(e)}
+                      onChange={(e) => {
+                        console.log("Change");
+                      }}
                       value={receiveUptoSize} // Use inputText instead of inputAmount to show the decimal value
                     />
                   </div>

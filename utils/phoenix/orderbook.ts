@@ -61,3 +61,23 @@ export const getMarketMidPrice = async (
     return 0;
   }
 };
+
+export const getMarketMetadata = async (
+  marketAddress: string
+) => {
+  try {
+    const endpoint = process.env.RPC_ENDPOINT;
+    const connection = new web3.Connection(endpoint, {
+      commitment: "processed",
+    });
+
+    const client = await Client.create(connection);
+    client.addMarket(marketAddress);
+    const metadata = client.marketMetadatas.get(marketAddress);
+
+    return metadata;
+  } catch (err) {
+    console.log("Error fetching fresh market metadata on Pheonix: ", err);
+    return null;
+  }
+}

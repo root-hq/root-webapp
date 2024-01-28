@@ -12,3 +12,5 @@ export const DOWNTIME_CHECK_FREQUENCY_IN_MS = 1_000;
 export const CHART_MOVING_AVERAGE_WINDOW_SIZE = 0;
 
 export const STROKE_DASH_ARRAY = 12;
+
+export const MAX_BPS = 10_000;
