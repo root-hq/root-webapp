@@ -327,7 +327,7 @@ const CLOBTrader = ({
       }
     }
     else {
-      // Simulate using Phoenix orderbook
+      // Simulate using Jupiter quote
     }
   }
 
@@ -411,7 +411,7 @@ const CLOBTrader = ({
                             allOrderTypes.map((type) => {
                                 if(type !== orderType) {
                                     return (
-                                        <button className={styles.dropdownButtonSecondary} onClick={
+                                        <button key = {type.toString()} className={styles.dropdownButtonSecondary} onClick={
                                             () => {
                                                 toggleOrderTypeDropdown()
                                                 handleOrderTypeUpdate(type)
@@ -469,21 +469,27 @@ const CLOBTrader = ({
                   <span>{isBuyOrder ? 'Buy' : 'Sell'} size</span>
                   {
                     isBuyOrder ?
-                      <Image
-                        src={quoteTokenMetadata.img_url}
-                        width={22}
-                        height={22}
-                        alt={`${quoteTokenMetadata.ticker} img`}
-                        className={styles.tokenImage}
-                      />
+                      quoteTokenMetadata ?
+                        <Image
+                          src={quoteTokenMetadata.img_url}
+                          width={22}
+                          height={22}
+                          alt={`${quoteTokenMetadata.ticker} img`}
+                          className={styles.tokenImage}
+                        />
+                      :
+                        <></>
                     :
-                      <Image
-                        src={baseTokenMetadata.img_url}
-                        width={22}
-                        height={22}
-                        alt={`${baseTokenMetadata.ticker} img`}
-                        className={styles.tokenImage}
-                      />
+                      baseTokenMetadata ?
+                        <Image
+                          src={baseTokenMetadata.img_url}
+                          width={22}
+                          height={22}
+                          alt={`${baseTokenMetadata.ticker} img`}
+                          className={styles.tokenImage}
+                        />
+                      :
+                        <></>
                   }
                 </span>
               </Form.Label>
@@ -537,21 +543,27 @@ const CLOBTrader = ({
                   <span>Receive</span>
                   {
                     isBuyOrder ?
-                      <Image
-                        src={baseTokenMetadata.img_url}
-                        width={22}
-                        height={22}
-                        alt={`${baseTokenMetadata.ticker} img`}
-                        className={styles.tokenImage}
-                      />
+                      baseTokenMetadata ?
+                        <Image
+                          src={baseTokenMetadata.img_url}
+                          width={22}
+                          height={22}
+                          alt={`${baseTokenMetadata.ticker} img`}
+                          className={styles.tokenImage}
+                        />
+                      :
+                        <></>
                     :
-                      <Image
-                        src={quoteTokenMetadata.img_url}
-                        width={22}
-                        height={22}
-                        alt={`${quoteTokenMetadata.ticker} img`}
-                        className={styles.tokenImage}
-                      />
+                      quoteTokenMetadata ?
+                        <Image
+                          src={quoteTokenMetadata.img_url}
+                          width={22}
+                          height={22}
+                          alt={`${quoteTokenMetadata.ticker} img`}
+                          className={styles.tokenImage}
+                        />
+                      :
+                        <></>
                   }
                 </span>
               </Form.Label>
