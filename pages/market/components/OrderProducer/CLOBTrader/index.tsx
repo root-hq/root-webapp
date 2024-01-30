@@ -11,7 +11,7 @@ import { Button, Form } from 'react-bootstrap';
 import dynamic from "next/dynamic";
 import KeyValueComponent, { KeyValueJustification } from '../../../../../components/KeyValueComponent';
 import Image from 'next/image';
-import { Client, OrderPacket, SelfTradeBehavior, Side, getMakerSetupInstructionsForMarket } from '@ellipsis-labs/phoenix-sdk';
+import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getMakerSetupInstructionsForMarket } from '@ellipsis-labs/phoenix-sdk';
 import {BN } from "@coral-xyz/anchor";
 
 const WalletMultiButtonDynamic = dynamic(
@@ -225,11 +225,12 @@ const CLOBTrader = ({
           let transaction = new web3.Transaction();
           const marketState = phoenixClient.marketStates.get(marketAddress);
 
-          let setupIxs = await getMakerSetupInstructionsForMarket(connection, marketState, walletState.publicKey);
+          const seat = marketState.getSeatAddress(walletState.publicKey);
+          if((await connection.getBalance(seat)) == 0) {
+            transaction.add(getClaimSeatIx(new web3.PublicKey(marketAddress), walletState.publicKey));
+          } 
+
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
-          for(let i of setupIxs) {
-            transaction.add(i);
-          }
           transaction.add(ix);
           
           const {
@@ -240,7 +241,7 @@ const CLOBTrader = ({
           transaction.feePayer = walletState.publicKey;
           transaction.lastValidBlockHeight = lastValidBlockHeight;
   
-          let response = await walletState.sendTransaction(transaction, connection, { minContextSlot });
+          let response = await walletState.sendTransaction(transaction, connection, { minContextSlot, skipPreflight: true });
           console.log("Signature: ", response);
         }
         catch(err) {
@@ -273,11 +274,12 @@ const CLOBTrader = ({
           let transaction = new web3.Transaction();
           const marketState = phoenixClient.marketStates.get(marketAddress);
 
-          let setupIxs = await getMakerSetupInstructionsForMarket(connection, marketState, walletState.publicKey);
+          const seat = marketState.getSeatAddress(walletState.publicKey);
+          if((await connection.getBalance(seat)) == 0) {
+            transaction.add(getClaimSeatIx(new web3.PublicKey(marketAddress), walletState.publicKey));
+          } 
+
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
-          for(let i of setupIxs) {
-            transaction.add(i);
-          }
           transaction.add(ix);
 
           const {
@@ -288,7 +290,7 @@ const CLOBTrader = ({
           transaction.feePayer = walletState.publicKey;
           transaction.lastValidBlockHeight = lastValidBlockHeight;
   
-          let response = await walletState.sendTransaction(transaction, connection, { minContextSlot });
+          let response = await walletState.sendTransaction(transaction, connection, { minContextSlot, skipPreflight: true });
           console.log("Signature: ", response);
         }
         catch(err) {
