@@ -164,7 +164,6 @@ const CLOBTrader = ({
     }
 
     if(limitPriceFloat && sendUptoSizeFloat) {
-      console.log("Calculating receiveUptoSize from sendSize and limitPrice");
       let takerFeeBps = 0;
       if(marketMetadata) {
         takerFeeBps = marketMetadata.takerFeeBps;
@@ -202,7 +201,6 @@ const CLOBTrader = ({
     }
 
     if(limitPriceFloat && sendUptoSizeFloat) {
-      console.log("Calculating receiveUptoSize from sendSize and limitPrice");
       let takerFeeBps = 0;
       if(marketMetadata) {
         takerFeeBps = marketMetadata.takerFeeBps;
