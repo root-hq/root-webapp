@@ -83,9 +83,10 @@ const CLOBTrader = ({
     updateBalance();
   }, [walletState, connection, baseTokenMetadata, quoteTokenMetadata]);
 
-  useEffect(() => {
-    calculateRecieveUpto()
-  }, [limitPrice, sendUptoSize]);
+  // useEffect(() => {
+  //   console.log("Calling calculateReceiveUpto");
+  //   calculateRecieveUpto()
+  // }, [limitPrice, sendUptoSize, receiveUptoSize]);
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -160,6 +161,35 @@ const CLOBTrader = ({
 
     const limitPrice = removeCommas(e.target.value);
 
+    let limitPriceFloat = parseFloat(limitPrice);
+
+    let sendUptoSizeFloat = 0.0;
+    if(sendUptoSize) {
+      sendUptoSizeFloat = parseFloat(sendUptoSize);
+    }
+
+    if(limitPriceFloat && sendUptoSizeFloat) {
+      console.log("Calculating receiveUptoSize from sendSize and limitPrice");
+      let takerFeeBps = 0;
+      if(marketMetadata) {
+        takerFeeBps = marketMetadata.takerFeeBps;
+      }
+
+      if(isBuyOrder) {
+        let receivingAmount = parseFloat(removeCommas(sendUptoSize)) / parseFloat(removeCommas(limitPrice));
+        let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+
+        formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setReceiveUptoSize);
+      }
+      else {
+        let receivingAmount = parseFloat(removeCommas(sendUptoSize)) * parseFloat(removeCommas(limitPrice));
+        let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+
+        formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setReceiveUptoSize);
+      }
+
+    }
+
     formatNumbersWithCommas(limitPrice, setLimitPrice);
   };
 
@@ -169,13 +199,72 @@ const CLOBTrader = ({
 
     const sendUptoSize = removeCommas(e.target.value);
 
+    let sendUptoSizeFloat = parseFloat(sendUptoSize);
+
+    let limitPriceFloat = 0.0;
+    if(limitPrice) {
+      limitPriceFloat = parseFloat(limitPrice);
+    }
+
+    if(limitPriceFloat && sendUptoSizeFloat) {
+      console.log("Calculating receiveUptoSize from sendSize and limitPrice");
+      let takerFeeBps = 0;
+      if(marketMetadata) {
+        takerFeeBps = marketMetadata.takerFeeBps;
+      }
+
+      if(isBuyOrder) {
+        let receivingAmount = parseFloat(removeCommas(sendUptoSize)) / parseFloat(removeCommas(limitPrice));
+        let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+
+        formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setReceiveUptoSize);
+      }
+      else {
+        let receivingAmount = parseFloat(removeCommas(sendUptoSize)) * parseFloat(removeCommas(limitPrice));
+        let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+
+        formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setReceiveUptoSize);
+      }
+
+    }
+
     formatNumbersWithCommas(sendUptoSize, setSendUptoSize);
   };
 
-  const handleReceiveUptoSizeChange = (receivingAmount) => {
-    const formattedAmount = removeCommas(receivingAmount);
+  const handleReceiveUptoSizeChange = (e) => {
+    e.preventDefault();
 
-    formatNumbersWithCommas(formattedAmount, setReceiveUptoSize);
+    const receiveUptoSize = removeCommas(e.target.value);
+
+    let receiveUptoSizeFloat = parseFloat(receiveUptoSize);
+
+    let limitPriceFloat = 0.0;
+    if(limitPrice) {
+      limitPriceFloat = parseFloat(limitPrice);
+    }
+
+    if(limitPriceFloat && receiveUptoSizeFloat) {
+      console.log("Calculating sendSize from receiveSize and limitPrice");
+        let takerFeeBps = 0;
+        if(marketMetadata) {
+          takerFeeBps = marketMetadata.takerFeeBps;
+        }
+
+        if(isBuyOrder) {
+          let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) * parseFloat(removeCommas(limitPrice));
+
+          let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
+          formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setSendUptoSize);
+        }
+        else {
+          let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) / parseFloat(removeCommas(limitPrice));
+
+          let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
+          formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setSendUptoSize);
+        }
+    }
+
+    formatNumbersWithCommas(receiveUptoSize, setReceiveUptoSize);
   }
 
   const handlePlaceOrderAction = async () => {
@@ -305,36 +394,6 @@ const CLOBTrader = ({
   const toggleOrderTypeDropdown = () => {
     setOrderTypeDropdownOpen(!isOrderTypeDropdownOpen);
   };
-
-  const calculateRecieveUpto = async () => {
-    if(orderType === OrderType.Limit) {
-      if(limitPrice && sendUptoSize) {
-        let takerFeeBps = 0;
-        if(marketMetadata) {
-          takerFeeBps = marketMetadata.takerFeeBps;
-        }
-
-        if(isBuyOrder) {
-          let receivingAmount = parseFloat(removeCommas(sendUptoSize)) / parseFloat(removeCommas(limitPrice));
-
-          let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
-          handleReceiveUptoSizeChange(amountPostFee.toFixed(baseTokenMetadata.decimals));
-        }
-        else {
-          let receivingAmount = parseFloat(removeCommas(sendUptoSize)) * parseFloat(removeCommas(limitPrice));
-          
-          let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
-          handleReceiveUptoSizeChange(amountPostFee.toFixed(quoteTokenMetadata.decimals))
-        }
-      }
-      else {
-        handleReceiveUptoSizeChange("")
-      }
-    }
-    else {
-      // Simulate using Jupiter quote
-    }
-  }
 
   // Reset all fields
   const resetAllFields = () => {
@@ -589,7 +648,7 @@ const CLOBTrader = ({
                 step="0.01" // Allow any decimal value
                 className={styles.formFieldContainer}
                 onChange={(e) => {
-                  console.log("Change");
+                  handleReceiveUptoSizeChange(e)
                 }}
                 value={receiveUptoSize} // Use inputText instead of inputAmount to show the decimal value
               />
