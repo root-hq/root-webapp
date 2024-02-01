@@ -39,6 +39,7 @@
     color: white;
     padding: 0.5rem;
     font-size: 1rem;
+    cursor: pointer;
 }
 
 .sellButton {
@@ -52,6 +53,7 @@
     color: white;
     padding: 0.5rem;
     font-size: 1rem;
+    cursor: pointer;
 }
 
 .orderTypeChooseContainer {

@@ -175,6 +175,11 @@ const CLOBTrader = ({
       sendUptoSizeFloat = parseFloat(sendUptoSize);
     }
 
+    let receiveUptoSizeFLoat = 0.0;
+    if(receiveUptoSize) {
+      receiveUptoSizeFLoat = parseFloat(receiveUptoSize);
+    }
+
     if(limitPriceFloat && sendUptoSizeFloat) {
       let takerFeeBps = 0;
       if(marketMetadata) {
@@ -193,7 +198,26 @@ const CLOBTrader = ({
 
         formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setReceiveUptoSize);
       }
+    }
 
+    if(limitPriceFloat && receiveUptoSizeFLoat) {
+      let takerFeeBps = 0;
+      if(marketMetadata) {
+        takerFeeBps = marketMetadata.takerFeeBps;
+      }
+
+      if(isBuyOrder) {
+        let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) * parseFloat(removeCommas(limitPrice));
+        let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
+
+        formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setSendUptoSize);
+      }
+      else {
+        let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) / parseFloat(removeCommas(limitPrice));
+        let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
+
+        formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setSendUptoSize);
+      }
     }
 
     formatNumbersWithCommas(limitPrice, setLimitPrice);
@@ -216,6 +240,8 @@ const CLOBTrader = ({
     }
 
     let sendUptoSizeFloat = parseFloat(sendUptoSize);
+
+    formatNumbersWithCommas(sendUptoSize, setSendUptoSize);  
 
     if(orderType === OrderType.Limit) {
       let limitPriceFloat = 0.0;
@@ -241,10 +267,7 @@ const CLOBTrader = ({
   
           formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setReceiveUptoSize);
         }
-  
       }
-  
-      formatNumbersWithCommas(sendUptoSize, setSendUptoSize);  
     }
     else if(orderType === OrderType.Market && sendUptoSizeFloat > 0.0) {
       if(isBuyOrder) {
@@ -262,40 +285,51 @@ const CLOBTrader = ({
     }
   };
 
-  const handleReceiveUptoSizeChange = (e) => {
-    e.preventDefault();
+  const handleReceiveUptoSizeChange = (e?: any, size?: any) => {
 
-    const receiveUptoSize = removeCommas(e.target.value);
+    if(e) {
+      e.preventDefault();
+    }
+
+    let receiveUptoSize;
+
+    if(size) {
+      receiveUptoSize = removeCommas(size);
+    }
+    else {
+      receiveUptoSize = removeCommas(e.target.value);
+    }
 
     let receiveUptoSizeFloat = parseFloat(receiveUptoSize);
 
-    let limitPriceFloat = 0.0;
-    if(limitPrice) {
-      limitPriceFloat = parseFloat(limitPrice);
+    if(orderType === OrderType.Limit) {
+      let limitPriceFloat = 0.0;
+      if(limitPrice) {
+        limitPriceFloat = parseFloat(limitPrice);
+      }
+  
+      if(limitPriceFloat && receiveUptoSizeFloat) {
+          let takerFeeBps = 0;
+          if(marketMetadata) {
+            takerFeeBps = marketMetadata.takerFeeBps;
+          }
+  
+          if(isBuyOrder) {
+            let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) * parseFloat(removeCommas(limitPrice));
+  
+            let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
+            formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setSendUptoSize);
+          }
+          else {
+            let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) / parseFloat(removeCommas(limitPrice));
+  
+            let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
+            formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setSendUptoSize);
+          }
+      }
+  
+      formatNumbersWithCommas(receiveUptoSize, setReceiveUptoSize);  
     }
-
-    if(limitPriceFloat && receiveUptoSizeFloat) {
-      console.log("Calculating sendSize from receiveSize and limitPrice");
-        let takerFeeBps = 0;
-        if(marketMetadata) {
-          takerFeeBps = marketMetadata.takerFeeBps;
-        }
-
-        if(isBuyOrder) {
-          let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) * parseFloat(removeCommas(limitPrice));
-
-          let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
-          formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setSendUptoSize);
-        }
-        else {
-          let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) / parseFloat(removeCommas(limitPrice));
-
-          let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
-          formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setSendUptoSize);
-        }
-    }
-
-    formatNumbersWithCommas(receiveUptoSize, setReceiveUptoSize);
   }
 
   const handlePlaceLimitOrderAction = async () => {
@@ -764,7 +798,7 @@ const CLOBTrader = ({
               </Form.Label>
               <Form.Control
                 placeholder={`0.00 ${isBuyOrder ? baseTokenMetadata ? baseTokenMetadata.ticker : '' : quoteTokenMetadata ? quoteTokenMetadata.ticker : ''}`}
-                // disabled={orderType === OrderType.Limit}
+                disabled={orderType === OrderType.Market}
                 style={{
                   backgroundColor: "transparent",
                   fontSize: "1.1rem",
