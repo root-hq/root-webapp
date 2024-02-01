@@ -11,7 +11,7 @@ import { Button, Form } from 'react-bootstrap';
 import dynamic from "next/dynamic";
 import KeyValueComponent, { KeyValueJustification } from '../../../../../components/KeyValueComponent';
 import Image from 'next/image';
-import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getMakerSetupInstructionsForMarket } from '@ellipsis-labs/phoenix-sdk';
+import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getCreateTokenAccountInstructions, getMakerSetupInstructionsForMarket } from '@ellipsis-labs/phoenix-sdk';
 import {BN } from "@coral-xyz/anchor";
 
 const WalletMultiButtonDynamic = dynamic(
@@ -82,11 +82,6 @@ const CLOBTrader = ({
 
     updateBalance();
   }, [walletState, connection, baseTokenMetadata, quoteTokenMetadata]);
-
-  // useEffect(() => {
-  //   console.log("Calling calculateReceiveUpto");
-  //   calculateRecieveUpto()
-  // }, [limitPrice, sendUptoSize, receiveUptoSize]);
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -312,12 +307,17 @@ const CLOBTrader = ({
             clientOrderId: new BN(1234)
           } as OrderPacket;
           let transaction = new web3.Transaction();
-          const marketState = phoenixClient.marketStates.get(marketAddress);
 
-          const seat = marketState.getSeatAddress(walletState.publicKey);
-          if((await connection.getBalance(seat)) == 0) {
-            transaction.add(getClaimSeatIx(new web3.PublicKey(marketAddress), walletState.publicKey));
-          } 
+          transaction.add(getClaimSeatIx(new web3.PublicKey(marketAddress), walletState.publicKey));
+
+          let baseAtaInitIxs = await getCreateTokenAccountInstructions(connection, walletState.publicKey, walletState.publicKey, new web3.PublicKey(baseTokenMetadata.mint));
+          let quoteAtaInitIxs = await getCreateTokenAccountInstructions(connection, walletState.publicKey, walletState.publicKey, new web3.PublicKey(quoteTokenMetadata.mint));
+          for(let ix of baseAtaInitIxs) {
+            transaction.add(ix);
+          }
+          for(let ix of quoteAtaInitIxs) {
+            transaction.add(ix);
+          }
 
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
@@ -361,12 +361,17 @@ const CLOBTrader = ({
             clientOrderId: new BN(1234)
           } as OrderPacket;
           let transaction = new web3.Transaction();
-          const marketState = phoenixClient.marketStates.get(marketAddress);
 
-          const seat = marketState.getSeatAddress(walletState.publicKey);
-          if((await connection.getBalance(seat)) == 0) {
-            transaction.add(getClaimSeatIx(new web3.PublicKey(marketAddress), walletState.publicKey));
-          } 
+          transaction.add(getClaimSeatIx(new web3.PublicKey(marketAddress), walletState.publicKey));
+
+          let baseAtaInitIxs = await getCreateTokenAccountInstructions(connection, walletState.publicKey, walletState.publicKey, new web3.PublicKey(baseTokenMetadata.mint));
+          let quoteAtaInitIxs = await getCreateTokenAccountInstructions(connection, walletState.publicKey, walletState.publicKey, new web3.PublicKey(quoteTokenMetadata.mint));
+          for(let ix of baseAtaInitIxs) {
+            transaction.add(ix);
+          }
+          for(let ix of quoteAtaInitIxs) {
+            transaction.add(ix);
+          }
 
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
