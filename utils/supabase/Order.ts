@@ -12,16 +12,18 @@ export const addOrder = async (
         "trader": order.trader,
         "price_in_ticks": order.price_in_ticks,
         "size_in_base_lots": order.size_in_base_lots,
-        "fill_size_in_base_lots": 0,
+        "fill_size_in_base_lots": order.fill_size_in_base_lots,
         "place_timestamp": order.place_timestamp,
-        "status": "PLACED"
+        "status": "PLACED",
+        "is_buy_order": order.is_buy_order
     };
 
-    const response = await axios.get(
+    const response = await axios.post(
       `${process.env.SPOT_GRID_DATABASE_SERVER_URL}/api/order/add-order`,
+      body
     );
 
-    if (response && response.data && response.data.length) {
+    if (response && response.status === 201) {
       return true;
     } else {
       console.log(

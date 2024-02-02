@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from "./CLOBTrader.module.css";
 import { MAX_BPS, OrderType, ROOT_PROTOCOL_FEE_BPS, WRAPPED_SOL_MAINNET, getAllOrderTypes, getOrderTypeText } from '../../../../../constants';
-import { SpotGridMarket, TokenMetadata } from '../../../../../utils/supabase';
-import { Connection, LAMPORTS_PER_SOL, VersionedTransaction } from '@solana/web3.js';
+import { Order, SpotGridMarket, TokenMetadata, addOrder } from '../../../../../utils/supabase';
+import { ComputeBudgetProgram, Connection, LAMPORTS_PER_SOL, VersionedTransaction } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { web3 } from '@coral-xyz/anchor';
@@ -11,7 +11,7 @@ import { Button, Form } from 'react-bootstrap';
 import dynamic from "next/dynamic";
 import KeyValueComponent, { KeyValueJustification } from '../../../../../components/KeyValueComponent';
 import Image from 'next/image';
-import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getCreateTokenAccountInstructions, getMakerSetupInstructionsForMarket } from '@ellipsis-labs/phoenix-sdk';
+import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getCreateTokenAccountInstructions, getMakerSetupInstructionsForMarket, getPhoenixEventsFromTransactionSignature } from '@ellipsis-labs/phoenix-sdk';
 import {BN } from "@coral-xyz/anchor";
 import { fetchQuote, swapOnJupiterTx } from '../../../../../utils/jupiter';
 
@@ -356,6 +356,17 @@ const CLOBTrader = ({
           } as OrderPacket;
           let transaction = new web3.Transaction();
 
+          // Create the priority fee instructions
+          const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
+            microLamports: 1000,
+          });
+
+          const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({
+            units: 200_000,
+          });
+          transaction.add(computePriceIx);
+          transaction.add(computeLimitIx);
+
           transaction.add(getClaimSeatIx(new web3.PublicKey(marketAddress), walletState.publicKey));
 
           let baseAtaInitIxs = await getCreateTokenAccountInstructions(connection, walletState.publicKey, walletState.publicKey, new web3.PublicKey(baseTokenMetadata.mint));
@@ -370,16 +381,46 @@ const CLOBTrader = ({
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
           
-          const {
-            context: { slot: minContextSlot },
-            value: { blockhash, lastValidBlockHeight }
-          } = await connection.getLatestBlockhashAndContext();
-          transaction.recentBlockhash = blockhash;
-          transaction.feePayer = walletState.publicKey;
-          transaction.lastValidBlockHeight = lastValidBlockHeight;
+          // const {
+          //   context: { slot: minContextSlot },
+          //   value: { blockhash, lastValidBlockHeight }
+          // } = await connection.getLatestBlockhashAndContext();
+          // transaction.recentBlockhash = blockhash;
+          // transaction.feePayer = walletState.publicKey;
+          // transaction.lastValidBlockHeight = lastValidBlockHeight;
   
-          let response = await walletState.sendTransaction(transaction, connection, { minContextSlot, skipPreflight: true });
+          let response = await walletState.sendTransaction(transaction, connection);
           console.log("Signature: ", response);
+
+          let status = await getPhoenixEventsFromTransactionSignature(connection, response);
+          if(status) {
+            let ixs = status.instructions;
+            for(let ix of ixs) {
+              for(let event of ix.events) {
+                if(event.__kind === "Place") {
+                  let order = {
+                    order_sequence_number: event.fields[0].orderSequenceNumber.toString(),
+                    order_type: 'LIMIT',
+                    phoenix_market_address: marketAddress,
+                    trader: walletState.publicKey.toString(),
+                    price_in_ticks: orderPacket.priceInTicks.toString(),
+                    size_in_base_lots: orderPacket.numBaseLots.toString(),
+                    fill_size_in_base_lots: "0",
+                    place_timestamp: Date.now().toString(),
+                    status: 'PLACED',
+                    is_buy_order: true
+                  } as Order;
+
+                  try {
+                    await addOrder(order);
+                  }
+                  catch(err) {
+                    console.log(`Error logging order to Supabase: ${err}`);
+                  }
+                }
+              }
+            }
+          }
         }
         catch(err) {
           console.log(`Error sending limit buy order: ${err}`);
@@ -410,6 +451,17 @@ const CLOBTrader = ({
           } as OrderPacket;
           let transaction = new web3.Transaction();
 
+          // Create the priority fee instructions
+          const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
+            microLamports: 10,
+          });
+
+          const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({
+            units: 350_000,
+          });
+          transaction.add(computePriceIx);
+          transaction.add(computeLimitIx);
+
           transaction.add(getClaimSeatIx(new web3.PublicKey(marketAddress), walletState.publicKey));
 
           let baseAtaInitIxs = await getCreateTokenAccountInstructions(connection, walletState.publicKey, walletState.publicKey, new web3.PublicKey(baseTokenMetadata.mint));
@@ -424,16 +476,46 @@ const CLOBTrader = ({
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
 
-          const {
-            context: { slot: minContextSlot },
-            value: { blockhash, lastValidBlockHeight }
-          } = await connection.getLatestBlockhashAndContext();
-          transaction.recentBlockhash = blockhash;
-          transaction.feePayer = walletState.publicKey;
-          transaction.lastValidBlockHeight = lastValidBlockHeight;
+          // const {
+          //   context: { slot: minContextSlot },
+          //   value: { blockhash, lastValidBlockHeight }
+          // } = await connection.getLatestBlockhashAndContext();
+          // transaction.recentBlockhash = blockhash;
+          // transaction.feePayer = walletState.publicKey;
+          // transaction.lastValidBlockHeight = lastValidBlockHeight;
   
-          let response = await walletState.sendTransaction(transaction, connection, { minContextSlot, skipPreflight: true });
+          let response = await walletState.sendTransaction(transaction, connection);
           console.log("Signature: ", response);
+
+          let status = await getPhoenixEventsFromTransactionSignature(connection, response);
+          if(status) {
+            let ixs = status.instructions;
+            for(let ix of ixs) {
+              for(let event of ix.events) {
+                if(event.__kind === "Place") {
+                  let order = {
+                    order_sequence_number: event.fields[0].orderSequenceNumber,
+                    order_type: 'LIMIT',
+                    phoenix_market_address: marketAddress,
+                    trader: walletState.publicKey.toString(),
+                    price_in_ticks: orderPacket.priceInTicks,
+                    size_in_base_lots: orderPacket.numBaseLots,
+                    fill_size_in_base_lots: "0",
+                    place_timestamp: Date.now().toString(),
+                    status: 'PLACED',
+                    is_buy_order: false
+                  } as Order;
+
+                  try {
+                    await addOrder(order);
+                  }
+                  catch(err) {
+                    console.log(`Error logging order to Supabase: ${err}`);
+                  }
+                }
+              }
+            }
+          }
         }
         catch(err) {
           console.log(`Error sending limit sell order: ${err}`);

@@ -8,4 +8,5 @@ export interface Order {
     fill_size_in_base_lots: String;
     place_timestamp: String;
     status: String;
+    is_buy_order: boolean;
 }
