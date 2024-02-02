@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from "./CLOBTrader.module.css";
-import { MAX_BPS, OrderType, ROOT_PROTOCOL_FEE_BPS, WRAPPED_SOL_MAINNET, getAllOrderTypes, getOrderTypeText } from '../../../../../constants';
+import { JUPITER_V6_PROGRAM, MAX_BPS, OrderType, ROOT_PROTOCOL_FEE_BPS, WRAPPED_SOL_MAINNET, getAllOrderTypes, getOrderTypeText } from '../../../../../constants';
 import { Order, SpotGridMarket, TokenMetadata, addOrder } from '../../../../../utils/supabase';
 import { ComputeBudgetProgram, Connection, LAMPORTS_PER_SOL, VersionedTransaction } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -14,6 +14,7 @@ import Image from 'next/image';
 import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getCreateTokenAccountInstructions, getMakerSetupInstructionsForMarket, getPhoenixEventsFromTransactionSignature } from '@ellipsis-labs/phoenix-sdk';
 import {BN } from "@coral-xyz/anchor";
 import { fetchQuote, swapOnJupiterTx } from '../../../../../utils/jupiter';
+import { getPriorityFeeEstimate } from '../../../../../utils/helius';
 
 const WalletMultiButtonDynamic = dynamic(
   async () =>
@@ -333,6 +334,15 @@ const CLOBTrader = ({
       }
     }
     else if(orderType === OrderType.Limit && limitPrice && sendUptoSize) {
+      let priorityFeeLevels = null;
+
+      try {
+        priorityFeeLevels = (await getPriorityFeeEstimate([marketAddress])).priorityFeeLevels;
+      }
+      catch(err) {
+        console.log(`Error fetching priority fee levels`);
+      }
+
       if(isBuyOrder && parseFloat(receiveUptoSize)) {
         console.log("Limit buy");
         setIsPlaceOrderButtonLoading(_ => true);
@@ -357,8 +367,13 @@ const CLOBTrader = ({
           let transaction = new web3.Transaction();
 
           // Create the priority fee instructions
+          let unitsPrice = 10;
+          if(priorityFeeLevels) {
+            unitsPrice = priorityFeeLevels["high"]
+          }
+
           const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
-            microLamports: 1000,
+            microLamports: unitsPrice,
           });
 
           const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({
@@ -380,15 +395,6 @@ const CLOBTrader = ({
 
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
-          
-          // const {
-          //   context: { slot: minContextSlot },
-          //   value: { blockhash, lastValidBlockHeight }
-          // } = await connection.getLatestBlockhashAndContext();
-          // transaction.recentBlockhash = blockhash;
-          // transaction.feePayer = walletState.publicKey;
-          // transaction.lastValidBlockHeight = lastValidBlockHeight;
-  
           let response = await walletState.sendTransaction(transaction, connection);
           console.log("Signature: ", response);
 
@@ -452,12 +458,17 @@ const CLOBTrader = ({
           let transaction = new web3.Transaction();
 
           // Create the priority fee instructions
+          let unitsPrice = 10;
+          if(priorityFeeLevels) {
+            unitsPrice = priorityFeeLevels["high"]
+          }
+
           const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
-            microLamports: 10,
+            microLamports: unitsPrice,
           });
 
           const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({
-            units: 350_000,
+            units: 200_000,
           });
           transaction.add(computePriceIx);
           transaction.add(computeLimitIx);
@@ -476,14 +487,6 @@ const CLOBTrader = ({
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
 
-          // const {
-          //   context: { slot: minContextSlot },
-          //   value: { blockhash, lastValidBlockHeight }
-          // } = await connection.getLatestBlockhashAndContext();
-          // transaction.recentBlockhash = blockhash;
-          // transaction.feePayer = walletState.publicKey;
-          // transaction.lastValidBlockHeight = lastValidBlockHeight;
-  
           let response = await walletState.sendTransaction(transaction, connection);
           console.log("Signature: ", response);
 
@@ -532,6 +535,16 @@ const CLOBTrader = ({
 
       let serializedTx = null;
 
+      let priorityFeeLevels = 0;
+
+      try {
+        let levels = (await getPriorityFeeEstimate([JUPITER_V6_PROGRAM])).priorityFeeLevels;
+        priorityFeeLevels = levels["high"];
+      }
+      catch(err) {
+        console.log(`Error fetching priority fee levels`);
+      }
+
       if(isBuyOrder) {
         let size = parseFloat(sendUptoSize) * Math.pow(10, quoteTokenMetadata.decimals);
 
@@ -541,7 +554,7 @@ const CLOBTrader = ({
           outputMint: baseTokenMetadata.mint,
           amountIn: size,
           slippage: 1,
-          priorityFeeInMicroLamportsPerUnit: 0
+          priorityFeeInMicroLamportsPerUnit: priorityFeeLevels
         });
 
         serializedTx = tx;
@@ -555,7 +568,7 @@ const CLOBTrader = ({
           outputMint: quoteTokenMetadata.mint,
           amountIn: size,
           slippage: 1,
-          priorityFeeInMicroLamportsPerUnit: 0
+          priorityFeeInMicroLamportsPerUnit: priorityFeeLevels
         });
 
         serializedTx = tx;
@@ -564,9 +577,7 @@ const CLOBTrader = ({
       try {
         if(serializedTx) {
           const swapTransactionBuf = Buffer.from(serializedTx, 'base64');
-          var transaction = VersionedTransaction.deserialize(swapTransactionBuf);
-          console.log(transaction);
-          
+          var transaction = VersionedTransaction.deserialize(swapTransactionBuf);          
   
           const {
             context: { slot: minContextSlot },
@@ -608,12 +619,10 @@ const CLOBTrader = ({
         size * (Math.pow(10, from.decimals)),
         1
       );
-      console.log("Quote: ", jupiterQuote);
 
       const outAmount = jupiterQuote.outAmount;
       const outAmountFormatted = (new BN(outAmount)).toNumber();
       const quote = outAmountFormatted / (Math.pow(10, to.decimals));
-      console.log("Setting quote: ", quote);
 
       setter(_ => quote.toString());
     }
