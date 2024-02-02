@@ -217,7 +217,7 @@
     font-size: 1.0rem;
     font-weight: bold;
     padding: 0.75rem;
-    border: none;
+    border: 1px solid transparent;
     border-radius: 0.25rem;
     cursor: pointer;
   }
