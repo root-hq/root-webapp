@@ -60,6 +60,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .dropdownInnerContainer {
@@ -85,11 +86,17 @@
     border-right: 1px solid rgba(87, 87, 87, 0.25);
     width: 100%;
   }
+
+  .dropdownButtonSecondaryContainer {
+    background-color: red;
+    width: 100%;
+  }
   
   .dropdownButtonSecondary {
     display: flex;
     justify-content: space-between;
     cursor: pointer;
+    position: absolute;
     background-color: #0a0b0f;
     color: white;
     font-size: 0.9rem;
@@ -110,7 +117,7 @@
   }
   
   .dropdownButtonSecondary:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(0, 0, 0, 0.85);
   }
   
   @media screen and (max-width: 600px) {

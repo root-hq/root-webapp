@@ -65,7 +65,11 @@ const OrderConsumer = ({
         </div>
       </div>
       <div className={styles.orderManagerContainer}>
-        <OrderManager />
+        <OrderManager
+          spotGridMarket={activeMarket}
+          baseTokenMetadata={baseTokenMetadata}
+          quoteTokenMetadata={quoteTokenMetadata}
+        />
       </div>
     </div>
   );

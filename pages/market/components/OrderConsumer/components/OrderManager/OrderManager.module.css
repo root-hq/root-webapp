@@ -15,30 +15,238 @@
     width: 100%;
     justify-content: space-between;
     border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
 }
 
 .orderTitleContainer {
     margin-left: 1rem;
     margin-right: 1rem;
-}
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
 .topMenuButtonContainer {
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .allMarketsDropdownContainer {
     margin-left: 1rem;
     margin-right: 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
-.orderStatusDropdownContainer {
+.allMarketsDropdownInnerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.allMarketsDropdownText {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.allMarketsDropdownButton {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: #0a0b0f;
+    white-space: nowrap;
+    color: white;
+    border-top: 1px solid rgba(87, 87, 87, 0.25);
+    border-left: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+    border-right: 1px solid rgba(87, 87, 87, 0.25);
+    min-width: 100%;
+  }
+  
+  .allMarketsDropdownButtonSecondary {
+    display: flex;
+    position: absolute;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: #0a0b0f;
+    white-space: nowrap;
+    color: white;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    border: none;
+    border-top: 1px solid rgba(87, 87, 87, 0.25);
+    border-left: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+    border-right: 1px solid rgba(87, 87, 87, 0.25);
+    min-width: 100%;
+    z-index: 10;
+  }
+
+  .allMarketsDropdownButtonSecondary div {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .allMarketsDropdownButtonSecondary:hover {
+    background-color: rgba(0, 0, 0, 0.95);
+  }
+  
+  @media screen and (max-width: 600px) {
+    .allMarketsDropdownButtonSecondaryContainer {
+      width: 100%;
+    }
+
+    .allMarketsDropdownButtonSecondary {
+      width: 100%;
+      left: 0;
+      border-radius: 0;
+    }
+  }
+
+  .orderStatusDropdownContainer {
     margin-left: 1rem;
     margin-right: 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
+
+.orderStatusDropdownInnerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.orderStatusDropdownText {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.orderStatusDropdownButton {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: #0a0b0f;
+    color: white;
+    border-top: 1px solid rgba(87, 87, 87, 0.25);
+    border-left: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+    border-right: 1px solid rgba(87, 87, 87, 0.25);
+    min-width: 100%;
+  }
+  
+  .orderStatusDropdownButtonSecondaryContainer {
+    position: absolute;
+  }
+
+  .orderStatusDropdownButtonSecondary {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: #0a0b0f;
+    color: white;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    border: none;
+    border-top: 1px solid rgba(87, 87, 87, 0.25);
+    border-left: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+    border-right: 1px solid rgba(87, 87, 87, 0.25);
+    min-width: 100%;
+    z-index: 10;
+  }
+
+  .orderStatusDropdownButtonSecondary div {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .orderStatusDropdownButtonSecondary:hover {
+    background-color: rgba(0, 0, 0, 0.85);
+  }
+  
+  @media screen and (max-width: 600px) {
+    .orderStatusDropdownButtonSecondaryContainer {
+      width: 100%;
+    }
+
+    .orderStatusDropdownButtonSecondary {
+      width: 100%;
+      left: 0;
+      border-radius: 0;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .topMenuContainer {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .topMenuButtonContainer {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem;
+    }
+
+    .allMarketsDropdownContainer {
+      margin-top: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .orderStatusDropdownContainer {
+      margin-top: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+  }
 
 .cancelAllButtonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
     margin-left: 1rem;
     margin-right: 1rem;
+    white-space: nowrap;
+}
+
+.cancelAllButton {
+  padding: 0.5rem;
+  background-color: rgba(227, 61, 61, 0.05);
+  border: none;
+  border-radius: 0.25rem;
+  color: rgb(227, 61, 61);
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+@media screen and (max-width: 600px) {
+  .cancelAllButtonContainer {
+    width: 100%;
+  }
+
+  .cancelAllButton {
+    width: 100%;
+  }
+}
+
+.ordersDisplayContainer {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+  width: 100%;
 }

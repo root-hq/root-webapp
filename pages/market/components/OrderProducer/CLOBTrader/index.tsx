@@ -33,7 +33,8 @@ const CLOBTrader = ({
     quoteTokenMetadata
 }: CLOBTraderProps) => {
   const [isBuyOrder, setIsBuyOrder] = useState(true);
-  const [orderType, setOrderType] = useState<OrderType>(OrderType.Limit);  
+  const [orderType, setOrderType] = useState<OrderType>(OrderType.Limit);
+  
   const dropdownRef = useRef(null);
   const [isOrderTypeDropdownOpen, setOrderTypeDropdownOpen] = useState(false);
 
@@ -606,32 +607,32 @@ const CLOBTrader = ({
                     </div>
                 </button>
             </div>
-            {
+              {
                 isOrderTypeDropdownOpen ?
-                    <>
-                        {
-                            allOrderTypes.map((type) => {
-                                if(type !== orderType) {
-                                    return (
-                                        <button key = {type.toString()} className={styles.dropdownButtonSecondary} onClick={
-                                            () => {
-                                                toggleOrderTypeDropdown()
-                                                handleOrderTypeUpdate(type)
-                                            }
-                                        }>
-                                            <div className={styles.dropdownInnerContainer}>
-                                                <span>{getOrderTypeText(type)}</span>
-                                            </div>
-                                        </button>
-                                    )
-                                }
-                            })
+                  <div className={styles.dropdownButtonSecondaryContainer}>
+                    {
+                      allOrderTypes.map((type) => {
+                        if(type !== orderType) {
+                          return (
+                            <button key = {type.toString()} className={styles.dropdownButtonSecondary} onClick={
+                              () => {
+                                  toggleOrderTypeDropdown()
+                                  handleOrderTypeUpdate(type)
+                              }
+                            }>
+                              <div className={styles.dropdownInnerContainer}>
+                                <span>{getOrderTypeText(type)}</span>
+                              </div>
+                            </button>
+                          )
                         }
-                    </>
+                      })
+                    }
+                  </div>
                 :
-                    <></>
-            }
-       </div>
+                  <></>
+              }
+         </div>
        <Form>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
             {
