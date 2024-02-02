@@ -8,4 +8,5 @@ export interface SpotGridMarket {
   withdrawal_fee_in_bps_hundredths: String;
   min_order_spacing_in_ticks: String;
   min_order_size_in_base_lots: String;
+  taker_fee_bps: String;
 }

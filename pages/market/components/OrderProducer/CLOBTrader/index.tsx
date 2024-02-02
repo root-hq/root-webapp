@@ -33,7 +33,7 @@ const CLOBTrader = ({
     quoteTokenMetadata
 }: CLOBTraderProps) => {
   const [isBuyOrder, setIsBuyOrder] = useState(true);
-  const [orderType, setOrderType] = useState<OrderType>(OrderType.Market);  
+  const [orderType, setOrderType] = useState<OrderType>(OrderType.Limit);  
   const dropdownRef = useRef(null);
   const [isOrderTypeDropdownOpen, setOrderTypeDropdownOpen] = useState(false);
 
@@ -44,7 +44,6 @@ const CLOBTrader = ({
   const [receiveUptoSize, setReceiveUptoSize] = useState("");
   const [isPlaceOrderButtonLoading, setIsPlaceOrderButtonLoading] = useState(false);
 
-  const [marketMetadata, setMarketMetadata] = useState(null);
   const [phoenixClient, setPhoenixClient] = useState<Client>(null);
 
   let connection: Connection;
@@ -93,7 +92,7 @@ const CLOBTrader = ({
     }
 
     updateBalance();
-  }, [walletState, connection, baseTokenMetadata, quoteTokenMetadata]);
+  }, [spotGridMarket, walletState, connection, baseTokenMetadata, quoteTokenMetadata]);
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -110,15 +109,6 @@ const CLOBTrader = ({
   }, []);
 
   useEffect(() => {
-    const fetchMetadata = async() => {
-      if(spotGridMarket) {
-        if(!marketMetadata) {
-          const metadata = await getMarketMetadata(spotGridMarket.phoenix_market_address.toString());
-          setMarketMetadata(_ => metadata);
-        }
-      }
-    }
-
     const setupPhoenixClient = async() => {
       if(spotGridMarket) {
         if(!phoenixClient) {
@@ -138,7 +128,6 @@ const CLOBTrader = ({
       }
     }
 
-    fetchMetadata();
     setupPhoenixClient();
   }, [spotGridMarket, connection]);
 
@@ -181,10 +170,7 @@ const CLOBTrader = ({
     }
 
     if(limitPriceFloat && sendUptoSizeFloat) {
-      let takerFeeBps = 0;
-      if(marketMetadata) {
-        takerFeeBps = marketMetadata.takerFeeBps;
-      }
+      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
 
       if(isBuyOrder) {
         let receivingAmount = parseFloat(removeCommas(sendUptoSize)) / parseFloat(removeCommas(limitPrice));
@@ -201,10 +187,7 @@ const CLOBTrader = ({
     }
 
     if(limitPriceFloat && receiveUptoSizeFLoat) {
-      let takerFeeBps = 0;
-      if(marketMetadata) {
-        takerFeeBps = marketMetadata.takerFeeBps;
-      }
+      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
 
       if(isBuyOrder) {
         let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) * parseFloat(removeCommas(limitPrice));
@@ -250,11 +233,8 @@ const CLOBTrader = ({
       }
   
       if(limitPriceFloat && sendUptoSizeFloat) {
-        let takerFeeBps = 0;
-        if(marketMetadata) {
-          takerFeeBps = marketMetadata.takerFeeBps;
-        }
-  
+        let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
+
         if(isBuyOrder) {
           let receivingAmount = parseFloat(removeCommas(sendUptoSize)) / parseFloat(removeCommas(limitPrice));
           let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
@@ -309,10 +289,7 @@ const CLOBTrader = ({
       }
   
       if(limitPriceFloat && receiveUptoSizeFloat) {
-          let takerFeeBps = 0;
-          if(marketMetadata) {
-            takerFeeBps = marketMetadata.takerFeeBps;
-          }
+        let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
   
           if(isBuyOrder) {
             let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) * parseFloat(removeCommas(limitPrice));
@@ -832,8 +809,8 @@ const CLOBTrader = ({
                     }
                   }
                   valueElement={
-                    marketMetadata ?
-                      <p>{`${(marketMetadata.takerFeeBps + ROOT_PROTOCOL_FEE_BPS)/100}%`}</p>
+                    spotGridMarket ?
+                      <p>{`${(parseFloat(spotGridMarket.taker_fee_bps.toString()) + ROOT_PROTOCOL_FEE_BPS)/100}%`}</p>
                     :
                       <p>{`-%`}</p>
                   }
