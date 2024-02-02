@@ -109,7 +109,7 @@ const OrderManager = ({
                             }
                         </div>
                     </div>
-                    <div className={styles.orderStatusDropdownContainer} ref={orderStatusDropdownRef}>
+                    {/* <div className={styles.orderStatusDropdownContainer} ref={orderStatusDropdownRef}>
                         <div
                             className={styles.orderStatusDropdownButtonContainer}
                             onClick={
@@ -164,9 +164,48 @@ const OrderManager = ({
                             <></>
                         }
                         </div>
-                    </div>
+                    </div> */}
                     <div className={styles.cancelAllButtonContainer}>
                         <button className={styles.cancelAllButton}>Cancel all</button>
+                    </div>
+                </div>
+            </div>
+            <div className={styles.columnNamesOuterContainer}>
+                <div className={styles.columnNamesContainer}>
+                    <div className={styles.columnNameRow}>
+                        <span className={styles.columnName}>
+                            {`Market`}
+                        </span>
+                    </div>
+                    <div className={styles.columnNameRow}>
+                        <span className={styles.columnName}>
+                            {`Side`}
+                        </span>
+                    </div>
+                    <div className={styles.columnNameRow}>
+                        <span className={styles.columnName}>
+                            {`Price`}
+                        </span>
+                    </div>
+                    <div className={styles.columnNameRow}>
+                        <span className={styles.columnName}>
+                            {`Size`}
+                        </span>
+                    </div>
+                    <div className={styles.columnNameRow}>
+                        <span className={styles.columnName}>
+                            {`Total`}
+                        </span>
+                    </div>
+                    <div className={styles.columnNameRow}>
+                        <span className={styles.columnName}>
+                            {`Filled`}
+                        </span>
+                    </div>
+                    <div className={styles.columnNameRow}>
+                        <span className={styles.columnName}>
+                            {``}
+                        </span>
                     </div>
                 </div>
             </div>

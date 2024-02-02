@@ -28,7 +28,7 @@ export enum OrderStatus {
 
 export const getOrderStatusText = (orderStatus: OrderStatus) => {
     if(orderStatus === OrderStatus.All) {
-        return "All";
+        return "All types";
     }
     if(orderStatus === OrderStatus.Placed) {
         return "Placed";
