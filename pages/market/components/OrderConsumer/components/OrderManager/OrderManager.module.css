@@ -1,7 +1,6 @@
 .orderManagerContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     border: 1px solid rgba(87, 87, 87, 0.25);
     box-sizing: border-box;
@@ -9,4 +8,37 @@
     width: 100%;
     height: 300px;
     color: white;
+}
+
+.topMenuContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.orderTitleContainer {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.topMenuButtonContainer {
+    display: flex;
+}
+
+.allMarketsDropdownContainer {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.orderStatusDropdownContainer {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.cancelAllButtonContainer {
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
