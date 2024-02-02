@@ -225,13 +225,17 @@
 .cancelAllButton {
   padding: 0.5rem;
   background-color: rgba(227, 61, 61, 0.05);
-  border: none;
+  border: 0.1px solid transparent;
   border-radius: 0.25rem;
   color: rgb(227, 61, 61);
   font-weight: bold;
   cursor: pointer;
   margin-left: 0.5rem;
   margin-right: 0.5rem;
+}
+
+.cancelAllButton:hover {
+  border: 0.1px solid;
 }
 
 @media screen and (max-width: 600px) {

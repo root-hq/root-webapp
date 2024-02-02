@@ -828,30 +828,7 @@ const CLOBTrader = ({
                   }
                 />
               :
-                <KeyValueComponent 
-                  keyElement={
-                    <p>Powered by</p>
-                  }
-                  keyElementStyle={
-                    {
-
-                    }
-                  }
-                  valueElement={
-                    <p>{`Jupiter`}</p>
-                  }
-                  valueElementStyle={
-                    {
-                      fontWeight: 'bold',
-                    }
-                  }
-                  justification={KeyValueJustification.SpaceBetween}
-                  keyElementContainerStyle={
-                    {
-                      
-                    }
-                  }
-                />
+                <></>
             }
           </div>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
@@ -868,15 +845,25 @@ const CLOBTrader = ({
                       else if(orderType === OrderType.Market) {
                         handlePlaceMarketOrderAction()
                       }
-                    }} 
+                    }}
+                    style={{
+                      backgroundColor: isBuyOrder ? 'rgba(61, 227, 131, 0.10)' : 'rgba(227, 61, 61, 0.10)',
+                      color: isBuyOrder ? '#3DE383' : '#e33d3d'
+                    }}
                   >
                     {
                       isPlaceOrderButtonLoading ?
                       <div className={styles.spinnerBox}>
-                        <div className={styles.threeQuarterSpinner}></div>
+                        <div
+                          className={styles.threeQuarterSpinner}
+                          style = {{
+                            border: isBuyOrder ? `3px solid #3DE383` : `3px solid #e33d3d`,
+                            borderTop: `3px solid transparent`
+                          }}
+                        ></div>
                       </div>
                       :
-                        <>Confirm {`${isBuyOrder ? 'buy' : 'sell'}`}</>
+                        <>{`${isBuyOrder ? 'Buy' : 'Sell'}`}</>
                     }
                   </Button>
                 </div>
