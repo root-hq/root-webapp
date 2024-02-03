@@ -1,0 +1,44 @@
+.orderViewContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.imageContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+  }
+  
+  .tokenImage {
+    border-radius: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+.columnName {
+    color:rgba(87, 87, 87, 1);
+    font-weight: bold;
+    font-size: 0.85rem;
+  }
+  
+  .columnSubname {
+    color:rgba(87, 87, 87, 1);
+    font-weight: bold;
+    font-size: 0.85rem;
+  }
+  
+
+.orderViewOuterContainer {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+  }
+  
+  @media screen and (max-width: 768px) {
+    .columnNamesOuterContainer {
+      width: 95%;
+    }
+  }

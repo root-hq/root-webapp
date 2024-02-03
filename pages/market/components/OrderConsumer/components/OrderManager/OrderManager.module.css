@@ -248,7 +248,7 @@
 }
 
 .columnNamesOuterContainer {
-  width: 97%;
+  width: 100%;
   display: flex;
   justify-content: center;
   padding-bottom: 0.5rem;
@@ -257,7 +257,7 @@
 
 @media screen and (max-width: 768px) {
   .columnNamesOuterContainer {
-    width: 95%;
+    width: 100%;
   }
 }
 
@@ -291,6 +291,9 @@
 .ordersDisplayContainer {
   display: flex;
   justify-content: center;
-  margin: 1rem;
+  width: 100%;
+}
+
+.allOrderViewsContainer {
   width: 100%;
 }

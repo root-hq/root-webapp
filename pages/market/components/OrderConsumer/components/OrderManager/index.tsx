@@ -1,16 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./OrderManager.module.css";
-import { SpotGridMarket, TokenMetadata } from "../../../../../../utils";
-import { OrderStatus, getAllOrderStatus, getOrderStatusText } from "../../../../../../constants";
+import { Order, SpotGridMarket, TokenMetadata, getAllOrdersForTrader } from "../../../../../../utils";
+import { ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS, OrderStatus, getAllOrderStatus, getOrderStatusText } from "../../../../../../constants";
+import { useWallet } from "@solana/wallet-adapter-react";
+import OrderView from "../OrderView";
+import { EnumeratedMarketToMetadata } from "../../../../[market]";
 
 export interface OrderManagerProps {
-    spotGridMarket: SpotGridMarket;
+    enumeratedMarket: EnumeratedMarketToMetadata;
     baseTokenMetadata: TokenMetadata;
     quoteTokenMetadata: TokenMetadata;
 }
 
 const OrderManager = ({
-    spotGridMarket,
+    enumeratedMarket,
     baseTokenMetadata,
     quoteTokenMetadata
 }: OrderManagerProps) => {
@@ -25,6 +28,10 @@ const OrderManager = ({
     const orderStatusDropdownRef = useRef(null);
 
     let allOrderStatusFilters = getAllOrderStatus();
+
+    let [activeOrdersForTrader, setActiveOrdersForTrader] = useState<Order[]>([]);
+
+    const walletState = useWallet();
 
     const handleOrderStatusFilterUpdate = (
         newOrderStatusFilter: OrderStatus
@@ -49,6 +56,41 @@ const OrderManager = ({
           document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        const refreshActiveOrdersForTrader = async () => {
+            if(walletState.connected) {
+                let orders: Order[] = [];
+
+                try {
+                    orders = await getAllOrdersForTrader(walletState.publicKey.toString());
+                }
+                catch(err) {
+                    console.log(`Error fetching active orders: ${err}`);
+                }
+
+                if(orders.length > 0) {
+                    setActiveOrdersForTrader(_ => [...orders]);
+                    console.log("Set");
+                    return;
+                }
+                else {
+                    setActiveOrdersForTrader(_ => []);
+                }
+            }
+            else {
+                setActiveOrdersForTrader(_ => []);
+            }
+        }
+
+        refreshActiveOrdersForTrader();
+
+        const intervalId = setInterval(() => {
+            refreshActiveOrdersForTrader();
+        }, ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS);
+
+    return () => clearInterval(intervalId);
+    }, [walletState]);
 
     return (
         <div className={styles.orderManagerContainer}>
@@ -204,13 +246,30 @@ const OrderManager = ({
                     </div>
                     <div className={styles.columnNameRow}>
                         <span className={styles.columnName}>
-                            {``}
+                            {`Cancel`}
                         </span>
                     </div>
                 </div>
             </div>
             <div className={styles.ordersDisplayContainer}>
-                {`Showing ${getOrderStatusText(orderStatusFilter).toLowerCase()} orders for ${allMarketsSelector ? `all markets` : `current market`}`}
+                {
+                    walletState && activeOrdersForTrader.length > 0 ?
+                        <div className={styles.allOrderViewsContainer}>
+                            {
+                                activeOrdersForTrader.map((order, index) => {
+                                    return (
+                                        <div key = {parseInt(order.order_sequence_number.toString())} className={styles.orderViewContainer}>
+                                            <OrderView order = {order} enumeratedMarket={enumeratedMarket}/>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    :
+                        <div className={styles.noOrderViewContainer}>
+                            <span>{`You have no active orders`}</span>
+                        </div>
+                }
             </div>
         </div>
     )

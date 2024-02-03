@@ -48,7 +48,7 @@ export const getAllOrdersForTrader = async (
     );
 
     if (response && response.data && response.data.length) {
-      return response.data[0] as Order[];
+      return response.data as Order[];
     } else {
       console.log(
         `Failed to retrieve all orders for trader: "${trader}`,

@@ -29,10 +29,18 @@ const OrderConsumer = ({
   leastKnownBar
 }: OrderConsumerProps) => {
   const [activeMarket, setActiveMarket] = useState(selectedSpotGridMarket);
+  const [activeEnumeratedMarket, setActiveEnumeratedMarket] = useState<EnumeratedMarketToMetadata>(null);
 
   useEffect(() => {
     const doStuff = () => {
       setActiveMarket(_ => selectedSpotGridMarket);
+      
+      if(selectedSpotGridMarket) {
+        let aem = enumeratedMarkets.find((value) => {
+          return value.spotGridMarket.spot_grid_market_address === selectedSpotGridMarket.spot_grid_market_address;
+        });
+        setActiveEnumeratedMarket(_ => aem);
+      }
     }
 
     doStuff();
@@ -66,7 +74,7 @@ const OrderConsumer = ({
       </div>
       <div className={styles.orderManagerContainer}>
         <OrderManager
-          spotGridMarket={activeMarket}
+          enumeratedMarket={activeEnumeratedMarket}
           baseTokenMetadata={baseTokenMetadata}
           quoteTokenMetadata={quoteTokenMetadata}
         />
