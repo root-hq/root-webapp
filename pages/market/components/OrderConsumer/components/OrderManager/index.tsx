@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./OrderManager.module.css";
-import { Order, SpotGridMarket, TokenMetadata, delay, getAllOrdersForTrader } from "../../../../../../utils";
+import { Order, SpotGridMarket, TokenMetadata, delay, getAllOrdersForTrader, getOpenOrdersForTrader } from "../../../../../../utils";
 import { ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS, OrderStatus, getAllOrderStatus, getOrderStatusText } from "../../../../../../constants";
 import { useWallet } from "@solana/wallet-adapter-react";
 import OrderView from "../OrderView";
@@ -153,27 +153,29 @@ const OrderManager = ({
 
     useEffect(() => {
         const refreshActiveOrdersForTrader = async () => {
-            if(walletState.connected) {
-                let orders: Order[] = [];
+            // if(walletState.connected && enumeratedMarket.spotGridMarket) {
+            //     let orders: Order[] = [];
 
-                try {
-                    orders = await getAllOrdersForTrader(walletState.publicKey.toString());
-                }
-                catch(err) {
-                    console.log(`Error fetching active orders: ${err}`);
-                }
+            //     try {
+            //         // orders = await getAllOrdersForTrader(walletState.publicKey.toString());
+            //         orders = await getOpenOrdersForTrader(enumeratedMarket.spotGridMarket.phoenix_market_address.toString(), walletState.publicKey.toString());
+            //         console.log("orders: ", orders);
+            //     }
+            //     catch(err) {
+            //         console.log(`Error fetching active orders: ${err}`);
+            //     }
 
-                if(orders.length > 0) {
-                    setActiveOrdersForTrader(_ => [...orders]);
-                    return;
-                }
-                else {
-                    setActiveOrdersForTrader(_ => []);
-                }
-            }
-            else {
-                setActiveOrdersForTrader(_ => []);
-            }
+            //     if(orders.length > 0) {
+            //         setActiveOrdersForTrader(_ => [...orders]);
+            //         return;
+            //     }
+            //     else {
+            //         setActiveOrdersForTrader(_ => []);
+            //     }
+            // }
+            // else {
+            //     setActiveOrdersForTrader(_ => []);
+            // }
         }
 
         refreshActiveOrdersForTrader();
@@ -190,7 +192,7 @@ const OrderManager = ({
             <div className={styles.topMenuContainer}>
                 <span className={styles.orderTitleContainer}>Orders</span>
                 <div className={styles.topMenuButtonContainer}>
-                    <div className={styles.allMarketsDropdownContainer} ref={allMarketsDropdownRef}>
+                    {/* <div className={styles.allMarketsDropdownContainer} ref={allMarketsDropdownRef}>
                         <div
                             className={styles.allMarketsDropdownButtonContainer}
                             onClick={() => {
@@ -243,7 +245,7 @@ const OrderManager = ({
                                     <></>
                             }
                         </div>
-                    </div>
+                    </div> */}
                     {/* <div className={styles.orderStatusDropdownContainer} ref={orderStatusDropdownRef}>
                         <div
                             className={styles.orderStatusDropdownButtonContainer}
@@ -370,11 +372,18 @@ const OrderManager = ({
                         <div className={styles.allOrderViewsContainer}>
                             {
                                 activeOrdersForTrader.map((order, index) => {
-                                    return (
-                                        <div key = {parseInt(order.order_sequence_number.toString())} className={styles.orderViewContainer}>
-                                            <OrderView order = {order} enumeratedMarket={enumeratedMarket}/>
-                                        </div>
-                                    )
+                                    if(order) {
+                                        return (
+                                            <div key = {parseInt(order.order_sequence_number.toString())} className={styles.orderViewContainer}>
+                                                <OrderView order = {order} enumeratedMarket={enumeratedMarket}/>
+                                            </div>
+                                        )
+                                    }
+                                    else {
+                                        return (
+                                            <></>
+                                        )
+                                    }
                                 })
                             }
                         </div>

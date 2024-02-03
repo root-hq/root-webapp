@@ -1,5 +1,6 @@
 import { Client, L3UiBook, Side } from "@ellipsis-labs/phoenix-sdk";
 import { web3 } from "@coral-xyz/anchor";
+import { Order } from "..";
 
 export const getL3Book = async (
   marketAddress: string,
@@ -79,5 +80,69 @@ export const getMarketMetadata = async (
   } catch (err) {
     console.log("Error fetching fresh market metadata on Pheonix: ", err);
     return null;
+  }
+}
+
+export const getOpenOrdersForTrader = async (
+  marketAddress: string,
+  trader: string
+): Promise<Order[]> => {
+  try {
+    const endpoint = process.env.RPC_ENDPOINT;
+    const connection = new web3.Connection(endpoint, {
+      commitment: "processed",
+    });
+
+    const client = await Client.create(connection);
+    client.addMarket(marketAddress);
+
+    const book = client.marketStates.get(marketAddress);
+        
+    let bids = book.data.bids.map((order, i) => {
+      let traderIndex = order[1].traderIndex;
+      let traderKey = book.data.traderIndexToTraderPubkey.get(traderIndex);
+      if(traderKey && (traderKey === trader)) {
+        return {
+          order_sequence_number: order[0].orderSequenceNumber.toString(),
+          order_type: 'LIMIT',
+          phoenix_market_address: marketAddress,
+          trader: trader,
+          price_in_ticks: order[0].priceInTicks.toString(),
+          size_in_base_lots: order[1].numBaseLots.toString(),
+          fill_size_in_base_lots: order[1].numBaseLots.toString(),
+          place_timestamp: "0",
+          status: 'status',
+          is_buy_order: true
+        } as Order;
+      }
+    });
+
+    let asks = book.data.asks.map((order, i) => {
+      let traderIndex = order[1].traderIndex;
+      let traderKey = book.data.traderIndexToTraderPubkey.get(traderIndex);
+      if(traderKey && (traderKey === trader)) {
+        return {
+          order_sequence_number: order[0].orderSequenceNumber.toString(),
+          order_type: 'LIMIT',
+          phoenix_market_address: marketAddress,
+          trader: trader,
+          price_in_ticks: order[0].priceInTicks.toString(),
+          size_in_base_lots: order[1].numBaseLots.toString(),
+          fill_size_in_base_lots: order[1].numBaseLots.toString(),
+          place_timestamp: "0",
+          status: 'status',
+          is_buy_order: false
+        } as Order;
+      }
+    });
+
+    let allOrders = [...bids, ...asks];
+
+    allOrders = allOrders.filter((element) => element !== null && element !== undefined);
+    return allOrders;
+  }
+  catch(err) {
+    console.log(`Error fetching open orders for trader: ${trader}, on market: ${marketAddress}`);
+    return [];
   }
 }

@@ -375,36 +375,6 @@ const CLOBTrader = ({
           transaction.add(ix);
           let response = await walletState.sendTransaction(transaction, connection);
           console.log("Signature: ", response);
-
-          let status = await getPhoenixEventsFromTransactionSignature(connection, response);
-          if(status) {
-            let ixs = status.instructions;
-            for(let ix of ixs) {
-              for(let event of ix.events) {
-                if(event.__kind === "Place") {
-                  let order = {
-                    order_sequence_number: event.fields[0].orderSequenceNumber.toString(),
-                    order_type: 'LIMIT',
-                    phoenix_market_address: marketAddress,
-                    trader: walletState.publicKey.toString(),
-                    price_in_ticks: orderPacket.priceInTicks.toString(),
-                    size_in_base_lots: orderPacket.numBaseLots.toString(),
-                    fill_size_in_base_lots: "0",
-                    place_timestamp: Date.now().toString(),
-                    status: 'PLACED',
-                    is_buy_order: true
-                  } as Order;
-
-                  try {
-                    await addOrder(order);
-                  }
-                  catch(err) {
-                    console.log(`Error logging order to Supabase: ${err}`);
-                  }
-                }
-              }
-            }
-          }
         }
         catch(err) {
           console.log(`Error sending limit buy order: ${err}`);
@@ -467,36 +437,6 @@ const CLOBTrader = ({
 
           let response = await walletState.sendTransaction(transaction, connection);
           console.log("Signature: ", response);
-
-          let status = await getPhoenixEventsFromTransactionSignature(connection, response);
-          if(status) {
-            let ixs = status.instructions;
-            for(let ix of ixs) {
-              for(let event of ix.events) {
-                if(event.__kind === "Place") {
-                  let order = {
-                    order_sequence_number: event.fields[0].orderSequenceNumber,
-                    order_type: 'LIMIT',
-                    phoenix_market_address: marketAddress,
-                    trader: walletState.publicKey.toString(),
-                    price_in_ticks: orderPacket.priceInTicks,
-                    size_in_base_lots: orderPacket.numBaseLots,
-                    fill_size_in_base_lots: "0",
-                    place_timestamp: Date.now().toString(),
-                    status: 'PLACED',
-                    is_buy_order: false
-                  } as Order;
-
-                  try {
-                    await addOrder(order);
-                  }
-                  catch(err) {
-                    console.log(`Error logging order to Supabase: ${err}`);
-                  }
-                }
-              }
-            }
-          }
         }
         catch(err) {
           console.log(`Error sending limit sell order: ${err}`);
