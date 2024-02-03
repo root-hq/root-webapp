@@ -26,6 +26,12 @@ const OrderManager = ({
 
     let allOrderStatusFilters = getAllOrderStatus();
 
+    const handleOrderStatusFilterUpdate = (
+        newOrderStatusFilter: OrderStatus
+    ) => {
+        setOrderStatusFilter(_ => newOrderStatusFilter);
+    };
+
     useEffect(() => {
         const handleClickOutside = (event) => {
           if (allMarketsDropdownRef.current && !allMarketsDropdownRef.current.contains(event.target)) {
@@ -42,13 +48,7 @@ const OrderManager = ({
         return () => {
           document.removeEventListener('mousedown', handleClickOutside);
         };
-      }, []);
-
-    const handleOrderStatusFilterUpdate = (
-        newOrderStatusFilter: OrderStatus
-    ) => {
-        setOrderStatusFilter(_ => newOrderStatusFilter);
-    };
+    }, []);
 
     return (
         <div className={styles.orderManagerContainer}>
