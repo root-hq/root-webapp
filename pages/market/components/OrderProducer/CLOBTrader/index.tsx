@@ -15,6 +15,7 @@ import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getCreate
 import {BN } from "@coral-xyz/anchor";
 import { fetchQuote, swapOnJupiterTx } from '../../../../../utils/jupiter';
 import { getPriorityFeeEstimate } from '../../../../../utils/helius';
+import { useBottomStatus } from '../../../../../components/BottomStatus';
 
 const WalletMultiButtonDynamic = dynamic(
   async () =>
@@ -58,6 +59,7 @@ const CLOBTrader = ({
   }
 
   const walletState = useWallet();
+  const { updateStatus, resetStatus, updateStatusCustom, updateStatusDuration } = useBottomStatus();
 
   useEffect(() => {
     const updateBalance = async() => {
@@ -463,6 +465,7 @@ const CLOBTrader = ({
         console.log(`Error fetching priority fee levels`);
       }
 
+      updateStatus('Preparing swap transaction...');
       if(isBuyOrder) {
         let size = parseFloat(sendUptoSize) * Math.pow(10, quoteTokenMetadata.decimals);
 
@@ -502,14 +505,18 @@ const CLOBTrader = ({
             value: { blockhash, lastValidBlockHeight }
           } = await connection.getLatestBlockhashAndContext();
   
+          updateStatus(`Waiting for you to sign ⏱...`);
           let response = await walletState.sendTransaction(transaction, connection, { minContextSlot, skipPreflight: true });
+          updateStatusDuration('Transaction sent', 2_000);
           console.log("Signature: ", response);
         }
       }
       catch(err) {
         console.log(`Error preparing Jupiter swap tx: ${err}`);
+        updateStatusCustom(`Error`, 3_000, {color: '#0a0b0e'}, {backgroundColor: '#e33d3d'});
       }
     }
+    resetStatus();
     setIsPlaceOrderButtonLoading(_ => false);
   }
 

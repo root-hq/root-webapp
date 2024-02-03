@@ -1,0 +1,18 @@
+.bottomStatusBarContainer {
+    display: flex;
+    flex-direction: row;
+    background-color: #12141a;
+    width: 100%;
+    position: fixed;
+    border-top: 1px solid rgba(87, 87, 87, 0.15);
+    padding-top: 0.25rem;
+    padding-bottom: 0.5rem;
+    bottom: 0;
+    color: rgba(170, 170, 170, 0.5);
+    font-size: 0.9rem;
+}
+
+.statusMessage {
+    flex-grow: 1;
+    text-align: center;  
+}
