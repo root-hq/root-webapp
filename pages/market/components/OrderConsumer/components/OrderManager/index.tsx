@@ -153,29 +153,29 @@ const OrderManager = ({
 
     useEffect(() => {
         const refreshActiveOrdersForTrader = async () => {
-            // if(walletState.connected && enumeratedMarket.spotGridMarket) {
-            //     let orders: Order[] = [];
+            if(walletState.connected && enumeratedMarket.spotGridMarket) {
+                let orders: Order[] = [];
 
-            //     try {
-            //         // orders = await getAllOrdersForTrader(walletState.publicKey.toString());
-            //         orders = await getOpenOrdersForTrader(enumeratedMarket.spotGridMarket.phoenix_market_address.toString(), walletState.publicKey.toString());
-            //         console.log("orders: ", orders);
-            //     }
-            //     catch(err) {
-            //         console.log(`Error fetching active orders: ${err}`);
-            //     }
+                try {
+                    // orders = await getAllOrdersForTrader(walletState.publicKey.toString());
+                    orders = await getOpenOrdersForTrader(enumeratedMarket.spotGridMarket.phoenix_market_address.toString(), walletState.publicKey.toString());
+                    console.log("orders: ", orders);
+                }
+                catch(err) {
+                    console.log(`Error fetching active orders: ${err}`);
+                }
 
-            //     if(orders.length > 0) {
-            //         setActiveOrdersForTrader(_ => [...orders]);
-            //         return;
-            //     }
-            //     else {
-            //         setActiveOrdersForTrader(_ => []);
-            //     }
-            // }
-            // else {
-            //     setActiveOrdersForTrader(_ => []);
-            // }
+                if(orders.length > 0) {
+                    setActiveOrdersForTrader(_ => [...orders]);
+                    return;
+                }
+                else {
+                    setActiveOrdersForTrader(_ => []);
+                }
+            }
+            else {
+                setActiveOrdersForTrader(_ => []);
+            }
         }
 
         refreshActiveOrdersForTrader();

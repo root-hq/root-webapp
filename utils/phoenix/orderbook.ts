@@ -100,7 +100,7 @@ export const getOpenOrdersForTrader = async (
         
     let bids = book.data.bids.map((order, i) => {
       let traderIndex = order[1].traderIndex;
-      let traderKey = book.data.traderIndexToTraderPubkey.get(traderIndex);
+      let traderKey = book.data.traderIndexToTraderPubkey.get(traderIndex.toNumber());
       if(traderKey && (traderKey === trader)) {
         return {
           order_sequence_number: order[0].orderSequenceNumber.toString(),
