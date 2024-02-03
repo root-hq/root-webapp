@@ -3,7 +3,7 @@ import { useBottomStatus } from '../BottomStatusContext';
 import styles from './BottomStatusBar.module.css';
 
 const BottomStatusBar: React.FC = () => {
-  const { status, textStyle, statusBarStyle } = useBottomStatus();
+  const { status, statusStyle, statusBarStyle } = useBottomStatus();
 
   return (
     <div
@@ -15,7 +15,7 @@ const BottomStatusBar: React.FC = () => {
       <div
         className={styles.statusMessage}
         style = {
-          textStyle ? textStyle : {}
+          statusStyle ? statusStyle : {}
         }
       >
         {status}

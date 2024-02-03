@@ -165,8 +165,29 @@ const OrderManager = ({
                 let orders: Order[] = [];
 
                 try {
-                    // orders = await getAllOrdersForTrader(walletState.publicKey.toString());
-                    orders = await getOpenOrdersForTrader(enumeratedMarket.spotGridMarket.phoenix_market_address.toString(), walletState.publicKey.toString());
+                    let phxClient: Client = null;
+                    if(!phoenixClient) {
+                        console.log("Creating fallback phxClient");
+                        let endpoint = process.env.RPC_ENDPOINT;
+                        if(!endpoint) {
+                            endpoint = `https://api.mainnet-beta.solana.com`;
+                        }
+
+                        const connection = new web3.Connection(endpoint, {
+                            commitment: "processed",
+                        });
+
+                        const client = await Client.create(connection);
+
+                        client.addMarket(enumeratedMarket.spotGridMarket.phoenix_market_address.toString());
+                        console.log("New client initialized");
+                        console.log("Client: ", client);
+                    }
+                    else {
+                        phxClient = phoenixClient;
+                    }
+
+                    orders = await getOpenOrdersForTrader(phxClient, enumeratedMarket.spotGridMarket.phoenix_market_address.toString(), walletState.publicKey.toString());
                     console.log("orders: ", orders);
                 }
                 catch(err) {

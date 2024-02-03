@@ -59,7 +59,7 @@ const CLOBTrader = ({
   }
 
   const walletState = useWallet();
-  const { updateStatus, resetStatus, updateStatusCustom, updateStatusDuration } = useBottomStatus();
+  const { updateStatus, green, red } = useBottomStatus();
 
   useEffect(() => {
     const updateBalance = async() => {
@@ -68,7 +68,7 @@ const CLOBTrader = ({
         const quoteTokenAddress = await getAssociatedTokenAddress(new web3.PublicKey(quoteTokenMetadata.mint), walletState.publicKey);
 
         let baseBalance = 0;
-        if((await connection.getBalance(baseTokenAddress)) > 0) {
+        if((await connection.getAccountInfo(baseTokenAddress))) {
           baseBalance = (await connection.getTokenAccountBalance(baseTokenAddress)).value.uiAmount;
         }
         if(baseTokenMetadata.mint === WRAPPED_SOL_MAINNET) {
@@ -78,7 +78,7 @@ const CLOBTrader = ({
         }
 
         let quoteBalance = 0;
-        if((await connection.getBalance(quoteTokenAddress)) > 0) {
+        if((await connection.getAccountInfo(quoteTokenAddress))) {
           quoteBalance = (await connection.getTokenAccountBalance(quoteTokenAddress)).value.uiAmount;
         }
         if(quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET) {
@@ -373,13 +373,18 @@ const CLOBTrader = ({
             transaction.add(ix);
           }
 
+          updateStatus(<span>{`Preparing limit order transaction...`}</span>);
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
+          
+          updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(transaction, connection);
+          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
           console.log("Signature: ", response);
         }
         catch(err) {
-          console.log(`Error sending limit buy order: ${err}`);
+          console.log(`Error sending limit buy order: ${err.message}`);
+          red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
         }
 
         setIsPlaceOrderButtonLoading(_ => false);
@@ -434,14 +439,18 @@ const CLOBTrader = ({
             transaction.add(ix);
           }
 
+          updateStatus(<span>{`Preparing limit order transaction...`}</span>);
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
 
+          updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(transaction, connection);
+          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
           console.log("Signature: ", response);
         }
         catch(err) {
           console.log(`Error sending limit sell order: ${err}`);
+          red(<span>{`Failed: ${err.message}`}</span>, 2_000)
         }
         
         setIsPlaceOrderButtonLoading(_ => false);
@@ -465,7 +474,7 @@ const CLOBTrader = ({
         console.log(`Error fetching priority fee levels`);
       }
 
-      updateStatus('Preparing swap transaction...');
+      updateStatus(<span>{`Preparing swap transaction...`}</span>);
       if(isBuyOrder) {
         let size = parseFloat(sendUptoSize) * Math.pow(10, quoteTokenMetadata.decimals);
 
@@ -505,18 +514,18 @@ const CLOBTrader = ({
             value: { blockhash, lastValidBlockHeight }
           } = await connection.getLatestBlockhashAndContext();
   
-          updateStatus(`Waiting for you to sign ⏱...`);
+          updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(transaction, connection, { minContextSlot, skipPreflight: true });
-          updateStatusDuration('Transaction sent', 2_000);
+          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
           console.log("Signature: ", response);
         }
       }
       catch(err) {
-        console.log(`Error preparing Jupiter swap tx: ${err}`);
-        updateStatusCustom(`Error`, 3_000, {color: '#0a0b0e'}, {backgroundColor: '#e33d3d'});
+        console.log(`Error preparing Jupiter swap tx: ${err.message}`);
+        red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
       }
     }
-    resetStatus();
+    // resetStatus();
     setIsPlaceOrderButtonLoading(_ => false);
   }
 

@@ -84,19 +84,12 @@ export const getMarketMetadata = async (
 }
 
 export const getOpenOrdersForTrader = async (
+  phoenixClient: Client,
   marketAddress: string,
   trader: string
 ): Promise<Order[]> => {
   try {
-    const endpoint = process.env.RPC_ENDPOINT;
-    const connection = new web3.Connection(endpoint, {
-      commitment: "processed",
-    });
-
-    const client = await Client.create(connection);
-    client.addMarket(marketAddress);
-
-    const book = client.marketStates.get(marketAddress);
+    const book = phoenixClient.marketStates.get(marketAddress);
         
     let bids = book.data.bids.map((order, i) => {
       let traderIndex = order[1].traderIndex;
