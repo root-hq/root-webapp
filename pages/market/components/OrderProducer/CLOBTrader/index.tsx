@@ -26,12 +26,14 @@ export interface CLOBTraderProps {
     spotGridMarket: SpotGridMarket;
     baseTokenMetadata: TokenMetadata;
     quoteTokenMetadata: TokenMetadata;
+    phoenixClient: Client
 }
 
 const CLOBTrader = ({
     spotGridMarket,
     baseTokenMetadata,
-    quoteTokenMetadata
+    quoteTokenMetadata,
+    phoenixClient
 }: CLOBTraderProps) => {
   const [isBuyOrder, setIsBuyOrder] = useState(true);
   const [orderType, setOrderType] = useState<OrderType>(OrderType.Limit);
@@ -46,7 +48,6 @@ const CLOBTrader = ({
   const [receiveUptoSize, setReceiveUptoSize] = useState("");
   const [isPlaceOrderButtonLoading, setIsPlaceOrderButtonLoading] = useState(false);
 
-  const [phoenixClient, setPhoenixClient] = useState<Client>(null);
 
   let connection: Connection;
   if(process.env.RPC_ENDPOINT) {
@@ -109,29 +110,6 @@ const CLOBTrader = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  useEffect(() => {
-    const setupPhoenixClient = async() => {
-      if(spotGridMarket) {
-        if(!phoenixClient) {
-          let endpoint = process.env.RPC_ENDPOINT;
-          if(!endpoint) {
-            endpoint = `https://api.mainnet-beta.solana.com`;
-          }
-
-          const connection = new web3.Connection(endpoint, {
-            commitment: "processed",
-          });
-
-          const client = await Client.create(connection);
-
-          setPhoenixClient(_ => client);
-        }
-      }
-    }
-
-    setupPhoenixClient();
-  }, [spotGridMarket, connection]);
 
   let allOrderTypes = getAllOrderTypes();
 

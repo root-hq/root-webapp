@@ -6,12 +6,14 @@ import { EnumeratedMarketToMetadata } from "../../[market]";
 import LightweightChart, { SeriesManagerInstance } from "./components/LightweightChart";
 import { IChartApi } from "lightweight-charts";
 import OrderManager from "./components/OrderManager";
+import { Client } from "@ellipsis-labs/phoenix-sdk";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
   selectedSpotGridMarket: SpotGridMarket;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
+  phoenixClient: Client;
   seriesManagerHandler: React.MutableRefObject<SeriesManagerInstance>;
   chartManagerHandler: React.MutableRefObject<IChartApi>;
   leastDisplayDate: React.MutableRefObject<Date>;
@@ -23,6 +25,7 @@ const OrderConsumer = ({
   selectedSpotGridMarket,
   baseTokenMetadata,
   quoteTokenMetadata,
+  phoenixClient,
   seriesManagerHandler,
   chartManagerHandler,
   leastDisplayDate,
@@ -77,6 +80,7 @@ const OrderConsumer = ({
           enumeratedMarket={activeEnumeratedMarket}
           baseTokenMetadata={baseTokenMetadata}
           quoteTokenMetadata={quoteTokenMetadata}
+          phoenixClient={phoenixClient}
         />
       </div>
     </div>

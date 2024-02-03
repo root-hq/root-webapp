@@ -1,21 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./OrderManager.module.css";
-import { Order, SpotGridMarket, TokenMetadata, getAllOrdersForTrader } from "../../../../../../utils";
+import { Order, SpotGridMarket, TokenMetadata, delay, getAllOrdersForTrader } from "../../../../../../utils";
 import { ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS, OrderStatus, getAllOrderStatus, getOrderStatusText } from "../../../../../../constants";
 import { useWallet } from "@solana/wallet-adapter-react";
 import OrderView from "../OrderView";
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
+import { getPriorityFeeEstimate } from "../../../../../../utils/helius";
+import { web3 } from "@coral-xyz/anchor";
+import { ComputeBudgetProgram, Connection } from "@solana/web3.js";
+import { Client, getPhoenixEventsFromTransactionSignature } from "@ellipsis-labs/phoenix-sdk";
 
 export interface OrderManagerProps {
     enumeratedMarket: EnumeratedMarketToMetadata;
     baseTokenMetadata: TokenMetadata;
     quoteTokenMetadata: TokenMetadata;
+    phoenixClient: Client;
 }
 
 const OrderManager = ({
     enumeratedMarket,
     baseTokenMetadata,
-    quoteTokenMetadata
+    quoteTokenMetadata,
+    phoenixClient
 }: OrderManagerProps) => {
 
     const [allMarketsSelector, setAllMarketsSelector] = useState<boolean>(true);
@@ -23,21 +29,109 @@ const OrderManager = ({
 
     const [allMarketsDropdownOpen, setAllMarketsDropdownOpen] = useState(false);
     const [orderStatusDropdownOpen, setOrderStatusDropdownOpen] = useState(false);
+    const [isCancelAllActionActive, setIsCancelAllActionActive] = useState(false);
+    let [activeOrdersForTrader, setActiveOrdersForTrader] = useState<Order[]>([]);
 
     const allMarketsDropdownRef = useRef(null);
     const orderStatusDropdownRef = useRef(null);
 
     let allOrderStatusFilters = getAllOrderStatus();
 
-    let [activeOrdersForTrader, setActiveOrdersForTrader] = useState<Order[]>([]);
-
     const walletState = useWallet();
+    let connection: Connection;
+    if(process.env.RPC_ENDPOINT) {
+        connection = new Connection(process.env.RPC_ENDPOINT, { commitment: "processed" });
+    }
+    else {
+        connection = new Connection(`https://api.mainnet-beta.solana.com/`, { commitment: "processed" });
+    }
 
     const handleOrderStatusFilterUpdate = (
         newOrderStatusFilter: OrderStatus
     ) => {
         setOrderStatusFilter(_ => newOrderStatusFilter);
     };
+
+    const handleCancelAllAction = async () => {
+        setIsCancelAllActionActive(true)
+
+        if(enumeratedMarket && enumeratedMarket.spotGridMarket && walletState.connected) {
+            let marketAddress = enumeratedMarket.spotGridMarket.phoenix_market_address.toString();
+
+            let priorityFeeLevels = null;
+
+            try {
+                priorityFeeLevels = (await getPriorityFeeEstimate([marketAddress])).priorityFeeLevels;
+            }
+            catch(err) {
+                console.log(`Error fetching priority fee levels`);
+            }
+
+            try {
+                let transaction = new web3.Transaction();
+      
+                // Create the priority fee instructions
+                let unitsPrice = 10;
+                if(priorityFeeLevels) {
+                  unitsPrice = priorityFeeLevels["high"]
+                }
+      
+                const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
+                  microLamports: unitsPrice,
+                });
+      
+                const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({
+                  units: 200_000,
+                });
+                transaction.add(computePriceIx);
+                transaction.add(computeLimitIx);
+
+                let phxClient: Client = null;
+                if(!phoenixClient) {
+                    console.log("Creating fallback phxClient");
+                    let endpoint = process.env.RPC_ENDPOINT;
+                    if(!endpoint) {
+                        endpoint = `https://api.mainnet-beta.solana.com`;
+                    }
+
+                    const connection = new web3.Connection(endpoint, {
+                        commitment: "processed",
+                    });
+
+                    const client = await Client.create(connection);
+
+                    client.addMarket(marketAddress);
+                    console.log("New client initialized");
+                    console.log("Client: ", client);
+                }
+                else {
+                    phxClient = phoenixClient;
+                }
+                  
+                let ix = phxClient.createCancelAllOrdersWithFreeFundsInstruction(marketAddress, walletState.publicKey);
+                transaction.add(ix);
+      
+                let response = await walletState.sendTransaction(transaction, connection, { skipPreflight: true});
+                console.log("Signature: ", response);
+      
+                let status = await getPhoenixEventsFromTransactionSignature(connection, response);
+                if(status) {
+                  let ixs = status.instructions;
+                  for(let ix of ixs) {
+                    for(let event of ix.events) {
+                      if(event.__kind === "Reduce") {
+                        console.log('Canceled all orders');
+                      }
+                    }
+                  }
+                }
+              }
+              catch(err) {
+                console.log(`Error placing cancel all request: ${err}`);
+              }
+        }
+        setIsCancelAllActionActive(false);
+    }
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -71,7 +165,6 @@ const OrderManager = ({
 
                 if(orders.length > 0) {
                     setActiveOrdersForTrader(_ => [...orders]);
-                    console.log("Set");
                     return;
                 }
                 else {
@@ -207,8 +300,28 @@ const OrderManager = ({
                         }
                         </div>
                     </div> */}
-                    <div className={styles.cancelAllButtonContainer}>
-                        <button className={styles.cancelAllButton}>Cancel all</button>
+                    <div
+                        className={styles.cancelAllButtonContainer}
+                        onClick={ () => {
+                            handleCancelAllAction()
+                        }}
+                    >
+                        <button className={styles.cancelAllButton}>
+                            {
+                                isCancelAllActionActive ?
+                                    <div className={styles.spinnerBox}>
+                                        <div
+                                        className={styles.threeQuarterSpinner}
+                                        style = {{
+                                            border: `3px solid #e33d3d`,
+                                            borderTop: `3px solid transparent`
+                                        }}
+                                        ></div>
+                                    </div>
+                                :
+                                    <>Cancel All</>
+                            }
+                        </button>
                     </div>
                 </div>
             </div>

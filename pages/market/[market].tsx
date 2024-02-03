@@ -14,6 +14,9 @@ import {
 } from "../../utils/supabase/SpotGridMarket";
 import { SeriesManagerInstance } from "./components/OrderConsumer/components/LightweightChart";
 import { IChartApi } from "lightweight-charts";
+import { web3 } from "@coral-xyz/anchor";
+import { Client } from "@ellipsis-labs/phoenix-sdk";
+import { Connection } from "@solana/web3.js";
 
 export interface EnumeratedMarketToMetadata {
   spotGridMarket: SpotGridMarket;
@@ -36,6 +39,7 @@ const MarketPage = ({
 }: MarketPageProps) => {
 
   const seriesManager = useRef<SeriesManagerInstance>(null);
+  const [phoenixClient, setPhoenixClient] = useState<Client>(null);
   const chartManager = useRef<IChartApi>(null);
   const leastDatedata = useRef<Date>(null);
   const leastKnownBar = useRef<number>();
@@ -47,6 +51,42 @@ const MarketPage = ({
     setSelectedSpotGridMarket((prev) => spotGridMarketOnPage);
   }, [spotGridMarketOnPage]);
 
+
+  let connection: Connection;
+  if(process.env.RPC_ENDPOINT) {
+    connection = new Connection(process.env.RPC_ENDPOINT, { commitment: "processed" });
+  }
+  else {
+    connection = new Connection(`https://api.mainnet-beta.solana.com/`, { commitment: "processed" });
+  }
+
+  useEffect(() => {
+    const setupPhoenixClient = async() => {
+      if(spotGridMarketOnPage) {
+        if(!phoenixClient) {
+          let endpoint = process.env.RPC_ENDPOINT;
+          if(!endpoint) {
+            endpoint = `https://api.mainnet-beta.solana.com`;
+          }
+
+          const connection = new web3.Connection(endpoint, {
+            commitment: "processed",
+          });
+
+          const client = await Client.create(connection);
+
+          client.addMarket(spotGridMarketOnPage.phoenix_market_address.toString());
+          console.log("New client initialized");
+          console.log("Client: ", client);
+          setPhoenixClient(_ => client);
+        }
+      }
+    }
+
+    setupPhoenixClient();
+  }, [spotGridMarketOnPage, connection]);
+
+
   return (
     <div className={styles.marketPageContainer}>
       <div className={styles.orderConsumerContainer}>
@@ -55,6 +95,7 @@ const MarketPage = ({
           selectedSpotGridMarket={selectedSpotGridMarket}
           baseTokenMetadata={baseTokenMetadata}
           quoteTokenMetadata={quoteTokenMetadata}
+          phoenixClient={phoenixClient}
           seriesManagerHandler={seriesManager}
           chartManagerHandler={chartManager}
           leastDisplayDate={leastDatedata}
@@ -63,7 +104,7 @@ const MarketPage = ({
       </div>
       <div className={styles.orderProducerContainer}>
         {/* <OrderProducer spotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata} /> */}
-        <CLOBTrader spotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata} />
+        <CLOBTrader spotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata} phoenixClient={phoenixClient}/>
       </div>
     </div>
   );
