@@ -135,7 +135,7 @@ export const getOpenOrdersForTrader = async (
     return allOrders;
   }
   catch(err) {
-    console.log(`Error fetching open orders for trader: ${trader}, on market: ${marketAddress}`);
+    console.log(`Error fetching open orders for trader: ${trader}, on market: ${marketAddress}: err: ${err}`);
     return [];
   }
 }
