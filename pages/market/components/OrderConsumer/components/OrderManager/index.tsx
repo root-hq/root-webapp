@@ -108,9 +108,17 @@ const OrderManager = ({
                     phxClient = phoenixClient;
                 }
                   
-                let ix = phxClient.createCancelAllOrdersWithFreeFundsInstruction(marketAddress, walletState.publicKey);
-                transaction.add(ix);
-      
+                let cancelAllIx = phxClient.createCancelAllOrdersWithFreeFundsInstruction(marketAddress, walletState.publicKey);
+                let withdrawFundsIx = phxClient.createWithdrawFundsInstruction({
+                    withdrawFundsParams: {
+                        quoteLotsToWithdraw: null,
+                        baseLotsToWithdraw: null
+                    }
+                }, marketAddress, walletState.publicKey);
+                
+                transaction.add(cancelAllIx);
+                transaction.add(withdrawFundsIx);
+                
                 let response = await walletState.sendTransaction(transaction, connection, { skipPreflight: true});
                 console.log("Signature: ", response);
       
