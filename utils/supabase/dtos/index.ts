@@ -1,4 +1,3 @@
-export * from "./unifiedVaults";
 export * from "./tokenMetadata";
 export * from "./tokenPrice";
 export * from "./SpotGridMarket";
