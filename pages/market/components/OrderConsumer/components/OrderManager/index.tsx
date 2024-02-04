@@ -88,7 +88,6 @@ const OrderManager = ({
 
                 let phxClient: Client = null;
                 if(!phoenixClient) {
-                    console.log("Creating fallback phxClient");
                     let endpoint = process.env.RPC_ENDPOINT;
                     if(!endpoint) {
                         endpoint = `https://api.mainnet-beta.solana.com`;
@@ -101,8 +100,8 @@ const OrderManager = ({
                     const client = await Client.create(connection);
 
                     client.addMarket(marketAddress);
-                    console.log("New client initialized");
-                    console.log("Client: ", client);
+                    // console.log("Market > New client initialized");
+                    // console.log("Client: ", client);
                 }
                 else {
                     phxClient = phoenixClient;
@@ -128,7 +127,7 @@ const OrderManager = ({
                   for(let ix of ixs) {
                     for(let event of ix.events) {
                       if(event.__kind === "Reduce") {
-                        console.log('Canceled all orders');
+                        // console.log('Canceled all orders');
                       }
                     }
                   }
@@ -167,7 +166,7 @@ const OrderManager = ({
                 try {
                     let phxClient: Client = null;
                     if(!phoenixClient) {
-                        console.log("Creating fallback phxClient");
+                        // console.log("Refresh orders > Creating fallback phxClient");
                         let endpoint = process.env.RPC_ENDPOINT;
                         if(!endpoint) {
                             endpoint = `https://api.mainnet-beta.solana.com`;
@@ -180,8 +179,8 @@ const OrderManager = ({
                         const client = await Client.create(connection);
 
                         client.addMarket(enumeratedMarket.spotGridMarket.phoenix_market_address.toString());
-                        console.log("New client initialized");
-                        console.log("Client: ", client);
+                        // console.log("New client initialized");
+                        // console.log("Client: ", client);
                     }
                     else {
                         phxClient = phoenixClient;

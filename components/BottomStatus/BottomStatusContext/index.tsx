@@ -33,7 +33,7 @@ export const BottomStatusProvider = ({ children }) => {
   const [statusBarStyle, setStatusBarStyle] = useState<React.CSSProperties>(null);
 
   const resetStatus = () => {
-    console.log("Reseting status");
+    // console.log("Reseting status");
     setStatus(_ => DEFAULT_STATUS_MESSAGE);
   }
 

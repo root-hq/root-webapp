@@ -217,7 +217,7 @@ const LightweightChart = ({
     return () => {
       window.removeEventListener("resize", handleResize);
       chart.timeScale().unsubscribeSizeChange(() => {
-        console.log("timescale change unsubscribed");
+        // console.log("timescale change unsubscribed");
       });
 
       chart.remove();

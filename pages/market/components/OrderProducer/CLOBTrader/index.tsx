@@ -59,7 +59,7 @@ const CLOBTrader = ({
   }
 
   const walletState = useWallet();
-  const { updateStatus, green, red } = useBottomStatus();
+  // const { updateStatus, green, red } = useBottomStatus();
 
   useEffect(() => {
     const updateBalance = async() => {
@@ -296,18 +296,18 @@ const CLOBTrader = ({
 
     if(orderType === OrderType.Market && sendUptoSize) {
       if(!phoenixClient) {
-        console.log("PHOENIX CLIENT NOT SET");
+        // console.log("PHOENIX CLIENT NOT SET");
         return;
       }
 
       if(isBuyOrder) {
-        console.log("Market buy");
+        // console.log("Market buy");
         setIsPlaceOrderButtonLoading(_ => true);
         await delay(3_000);
         setIsPlaceOrderButtonLoading(_ => false);
       }
       else {
-        console.log("Market sell");
+        // console.log("Market sell");
         setIsPlaceOrderButtonLoading(_ => true);
         await delay(3_000);
         setIsPlaceOrderButtonLoading(_ => false);
@@ -324,11 +324,11 @@ const CLOBTrader = ({
       }
 
       if(isBuyOrder && parseFloat(receiveUptoSize)) {
-        console.log("Limit buy");
+        // console.log("Limit buy");
         setIsPlaceOrderButtonLoading(_ => true);
         let priceInTicks = new BN(phoenixClient.floatPriceToTicks(parseFloat(limitPrice), marketAddress));
         let sizeInBaseLosts = new BN(phoenixClient.baseAtomsToBaseLots(parseFloat(receiveUptoSize) * Math.pow(10, baseTokenMetadata.decimals), marketAddress));
-        console.log(`Buying ${sizeInBaseLosts} base lots at ${priceInTicks} price in ticks`);
+        // console.log(`Buying ${sizeInBaseLosts} base lots at ${priceInTicks} price in ticks`);
         
         try {
           let orderPacket = {
@@ -373,28 +373,28 @@ const CLOBTrader = ({
             transaction.add(ix);
           }
 
-          updateStatus(<span>{`Preparing limit order transaction...`}</span>);
+          // updateStatus(<span>{`Preparing limit order transaction...`}</span>);
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
           
-          updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
+          // updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(transaction, connection);
-          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
+          // green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
           console.log("Signature: ", response);
         }
         catch(err) {
           console.log(`Error sending limit buy order: ${err.message}`);
-          red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
+          // red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
         }
 
         setIsPlaceOrderButtonLoading(_ => false);
       }
       else if(!isBuyOrder && parseFloat(sendUptoSize)){
-        console.log("Limit sell");
+        // console.log("Limit sell");
         setIsPlaceOrderButtonLoading(_ => true);
         let priceInTicks = new BN(phoenixClient.floatPriceToTicks(parseFloat(limitPrice), marketAddress));
         let sizeInBaseLosts = new BN(phoenixClient.baseAtomsToBaseLots(parseFloat(sendUptoSize) * Math.pow(10, baseTokenMetadata.decimals), marketAddress));
-        console.log(`Selling ${sizeInBaseLosts} base lots at ${priceInTicks} price in ticks`);
+        // console.log(`Selling ${sizeInBaseLosts} base lots at ${priceInTicks} price in ticks`);
         
         try {
           let orderPacket = {
@@ -439,18 +439,18 @@ const CLOBTrader = ({
             transaction.add(ix);
           }
 
-          updateStatus(<span>{`Preparing limit order transaction...`}</span>);
+          // updateStatus(<span>{`Preparing limit order transaction...`}</span>);
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
 
-          updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
+          // updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(transaction, connection);
-          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
+          // green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
           console.log("Signature: ", response);
         }
         catch(err) {
           console.log(`Error sending limit sell order: ${err}`);
-          red(<span>{`Failed: ${err.message}`}</span>, 2_000)
+          // red(<span>{`Failed: ${err.message}`}</span>, 2_000)
         }
         
         setIsPlaceOrderButtonLoading(_ => false);
@@ -474,7 +474,7 @@ const CLOBTrader = ({
         console.log(`Error fetching priority fee levels`);
       }
 
-      updateStatus(<span>{`Preparing swap transaction...`}</span>);
+      // updateStatus(<span>{`Preparing swap transaction...`}</span>);
       if(isBuyOrder) {
         let size = parseFloat(sendUptoSize) * Math.pow(10, quoteTokenMetadata.decimals);
 
@@ -514,15 +514,15 @@ const CLOBTrader = ({
             value: { blockhash, lastValidBlockHeight }
           } = await connection.getLatestBlockhashAndContext();
   
-          updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
+          // updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(transaction, connection, { minContextSlot, skipPreflight: true });
-          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
+          // green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
           console.log("Signature: ", response);
         }
       }
       catch(err) {
         console.log(`Error preparing Jupiter swap tx: ${err.message}`);
-        red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
+        // red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
       }
     }
     // resetStatus();

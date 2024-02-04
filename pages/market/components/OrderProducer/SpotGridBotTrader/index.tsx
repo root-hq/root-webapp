@@ -51,8 +51,8 @@ const SpotGridBotTrader = ({
         const baseTokenAddress = await getAssociatedTokenAddress(new web3.PublicKey(baseTokenMetadata.mint), walletState.publicKey);
         const quoteTokenAddress = await getAssociatedTokenAddress(new web3.PublicKey(quoteTokenMetadata.mint), walletState.publicKey);
 
-        console.log("Base token address: ", baseTokenAddress.toString());
-        console.log("Quote token address: ", quoteTokenAddress.toString());
+        // console.log("Base token address: ", baseTokenAddress.toString());
+        // console.log("Quote token address: ", quoteTokenAddress.toString());
 
         let baseBalance = 0;
         if((await connection.getBalance(baseTokenAddress)) > 0) {
@@ -64,8 +64,8 @@ const SpotGridBotTrader = ({
           quoteBalance = (await connection.getTokenAccountBalance(quoteTokenAddress)).value.uiAmount;
         }
 
-        console.log("base balance: ", baseBalance);
-        console.log("quote balance: ", quoteBalance);
+        // console.log("base balance: ", baseBalance);
+        // console.log("quote balance: ", quoteBalance);
 
         setBaseTokenBalance(_ => baseBalance);
         setQuoteTokenBalance(_ => quoteBalance);

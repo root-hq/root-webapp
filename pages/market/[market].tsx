@@ -76,8 +76,8 @@ const MarketPage = ({
           const client = await Client.create(connection);
 
           client.addMarket(spotGridMarketOnPage.phoenix_market_address.toString());
-          console.log("New client initialized");
-          console.log("Client: ", client);
+          // console.log("New client initialized");
+          // console.log("Client: ", client);
           setPhoenixClient(_ => client);
         }
       }
