@@ -68,9 +68,14 @@ const CLOBTrader = ({
         const quoteTokenAddress = await getAssociatedTokenAddress(new web3.PublicKey(quoteTokenMetadata.mint), walletState.publicKey);
 
         let baseBalance = 0;
-        if((await connection.getAccountInfo(baseTokenAddress))) {
+        try {
           baseBalance = (await connection.getTokenAccountBalance(baseTokenAddress)).value.uiAmount;
         }
+        catch(Err) {
+          console.log(`Error fetching base ata balance`);
+          baseBalance = 0;
+        }
+
         if(baseTokenMetadata.mint === WRAPPED_SOL_MAINNET) {
           let sol_lamports = (await connection.getBalance(walletState.publicKey));
           let sol_balance = sol_lamports / LAMPORTS_PER_SOL;
@@ -78,9 +83,14 @@ const CLOBTrader = ({
         }
 
         let quoteBalance = 0;
-        if((await connection.getAccountInfo(quoteTokenAddress))) {
+        try {
           quoteBalance = (await connection.getTokenAccountBalance(quoteTokenAddress)).value.uiAmount;
         }
+        catch(err) {
+          console.log(`Error fetching quote ata balance`);
+          quoteBalance = 0;
+        }
+
         if(quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET) {
           let sol_lamports = (await connection.getBalance(walletState.publicKey));
           let sol_balance = sol_lamports / LAMPORTS_PER_SOL;
