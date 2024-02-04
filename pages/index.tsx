@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <div className={styles.appContainer}>
       <main>
-        <span style={{color: 'white'}}>Redirecting...</span>
+        <span>Redirecting...</span>
       </main>
     </div>
   );
