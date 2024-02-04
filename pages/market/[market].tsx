@@ -162,8 +162,8 @@ export const getServerSideProps = async ({ params }) => {
 
   return {
     props: {
-      spotGridMarketOnPage: spotGridMarketOnPage,
-      enumeratedMarkets,
+      spotGridMarketOnPage: spotGridMarketOnPage ? spotGridMarketOnPage : null,
+      enumeratedMarkets: enumeratedMarkets ? enumeratedMarkets : null,
       baseTokenMetadata:
         baseTokenMetadata === undefined ? null : baseTokenMetadata,
       quoteTokenMetadata:
