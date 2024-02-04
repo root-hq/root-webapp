@@ -64,7 +64,7 @@ const OrderConsumer = ({
           </div>
         </div>
         <div className={styles.lightweightChartContainer}>
-          {/* <LightweightChart
+          <LightweightChart
             selectedSpotGridMarket={activeMarket}
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
@@ -72,7 +72,7 @@ const OrderConsumer = ({
             chartManagerHandler={chartManagerHandler}
             leastDisplayDate={leastDisplayDate}
             leastKnownBar={leastKnownBar}
-          /> */}
+          />
         </div>
       </div>
       <div className={styles.orderManagerContainer}>

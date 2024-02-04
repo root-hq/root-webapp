@@ -148,7 +148,7 @@ const OrderManager = ({
                     }
 
                     orders = await getOpenOrdersForTrader(phxClient, enumeratedMarket.spotGridMarket.phoenix_market_address.toString(), walletState.publicKey.toString());
-                    console.log("orders: ", orders);
+                    // console.log("orders: ", orders);
                 }
                 catch(err) {
                     console.log(`Error fetching active orders: ${err}`);
