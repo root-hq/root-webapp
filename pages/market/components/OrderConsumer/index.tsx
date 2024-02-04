@@ -3,10 +3,14 @@ import styles from "./OrderConsumer.module.css";
 import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import MarketSelectorDropdown from "./components/MarketSelectorDropdown";
 import { EnumeratedMarketToMetadata } from "../../[market]";
-import LightweightChart, { SeriesManagerInstance } from "./components/LightweightChart";
+import { SeriesManagerInstance } from "./components/LightweightChart";
+
+const LightweightChart = dynamic(() => import('./components/LightweightChart'));
+const OrderManager = dynamic(() => import ('./components/OrderManager'));
+
 import { IChartApi } from "lightweight-charts";
-import OrderManager from "./components/OrderManager";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
+import dynamic from "next/dynamic";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];

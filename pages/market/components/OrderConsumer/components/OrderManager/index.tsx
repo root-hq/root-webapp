@@ -3,13 +3,16 @@ import styles from "./OrderManager.module.css";
 import { Order, TokenMetadata, getOpenOrdersForTrader } from "../../../../../../utils";
 import { ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS } from "../../../../../../constants";
 import { useWallet } from "@solana/wallet-adapter-react";
-import OrderView from "../OrderView";
+
+const OrderView = dynamic(() => import('../OrderView'));
+
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
 import { getPriorityFeeEstimate } from "../../../../../../utils/helius";
 import { web3 } from "@coral-xyz/anchor";
 import { ComputeBudgetProgram, Connection } from "@solana/web3.js";
 import { Client, getPhoenixEventsFromTransactionSignature } from "@ellipsis-labs/phoenix-sdk";
 import { useBottomStatus } from "../../../../../../components/BottomStatus";
+import dynamic from "next/dynamic";
 
 export interface OrderManagerProps {
     enumeratedMarket: EnumeratedMarketToMetadata;

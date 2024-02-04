@@ -1,21 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarketPage.module.css";
-import OrderConsumer from "./components/OrderConsumer";
-import CLOBTrader from "./components/OrderProducer/CLOBTrader";
+
+const OrderConsumer = dynamic(() => import('./components/OrderConsumer'));
+const CLOBTrader = dynamic(() => import('./components/OrderProducer/CLOBTrader'));
+
 import {
   SpotGridMarket,
   TokenMetadata,
   getAllTokenMetadata,
 } from "../../utils/supabase";
+
 import {
   getAllMarkets,
   getMarketForPhoenixMarket,
 } from "../../utils/supabase/SpotGridMarket";
+
 import { SeriesManagerInstance } from "./components/OrderConsumer/components/LightweightChart";
 import { IChartApi } from "lightweight-charts";
 import { web3 } from "@coral-xyz/anchor";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
 import { Connection } from "@solana/web3.js";
+
+import dynamic from "next/dynamic";
 
 export interface EnumeratedMarketToMetadata {
   spotGridMarket: SpotGridMarket;
