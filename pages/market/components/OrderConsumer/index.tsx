@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styles from "./OrderConsumer.module.css";
 import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
-import MarketSelectorDropdown from "./components/MarketSelectorDropdown";
 import { EnumeratedMarketToMetadata } from "../../[market]";
 import { SeriesManagerInstance } from "./components/LightweightChart";
 
+const MarketSelectorDropdown = dynamic(() => import('./components/MarketSelectorDropdown'));
 const LightweightChart = dynamic(() => import('./components/LightweightChart'));
 const OrderManager = dynamic(() => import ('./components/OrderManager'));
 

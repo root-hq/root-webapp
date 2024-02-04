@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./OrderManager.module.css";
 import { Order, TokenMetadata, getOpenOrdersForTrader } from "../../../../../../utils";
 import { ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS } from "../../../../../../constants";
@@ -124,7 +124,7 @@ const OrderManager = ({
 
     useEffect(() => {
         const refreshActiveOrdersForTrader = async () => {
-            if(walletState.connected && enumeratedMarket.spotGridMarket) {
+            if(walletState.connected && enumeratedMarket && enumeratedMarket.spotGridMarket) {
                 let orders: Order[] = [];
 
                 try {

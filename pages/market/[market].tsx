@@ -94,7 +94,7 @@ const MarketPage = ({
 
   return (
     <div className={styles.marketPageContainer}>
-      <div className={styles.orderConsumerContainer}>
+      <div className={styles.orderConsumerContainer} suppressHydrationWarning>
         <OrderConsumer
           enumeratedMarkets={enumeratedMarkets}
           selectedSpotGridMarket={selectedSpotGridMarket}
@@ -107,8 +107,7 @@ const MarketPage = ({
           leastKnownBar={leastKnownBar}
         />
       </div>
-      <div className={styles.orderProducerContainer}>
-        {/* <OrderProducer spotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata} /> */}
+      <div className={styles.orderProducerContainer} suppressHydrationWarning>
         <CLOBTrader spotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata} phoenixClient={phoenixClient}/>
       </div>
     </div>
