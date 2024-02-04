@@ -26,7 +26,7 @@ export const useBottomStatus = () => {
 //@ts-ignore
 export const BottomStatusProvider = ({ children }) => {
 
-  const DEFAULT_STATUS_MESSAGE = <></>;
+  const DEFAULT_STATUS_MESSAGE = <span>{`gm! ☀️`}</span>;
 
   const [status, setStatus] = useState<React.JSX.Element>(DEFAULT_STATUS_MESSAGE);
   const [statusStyle, setStatusStyle] = useState<React.CSSProperties>(null);

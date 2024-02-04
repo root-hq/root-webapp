@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from "./CLOBTrader.module.css";
 import { JUPITER_V6_PROGRAM, MAX_BPS, OrderType, ROOT_PROTOCOL_FEE_BPS, WRAPPED_SOL_MAINNET, getAllOrderTypes, getOrderTypeText } from '../../../../../constants';
-import { Order, SpotGridMarket, TokenMetadata, addOrder } from '../../../../../utils/supabase';
+import { SpotGridMarket, TokenMetadata } from '../../../../../utils/supabase';
 import { ComputeBudgetProgram, Connection, LAMPORTS_PER_SOL, VersionedTransaction } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { web3 } from '@coral-xyz/anchor';
-import { delay, formatNumbersWithCommas, getMarketMetadata, removeCommas } from '../../../../../utils';
+import { delay, formatNumbersWithCommas, removeCommas } from '../../../../../utils';
 import { Button, Form } from 'react-bootstrap';
 import dynamic from "next/dynamic";
 import KeyValueComponent, { KeyValueJustification } from '../../../../../components/KeyValueComponent';
 import Image from 'next/image';
-import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getCreateTokenAccountInstructions, getMakerSetupInstructionsForMarket, getPhoenixEventsFromTransactionSignature } from '@ellipsis-labs/phoenix-sdk';
+import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getCreateTokenAccountInstructions } from '@ellipsis-labs/phoenix-sdk';
 import {BN } from "@coral-xyz/anchor";
 import { fetchQuote, swapOnJupiterTx } from '../../../../../utils/jupiter';
 import { getPriorityFeeEstimate } from '../../../../../utils/helius';
@@ -59,7 +59,7 @@ const CLOBTrader = ({
   }
 
   const walletState = useWallet();
-  // const { updateStatus, green, red } = useBottomStatus();
+  const { updateStatus, green, red } = useBottomStatus();
 
   useEffect(() => {
     const updateBalance = async() => {
@@ -354,6 +354,7 @@ const CLOBTrader = ({
             lastValidUnixTimestampInSeconds: null,
             clientOrderId: new BN(1234)
           } as OrderPacket;
+          updateStatus(<span>{`Preparing limit order transaction...`}</span>);
           let transaction = new web3.Transaction();
 
           // Create the priority fee instructions
@@ -383,18 +384,17 @@ const CLOBTrader = ({
             transaction.add(ix);
           }
 
-          // updateStatus(<span>{`Preparing limit order transaction...`}</span>);
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
           
-          // updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
+          updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(transaction, connection);
-          // green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
+          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
           console.log("Signature: ", response);
         }
         catch(err) {
           console.log(`Error sending limit buy order: ${err.message}`);
-          // red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
+          red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
         }
 
         setIsPlaceOrderButtonLoading(_ => false);
@@ -449,18 +449,18 @@ const CLOBTrader = ({
             transaction.add(ix);
           }
 
-          // updateStatus(<span>{`Preparing limit order transaction...`}</span>);
+          updateStatus(<span>{`Preparing limit order transaction...`}</span>);
           let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
           transaction.add(ix);
 
-          // updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
+          updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(transaction, connection);
-          // green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
+          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
           console.log("Signature: ", response);
         }
         catch(err) {
           console.log(`Error sending limit sell order: ${err}`);
-          // red(<span>{`Failed: ${err.message}`}</span>, 2_000)
+          red(<span>{`Failed: ${err.message}`}</span>, 2_000)
         }
         
         setIsPlaceOrderButtonLoading(_ => false);
@@ -484,7 +484,7 @@ const CLOBTrader = ({
         console.log(`Error fetching priority fee levels`);
       }
 
-      // updateStatus(<span>{`Preparing swap transaction...`}</span>);
+      updateStatus(<span>{`Preparing swap transaction...`}</span>);
       if(isBuyOrder) {
         let size = parseFloat(sendUptoSize) * Math.pow(10, quoteTokenMetadata.decimals);
 
@@ -524,15 +524,15 @@ const CLOBTrader = ({
             value: { blockhash, lastValidBlockHeight }
           } = await connection.getLatestBlockhashAndContext();
   
-          // updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
+          updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(transaction, connection, { minContextSlot, skipPreflight: true });
-          // green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
+          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
           console.log("Signature: ", response);
         }
       }
       catch(err) {
         console.log(`Error preparing Jupiter swap tx: ${err.message}`);
-        // red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
+        red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
       }
     }
     // resetStatus();

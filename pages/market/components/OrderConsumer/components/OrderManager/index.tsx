@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./OrderManager.module.css";
-import { Order, SpotGridMarket, TokenMetadata, delay, getAllOrdersForTrader, getOpenOrdersForTrader } from "../../../../../../utils";
-import { ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS, OrderStatus, getAllOrderStatus, getOrderStatusText } from "../../../../../../constants";
+import { Order, TokenMetadata, getOpenOrdersForTrader } from "../../../../../../utils";
+import { ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS } from "../../../../../../constants";
 import { useWallet } from "@solana/wallet-adapter-react";
 import OrderView from "../OrderView";
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
@@ -9,6 +9,7 @@ import { getPriorityFeeEstimate } from "../../../../../../utils/helius";
 import { web3 } from "@coral-xyz/anchor";
 import { ComputeBudgetProgram, Connection } from "@solana/web3.js";
 import { Client, getPhoenixEventsFromTransactionSignature } from "@ellipsis-labs/phoenix-sdk";
+import { useBottomStatus } from "../../../../../../components/BottomStatus";
 
 export interface OrderManagerProps {
     enumeratedMarket: EnumeratedMarketToMetadata;
@@ -28,6 +29,8 @@ const OrderManager = ({
     let [activeOrdersForTrader, setActiveOrdersForTrader] = useState<Order[]>([]);
 
     const walletState = useWallet();
+    const { updateStatus, green, red } = useBottomStatus();
+
     let connection: Connection;
     if(process.env.RPC_ENDPOINT) {
         connection = new Connection(process.env.RPC_ENDPOINT, { commitment: "processed" });
@@ -52,6 +55,7 @@ const OrderManager = ({
             }
 
             try {
+                updateStatus(<span>{`Preparing cancel all transaction...`}</span>);
                 let transaction = new web3.Transaction();
       
                 // Create the priority fee instructions
@@ -90,7 +94,7 @@ const OrderManager = ({
                 else {
                     phxClient = phoenixClient;
                 }
-                  
+                
                 let cancelAllIx = phxClient.createCancelAllOrdersWithFreeFundsInstruction(marketAddress, walletState.publicKey);
                 let withdrawFundsIx = phxClient.createWithdrawFundsInstruction({
                     withdrawFundsParams: {
@@ -102,23 +106,14 @@ const OrderManager = ({
                 transaction.add(cancelAllIx);
                 transaction.add(withdrawFundsIx);
                 
+                updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
                 let response = await walletState.sendTransaction(transaction, connection, { skipPreflight: true});
+                green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
                 console.log("Signature: ", response);
-      
-                let status = await getPhoenixEventsFromTransactionSignature(connection, response);
-                if(status) {
-                  let ixs = status.instructions;
-                  for(let ix of ixs) {
-                    for(let event of ix.events) {
-                      if(event.__kind === "Reduce") {
-                        // console.log('Canceled all orders');
-                      }
-                    }
-                  }
-                }
               }
               catch(err) {
                 console.log(`Error placing cancel all request: ${err}`);
+                red(<span>{`Failed: ${err.message}`}</span>, 2_000,);
               }
         }
         setIsCancelAllActionActive(false);

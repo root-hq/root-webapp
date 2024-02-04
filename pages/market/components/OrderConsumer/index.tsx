@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./OrderConsumer.module.css";
 import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import MarketSelectorDropdown from "./components/MarketSelectorDropdown";
@@ -64,7 +64,7 @@ const OrderConsumer = ({
           </div>
         </div>
         <div className={styles.lightweightChartContainer}>
-          <LightweightChart
+          {/* <LightweightChart
             selectedSpotGridMarket={activeMarket}
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
@@ -72,7 +72,7 @@ const OrderConsumer = ({
             chartManagerHandler={chartManagerHandler}
             leastDisplayDate={leastDisplayDate}
             leastKnownBar={leastKnownBar}
-          />
+          /> */}
         </div>
       </div>
       <div className={styles.orderManagerContainer}>

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarketPage.module.css";
 import OrderConsumer from "./components/OrderConsumer";
-import OrderProducer from "./components/OrderProducer/SpotGridBotTrader";
 import CLOBTrader from "./components/OrderProducer/CLOBTrader";
 import {
   SpotGridMarket,

@@ -89,19 +89,7 @@ export const getOpenOrdersForTrader = async (
   trader: string
 ): Promise<Order[]> => {
   try {
-
-    let endpoint = process.env.RPC_ENDPOINT;
-      if(!endpoint) {
-          endpoint = `https://api.mainnet-beta.solana.com`;
-      }
-
-      const connection = new web3.Connection(endpoint, {
-          commitment: "processed",
-      });
-
-      const phoenixClient = await Client.create(connection);
-
-      phoenixClient.addMarket(marketAddress);
+      phoenixClient.refreshMarket(marketAddress, true);
 
     const book = phoenixClient.marketStates.get(marketAddress);
         
