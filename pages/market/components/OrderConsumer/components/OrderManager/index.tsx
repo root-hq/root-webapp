@@ -4,7 +4,7 @@ import { Order, TokenMetadata, getOpenOrdersForTrader } from "../../../../../../
 import { ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS } from "../../../../../../constants";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-const OrderView = dynamic(() => import('../OrderView'));
+const OrderView = dynamic(() => import('../OrderView'), { ssr: false });
 
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
 import { getPriorityFeeEstimate } from "../../../../../../utils/helius";

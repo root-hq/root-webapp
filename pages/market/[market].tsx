@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarketPage.module.css";
 
-const OrderConsumer = dynamic(() => import('./components/OrderConsumer'));
-const CLOBTrader = dynamic(() => import('./components/OrderProducer/CLOBTrader'));
+const OrderConsumer = dynamic(() => import('./components/OrderConsumer'), { ssr: false });
+const CLOBTrader = dynamic(() => import('./components/OrderProducer/CLOBTrader'), { ssr: false });
 
 import {
   SpotGridMarket,

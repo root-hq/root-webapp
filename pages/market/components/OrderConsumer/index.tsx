@@ -4,9 +4,9 @@ import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import { EnumeratedMarketToMetadata } from "../../[market]";
 import { SeriesManagerInstance } from "./components/LightweightChart";
 
-const MarketSelectorDropdown = dynamic(() => import('./components/MarketSelectorDropdown'));
-const LightweightChart = dynamic(() => import('./components/LightweightChart'));
-const OrderManager = dynamic(() => import ('./components/OrderManager'));
+const MarketSelectorDropdown = dynamic(() => import('./components/MarketSelectorDropdown'), { ssr: false });
+const LightweightChart = dynamic(() => import('./components/LightweightChart'), { ssr: false });
+const OrderManager = dynamic(() => import ('./components/OrderManager'), { ssr: false });
 
 import { IChartApi } from "lightweight-charts";
 import { Client } from "@ellipsis-labs/phoenix-sdk";

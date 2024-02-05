@@ -9,7 +9,7 @@ import { web3 } from '@coral-xyz/anchor';
 import { formatNumbersWithCommas, removeCommas } from '../../../../../utils';
 import { Button, Form } from 'react-bootstrap';
 import dynamic from "next/dynamic";
-const KeyValueComponent = dynamic(() => import("../../../../../components/KeyValueComponent/index"));
+const KeyValueComponent = dynamic(() => import("../../../../../components/KeyValueComponent/index"), { ssr: false });
 import { KeyValueJustification } from '../../../../../components/KeyValueComponent';
 import Image from 'next/image';
 import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getCreateTokenAccountInstructions } from '@ellipsis-labs/phoenix-sdk';
