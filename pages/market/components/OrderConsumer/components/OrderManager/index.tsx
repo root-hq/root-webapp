@@ -24,6 +24,7 @@ export interface OrderManagerProps {
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
   phoenixClient: Client;
+  connection: Connection;
 }
 
 const OrderManager = ({
@@ -31,23 +32,13 @@ const OrderManager = ({
   baseTokenMetadata,
   quoteTokenMetadata,
   phoenixClient,
+  connection
 }: OrderManagerProps) => {
   const [isCancelAllActionActive, setIsCancelAllActionActive] = useState(false);
   let [activeOrdersForTrader, setActiveOrdersForTrader] = useState<Order[]>([]);
 
   const walletState = useWallet();
   const { updateStatus, green, red } = useBottomStatus();
-
-  let connection: Connection;
-  if (process.env.RPC_ENDPOINT) {
-    connection = new Connection(process.env.RPC_ENDPOINT, {
-      commitment: "processed",
-    });
-  } else {
-    connection = new Connection(`https://api.mainnet-beta.solana.com/`, {
-      commitment: "processed",
-    });
-  }
 
   const handleCancelAllAction = async () => {
     setIsCancelAllActionActive(true);
@@ -281,6 +272,7 @@ const OrderManager = ({
                       order={order}
                       enumeratedMarket={enumeratedMarket}
                       phoenixClient={phoenixClient}
+                      connection={connection}
                     />
                   </div>
                 );

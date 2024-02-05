@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./OrderView.module.css";
 import { Order } from "../../../../../../utils";
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
@@ -20,29 +20,25 @@ export interface OrderViewProps {
   enumeratedMarket: EnumeratedMarketToMetadata | null;
   order: Order;
   phoenixClient: Client;
+  connection: Connection;
 }
 
 const OrderView = ({
   enumeratedMarket,
   order,
   phoenixClient,
+  connection
 }: OrderViewProps) => {
+  const [floatPrice, setFloatPrice] = useState(0);
+  const [floatSizeInBaseUnits, setFloatSizeInBaseUnits] = useState(0);
+  const [floatTotalSizeInQuoteUnits, setFloatTotalSizeInQuoteUnits] = useState(0);
+  const [fillSizeInBaseUnits, setFillSizeInBaseUnits] = useState(0);
+
   const [isCancelOrderActionActive, setIsCancelOrderActionActive] =
     useState(false);
 
   const walletState = useWallet();
   const { updateStatus, green, red } = useBottomStatus();
-
-  let connection: Connection;
-  if (process.env.RPC_ENDPOINT) {
-    connection = new Connection(process.env.RPC_ENDPOINT, {
-      commitment: "processed",
-    });
-  } else {
-    connection = new Connection(`https://api.mainnet-beta.solana.com/`, {
-      commitment: "processed",
-    });
-  }
 
   const handleCancelOrderAction = async () => {
     setIsCancelOrderActionActive((_) => true);
@@ -161,6 +157,20 @@ const OrderView = ({
     setIsCancelOrderActionActive(false);
   };
 
+  useEffect(() => {
+    if(enumeratedMarket) {
+      let floatPrice = phoenixClient.ticksToFloatPrice(parseInt(order.price_in_ticks.toString()), enumeratedMarket.spotGridMarket.phoenix_market_address.toString());
+      let floatSizeInBaseUnits = phoenixClient.baseLotsToBaseAtoms(parseInt(order.size_in_base_lots.toString()), enumeratedMarket.spotGridMarket.phoenix_market_address.toString()) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
+      let floatTotalSizeInQuoteUnits = floatPrice * floatSizeInBaseUnits;
+      let fillSizeInBaseUnits =  phoenixClient.baseLotsToBaseAtoms(parseInt(order.fill_size_in_base_lots.toString()), enumeratedMarket.spotGridMarket.phoenix_market_address.toString()) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
+
+      setFloatPrice(_ => floatPrice);
+      setFloatSizeInBaseUnits(_ => floatSizeInBaseUnits);
+      setFloatTotalSizeInQuoteUnits(_ => floatTotalSizeInQuoteUnits);
+      setFillSizeInBaseUnits(_ => fillSizeInBaseUnits);
+    }
+  }, [order, phoenixClient, connection]);
+
   return (
     <div className={styles.orderViewOuterContainer}>
       <div className={styles.orderViewContainer}>
@@ -183,26 +193,22 @@ const OrderView = ({
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {order ? <span>{order.price_in_ticks}</span> : <span></span>}
+            {floatPrice.toFixed(4)}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {order ? <span>{order.size_in_base_lots}</span> : <span></span>}
+            {floatSizeInBaseUnits.toFixed(4)}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {order ? <span>{order.price_in_ticks}</span> : <span></span>}
+            {floatTotalSizeInQuoteUnits.toFixed(4)}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {order ? (
-              <span>{order.fill_size_in_base_lots}</span>
-            ) : (
-              <span></span>
-            )}
+            {fillSizeInBaseUnits.toFixed(4)}
           </span>
         </div>
         <div className={styles.columnNameRow}>

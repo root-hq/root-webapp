@@ -48,6 +48,7 @@ export interface CLOBTraderProps {
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
   phoenixClient: Client;
+  connection: Connection;
 }
 
 const CLOBTrader = ({
@@ -55,6 +56,7 @@ const CLOBTrader = ({
   baseTokenMetadata,
   quoteTokenMetadata,
   phoenixClient,
+  connection
 }: CLOBTraderProps) => {
   const [isBuyOrder, setIsBuyOrder] = useState(true);
 
@@ -65,17 +67,6 @@ const CLOBTrader = ({
   const [receiveUptoSize, setReceiveUptoSize] = useState("");
   const [isPlaceOrderButtonLoading, setIsPlaceOrderButtonLoading] =
     useState(false);
-
-  let connection: Connection;
-  if (process.env.RPC_ENDPOINT) {
-    connection = new Connection(process.env.RPC_ENDPOINT, {
-      commitment: "processed",
-    });
-  } else {
-    connection = new Connection(`https://api.mainnet-beta.solana.com/`, {
-      commitment: "processed",
-    });
-  }
 
   const walletState = useWallet();
   const { updateStatus, green, red, resetStatus } = useBottomStatus();
@@ -408,7 +399,6 @@ const CLOBTrader = ({
             3_000,
           );
           console.log("Signature: ", response);
-          resetAllFields();
         } catch (err) {
           console.log(`Error sending limit buy order: ${err.message}`);
           red(<span>{`Failed: ${err.message}`}</span>, 2_000);
@@ -509,12 +499,12 @@ const CLOBTrader = ({
             3_000,
           );
           console.log("Signature: ", response);
-          resetAllFields();
         } catch (err) {
           console.log(`Error sending limit sell order: ${err}`);
           red(<span>{`Failed: ${err.message}`}</span>, 2_000);
         }
       }
+      resetAllFields();
     }
 
     setIsPlaceOrderButtonLoading((_) => false);

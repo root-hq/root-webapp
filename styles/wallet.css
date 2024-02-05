@@ -3,7 +3,7 @@
 .wallet-adapter-button {
   background-color: transparent;
   border: none;
-  color: #fff;
+  color: #ddd;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -108,11 +108,11 @@
   font-size: 14px;
   font-weight: 600;
   height: 37px;
-  color: #fff;
+  color: #ddd;
 }
 
 /* .wallet-adapter-dropdown-list-item:not([disabled]):hover {
-    background-color: #fff;
+    background-color: #ddd;
 } */
 
 .wallet-adapter-modal-collapse-button svg {
@@ -220,7 +220,7 @@
   margin: 0;
   padding: 64px 48px 48px 48px;
   text-align: center;
-  color: #fff;
+  color: #ddd;
 }
 
 @media (max-width: 374px) {
@@ -264,7 +264,7 @@
   display: flex;
   align-items: center;
   background-color: transparent;
-  color: #fff;
+  color: #ddd;
 }
 
 .wallet-adapter-modal-list-more svg {
@@ -296,5 +296,5 @@
   font-size: 18px;
   border: none;
   border-radius: 8px;
-  color: #fff;
+  color: #ddd;
 }

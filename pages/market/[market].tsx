@@ -49,6 +49,7 @@ const MarketPage = ({
 }: MarketPageProps) => {
   const seriesManager = useRef<SeriesManagerInstance>(null);
   const [phoenixClient, setPhoenixClient] = useState<Client>(null);
+  const [connection, setConnection] = useState<Connection>(new web3.Connection(`https://api.mainnet-beta.solana.com`));
   const chartManager = useRef<IChartApi>(null);
   const leastDatedata = useRef<Date>(null);
   const leastKnownBar = useRef<number>();
@@ -59,17 +60,6 @@ const MarketPage = ({
   useEffect(() => {
     setSelectedSpotGridMarket((prev) => spotGridMarketOnPage);
   }, [spotGridMarketOnPage]);
-
-  let connection: Connection;
-  if (process.env.RPC_ENDPOINT) {
-    connection = new Connection(process.env.RPC_ENDPOINT, {
-      commitment: "processed",
-    });
-  } else {
-    connection = new Connection(`https://api.mainnet-beta.solana.com/`, {
-      commitment: "processed",
-    });
-  }
 
   useEffect(() => {
     const setupPhoenixClient = async () => {
@@ -99,6 +89,19 @@ const MarketPage = ({
     setupPhoenixClient();
   }, [spotGridMarketOnPage, connection]);
 
+  useEffect(() => {
+    const setUpConnection = () => {
+      if (process.env.RPC_ENDPOINT) {
+        let conn = new Connection(process.env.RPC_ENDPOINT, {
+          commitment: "processed",
+        });
+        setConnection(_ => conn);
+      }
+    }
+    
+    setUpConnection();
+  }, []);
+
   return (
     <div className={styles.marketPageContainer} suppressHydrationWarning>
       <div className={styles.orderConsumerContainer} suppressHydrationWarning>
@@ -112,6 +115,7 @@ const MarketPage = ({
           chartManagerHandler={chartManager}
           leastDisplayDate={leastDatedata}
           leastKnownBar={leastKnownBar}
+          connection={connection}
         />
       </div>
       <div className={styles.orderProducerContainer} suppressHydrationWarning>
@@ -120,6 +124,7 @@ const MarketPage = ({
           baseTokenMetadata={baseTokenMetadata}
           quoteTokenMetadata={quoteTokenMetadata}
           phoenixClient={phoenixClient}
+          connection={connection}
         />
       </div>
     </div>

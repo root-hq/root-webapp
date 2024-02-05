@@ -9,14 +9,12 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  /* margin-top: 0.5rem; */
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
 
 .columnNameRow {
   color: #ddd;
-  /* font-weight: bold; */
   font-size: 0.85rem;
   display: flex;
   width: 20%;

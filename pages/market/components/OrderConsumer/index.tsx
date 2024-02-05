@@ -19,6 +19,7 @@ const OrderManager = dynamic(() => import("./components/OrderManager"), {
 import { IChartApi } from "lightweight-charts";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
 import dynamic from "next/dynamic";
+import { Connection } from "@solana/web3.js";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -30,6 +31,7 @@ export interface OrderConsumerProps {
   chartManagerHandler: React.MutableRefObject<IChartApi>;
   leastDisplayDate: React.MutableRefObject<Date>;
   leastKnownBar: React.MutableRefObject<number>;
+  connection: Connection;
 }
 
 const OrderConsumer = ({
@@ -42,6 +44,7 @@ const OrderConsumer = ({
   chartManagerHandler,
   leastDisplayDate,
   leastKnownBar,
+  connection
 }: OrderConsumerProps) => {
   const [activeMarket, setActiveMarket] = useState(selectedSpotGridMarket);
   const [activeEnumeratedMarket, setActiveEnumeratedMarket] =
@@ -97,6 +100,7 @@ const OrderConsumer = ({
           baseTokenMetadata={baseTokenMetadata}
           quoteTokenMetadata={quoteTokenMetadata}
           phoenixClient={phoenixClient}
+          connection={connection}
         />
       </div>
     </div>

@@ -25,7 +25,7 @@ a {
 }
 
 a:hover {
-  color: #fff;
+  color: #ddd;
 }
 *:focus {
   outline: none;
