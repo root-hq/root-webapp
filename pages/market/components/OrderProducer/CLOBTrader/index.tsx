@@ -427,7 +427,7 @@ const CLOBTrader = ({
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
           <div className={styles.formLabelAndFieldContainer}>
                   <Form.Label className={styles.formLabelContainer}>
-                    <span>{isBuyOrder ? 'Buy' : 'Sell'} price</span>
+                    <span>Limit price</span>
                   </Form.Label>
                   <Form.Control
                     placeholder="0.00"
@@ -454,31 +454,7 @@ const CLOBTrader = ({
             <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
               <Form.Label className={styles.formLabelContainer}>
                 <span className={styles.fieldTitleContainer}>
-                  <span>{isBuyOrder ? 'Buy' : 'Sell'} size</span>
-                  {
-                    isBuyOrder ?
-                      quoteTokenMetadata ?
-                        <Image
-                          src={quoteTokenMetadata.img_url}
-                          width={22}
-                          height={22}
-                          alt={`${quoteTokenMetadata.ticker} img`}
-                          className={styles.tokenImage}
-                        />
-                      :
-                        <></>
-                    :
-                      baseTokenMetadata ?
-                        <Image
-                          src={baseTokenMetadata.img_url}
-                          width={22}
-                          height={22}
-                          alt={`${baseTokenMetadata.ticker} img`}
-                          className={styles.tokenImage}
-                        />
-                      :
-                        <></>
-                  }
+                  <span>Quantity</span>
                 </span>
               </Form.Label>
               <Form.Control
@@ -530,33 +506,38 @@ const CLOBTrader = ({
           </Form.Group>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
           <div className={styles.tradeInfoContainer}>
-              <KeyValueComponent 
-                  keyElement={
-                    <p>Total fee</p>
-                  }
-                  keyElementStyle={
-                    {
+              {
+                walletState.connected ?
+                <KeyValueComponent 
+                keyElement={
+                  <p>Total fee</p>
+                }
+                keyElementStyle={
+                  {
 
-                    }
                   }
-                  valueElement={
-                    spotGridMarket ?
-                      <p>{`${(parseFloat(spotGridMarket.taker_fee_bps.toString()) + ROOT_PROTOCOL_FEE_BPS)/100}%`}</p>
-                    :
-                      <p>{`-%`}</p>
-                  }
-                  valueElementStyle={
-                    {
+                }
+                valueElement={
+                  spotGridMarket ?
+                    <p>{`${(parseFloat(spotGridMarket.taker_fee_bps.toString()) + ROOT_PROTOCOL_FEE_BPS)/100}%`}</p>
+                  :
+                    <p>{`-%`}</p>
+                }
+                valueElementStyle={
+                  {
 
-                    }
                   }
-                  justification={KeyValueJustification.SpaceBetween}
-                  keyElementContainerStyle={
-                    {
-                      
-                    }
+                }
+                justification={KeyValueJustification.SpaceBetween}
+                keyElementContainerStyle={
+                  {
+                    
                   }
-                />
+                }
+              />
+              :
+              <></>
+              }
           </div>
           </Form.Group>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>

@@ -55,6 +55,8 @@
 
 .formGroupContainer {
   margin: 1rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
 }
   
   .shortcutButtonsContainer {
@@ -79,7 +81,6 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    /* margin-top: 2rem; */
     border-bottom: 1px solid rgba(87, 87, 87, 0.25);
   }
   
@@ -88,7 +89,6 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    /* margin-top: 2rem; */
     border-bottom: 1px solid rgba(87, 87, 87, 0.25);
   }
   
