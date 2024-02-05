@@ -4,6 +4,9 @@ import styles from "./MarketPage.module.css";
 const OrderConsumer = dynamic(() => import("./components/OrderConsumer"), {
   ssr: false,
 });
+const Orderbook = dynamic(() => import("./components/Orderbook"), {
+  ssr: false
+});
 const CLOBTrader = dynamic(
   () => import("./components/OrderProducer/CLOBTrader"),
   { ssr: false },
@@ -103,22 +106,27 @@ const MarketPage = ({
   }, []);
 
   return (
-    <div className={styles.marketPageContainer} suppressHydrationWarning>
-      <div className={styles.orderConsumerContainer} suppressHydrationWarning>
-        <OrderConsumer
-          enumeratedMarkets={enumeratedMarkets}
-          selectedSpotGridMarket={selectedSpotGridMarket}
-          baseTokenMetadata={baseTokenMetadata}
-          quoteTokenMetadata={quoteTokenMetadata}
-          phoenixClient={phoenixClient}
-          seriesManagerHandler={seriesManager}
-          chartManagerHandler={chartManager}
-          leastDisplayDate={leastDatedata}
-          leastKnownBar={leastKnownBar}
-          connection={connection}
-        />
+    <div className={styles.marketPageContainer}>
+      <div className={styles.orderConsumerContainer}>
+        <div className={styles.orderConsumerChartContainer}>
+          <OrderConsumer
+            enumeratedMarkets={enumeratedMarkets}
+            selectedSpotGridMarket={selectedSpotGridMarket}
+            baseTokenMetadata={baseTokenMetadata}
+            quoteTokenMetadata={quoteTokenMetadata}
+            phoenixClient={phoenixClient}
+            seriesManagerHandler={seriesManager}
+            chartManagerHandler={chartManager}
+            leastDisplayDate={leastDatedata}
+            leastKnownBar={leastKnownBar}
+            connection={connection}
+          />
+        </div>
+        <div className={styles.orderBookContainer}>
+          <Orderbook />
+        </div>
       </div>
-      <div className={styles.orderProducerContainer} suppressHydrationWarning>
+      <div className={styles.orderProducerContainer}>
         <CLOBTrader
           spotGridMarket={selectedSpotGridMarket}
           baseTokenMetadata={baseTokenMetadata}

@@ -8,10 +8,18 @@
 .orderVisualContainer {
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(87, 87, 87, 0.25);
+  border-left: 1px solid rgba(87, 87, 87, 0.25);
+  border-right: 1px solid rgba(87, 87, 87, 0.25);
   box-sizing: border-box;
   /* border-radius: 0.75rem; */
   width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .orderVisualContainer {
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+    border-radius: 0rem 0rem 0.75rem 0.75rem;
+  }
 }
 
 .marketInfoContainer {
