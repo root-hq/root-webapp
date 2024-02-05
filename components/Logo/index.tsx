@@ -6,8 +6,9 @@ const Logo = () => {
     <Image
       src="/images/root-logo.png"
       alt="Logo"
+      width={42}
+      height={42}
       style={{
-        width: "22%",
         height: "auto",
         maxWidth: "200px",
       }}
