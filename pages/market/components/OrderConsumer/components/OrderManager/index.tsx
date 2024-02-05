@@ -239,7 +239,7 @@ const OrderManager = ({
                     </div>
                     <div className={styles.columnNameRow}>
                         <span className={styles.columnName}>
-                            {`Cancel`}
+                            {``}
                         </span>
                     </div>
                 </div>
@@ -253,7 +253,7 @@ const OrderManager = ({
                                     if(order) {
                                         return (
                                             <div key = {parseInt(order.order_sequence_number.toString())} className={styles.orderViewContainer}>
-                                                <OrderView order = {order} enumeratedMarket={enumeratedMarket}/>
+                                                <OrderView order = {order} enumeratedMarket={enumeratedMarket} phoenixClient={phoenixClient}/>
                                             </div>
                                         )
                                     }
