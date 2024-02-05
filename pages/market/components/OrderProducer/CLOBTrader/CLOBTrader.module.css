@@ -3,14 +3,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 1rem;
+    /* padding-top: 1rem; */
     padding-bottom: 1rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    /* padding-left: 2rem;
+    padding-right: 2rem; */
     color: white;
     border: 1px solid rgba(87, 87, 87, 0.25);
     box-sizing: border-box;
-    border-radius: 0.75rem;
+    /* border-radius: 0.75rem; */
 }
 
 .tabsContainer {
@@ -32,12 +32,13 @@
     width: 100%;
     border-radius: 0rem;
     border: none;
-    border-top: 1px solid rgba(87, 87, 87, 0.25);
-    border-left: 1px solid rgba(87, 87, 87, 0.25);
-    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-    background-color: transparent;
-    color: white;
-    padding: 0.5rem;
+    border-top: 3px solid transparent;
+    /* border-left: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25); */
+    background-color: #12211b;
+    color: #3DE383;
+    font-weight: bolder;
+    padding: 1rem;
     font-size: 1rem;
     cursor: pointer;
 }
@@ -46,12 +47,13 @@
     width: 100%;
     border-radius: 0rem;
     border: none;
-    border-top: 1px solid rgba(87, 87, 87, 0.25);
-    border-right: 1px solid rgba(87, 87, 87, 0.25);
-    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-    background-color: transparent;
-    color: white;
-    padding: 0.5rem;
+    border-top: 3px solid transparent;
+    /* border-right: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25); */
+    background-color: #150e11;
+    color: #e33d3d;
+    font-weight: bolder;
+    padding: 1rem;
     font-size: 1rem;
     cursor: pointer;
 }
@@ -71,6 +73,11 @@
     width: 100%;
 }
 
+.dropdownButtonContainer {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
 .dropdownButton {
     display: flex;
     justify-content: space-between;
@@ -88,7 +95,6 @@
   }
 
   .dropdownButtonSecondaryContainer {
-    background-color: red;
     width: 100%;
   }
   
@@ -133,8 +139,10 @@
     flex-direction: row;
     justify-content: right;
     width: 100%;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+  }
+  
+  .resetButtonContainer {
+    margin: 1rem;
   }
   
   .resetFieldsButton {
@@ -152,8 +160,8 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    /* margin-top: 2rem;
+    margin-bottom: 2rem; */
     border-bottom: 1px solid rgba(87, 87, 87, 0.25);
   }
   

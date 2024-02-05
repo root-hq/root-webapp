@@ -585,8 +585,7 @@ const CLOBTrader = ({
                     className={styles.buyButton}
                     key = {'buyButton'}
                     style = {{
-                        borderTop: isBuyOrder ? '2px solid green' : '',
-                        borderBottom: isBuyOrder ? 'none' : '1px solid rgba(87, 87, 87, 0.25)'
+                        borderTop: isBuyOrder ? '3px solid #3DE383' : '',
                     }}
                     onClick={() => {
                         handleBuySellToggle("buy")
@@ -600,8 +599,7 @@ const CLOBTrader = ({
                     className={styles.sellButton}
                     key = {'sellButton'}
                     style = {{
-                        borderTop: !isBuyOrder ? '2px solid red' : '',
-                        borderBottom: !isBuyOrder ? 'none' : '1px solid rgba(87, 87, 87, 0.25)'
+                        borderTop: !isBuyOrder ? '3px solid #e33d3d' : '',
                     }}
                     onClick={() => {
                         handleBuySellToggle("sell")
@@ -611,17 +609,17 @@ const CLOBTrader = ({
                 </button>
             </div>
        </div>
-       <div
-          className={styles.shortcutButtonsContainer}
-        >
-          <span
-            className={styles.resetFieldsButton}
-            onClick={() => {
-              resetAllFields()
-            }}
-          >Reset</span>
+       <div className={styles.shortcutButtonsContainer}>
+          <div className={styles.resetButtonContainer}>
+            <span
+              className={styles.resetFieldsButton}
+              onClick={() => {
+                resetAllFields()
+              }}
+            >Reset</span>
+          </div>
         </div>
-       <div className={styles.orderTypeChooseContainer} ref={dropdownRef}>
+       {/* <div className={styles.orderTypeChooseContainer} ref={dropdownRef}>
             <div
                 className={styles.dropdownButtonContainer}
                 onClick={
@@ -643,6 +641,7 @@ const CLOBTrader = ({
                     </div>
                 </button>
             </div>
+            <div>
               {
                 isOrderTypeDropdownOpen ?
                   <div className={styles.dropdownButtonSecondaryContainer}>
@@ -668,7 +667,8 @@ const CLOBTrader = ({
                 :
                   <></>
               }
-         </div>
+            </div>
+      </div> */}
        <Form>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
             {

@@ -93,7 +93,7 @@ const MarketPage = ({
 
 
   return (
-    <div className={styles.marketPageContainer}>
+    <div className={styles.marketPageContainer} suppressHydrationWarning>
       <div className={styles.orderConsumerContainer} suppressHydrationWarning>
         <OrderConsumer
           enumeratedMarkets={enumeratedMarkets}

@@ -10,7 +10,7 @@
   flex-direction: column;
   border: 1px solid rgba(87, 87, 87, 0.25);
   box-sizing: border-box;
-  border-radius: 0.75rem;
+  /* border-radius: 0.75rem; */
   width: 100%;
 }
 
@@ -26,20 +26,20 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   width: 100%;
   margin-bottom: 1rem;
 }
 
-.marketSelectorContainer {
-}
+/* .marketSelectorContainer {
+} */
 
 .orderManagerContainer {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   width: 100%;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
 }

@@ -9,7 +9,7 @@ const LABELS = {
   copied: "Copied",
   disconnect: "Disconnect",
   "has-wallet": "Connect",
-  "no-wallet": "Connect",
+  "no-wallet": `Connect`,
 } as const;
 
 export function WalletMultiButton(props: ButtonProps) {

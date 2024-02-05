@@ -12,9 +12,6 @@ const Header = () => {
   return (
     <div
       className={styles.headerContainer}
-      // style={{
-      //   maxWidth: '1200px'
-      // }}
     >
       <div className={styles.logoContainer}>
         <div className={styles.logo}>

@@ -5,15 +5,15 @@
 }
 
 .orderProducerContainer {
-  width: 28%;
-  margin-right: 2rem;
-  margin-left: 1rem;
+  width: 25%;
+  /* margin-right: 2rem;
+  margin-left: 1rem; */
 }
 
 .orderConsumerContainer {
-  width: 72%;
-  margin-right: 1rem;
-  margin-left: 2rem;
+  width: 75%;
+  /* margin-right: 1rem;
+  margin-left: 2rem; */
 }
 
 @media (max-width: 1024px) {
@@ -25,18 +25,9 @@
 
   .orderConsumerContainer {
     width: 90%;
-    margin-top: 2rem;
-    margin-left: 0rem;
-    margin-right: 0rem;
-    margin-bottom: 0rem;
-
   }
 
   .orderProducerContainer {
-    margin-top: 2rem;
-    margin-left: 0rem;
-    margin-right: 0rem;
-    margin-bottom: 0rem;
     width: 90%;
   }
 }

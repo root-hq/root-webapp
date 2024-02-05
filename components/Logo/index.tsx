@@ -6,10 +6,9 @@ const Logo = () => {
       src="/images/root-logo.png"
       alt="Logo"
       style={{
-        width: "25%",
+        width: "22%",
         height: "auto",
         maxWidth: "200px",
-        margin: "1rem",
       }}
     />
   );
