@@ -55,7 +55,7 @@ const CLOBTrader = ({
   }
 
   const walletState = useWallet();
-  const { updateStatus, green, red } = useBottomStatus();
+  const { updateStatus, green, red, resetStatus } = useBottomStatus();
 
   useEffect(() => {
     const updateBalance = async() => {
@@ -104,6 +104,16 @@ const CLOBTrader = ({
 
     updateBalance();
   }, [spotGridMarket, walletState, connection, baseTokenMetadata, quoteTokenMetadata]);
+
+  useEffect(() => {
+    if(receiveUptoSize) {
+      console.log("Receive upto size: ", receiveUptoSize);
+      updateStatus(<span>{`Buying ${receiveUptoSize} ${isBuyOrder ? baseTokenMetadata.ticker : quoteTokenMetadata.ticker}`}</span>);
+    }
+    else {
+      resetStatus();
+    }
+  }, [receiveUptoSize]);
 
   const handleBuySellToggle = (type: string) => {
     if(type === "buy") {
@@ -212,49 +222,6 @@ const CLOBTrader = ({
         }
       }
   };
-
-  const handleReceiveUptoSizeChange = (e?: any, size?: any) => {
-
-    if(e) {
-      e.preventDefault();
-    }
-
-    let receiveUptoSize;
-
-    if(size) {
-      receiveUptoSize = removeCommas(size);
-    }
-    else {
-      receiveUptoSize = removeCommas(e.target.value);
-    }
-
-    let receiveUptoSizeFloat = parseFloat(receiveUptoSize);
-
-    let limitPriceFloat = 0.0;
-    if(limitPrice) {
-      limitPriceFloat = parseFloat(limitPrice);
-    }
-
-    if(limitPriceFloat && receiveUptoSizeFloat) {
-      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
-
-        if(isBuyOrder) {
-          let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) * parseFloat(removeCommas(limitPrice));
-
-          let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
-          formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setSendUptoSize);
-        }
-        else {
-          let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) / parseFloat(removeCommas(limitPrice));
-
-          let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
-          formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setSendUptoSize);
-        }
-    }
-
-    formatNumbersWithCommas(receiveUptoSize, setReceiveUptoSize);  
-
-  }
 
   const handlePlaceLimitOrderAction = async () => {
     let marketAddress = spotGridMarket.phoenix_market_address.toString();
@@ -559,59 +526,6 @@ const CLOBTrader = ({
                   <span>{` `}</span>
                 </div>
               )}
-            </div>
-          </Form.Group>
-          <Form.Group controlId="formInput" className={styles.formGroupContainer}>
-            <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
-              <Form.Label className={styles.formLabelContainer}>
-                <span className={styles.fieldTitleContainer}>
-                  <span>Receive</span>
-                  {
-                    isBuyOrder ?
-                      baseTokenMetadata ?
-                        <Image
-                          src={baseTokenMetadata.img_url}
-                          width={22}
-                          height={22}
-                          alt={`${baseTokenMetadata.ticker} img`}
-                          className={styles.tokenImage}
-                        />
-                      :
-                        <></>
-                    :
-                      quoteTokenMetadata ?
-                        <Image
-                          src={quoteTokenMetadata.img_url}
-                          width={22}
-                          height={22}
-                          alt={`${quoteTokenMetadata.ticker} img`}
-                          className={styles.tokenImage}
-                        />
-                      :
-                        <></>
-                  }
-                </span>
-              </Form.Label>
-              <Form.Control
-                placeholder={`0.00 ${isBuyOrder ? baseTokenMetadata ? baseTokenMetadata.ticker : '' : quoteTokenMetadata ? quoteTokenMetadata.ticker : ''}`}
-                style={{
-                  backgroundColor: "transparent",
-                  fontSize: "1.1rem",
-                  fontWeight: "bold",
-                  textAlign: "right",
-                  color: "#ddd",
-                  border: "none",
-                  caretColor: "#ddd",
-                  padding: "1rem"
-                }}
-                min="0"
-                step="0.01" // Allow any decimal value
-                className={styles.formFieldContainer}
-                onChange={(e) => {
-                  handleReceiveUptoSizeChange(e)
-                }}
-                value={receiveUptoSize} // Use inputText instead of inputAmount to show the decimal value
-              />
             </div>
           </Form.Group>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
