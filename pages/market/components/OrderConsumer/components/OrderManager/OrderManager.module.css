@@ -10,6 +10,14 @@
     color: white;
 }
 
+@media (max-width: 1024px) {
+  .orderManagerContainer {
+    border: 1px solid rgba(87, 87, 87, 0.25);
+    margin-top: 2rem;
+    border-radius: 0.75rem;
+  }
+}
+
 .topMenuContainer {
     display: flex;
     width: 100%;

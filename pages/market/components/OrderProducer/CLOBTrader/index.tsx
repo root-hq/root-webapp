@@ -300,6 +300,7 @@ const CLOBTrader = ({
           let response = await walletState.sendTransaction(transaction, connection);
           green(<span>{`Transaction confirmed `}<Link href={`https://solscan.io/tx/${response}`} target="_blank">{` ↗️`}</Link></span>, 3_000)
           console.log("Signature: ", response);
+          resetAllFields();
         }
         catch(err) {
           console.log(`Error sending limit buy order: ${err.message}`);
@@ -361,6 +362,7 @@ const CLOBTrader = ({
           let response = await walletState.sendTransaction(transaction, connection);
           green(<span>{`Transaction confirmed `}<Link href={`https://solscan.io/tx/${response}`} target="_blank">{` ↗️`}</Link></span>, 3_000)
           console.log("Signature: ", response);
+          resetAllFields();
         }
         catch(err) {
           console.log(`Error sending limit sell order: ${err}`);

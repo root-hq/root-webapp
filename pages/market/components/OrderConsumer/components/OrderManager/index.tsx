@@ -212,11 +212,6 @@ const OrderManager = ({
             </div>
             <div className={styles.columnNamesOuterContainer}>
                 <div className={styles.columnNamesContainer}>
-                    {/* <div className={styles.columnNameRow}>
-                        <span className={styles.columnName}>
-                            {`Market`}
-                        </span>
-                    </div> */}
                     <div className={styles.columnNameRow}>
                         <span className={styles.columnName}>
                             {`Side`}
@@ -237,11 +232,11 @@ const OrderManager = ({
                             {`Total`}
                         </span>
                     </div>
-                    {/* <div className={styles.columnNameRow}>
+                    <div className={styles.columnNameRow}>
                         <span className={styles.columnName}>
                             {`Filled`}
                         </span>
-                    </div> */}
+                    </div>
                     <div className={styles.columnNameRow}>
                         <span className={styles.columnName}>
                             {`Cancel`}

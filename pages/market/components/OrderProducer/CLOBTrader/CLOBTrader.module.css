@@ -9,6 +9,13 @@
     box-sizing: border-box;
 }
 
+@media (max-width: 1024px) {
+  .clobTraderContainer {
+    border: 1px solid rgba(87, 87, 87, 0.25);
+    margin-top: 2rem;
+  }
+}
+
 .tabsContainer {
     width: 100%;
     display: flex;

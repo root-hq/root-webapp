@@ -17,44 +17,11 @@ const OrderView = ({
         <div className={styles.orderViewOuterContainer}>
             <div className={styles.orderViewContainer}>
                 <div className={styles.columnNameRow}>
-                    <span className={styles.columnName}>
-                        {
-                            enumeratedMarket ?
-                                <div className={styles.imageContainer}>
-                                    <div className={styles.tokenImageContainer}>
-                                        {enumeratedMarket.baseTokenMetadata && enumeratedMarket.baseTokenMetadata.img_url ? (
-                                            <Image
-                                                src={enumeratedMarket.baseTokenMetadata.img_url}
-                                                width={22}
-                                                height={22}
-                                                alt={`${enumeratedMarket.baseTokenMetadata.ticker} img`}
-                                                className={styles.tokenImage}
-                                            />
-                                        ) : (
-                                            <></>
-                                        )}
-                                    </div>
-                                    <div className={styles.tokenImageContainer}>
-                                        {enumeratedMarket.quoteTokenMetadata && enumeratedMarket.quoteTokenMetadata.img_url ? (
-                                            <Image
-                                            src={enumeratedMarket.quoteTokenMetadata.img_url}
-                                            width={22}
-                                            height={22}
-                                            alt={`${enumeratedMarket.quoteTokenMetadata.ticker} img`}
-                                            className={styles.tokenImage}
-                                            />
-                                        ) : (
-                                            <></>
-                                        )}
-                                    </div>
-                                </div>
-                            :
-                                <span></span>
-                        }
-                    </span>
-                </div>
-                <div className={styles.columnNameRow}>
-                    <span className={styles.columnName}>
+                    <span
+                        style = {{
+                            color: order.is_buy_order ? `#3DE383` : `#e33d3d`
+                        }}
+                    >
                         {
                             order ?
                                 order.is_buy_order ?
