@@ -70,11 +70,11 @@ export const BottomStatusProvider = ({ children }) => {
   }
 
   const red = async (status: React.JSX.Element, duration: number) => {
-    updateStatusCustom(status, duration, {color: '#e33d3d'}, {backgroundColor: '#150e11'});
+    updateStatusCustom(status, duration, {color: '#e33d3d'}, {backgroundColor: '#150e11', borderTop: `1px solid rgba(227, 61, 61, 0.25)`});
   }
 
   const green = async (status: React.JSX.Element, duration: number) => {
-    updateStatusCustom(status, duration, {color: '#3DE383'}, {backgroundColor: '#12211b'});
+    updateStatusCustom(status, duration, {color: '#3DE383'}, {backgroundColor: '#12211b', borderTop: `1px solid rgba(61, 227, 131, 0.25)`});
   }
 
   const value = {

@@ -10,7 +10,7 @@ import { EnumeratedMarketToMetadata } from "../../../../[market]";
 import { getPriorityFeeEstimate } from "../../../../../../utils/helius";
 import { web3 } from "@coral-xyz/anchor";
 import { ComputeBudgetProgram, Connection } from "@solana/web3.js";
-import { Client, getPhoenixEventsFromTransactionSignature } from "@ellipsis-labs/phoenix-sdk";
+import { Client } from "@ellipsis-labs/phoenix-sdk";
 import { useBottomStatus } from "../../../../../../components/BottomStatus";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -212,11 +212,11 @@ const OrderManager = ({
             </div>
             <div className={styles.columnNamesOuterContainer}>
                 <div className={styles.columnNamesContainer}>
-                    <div className={styles.columnNameRow}>
+                    {/* <div className={styles.columnNameRow}>
                         <span className={styles.columnName}>
                             {`Market`}
                         </span>
-                    </div>
+                    </div> */}
                     <div className={styles.columnNameRow}>
                         <span className={styles.columnName}>
                             {`Side`}
@@ -237,11 +237,11 @@ const OrderManager = ({
                             {`Total`}
                         </span>
                     </div>
-                    <div className={styles.columnNameRow}>
+                    {/* <div className={styles.columnNameRow}>
                         <span className={styles.columnName}>
                             {`Filled`}
                         </span>
-                    </div>
+                    </div> */}
                     <div className={styles.columnNameRow}>
                         <span className={styles.columnName}>
                             {`Cancel`}
@@ -272,7 +272,7 @@ const OrderManager = ({
                         </div>
                     :
                         <div className={styles.noOrderViewContainer}>
-                            <span>{`You have no active orders`}</span>
+                            <span>{`No active orders`}</span>
                         </div>
                 }
             </div>

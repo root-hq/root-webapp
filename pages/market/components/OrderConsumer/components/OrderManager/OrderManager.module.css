@@ -3,7 +3,6 @@
     flex-direction: column;
     align-items: center;
     border-right: 1px solid rgba(87, 87, 87, 0.25);
-    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
     box-sizing: border-box;
     /* border-radius: 0.75rem; */
     width: 100%;
@@ -253,8 +252,6 @@
 
 .columnNamesOuterContainer {
   width: 100%;
-  display: flex;
-  justify-content: center;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid rgba(87, 87, 87, 0.25);
 }
@@ -276,6 +273,8 @@
 
 .columnNameRow {
   display: flex;
+  width: 20%;
+  justify-content: center;
 }
 
 .columnName {
@@ -300,6 +299,14 @@
 
 .allOrderViewsContainer {
   width: 100%;
+}
+
+.noOrderViewContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  color: rgba(87, 87, 87, 1);
 }
 
 .spinnerBox {

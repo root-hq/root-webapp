@@ -109,7 +109,12 @@ const CLOBTrader = ({
   useEffect(() => {
     if(receiveUptoSize) {
       console.log("Receive upto size: ", receiveUptoSize);
-      updateStatus(<span>{`Buying ${receiveUptoSize} ${isBuyOrder ? baseTokenMetadata.ticker : quoteTokenMetadata.ticker}`}</span>);
+      updateStatus(
+        <div>
+          <span style = {{color: `#3DE383`}}>{`+ ${receiveUptoSize} ${isBuyOrder ? baseTokenMetadata.ticker : quoteTokenMetadata.ticker}`}</span>
+          <span style = {{color: `#e33d3d`, marginLeft: `1rem`}}>{`- ${sendUptoSize} ${isBuyOrder ? quoteTokenMetadata.ticker : baseTokenMetadata.ticker}`}</span>
+        </div>
+      );
     }
     else {
       resetStatus();
@@ -376,7 +381,11 @@ const CLOBTrader = ({
   }
   
   return (
-    <div className={styles.clobTraderContainer}>
+    <div className={styles.clobTraderContainer}
+      // style={{
+      //   filter: walletState.connected ? `` : `blur(5px)`
+      // }}
+    >
        <div className={styles.tabsContainer}>
             <div className={styles.buyTabContainer}>
                 <button
@@ -538,9 +547,7 @@ const CLOBTrader = ({
           </div>
           </Form.Group>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
-            {
-              walletState.connected ?
-                <div className={styles.placeOrderButtonContainer}>
+            <div className={styles.placeOrderButtonContainer}>
                   <Button
                     className={styles.placeOrderButton}
                     disabled={!walletState.connected}
@@ -568,9 +575,6 @@ const CLOBTrader = ({
                     }
                   </Button>
                 </div>
-              :
-                <></>
-            }
           </Form.Group>
         </Form>
     </div>
