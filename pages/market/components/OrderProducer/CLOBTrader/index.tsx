@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "./CLOBTrader.module.css";
-import { JUPITER_V6_PROGRAM, MAX_BPS, OrderType, ROOT_PROTOCOL_FEE_BPS, WRAPPED_SOL_MAINNET, getAllOrderTypes, getOrderTypeText } from '../../../../../constants';
+import { MAX_BPS, ROOT_PROTOCOL_FEE_BPS, WRAPPED_SOL_MAINNET } from '../../../../../constants';
 import { SpotGridMarket, TokenMetadata } from '../../../../../utils/supabase';
 import { ComputeBudgetProgram, Connection, LAMPORTS_PER_SOL, VersionedTransaction } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { web3 } from '@coral-xyz/anchor';
-import { delay, formatNumbersWithCommas, removeCommas } from '../../../../../utils';
+import { formatNumbersWithCommas, removeCommas } from '../../../../../utils';
 import { Button, Form } from 'react-bootstrap';
 import dynamic from "next/dynamic";
 const KeyValueComponent = dynamic(() => import("../../../../../components/KeyValueComponent/index"));
@@ -14,7 +14,6 @@ import { KeyValueJustification } from '../../../../../components/KeyValueCompone
 import Image from 'next/image';
 import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getCreateTokenAccountInstructions } from '@ellipsis-labs/phoenix-sdk';
 import {BN } from "@coral-xyz/anchor";
-import { fetchQuote, swapOnJupiterTx } from '../../../../../utils/jupiter';
 import { getPriorityFeeEstimate } from '../../../../../utils/helius';
 import { useBottomStatus } from '../../../../../components/BottomStatus';
 
@@ -38,10 +37,6 @@ const CLOBTrader = ({
     phoenixClient
 }: CLOBTraderProps) => {
   const [isBuyOrder, setIsBuyOrder] = useState(true);
-  const [orderType, setOrderType] = useState<OrderType>(OrderType.Limit);
-  
-  const dropdownRef = useRef(null);
-  const [isOrderTypeDropdownOpen, setOrderTypeDropdownOpen] = useState(false);
 
   const [baseTokenBalance, setBaseTokenBalance] = useState(0.0);
   const [quoteTokenBalance, setQuoteTokenBalance] = useState(0.0);
@@ -109,22 +104,6 @@ const CLOBTrader = ({
 
     updateBalance();
   }, [spotGridMarket, walletState, connection, baseTokenMetadata, quoteTokenMetadata]);
-  
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOrderTypeDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  let allOrderTypes = getAllOrderTypes();
 
   const handleBuySellToggle = (type: string) => {
     if(type === "buy") {
@@ -136,14 +115,6 @@ const CLOBTrader = ({
         resetAllFields()
     }
   }
-
-  const handleOrderTypeUpdate = (
-    newOrderType: OrderType
-  ) => {
-    
-    setOrderType(_ => newOrderType);
-    resetAllFields();
-  };
 
   const handleLimitPriceChange = (e) => {
     e.preventDefault();
@@ -219,8 +190,7 @@ const CLOBTrader = ({
 
     formatNumbersWithCommas(sendUptoSize, setSendUptoSize);  
 
-    if(orderType === OrderType.Limit) {
-      let limitPriceFloat = 0.0;
+    let limitPriceFloat = 0.0;
       if(limitPrice) {
         limitPriceFloat = parseFloat(limitPrice);
       }
@@ -241,21 +211,6 @@ const CLOBTrader = ({
           formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setReceiveUptoSize);
         }
       }
-    }
-    else if(orderType === OrderType.Market && sendUptoSizeFloat > 0.0) {
-      if(isBuyOrder) {
-        formatNumbersWithCommas(sendUptoSize, setSendUptoSize);  
-        fetchAndSetJupiterQuote(quoteTokenMetadata, baseTokenMetadata, sendUptoSizeFloat, setReceiveUptoSize);
-      }
-      else {
-        formatNumbersWithCommas(sendUptoSize, setSendUptoSize);  
-        fetchAndSetJupiterQuote(baseTokenMetadata, quoteTokenMetadata, sendUptoSizeFloat, setReceiveUptoSize);
-      }
-    }
-    else {
-      setSendUptoSize(_ => "");
-      setReceiveUptoSize(_ => "");
-    }
   };
 
   const handleReceiveUptoSizeChange = (e?: any, size?: any) => {
@@ -275,56 +230,36 @@ const CLOBTrader = ({
 
     let receiveUptoSizeFloat = parseFloat(receiveUptoSize);
 
-    if(orderType === OrderType.Limit) {
-      let limitPriceFloat = 0.0;
-      if(limitPrice) {
-        limitPriceFloat = parseFloat(limitPrice);
-      }
-  
-      if(limitPriceFloat && receiveUptoSizeFloat) {
-        let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
-  
-          if(isBuyOrder) {
-            let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) * parseFloat(removeCommas(limitPrice));
-  
-            let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
-            formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setSendUptoSize);
-          }
-          else {
-            let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) / parseFloat(removeCommas(limitPrice));
-  
-            let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
-            formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setSendUptoSize);
-          }
-      }
-  
-      formatNumbersWithCommas(receiveUptoSize, setReceiveUptoSize);  
+    let limitPriceFloat = 0.0;
+    if(limitPrice) {
+      limitPriceFloat = parseFloat(limitPrice);
     }
+
+    if(limitPriceFloat && receiveUptoSizeFloat) {
+      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
+
+        if(isBuyOrder) {
+          let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) * parseFloat(removeCommas(limitPrice));
+
+          let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
+          formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setSendUptoSize);
+        }
+        else {
+          let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) / parseFloat(removeCommas(limitPrice));
+
+          let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
+          formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setSendUptoSize);
+        }
+    }
+
+    formatNumbersWithCommas(receiveUptoSize, setReceiveUptoSize);  
+
   }
 
   const handlePlaceLimitOrderAction = async () => {
     let marketAddress = spotGridMarket.phoenix_market_address.toString();
 
-    if(orderType === OrderType.Market && sendUptoSize) {
-      if(!phoenixClient) {
-        // console.log("PHOENIX CLIENT NOT SET");
-        return;
-      }
-
-      if(isBuyOrder) {
-        // console.log("Market buy");
-        setIsPlaceOrderButtonLoading(_ => true);
-        await delay(3_000);
-        setIsPlaceOrderButtonLoading(_ => false);
-      }
-      else {
-        // console.log("Market sell");
-        setIsPlaceOrderButtonLoading(_ => true);
-        await delay(3_000);
-        setIsPlaceOrderButtonLoading(_ => false);
-      }
-    }
-    else if(orderType === OrderType.Limit && limitPrice && sendUptoSize) {
+    if(limitPrice && sendUptoSize) {
       let priorityFeeLevels = null;
 
       try {
@@ -469,112 +404,11 @@ const CLOBTrader = ({
     }
   }
 
-  const handlePlaceMarketOrderAction = async () => {
-    setIsPlaceOrderButtonLoading(_ => true);
-    if(orderType === OrderType.Market) {
-
-      let serializedTx = null;
-
-      let priorityFeeLevels = 0;
-
-      try {
-        let levels = (await getPriorityFeeEstimate([JUPITER_V6_PROGRAM])).priorityFeeLevels;
-        priorityFeeLevels = levels["high"];
-      }
-      catch(err) {
-        console.log(`Error fetching priority fee levels`);
-      }
-
-      updateStatus(<span>{`Preparing swap transaction...`}</span>);
-      if(isBuyOrder) {
-        let size = parseFloat(sendUptoSize) * Math.pow(10, quoteTokenMetadata.decimals);
-
-        const tx = await swapOnJupiterTx({
-          userPublicKey: walletState.publicKey.toString(),
-          inputMint: quoteTokenMetadata.mint,
-          outputMint: baseTokenMetadata.mint,
-          amountIn: size,
-          slippage: 1,
-          priorityFeeInMicroLamportsPerUnit: priorityFeeLevels
-        });
-
-        serializedTx = tx;
-      }
-      else {
-        let size = parseFloat(sendUptoSize) * Math.pow(10, baseTokenMetadata.decimals);
-
-        const tx = await swapOnJupiterTx({
-          userPublicKey: walletState.publicKey.toString(),
-          inputMint: baseTokenMetadata.mint,
-          outputMint: quoteTokenMetadata.mint,
-          amountIn: size,
-          slippage: 1,
-          priorityFeeInMicroLamportsPerUnit: priorityFeeLevels
-        });
-
-        serializedTx = tx;
-      }
-
-      try {
-        if(serializedTx) {
-          const swapTransactionBuf = Buffer.from(serializedTx, 'base64');
-          var transaction = VersionedTransaction.deserialize(swapTransactionBuf);          
-  
-          const {
-            context: { slot: minContextSlot },
-            value: { blockhash, lastValidBlockHeight }
-          } = await connection.getLatestBlockhashAndContext();
-  
-          updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
-          let response = await walletState.sendTransaction(transaction, connection, { minContextSlot, skipPreflight: true });
-          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
-          console.log("Signature: ", response);
-        }
-      }
-      catch(err) {
-        console.log(`Error preparing Jupiter swap tx: ${err.message}`);
-        red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
-      }
-    }
-    // resetStatus();
-    setIsPlaceOrderButtonLoading(_ => false);
-  }
-
-  const toggleOrderTypeDropdown = () => {
-    setOrderTypeDropdownOpen(!isOrderTypeDropdownOpen);
-  };
-
   // Reset all fields
   const resetAllFields = () => {
     setLimitPrice("")
     setSendUptoSize("");
     setReceiveUptoSize("");
-  }
-
-  const fetchAndSetJupiterQuote = async(
-    from: TokenMetadata,
-    to: TokenMetadata,
-    size: number,
-    setter: React.Dispatch<React.SetStateAction<string>>
-  ) => {
-    try {
-      const jupiterQuote = await fetchQuote(
-        from.mint,
-        to.mint,
-        size * (Math.pow(10, from.decimals)),
-        1
-      );
-
-      const outAmount = jupiterQuote.outAmount;
-      const outAmountFormatted = (new BN(outAmount)).toNumber();
-      const quote = outAmountFormatted / (Math.pow(10, to.decimals));
-
-      setter(_ => quote.toString());
-    }
-    catch(err) {
-      console.log("Error fetching and setting Jupiter quote: ", err);
-      setter(_ => "");
-    }
   }
   
   return (
@@ -619,61 +453,9 @@ const CLOBTrader = ({
             >Reset</span>
           </div>
         </div>
-       {/* <div className={styles.orderTypeChooseContainer} ref={dropdownRef}>
-            <div
-                className={styles.dropdownButtonContainer}
-                onClick={
-                    () => {
-                        toggleOrderTypeDropdown()
-                    }
-                }
-            >
-                <button className={styles.dropdownButton}>
-                    <div className={styles.dropdownInnerContainer}>
-                        <span>{getOrderTypeText(orderType)}</span>
-                        <div className={styles.caretContainer}>
-                            {isOrderTypeDropdownOpen ? (
-                            <i className="fa-solid fa-caret-up"></i>
-                            ) : (
-                            <i className="fa-solid fa-caret-down"></i>
-                            )}
-                        </div>
-                    </div>
-                </button>
-            </div>
-            <div>
-              {
-                isOrderTypeDropdownOpen ?
-                  <div className={styles.dropdownButtonSecondaryContainer}>
-                    {
-                      allOrderTypes.map((type) => {
-                        if(type !== orderType) {
-                          return (
-                            <button key = {type.toString()} className={styles.dropdownButtonSecondary} onClick={
-                              () => {
-                                  toggleOrderTypeDropdown()
-                                  handleOrderTypeUpdate(type)
-                              }
-                            }>
-                              <div className={styles.dropdownInnerContainer}>
-                                <span>{getOrderTypeText(type)}</span>
-                              </div>
-                            </button>
-                          )
-                        }
-                      })
-                    }
-                  </div>
-                :
-                  <></>
-              }
-            </div>
-      </div> */}
        <Form>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
-            {
-              orderType === OrderType.Limit ?
-                <div className={styles.formLabelAndFieldContainer}>
+          <div className={styles.formLabelAndFieldContainer}>
                   <Form.Label className={styles.formLabelContainer}>
                     <span>Limit price</span>
                   </Form.Label>
@@ -697,9 +479,6 @@ const CLOBTrader = ({
                     value={limitPrice} // Use inputText instead of inputAmount to show the decimal value
                   />
                 </div>
-              :
-                <></>
-            }
           </Form.Group>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
             <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
@@ -812,7 +591,6 @@ const CLOBTrader = ({
               </Form.Label>
               <Form.Control
                 placeholder={`0.00 ${isBuyOrder ? baseTokenMetadata ? baseTokenMetadata.ticker : '' : quoteTokenMetadata ? quoteTokenMetadata.ticker : ''}`}
-                disabled={orderType === OrderType.Market}
                 style={{
                   backgroundColor: "transparent",
                   fontSize: "1.1rem",
@@ -834,9 +612,7 @@ const CLOBTrader = ({
             </div>
           </Form.Group>
           <div className={styles.tradeInfoContainer}>
-            {
-              orderType === OrderType.Limit ?
-                <KeyValueComponent 
+              <KeyValueComponent 
                   keyElement={
                     <p>Total fee</p>
                   }
@@ -863,9 +639,6 @@ const CLOBTrader = ({
                     }
                   }
                 />
-              :
-                <></>
-            }
           </div>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
             {
@@ -875,12 +648,7 @@ const CLOBTrader = ({
                     className={styles.placeOrderButton}
                     disabled={!walletState.connected}
                     onClick={() => {
-                      if(orderType === OrderType.Limit) {
-                        handlePlaceLimitOrderAction()
-                      }
-                      else if(orderType === OrderType.Market) {
-                        handlePlaceMarketOrderAction()
-                      }
+                      handlePlaceLimitOrderAction()
                     }}
                     style={{
                       backgroundColor: isBuyOrder ? 'rgba(61, 227, 131, 0.10)' : 'rgba(227, 61, 61, 0.10)',
