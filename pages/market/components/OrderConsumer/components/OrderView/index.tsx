@@ -49,7 +49,7 @@ const OrderView = ({
       walletState.connected
     ) {
       let marketAddress =
-        enumeratedMarket.spotGridMarket.phoenix_market_address.toString();
+        enumeratedMarket.spotGridMarket.phoenix_market_address;
 
       let priorityFeeLevels = null;
 
@@ -98,9 +98,9 @@ const OrderView = ({
           phxClient = phoenixClient;
         }
 
-        let priceInTicksBN = new BN(order.price_in_ticks.toString());
+        let priceInTicksBN = new BN(order.price_in_ticks);
         let orderSequenceNumberBN = new BN(
-          order.order_sequence_number.toString(),
+          order.order_sequence_number,
         );
 
         let cancelOrderIx = phxClient.createCancelMultipleOrdersByIdInstruction(
@@ -159,10 +159,10 @@ const OrderView = ({
 
   useEffect(() => {
     if(enumeratedMarket) {
-      let floatPrice = phoenixClient.ticksToFloatPrice(parseInt(order.price_in_ticks.toString()), enumeratedMarket.spotGridMarket.phoenix_market_address.toString());
-      let floatSizeInBaseUnits = phoenixClient.baseLotsToBaseAtoms(parseInt(order.size_in_base_lots.toString()), enumeratedMarket.spotGridMarket.phoenix_market_address.toString()) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
+      let floatPrice = phoenixClient.ticksToFloatPrice(parseInt(order.price_in_ticks), enumeratedMarket.spotGridMarket.phoenix_market_address);
+      let floatSizeInBaseUnits = phoenixClient.baseLotsToBaseAtoms(parseInt(order.size_in_base_lots), enumeratedMarket.spotGridMarket.phoenix_market_address) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
       let floatTotalSizeInQuoteUnits = floatPrice * floatSizeInBaseUnits;
-      let fillSizeInBaseUnits =  phoenixClient.baseLotsToBaseAtoms(parseInt(order.fill_size_in_base_lots.toString()), enumeratedMarket.spotGridMarket.phoenix_market_address.toString()) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
+      let fillSizeInBaseUnits =  phoenixClient.baseLotsToBaseAtoms(parseInt(order.fill_size_in_base_lots), enumeratedMarket.spotGridMarket.phoenix_market_address) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
 
       setFloatPrice(_ => floatPrice);
       setFloatSizeInBaseUnits(_ => floatSizeInBaseUnits);

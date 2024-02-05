@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Order, SpotGridMarket } from ".";
+import { Order } from ".";
 
 export const addOrder = async (order: Order): Promise<boolean> => {
   try {
@@ -34,7 +34,7 @@ export const addOrder = async (order: Order): Promise<boolean> => {
 };
 
 export const getAllOrdersForTrader = async (
-  trader: String,
+  trader: string,
 ): Promise<Order[]> => {
   try {
     const response = await axios.get(

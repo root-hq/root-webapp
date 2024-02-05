@@ -25,7 +25,7 @@ export const getPosition = async (
 };
 
 export const getPositionsForOwner = async (
-  ownerAddress: String,
+  ownerAddress: string,
 ): Promise<SpotGridPosition[]> => {
   try {
     const response = await axios.get(

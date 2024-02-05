@@ -77,7 +77,7 @@ const MarketPage = ({
           const client = await Client.create(connection);
 
           client.addMarket(
-            spotGridMarketOnPage.phoenix_market_address.toString(),
+            spotGridMarketOnPage.phoenix_market_address,
           );
           // console.log("New client initialized");
           // console.log("Client: ", client);
@@ -151,11 +151,11 @@ export const getServerSideProps = async ({ params }) => {
   if (allSpotGridMarkets && allSpotGridMarkets.length > 0) {
     allSpotGridMarkets.forEach((market) => {
       let baseMetadata = allTokenMetadata.find((value) => {
-        return value.mint === market.base_token_mint.toString();
+        return value.mint === market.base_token_mint;
       });
 
       let quoteMetadata = allTokenMetadata.find((value) => {
-        return value.mint === market.quote_token_mint.toString();
+        return value.mint === market.quote_token_mint;
       });
 
       if (
@@ -163,12 +163,12 @@ export const getServerSideProps = async ({ params }) => {
         spotGridMarketOnPage.spot_grid_market_address
       ) {
         baseTokenMetadata = allTokenMetadata.find((value) => {
-          return value.mint === spotGridMarketOnPage.base_token_mint.toString();
+          return value.mint === spotGridMarketOnPage.base_token_mint;
         });
 
         quoteTokenMetadata = allTokenMetadata.find((value) => {
           return (
-            value.mint === spotGridMarketOnPage.quote_token_mint.toString()
+            value.mint === spotGridMarketOnPage.quote_token_mint
           );
         });
       }

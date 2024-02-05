@@ -178,7 +178,7 @@ const CLOBTrader = ({
     }
 
     if (limitPriceFloat && sendUptoSizeFloat) {
-      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
+      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps);
 
       if (isBuyOrder) {
         let receivingAmount =
@@ -206,7 +206,7 @@ const CLOBTrader = ({
     }
 
     if (limitPriceFloat && receiveUptoSizeFLoat) {
-      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
+      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps);
 
       if (isBuyOrder) {
         let sendingAmount =
@@ -258,7 +258,7 @@ const CLOBTrader = ({
     }
 
     if (limitPriceFloat && sendUptoSizeFloat) {
-      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
+      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps);
 
       if (isBuyOrder) {
         let receivingAmount =
@@ -288,7 +288,7 @@ const CLOBTrader = ({
 
   const handlePlaceLimitOrderAction = async () => {
     setIsPlaceOrderButtonLoading((_) => true);
-    let marketAddress = spotGridMarket.phoenix_market_address.toString();
+    let marketAddress = spotGridMarket.phoenix_market_address;
 
     if (limitPrice && sendUptoSize) {
       let priorityFeeLevels = null;
@@ -661,7 +661,7 @@ const CLOBTrader = ({
                 keyElementStyle={{}}
                 valueElement={
                   spotGridMarket ? (
-                    <p>{`${(parseFloat(spotGridMarket.taker_fee_bps.toString()) + ROOT_PROTOCOL_FEE_BPS) / 100}%`}</p>
+                    <p>{`${(parseFloat(spotGridMarket.taker_fee_bps) + ROOT_PROTOCOL_FEE_BPS) / 100}%`}</p>
                   ) : (
                     <p>{`-%`}</p>
                   )

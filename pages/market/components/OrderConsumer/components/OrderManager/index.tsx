@@ -49,7 +49,7 @@ const OrderManager = ({
       walletState.connected
     ) {
       let marketAddress =
-        enumeratedMarket.spotGridMarket.phoenix_market_address.toString();
+        enumeratedMarket.spotGridMarket.phoenix_market_address;
 
       let priorityFeeLevels = null;
 
@@ -169,7 +169,7 @@ const OrderManager = ({
             const client = await Client.create(connection);
 
             client.addMarket(
-              enumeratedMarket.spotGridMarket.phoenix_market_address.toString(),
+              enumeratedMarket.spotGridMarket.phoenix_market_address,
             );
             // console.log("New client initialized");
             // console.log("Client: ", client);
@@ -179,7 +179,7 @@ const OrderManager = ({
 
           orders = await getOpenOrdersForTrader(
             phxClient,
-            enumeratedMarket.spotGridMarket.phoenix_market_address.toString(),
+            enumeratedMarket.spotGridMarket.phoenix_market_address,
             walletState.publicKey.toString(),
           );
           // console.log("orders: ", orders);
@@ -265,7 +265,7 @@ const OrderManager = ({
               if (order) {
                 return (
                   <div
-                    key={parseInt(order.order_sequence_number.toString())}
+                    key={parseInt(order.order_sequence_number)}
                     className={styles.orderViewContainer}
                   >
                     <OrderView

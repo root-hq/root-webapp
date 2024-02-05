@@ -2,7 +2,7 @@ import axios from "axios";
 import { SpotGridMarket } from ".";
 
 export const getMarket = async (
-  marketAddress: String,
+  marketAddress: string,
 ): Promise<SpotGridMarket> => {
   try {
     const response = await axios.get(
@@ -25,7 +25,7 @@ export const getMarket = async (
 };
 
 export const getMarketForPhoenixMarket = async (
-  phoenixMarketAddress: String,
+  phoenixMarketAddress: string,
 ): Promise<SpotGridMarket> => {
   try {
     const response = await axios.get(

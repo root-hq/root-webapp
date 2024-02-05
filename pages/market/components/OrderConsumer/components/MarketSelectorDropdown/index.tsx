@@ -145,7 +145,7 @@ const MarketSelectorDropdown = ({
           {enumeratedMarkets.map((enumeratedMarket, index) => (
             <div
               className={styles.otherMarketRowContainer}
-              key={enumeratedMarket.spotGridMarket.phoenix_market_address.toString()}
+              key={enumeratedMarket.spotGridMarket.phoenix_market_address}
               onClick={() =>
                 handleMarketChange(
                   enumeratedMarket.spotGridMarket,

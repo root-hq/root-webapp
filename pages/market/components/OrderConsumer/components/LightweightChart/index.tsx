@@ -66,7 +66,7 @@ const LightweightChart = ({
         let newMidPrice = parseFloat(
           (
             await getMarketMidPrice(
-              selectedSpotGridMarket.phoenix_market_address.toString(),
+              selectedSpotGridMarket.phoenix_market_address,
             )
           ).toString(),
         );
@@ -99,7 +99,7 @@ const LightweightChart = ({
 
       if (selectedSpotGridMarket) {
         rawData = await getTokenPriceDataWithDate(
-          selectedSpotGridMarket.phoenix_market_address.toString(),
+          selectedSpotGridMarket.phoenix_market_address,
           date,
         );
       }
@@ -189,7 +189,7 @@ const LightweightChart = ({
           if (selectedSpotGridMarket) {
             try {
               rawData = await getTokenPriceDataWithDate(
-                selectedSpotGridMarket.phoenix_market_address.toString(),
+                selectedSpotGridMarket.phoenix_market_address,
                 oneLess,
               );
             } catch (err) {

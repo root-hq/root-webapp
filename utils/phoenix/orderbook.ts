@@ -98,13 +98,13 @@ export const getOpenOrdersForTrader = async (
       );
       if (traderKey && traderKey === trader) {
         return {
-          order_sequence_number: order[0].orderSequenceNumber.toString(),
+          order_sequence_number: order[0].orderSequenceNumber,
           order_type: "LIMIT",
           phoenix_market_address: marketAddress,
           trader: trader,
-          price_in_ticks: order[0].priceInTicks.toString(),
-          size_in_base_lots: order[1].numBaseLots.toString(),
-          fill_size_in_base_lots: order[1].numBaseLots.toString(),
+          price_in_ticks: order[0].priceInTicks,
+          size_in_base_lots: order[1].numBaseLots,
+          fill_size_in_base_lots: order[1].numBaseLots,
           place_timestamp: "0",
           status: "status",
           is_buy_order: true,
@@ -117,13 +117,13 @@ export const getOpenOrdersForTrader = async (
       let traderKey = book.data.traderIndexToTraderPubkey.get(traderIndex);
       if (traderKey && traderKey === trader) {
         return {
-          order_sequence_number: order[0].orderSequenceNumber.toString(),
+          order_sequence_number: order[0].orderSequenceNumber,
           order_type: "LIMIT",
           phoenix_market_address: marketAddress,
           trader: trader,
-          price_in_ticks: order[0].priceInTicks.toString(),
-          size_in_base_lots: order[1].numBaseLots.toString(),
-          fill_size_in_base_lots: order[1].numBaseLots.toString(),
+          price_in_ticks: order[0].priceInTicks,
+          size_in_base_lots: order[1].numBaseLots,
+          fill_size_in_base_lots: order[1].numBaseLots,
           place_timestamp: "0",
           status: "status",
           is_buy_order: false,

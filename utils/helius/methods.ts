@@ -1,4 +1,4 @@
-export const getPriorityFeeEstimate = async (accountsToTrack: String[]) => {
+export const getPriorityFeeEstimate = async (accountsToTrack: string[]) => {
   const response = await fetch(process.env.RPC_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
