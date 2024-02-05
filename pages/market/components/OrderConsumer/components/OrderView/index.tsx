@@ -169,27 +169,32 @@ const OrderView = ({
       setFloatTotalSizeInQuoteUnits(_ => floatTotalSizeInQuoteUnits);
       setFillSizeInBaseUnits(_ => fillSizeInBaseUnits);
     }
-  }, [order, phoenixClient, connection]);
+  }, [order, phoenixClient, connection, enumeratedMarket]);
 
   return (
     <div className={styles.orderViewOuterContainer}>
       <div className={styles.orderViewContainer}>
         <div className={styles.columnNameRow}>
-          <span
-            style={{
-              color: order.is_buy_order ? `#3DE383` : `#e33d3d`,
-            }}
-          >
-            {order ? (
-              order.is_buy_order ? (
-                <span>{`BUY`}</span>
-              ) : (
-                <span>{`SELL`}</span>
-              )
-            ) : (
-              <></>
-            )}
-          </span>
+          {
+            order ?
+              <span
+                style={{
+                  color: order.is_buy_order ? `#3DE383` : `#e33d3d`,
+                }}
+              >
+                {order ? (
+                  order.is_buy_order ? (
+                    <span>{`BUY`}</span>
+                  ) : (
+                    <span>{`SELL`}</span>
+                  )
+                ) : (
+                  <></>
+              )}
+            </span>
+            :
+            <></>
+          }
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>

@@ -205,7 +205,7 @@ const OrderManager = ({
     }, ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS);
 
     return () => clearInterval(intervalId);
-  }, [walletState]);
+  }, [walletState, enumeratedMarket]);
 
   return (
     <div className={styles.orderManagerContainer}>

@@ -1,8 +1,9 @@
+import Image from "next/image";
 import React from "react";
 
 const Logo = () => {
   return (
-    <img
+    <Image
       src="/images/root-logo.png"
       alt="Logo"
       style={{
