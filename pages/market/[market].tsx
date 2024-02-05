@@ -1,8 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarketPage.module.css";
 
-const OrderConsumer = dynamic(() => import('./components/OrderConsumer'), { ssr: false });
-const CLOBTrader = dynamic(() => import('./components/OrderProducer/CLOBTrader'), { ssr: false });
+const OrderConsumer = dynamic(() => import("./components/OrderConsumer"), {
+  ssr: false,
+});
+const CLOBTrader = dynamic(
+  () => import("./components/OrderProducer/CLOBTrader"),
+  { ssr: false },
+);
 
 import {
   SpotGridMarket,
@@ -42,7 +47,6 @@ const MarketPage = ({
   baseTokenMetadata,
   quoteTokenMetadata,
 }: MarketPageProps) => {
-
   const seriesManager = useRef<SeriesManagerInstance>(null);
   const [phoenixClient, setPhoenixClient] = useState<Client>(null);
   const chartManager = useRef<IChartApi>(null);
@@ -56,21 +60,23 @@ const MarketPage = ({
     setSelectedSpotGridMarket((prev) => spotGridMarketOnPage);
   }, [spotGridMarketOnPage]);
 
-
   let connection: Connection;
-  if(process.env.RPC_ENDPOINT) {
-    connection = new Connection(process.env.RPC_ENDPOINT, { commitment: "processed" });
-  }
-  else {
-    connection = new Connection(`https://api.mainnet-beta.solana.com/`, { commitment: "processed" });
+  if (process.env.RPC_ENDPOINT) {
+    connection = new Connection(process.env.RPC_ENDPOINT, {
+      commitment: "processed",
+    });
+  } else {
+    connection = new Connection(`https://api.mainnet-beta.solana.com/`, {
+      commitment: "processed",
+    });
   }
 
   useEffect(() => {
-    const setupPhoenixClient = async() => {
-      if(spotGridMarketOnPage) {
-        if(!phoenixClient) {
+    const setupPhoenixClient = async () => {
+      if (spotGridMarketOnPage) {
+        if (!phoenixClient) {
           let endpoint = process.env.RPC_ENDPOINT;
-          if(!endpoint) {
+          if (!endpoint) {
             endpoint = `https://api.mainnet-beta.solana.com`;
           }
 
@@ -80,17 +86,18 @@ const MarketPage = ({
 
           const client = await Client.create(connection);
 
-          client.addMarket(spotGridMarketOnPage.phoenix_market_address.toString());
+          client.addMarket(
+            spotGridMarketOnPage.phoenix_market_address.toString(),
+          );
           // console.log("New client initialized");
           // console.log("Client: ", client);
-          setPhoenixClient(_ => client);
+          setPhoenixClient((_) => client);
         }
       }
-    }
+    };
 
     setupPhoenixClient();
   }, [spotGridMarketOnPage, connection]);
-
 
   return (
     <div className={styles.marketPageContainer} suppressHydrationWarning>
@@ -108,7 +115,12 @@ const MarketPage = ({
         />
       </div>
       <div className={styles.orderProducerContainer} suppressHydrationWarning>
-        <CLOBTrader spotGridMarket={selectedSpotGridMarket} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata} phoenixClient={phoenixClient}/>
+        <CLOBTrader
+          spotGridMarket={selectedSpotGridMarket}
+          baseTokenMetadata={baseTokenMetadata}
+          quoteTokenMetadata={quoteTokenMetadata}
+          phoenixClient={phoenixClient}
+        />
       </div>
     </div>
   );

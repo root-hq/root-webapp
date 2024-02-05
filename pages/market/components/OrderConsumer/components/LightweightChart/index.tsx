@@ -56,7 +56,10 @@ const LightweightChart = ({
 
   useEffect(() => {
     const refreshPriceData = async () => {
-      if(lastFetchTimestamp.current + PRICE_REFRESH_FREQUENCY_IN_MS < Date.now()) {
+      if (
+        lastFetchTimestamp.current + PRICE_REFRESH_FREQUENCY_IN_MS <
+        Date.now()
+      ) {
         if (!selectedSpotGridMarket) {
           return;
         }
@@ -67,13 +70,14 @@ const LightweightChart = ({
             )
           ).toString(),
         );
-  
+
         if (newMidPrice) {
           seriesManagerHandler.current.update({
             time: Math.floor(Date.now() / 1000) as Time,
             value: newMidPrice,
           });
-        }      }
+        }
+      }
     };
 
     refreshPriceData();
@@ -137,40 +141,45 @@ const LightweightChart = ({
       timeScale: {
         visible: true,
         timeVisible: true,
-        secondsVisible: true
+        secondsVisible: true,
       },
       width: chartContainerRef.current.clientWidth,
       // width: 800,
       height: 350,
     });
     chart.timeScale().fitContent();
-    
+
     chart.applyOptions({
       watermark: {
         visible: true,
         fontSize: 48,
-        horzAlign: 'center',
-        vertAlign: 'center',
-        color: 'rgba(87, 87, 87, 0.08)',
-        text: 'root.exchange',
-        fontStyle: 'bold'
+        horzAlign: "center",
+        vertAlign: "center",
+        color: "rgba(87, 87, 87, 0.08)",
+        text: "root.exchange",
+        fontStyle: "bold",
       },
     });
 
     const handleScrollChange = async () => {
       const visibleLogicalRange = chart.timeScale().getVisibleLogicalRange();
-      if(visibleLogicalRange.from < 0) {
-        const barsInfo = seriesManagerHandler.current.barsInLogicalRange(chart.timeScale().getVisibleLogicalRange());
+      if (visibleLogicalRange.from < 0) {
+        const barsInfo = seriesManagerHandler.current.barsInLogicalRange(
+          chart.timeScale().getVisibleLogicalRange(),
+        );
         let leastDisplayedBar = parseInt(barsInfo.from.toString());
 
-        if(!leastDisplayDate.current) {
+        if (!leastDisplayDate.current) {
           let today = new Date();
           today.setDate(today.getDate());
 
           leastDisplayDate.current = today;
         }
 
-        if(!leastKnownBar.current || leastDisplayedBar < leastKnownBar.current) {
+        if (
+          !leastKnownBar.current ||
+          leastDisplayedBar < leastKnownBar.current
+        ) {
           leastKnownBar.current = leastDisplayedBar;
           var oneLess = new Date();
           oneLess.setDate(leastDisplayDate.current.getDate() - 1);
@@ -183,8 +192,7 @@ const LightweightChart = ({
                 selectedSpotGridMarket.phoenix_market_address.toString(),
                 oneLess,
               );
-            }
-            catch(err) {
+            } catch (err) {
               rawData = [];
             }
           }
@@ -201,7 +209,7 @@ const LightweightChart = ({
           lastFetchTimestamp.current = Date.now();
         }
       }
-    }
+    };
 
     chart.timeScale().subscribeVisibleLogicalRangeChange(handleScrollChange);
 

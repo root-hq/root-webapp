@@ -1,22 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import styles from "./CLOBTrader.module.css";
-import { MAX_BPS, ROOT_PROTOCOL_FEE_BPS, WRAPPED_SOL_MAINNET } from '../../../../../constants';
-import { SpotGridMarket, TokenMetadata } from '../../../../../utils/supabase';
-import { ComputeBudgetProgram, Connection, LAMPORTS_PER_SOL, VersionedTransaction } from '@solana/web3.js';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { getAssociatedTokenAddress } from '@solana/spl-token';
-import { web3 } from '@coral-xyz/anchor';
-import { formatNumbersWithCommas, removeCommas } from '../../../../../utils';
-import { Button, Form } from 'react-bootstrap';
+import {
+  MAX_BPS,
+  ROOT_PROTOCOL_FEE_BPS,
+  WRAPPED_SOL_MAINNET,
+} from "../../../../../constants";
+import { SpotGridMarket, TokenMetadata } from "../../../../../utils/supabase";
+import {
+  ComputeBudgetProgram,
+  Connection,
+  LAMPORTS_PER_SOL,
+  VersionedTransaction,
+} from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { getAssociatedTokenAddress } from "@solana/spl-token";
+import { web3 } from "@coral-xyz/anchor";
+import { formatNumbersWithCommas, removeCommas } from "../../../../../utils";
+import { Button, Form } from "react-bootstrap";
 import dynamic from "next/dynamic";
-const KeyValueComponent = dynamic(() => import("../../../../../components/KeyValueComponent/index"), { ssr: false });
-import { KeyValueJustification } from '../../../../../components/KeyValueComponent';
-import Image from 'next/image';
-import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getCreateTokenAccountInstructions } from '@ellipsis-labs/phoenix-sdk';
-import {BN } from "@coral-xyz/anchor";
-import { getPriorityFeeEstimate } from '../../../../../utils/helius';
-import { useBottomStatus } from '../../../../../components/BottomStatus';
-import Link from 'next/link';
+const KeyValueComponent = dynamic(
+  () => import("../../../../../components/KeyValueComponent/index"),
+  { ssr: false },
+);
+import { KeyValueJustification } from "../../../../../components/KeyValueComponent";
+import Image from "next/image";
+import {
+  Client,
+  OrderPacket,
+  SelfTradeBehavior,
+  Side,
+  getClaimSeatIx,
+  getCreateTokenAccountInstructions,
+} from "@ellipsis-labs/phoenix-sdk";
+import { BN } from "@coral-xyz/anchor";
+import { getPriorityFeeEstimate } from "../../../../../utils/helius";
+import { useBottomStatus } from "../../../../../components/BottomStatus";
+import Link from "next/link";
 
 const WalletMultiButtonDynamic = dynamic(
   async () =>
@@ -25,17 +44,17 @@ const WalletMultiButtonDynamic = dynamic(
 );
 
 export interface CLOBTraderProps {
-    spotGridMarket: SpotGridMarket;
-    baseTokenMetadata: TokenMetadata;
-    quoteTokenMetadata: TokenMetadata;
-    phoenixClient: Client
+  spotGridMarket: SpotGridMarket;
+  baseTokenMetadata: TokenMetadata;
+  quoteTokenMetadata: TokenMetadata;
+  phoenixClient: Client;
 }
 
 const CLOBTrader = ({
-    spotGridMarket,
-    baseTokenMetadata,
-    quoteTokenMetadata,
-    phoenixClient
+  spotGridMarket,
+  baseTokenMetadata,
+  quoteTokenMetadata,
+  phoenixClient,
 }: CLOBTraderProps) => {
   const [isBuyOrder, setIsBuyOrder] = useState(true);
 
@@ -44,93 +63,111 @@ const CLOBTrader = ({
   const [limitPrice, setLimitPrice] = useState("");
   const [sendUptoSize, setSendUptoSize] = useState("");
   const [receiveUptoSize, setReceiveUptoSize] = useState("");
-  const [isPlaceOrderButtonLoading, setIsPlaceOrderButtonLoading] = useState(false);
-
+  const [isPlaceOrderButtonLoading, setIsPlaceOrderButtonLoading] =
+    useState(false);
 
   let connection: Connection;
-  if(process.env.RPC_ENDPOINT) {
-    connection = new Connection(process.env.RPC_ENDPOINT, { commitment: "processed" });
-  }
-  else {
-    connection = new Connection(`https://api.mainnet-beta.solana.com/`, { commitment: "processed" });
+  if (process.env.RPC_ENDPOINT) {
+    connection = new Connection(process.env.RPC_ENDPOINT, {
+      commitment: "processed",
+    });
+  } else {
+    connection = new Connection(`https://api.mainnet-beta.solana.com/`, {
+      commitment: "processed",
+    });
   }
 
   const walletState = useWallet();
   const { updateStatus, green, red, resetStatus } = useBottomStatus();
 
   useEffect(() => {
-    const updateBalance = async() => {
-      if(walletState.connected) {
-        const baseTokenAddress = await getAssociatedTokenAddress(new web3.PublicKey(baseTokenMetadata.mint), walletState.publicKey);
-        const quoteTokenAddress = await getAssociatedTokenAddress(new web3.PublicKey(quoteTokenMetadata.mint), walletState.publicKey);
+    const updateBalance = async () => {
+      if (walletState.connected) {
+        const baseTokenAddress = await getAssociatedTokenAddress(
+          new web3.PublicKey(baseTokenMetadata.mint),
+          walletState.publicKey,
+        );
+        const quoteTokenAddress = await getAssociatedTokenAddress(
+          new web3.PublicKey(quoteTokenMetadata.mint),
+          walletState.publicKey,
+        );
 
         let baseBalance = 0;
         try {
-          baseBalance = (await connection.getTokenAccountBalance(baseTokenAddress)).value.uiAmount;
-        }
-        catch(Err) {
+          baseBalance = (
+            await connection.getTokenAccountBalance(baseTokenAddress)
+          ).value.uiAmount;
+        } catch (Err) {
           console.log(`Error fetching base ata balance`);
           baseBalance = 0;
         }
 
-        if(baseTokenMetadata.mint === WRAPPED_SOL_MAINNET) {
-          let sol_lamports = (await connection.getBalance(walletState.publicKey));
+        if (baseTokenMetadata.mint === WRAPPED_SOL_MAINNET) {
+          let sol_lamports = await connection.getBalance(walletState.publicKey);
           let sol_balance = sol_lamports / LAMPORTS_PER_SOL;
           baseBalance += sol_balance;
         }
 
         let quoteBalance = 0;
         try {
-          quoteBalance = (await connection.getTokenAccountBalance(quoteTokenAddress)).value.uiAmount;
-        }
-        catch(err) {
+          quoteBalance = (
+            await connection.getTokenAccountBalance(quoteTokenAddress)
+          ).value.uiAmount;
+        } catch (err) {
           console.log(`Error fetching quote ata balance`);
           quoteBalance = 0;
         }
 
-        if(quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET) {
-          let sol_lamports = (await connection.getBalance(walletState.publicKey));
+        if (quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET) {
+          let sol_lamports = await connection.getBalance(walletState.publicKey);
           let sol_balance = sol_lamports / LAMPORTS_PER_SOL;
           quoteBalance += sol_balance;
         }
 
-        setBaseTokenBalance(_ => baseBalance);
-        setQuoteTokenBalance(_ => quoteBalance);
+        setBaseTokenBalance((_) => baseBalance);
+        setQuoteTokenBalance((_) => quoteBalance);
+      } else {
+        setBaseTokenBalance((_) => 0);
+        setQuoteTokenBalance((_) => 0);
       }
-      else {
-        setBaseTokenBalance(_ => 0);
-        setQuoteTokenBalance(_ => 0);
-      }
-    }
+    };
 
     updateBalance();
-  }, [spotGridMarket, walletState, connection, baseTokenMetadata, quoteTokenMetadata]);
+  }, [
+    spotGridMarket,
+    walletState,
+    connection,
+    baseTokenMetadata,
+    quoteTokenMetadata,
+  ]);
 
   useEffect(() => {
-    if(receiveUptoSize) {
+    if (receiveUptoSize) {
       console.log("Receive upto size: ", receiveUptoSize);
       updateStatus(
         <div>
-          <span style = {{color: `#3DE383`}}>{`+ ${receiveUptoSize} ${isBuyOrder ? baseTokenMetadata.ticker : quoteTokenMetadata.ticker}`}</span>
-          <span style = {{color: `#e33d3d`, marginLeft: `1rem`}}>{`- ${sendUptoSize} ${isBuyOrder ? quoteTokenMetadata.ticker : baseTokenMetadata.ticker}`}</span>
-        </div>
+          <span
+            style={{ color: `#3DE383` }}
+          >{`+ ${receiveUptoSize} ${isBuyOrder ? baseTokenMetadata.ticker : quoteTokenMetadata.ticker}`}</span>
+          <span
+            style={{ color: `#e33d3d`, marginLeft: `1rem` }}
+          >{`- ${sendUptoSize} ${isBuyOrder ? quoteTokenMetadata.ticker : baseTokenMetadata.ticker}`}</span>
+        </div>,
       );
-    }
-    else {
+    } else {
       resetStatus();
     }
   }, [receiveUptoSize]);
 
   const handleBuySellToggle = (type: string) => {
-    if(type === "buy") {
-        setIsBuyOrder(_ => true);
-        resetAllFields()
+    if (type === "buy") {
+      setIsBuyOrder((_) => true);
+      resetAllFields();
+    } else {
+      setIsBuyOrder((_) => false);
+      resetAllFields();
     }
-    else {
-        setIsBuyOrder(_ => false);
-        resetAllFields()
-    }
-  }
+  };
 
   const handleLimitPriceChange = (e) => {
     e.preventDefault();
@@ -140,46 +177,66 @@ const CLOBTrader = ({
     let limitPriceFloat = parseFloat(limitPrice);
 
     let sendUptoSizeFloat = 0.0;
-    if(sendUptoSize) {
+    if (sendUptoSize) {
       sendUptoSizeFloat = parseFloat(sendUptoSize);
     }
 
     let receiveUptoSizeFLoat = 0.0;
-    if(receiveUptoSize) {
+    if (receiveUptoSize) {
       receiveUptoSizeFLoat = parseFloat(receiveUptoSize);
     }
 
-    if(limitPriceFloat && sendUptoSizeFloat) {
+    if (limitPriceFloat && sendUptoSizeFloat) {
       let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
 
-      if(isBuyOrder) {
-        let receivingAmount = parseFloat(removeCommas(sendUptoSize)) / parseFloat(removeCommas(limitPrice));
-        let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+      if (isBuyOrder) {
+        let receivingAmount =
+          parseFloat(removeCommas(sendUptoSize)) /
+          parseFloat(removeCommas(limitPrice));
+        let amountPostFee =
+          receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
 
-        formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setReceiveUptoSize);
-      }
-      else {
-        let receivingAmount = parseFloat(removeCommas(sendUptoSize)) * parseFloat(removeCommas(limitPrice));
-        let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+        formatNumbersWithCommas(
+          amountPostFee.toFixed(baseTokenMetadata.decimals),
+          setReceiveUptoSize,
+        );
+      } else {
+        let receivingAmount =
+          parseFloat(removeCommas(sendUptoSize)) *
+          parseFloat(removeCommas(limitPrice));
+        let amountPostFee =
+          receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
 
-        formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setReceiveUptoSize);
+        formatNumbersWithCommas(
+          amountPostFee.toFixed(quoteTokenMetadata.decimals),
+          setReceiveUptoSize,
+        );
       }
     }
 
-    if(limitPriceFloat && receiveUptoSizeFLoat) {
+    if (limitPriceFloat && receiveUptoSizeFLoat) {
       let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
 
-      if(isBuyOrder) {
-        let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) * parseFloat(removeCommas(limitPrice));
+      if (isBuyOrder) {
+        let sendingAmount =
+          parseFloat(removeCommas(receiveUptoSize)) *
+          parseFloat(removeCommas(limitPrice));
         let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
 
-        formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setSendUptoSize);
-      }
-      else {
-        let sendingAmount = parseFloat(removeCommas(receiveUptoSize)) / parseFloat(removeCommas(limitPrice));
+        formatNumbersWithCommas(
+          amountPostFee.toFixed(baseTokenMetadata.decimals),
+          setSendUptoSize,
+        );
+      } else {
+        let sendingAmount =
+          parseFloat(removeCommas(receiveUptoSize)) /
+          parseFloat(removeCommas(limitPrice));
         let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
 
-        formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setSendUptoSize);
+        formatNumbersWithCommas(
+          amountPostFee.toFixed(quoteTokenMetadata.decimals),
+          setSendUptoSize,
+        );
       }
     }
 
@@ -188,70 +245,90 @@ const CLOBTrader = ({
 
   // Handle change for maximum price
   const handleSendUptoSizeChange = (e?: any, size?: any) => {
-
-    if(e) {
+    if (e) {
       e.preventDefault();
     }
 
     let sendUptoSize;
-    
-    if(size) {
+
+    if (size) {
       sendUptoSize = size;
-    }
-    else {
+    } else {
       sendUptoSize = removeCommas(e.target.value);
     }
 
     let sendUptoSizeFloat = parseFloat(sendUptoSize);
 
-    formatNumbersWithCommas(sendUptoSize, setSendUptoSize);  
+    formatNumbersWithCommas(sendUptoSize, setSendUptoSize);
 
     let limitPriceFloat = 0.0;
-      if(limitPrice) {
-        limitPriceFloat = parseFloat(limitPrice);
-      }
-  
-      if(limitPriceFloat && sendUptoSizeFloat) {
-        let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
+    if (limitPrice) {
+      limitPriceFloat = parseFloat(limitPrice);
+    }
 
-        if(isBuyOrder) {
-          let receivingAmount = parseFloat(removeCommas(sendUptoSize)) / parseFloat(removeCommas(limitPrice));
-          let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
-  
-          formatNumbersWithCommas(amountPostFee.toFixed(baseTokenMetadata.decimals), setReceiveUptoSize);
-        }
-        else {
-          let receivingAmount = parseFloat(removeCommas(sendUptoSize)) * parseFloat(removeCommas(limitPrice));
-          let amountPostFee = receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
-  
-          formatNumbersWithCommas(amountPostFee.toFixed(quoteTokenMetadata.decimals), setReceiveUptoSize);
-        }
+    if (limitPriceFloat && sendUptoSizeFloat) {
+      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps.toString());
+
+      if (isBuyOrder) {
+        let receivingAmount =
+          parseFloat(removeCommas(sendUptoSize)) /
+          parseFloat(removeCommas(limitPrice));
+        let amountPostFee =
+          receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+
+        formatNumbersWithCommas(
+          amountPostFee.toFixed(baseTokenMetadata.decimals),
+          setReceiveUptoSize,
+        );
+      } else {
+        let receivingAmount =
+          parseFloat(removeCommas(sendUptoSize)) *
+          parseFloat(removeCommas(limitPrice));
+        let amountPostFee =
+          receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+
+        formatNumbersWithCommas(
+          amountPostFee.toFixed(quoteTokenMetadata.decimals),
+          setReceiveUptoSize,
+        );
       }
+    }
   };
 
   const handlePlaceLimitOrderAction = async () => {
-    setIsPlaceOrderButtonLoading(_ => true);
+    setIsPlaceOrderButtonLoading((_) => true);
     let marketAddress = spotGridMarket.phoenix_market_address.toString();
 
-    if(limitPrice && sendUptoSize) {
+    if (limitPrice && sendUptoSize) {
       let priorityFeeLevels = null;
 
       try {
-        priorityFeeLevels = (await getPriorityFeeEstimate([marketAddress])).priorityFeeLevels;
-      }
-      catch(err) {
+        priorityFeeLevels = (await getPriorityFeeEstimate([marketAddress]))
+          .priorityFeeLevels;
+      } catch (err) {
         console.log(`Error fetching priority fee levels`);
       }
 
-      if(isBuyOrder && parseFloat(receiveUptoSize)) {
+      if (isBuyOrder && parseFloat(receiveUptoSize)) {
         // console.log("Limit buy");
-        let priceInTicks = new BN(phoenixClient.floatPriceToTicks(parseFloat(limitPrice), marketAddress));
-        let sizeInBaseLosts = new BN(phoenixClient.baseAtomsToBaseLots(parseFloat(receiveUptoSize) * Math.pow(10, baseTokenMetadata.decimals), marketAddress));
+        let priceInTicks = new BN(
+          phoenixClient.floatPriceToTicks(
+            parseFloat(limitPrice),
+            marketAddress,
+          ),
+        );
+        let sizeInBaseLosts = new BN(
+          phoenixClient.baseAtomsToBaseLots(
+            parseFloat(receiveUptoSize) *
+              Math.pow(10, baseTokenMetadata.decimals),
+            marketAddress,
+          ),
+        );
         // console.log(`Buying ${sizeInBaseLosts} base lots at ${priceInTicks} price in ticks`);
-        
+
         try {
           let orderPacket = {
-            __kind: 'Limit',
+            __kind: "Limit",
             side: Side.Bid,
             priceInTicks,
             numBaseLots: sizeInBaseLosts,
@@ -261,15 +338,15 @@ const CLOBTrader = ({
             matchLimit: null,
             lastValidSlot: null,
             lastValidUnixTimestampInSeconds: null,
-            clientOrderId: new BN(1234)
+            clientOrderId: new BN(1234),
           } as OrderPacket;
           updateStatus(<span>{`Preparing limit order transaction...`}</span>);
           let transaction = new web3.Transaction();
 
           // Create the priority fee instructions
           let unitsPrice = 10;
-          if(priorityFeeLevels) {
-            unitsPrice = priorityFeeLevels["high"]
+          if (priorityFeeLevels) {
+            unitsPrice = priorityFeeLevels["high"];
           }
 
           const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
@@ -282,38 +359,77 @@ const CLOBTrader = ({
           transaction.add(computePriceIx);
           transaction.add(computeLimitIx);
 
-          transaction.add(getClaimSeatIx(new web3.PublicKey(marketAddress), walletState.publicKey));
+          transaction.add(
+            getClaimSeatIx(
+              new web3.PublicKey(marketAddress),
+              walletState.publicKey,
+            ),
+          );
 
-          let baseAtaInitIxs = await getCreateTokenAccountInstructions(connection, walletState.publicKey, walletState.publicKey, new web3.PublicKey(baseTokenMetadata.mint));
-          let quoteAtaInitIxs = await getCreateTokenAccountInstructions(connection, walletState.publicKey, walletState.publicKey, new web3.PublicKey(quoteTokenMetadata.mint));
-          for(let ix of baseAtaInitIxs) {
+          let baseAtaInitIxs = await getCreateTokenAccountInstructions(
+            connection,
+            walletState.publicKey,
+            walletState.publicKey,
+            new web3.PublicKey(baseTokenMetadata.mint),
+          );
+          let quoteAtaInitIxs = await getCreateTokenAccountInstructions(
+            connection,
+            walletState.publicKey,
+            walletState.publicKey,
+            new web3.PublicKey(quoteTokenMetadata.mint),
+          );
+          for (let ix of baseAtaInitIxs) {
             transaction.add(ix);
           }
-          for(let ix of quoteAtaInitIxs) {
+          for (let ix of quoteAtaInitIxs) {
             transaction.add(ix);
           }
 
-          let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
+          let ix = phoenixClient.createPlaceLimitOrderInstruction(
+            orderPacket,
+            marketAddress,
+            walletState.publicKey,
+          );
           transaction.add(ix);
-          
+
           updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
-          let response = await walletState.sendTransaction(transaction, connection);
-          green(<span>{`Transaction confirmed `}<Link href={`https://solscan.io/tx/${response}`} target="_blank">{` ↗️`}</Link></span>, 3_000)
+          let response = await walletState.sendTransaction(
+            transaction,
+            connection,
+          );
+          green(
+            <span>
+              {`Transaction confirmed `}
+              <Link
+                href={`https://solscan.io/tx/${response}`}
+                target="_blank"
+              >{` ↗️`}</Link>
+            </span>,
+            3_000,
+          );
           console.log("Signature: ", response);
           resetAllFields();
-        }
-        catch(err) {
+        } catch (err) {
           console.log(`Error sending limit buy order: ${err.message}`);
-          red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
+          red(<span>{`Failed: ${err.message}`}</span>, 2_000);
         }
-      }
-      else if(!isBuyOrder && parseFloat(sendUptoSize)){
-        let priceInTicks = new BN(phoenixClient.floatPriceToTicks(parseFloat(limitPrice), marketAddress));
-        let sizeInBaseLosts = new BN(phoenixClient.baseAtomsToBaseLots(parseFloat(sendUptoSize) * Math.pow(10, baseTokenMetadata.decimals), marketAddress));
-        
+      } else if (!isBuyOrder && parseFloat(sendUptoSize)) {
+        let priceInTicks = new BN(
+          phoenixClient.floatPriceToTicks(
+            parseFloat(limitPrice),
+            marketAddress,
+          ),
+        );
+        let sizeInBaseLosts = new BN(
+          phoenixClient.baseAtomsToBaseLots(
+            parseFloat(sendUptoSize) * Math.pow(10, baseTokenMetadata.decimals),
+            marketAddress,
+          ),
+        );
+
         try {
           let orderPacket = {
-            __kind: 'Limit',
+            __kind: "Limit",
             side: Side.Ask,
             priceInTicks,
             numBaseLots: sizeInBaseLosts,
@@ -323,14 +439,14 @@ const CLOBTrader = ({
             matchLimit: null,
             lastValidSlot: null,
             lastValidUnixTimestampInSeconds: null,
-            clientOrderId: new BN(1234)
+            clientOrderId: new BN(1234),
           } as OrderPacket;
           let transaction = new web3.Transaction();
 
           // Create the priority fee instructions
           let unitsPrice = 10;
-          if(priorityFeeLevels) {
-            unitsPrice = priorityFeeLevels["high"]
+          if (priorityFeeLevels) {
+            unitsPrice = priorityFeeLevels["high"];
           }
 
           const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
@@ -343,244 +459,266 @@ const CLOBTrader = ({
           transaction.add(computePriceIx);
           transaction.add(computeLimitIx);
 
-          transaction.add(getClaimSeatIx(new web3.PublicKey(marketAddress), walletState.publicKey));
+          transaction.add(
+            getClaimSeatIx(
+              new web3.PublicKey(marketAddress),
+              walletState.publicKey,
+            ),
+          );
 
-          let baseAtaInitIxs = await getCreateTokenAccountInstructions(connection, walletState.publicKey, walletState.publicKey, new web3.PublicKey(baseTokenMetadata.mint));
-          let quoteAtaInitIxs = await getCreateTokenAccountInstructions(connection, walletState.publicKey, walletState.publicKey, new web3.PublicKey(quoteTokenMetadata.mint));
-          for(let ix of baseAtaInitIxs) {
+          let baseAtaInitIxs = await getCreateTokenAccountInstructions(
+            connection,
+            walletState.publicKey,
+            walletState.publicKey,
+            new web3.PublicKey(baseTokenMetadata.mint),
+          );
+          let quoteAtaInitIxs = await getCreateTokenAccountInstructions(
+            connection,
+            walletState.publicKey,
+            walletState.publicKey,
+            new web3.PublicKey(quoteTokenMetadata.mint),
+          );
+          for (let ix of baseAtaInitIxs) {
             transaction.add(ix);
           }
-          for(let ix of quoteAtaInitIxs) {
+          for (let ix of quoteAtaInitIxs) {
             transaction.add(ix);
           }
 
           updateStatus(<span>{`Preparing limit order transaction...`}</span>);
-          let ix = phoenixClient.createPlaceLimitOrderInstruction(orderPacket, marketAddress, walletState.publicKey);
+          let ix = phoenixClient.createPlaceLimitOrderInstruction(
+            orderPacket,
+            marketAddress,
+            walletState.publicKey,
+          );
           transaction.add(ix);
 
           updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
-          let response = await walletState.sendTransaction(transaction, connection);
-          green(<span>{`Transaction confirmed `}<Link href={`https://solscan.io/tx/${response}`} target="_blank">{` ↗️`}</Link></span>, 3_000)
+          let response = await walletState.sendTransaction(
+            transaction,
+            connection,
+          );
+          green(
+            <span>
+              {`Transaction confirmed `}
+              <Link
+                href={`https://solscan.io/tx/${response}`}
+                target="_blank"
+              >{` ↗️`}</Link>
+            </span>,
+            3_000,
+          );
           console.log("Signature: ", response);
           resetAllFields();
-        }
-        catch(err) {
+        } catch (err) {
           console.log(`Error sending limit sell order: ${err}`);
-          red(<span>{`Failed: ${err.message}`}</span>, 2_000)
+          red(<span>{`Failed: ${err.message}`}</span>, 2_000);
         }
-        
       }
     }
 
-    setIsPlaceOrderButtonLoading(_ => false);
-  }
+    setIsPlaceOrderButtonLoading((_) => false);
+  };
 
   // Reset all fields
   const resetAllFields = () => {
-    setLimitPrice("")
+    setLimitPrice("");
     setSendUptoSize("");
     setReceiveUptoSize("");
-  }
-  
+  };
+
   return (
-    <div className={styles.clobTraderContainer}
+    <div
+      className={styles.clobTraderContainer}
       // style={{
       //   filter: walletState.connected ? `` : `blur(5px)`
       // }}
     >
-       <div className={styles.tabsContainer}>
-            <div className={styles.buyTabContainer}>
-                <button
-                    className={styles.buyButton}
-                    key = {'buyButton'}
-                    style = {{
-                        borderTop: isBuyOrder ? '3px solid #3DE383' : '',
-                    }}
-                    onClick={() => {
-                        handleBuySellToggle("buy")
-                    }}
-                >
-                    Buy
-                </button>
-            </div>
-            <div className={styles.sellTabContainer}>
-                <button 
-                    className={styles.sellButton}
-                    key = {'sellButton'}
-                    style = {{
-                        borderTop: !isBuyOrder ? '3px solid #e33d3d' : '',
-                    }}
-                    onClick={() => {
-                        handleBuySellToggle("sell")
-                    }}
-                >
-                    Sell
-                </button>
-            </div>
-       </div>
-       
-       <Form>
-          <Form.Group controlId="formInput" className={styles.formGroupContainer}>
-            <div className={styles.shortcutButtonsContainer}>
+      <div className={styles.tabsContainer}>
+        <div className={styles.buyTabContainer}>
+          <button
+            className={styles.buyButton}
+            key={"buyButton"}
+            style={{
+              borderTop: isBuyOrder ? "3px solid #3DE383" : "",
+            }}
+            onClick={() => {
+              handleBuySellToggle("buy");
+            }}
+          >
+            Buy
+          </button>
+        </div>
+        <div className={styles.sellTabContainer}>
+          <button
+            className={styles.sellButton}
+            key={"sellButton"}
+            style={{
+              borderTop: !isBuyOrder ? "3px solid #e33d3d" : "",
+            }}
+            onClick={() => {
+              handleBuySellToggle("sell");
+            }}
+          >
+            Sell
+          </button>
+        </div>
+      </div>
+
+      <Form>
+        <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+          <div className={styles.shortcutButtonsContainer}>
             <div className={styles.resetButtonContainer}>
               <span
                 className={styles.resetFieldsButton}
                 onClick={() => {
-                  resetAllFields()
+                  resetAllFields();
                 }}
-              >Reset</span>
+              >
+                Reset
+              </span>
             </div>
           </div>
-          </Form.Group>
-          <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+        </Form.Group>
+        <Form.Group controlId="formInput" className={styles.formGroupContainer}>
           <div className={styles.formLabelAndFieldContainer}>
-                  <Form.Label className={styles.formLabelContainer}>
-                    <span>Limit price</span>
-                  </Form.Label>
-                  <Form.Control
-                    placeholder="0.00"
-                    // disabled={!walletState.connected}
-                    style={{
-                      backgroundColor: "transparent",
-                      fontSize: "1.1rem",
-                      fontWeight: "bold",
-                      textAlign: "right",
-                      color: "#ddd",
-                      border: "none",
-                      caretColor: "#ddd",
-                      padding: "1rem"
-                    }}
-                    min="0"
-                    step="0.01" // Allow any decimal value
-                    className={styles.formFieldContainer}
-                    onChange={(e) => handleLimitPriceChange(e)}
-                    value={limitPrice} // Use inputText instead of inputAmount to show the decimal value
-                  />
-                </div>
-          </Form.Group>
-          <Form.Group controlId="formInput" className={styles.formGroupContainer}>
-            <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
-              <Form.Label className={styles.formLabelContainer}>
-                <span className={styles.fieldTitleContainer}>
-                  <span>Quantity</span>
+            <Form.Label className={styles.formLabelContainer}>
+              <span>Limit price</span>
+            </Form.Label>
+            <Form.Control
+              placeholder="0.00"
+              // disabled={!walletState.connected}
+              style={{
+                backgroundColor: "transparent",
+                fontSize: "1.1rem",
+                fontWeight: "bold",
+                textAlign: "right",
+                color: "#ddd",
+                border: "none",
+                caretColor: "#ddd",
+                padding: "1rem",
+              }}
+              min="0"
+              step="0.01" // Allow any decimal value
+              className={styles.formFieldContainer}
+              onChange={(e) => handleLimitPriceChange(e)}
+              value={limitPrice} // Use inputText instead of inputAmount to show the decimal value
+            />
+          </div>
+        </Form.Group>
+        <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+          <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
+            <Form.Label className={styles.formLabelContainer}>
+              <span className={styles.fieldTitleContainer}>
+                <span>Quantity</span>
+              </span>
+            </Form.Label>
+            <Form.Control
+              placeholder={`0.00 ${isBuyOrder ? (quoteTokenMetadata ? quoteTokenMetadata.ticker : "") : baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
+              // disabled={!walletState.connected}
+              style={{
+                backgroundColor: "transparent",
+                fontSize: "1.1rem",
+                fontWeight: "bold",
+                textAlign: "right",
+                color: "#ddd",
+                border: "none",
+                caretColor: "#ddd",
+                padding: "1rem",
+              }}
+              min="0"
+              step="0.01" // Allow any decimal value
+              className={styles.formFieldContainer}
+              onChange={(e) => handleSendUptoSizeChange(e)}
+              value={sendUptoSize} // Use inputText instead of inputAmount to show the decimal value
+            />
+          </div>
+          <div className={styles.tokenBalanceContainer}>
+            {walletState.connected ? (
+              <div className={styles.userBalanceContainer}>
+                <span
+                  className={styles.userBalance}
+                  onClick={() => {
+                    // formatNumbersWithCommas(isBuyOrder ? quoteTokenBalance.toString() : baseTokenBalance.toString(), setSendUptoSize);
+                    isBuyOrder
+                      ? handleSendUptoSizeChange(
+                          null,
+                          quoteTokenBalance.toString(),
+                        )
+                      : handleSendUptoSizeChange(
+                          null,
+                          baseTokenBalance.toString(),
+                        );
+                  }}
+                >
+                  <i className="fa-solid fa-wallet fa-2xs"></i>
+                  {` `}
+                  {` ${isBuyOrder ? quoteTokenBalance : baseTokenBalance}`}
                 </span>
-              </Form.Label>
-              <Form.Control
-                placeholder={`0.00 ${isBuyOrder ? quoteTokenMetadata ? quoteTokenMetadata.ticker : '' : baseTokenMetadata ? baseTokenMetadata.ticker : ''}`}
-                // disabled={!walletState.connected}
-                style={{
-                  backgroundColor: "transparent",
-                  fontSize: "1.1rem",
-                  fontWeight: "bold",
-                  textAlign: "right",
-                  color: "#ddd",
-                  border: "none",
-                  caretColor: "#ddd",
-                  padding: "1rem"
-                }}
-                min="0"
-                step="0.01" // Allow any decimal value
-                className={styles.formFieldContainer}
-                onChange={(e) => handleSendUptoSizeChange(e)}
-                value={sendUptoSize} // Use inputText instead of inputAmount to show the decimal value
+              </div>
+            ) : (
+              <div className={styles.userBalanceContainer}>
+                <span>{` `}</span>
+              </div>
+            )}
+          </div>
+        </Form.Group>
+        <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+          <div className={styles.tradeInfoContainer}>
+            {walletState.connected ? (
+              <KeyValueComponent
+                keyElement={<p>Total fee</p>}
+                keyElementStyle={{}}
+                valueElement={
+                  spotGridMarket ? (
+                    <p>{`${(parseFloat(spotGridMarket.taker_fee_bps.toString()) + ROOT_PROTOCOL_FEE_BPS) / 100}%`}</p>
+                  ) : (
+                    <p>{`-%`}</p>
+                  )
+                }
+                valueElementStyle={{}}
+                justification={KeyValueJustification.SpaceBetween}
+                keyElementContainerStyle={{}}
               />
-            </div>
-            <div className={styles.tokenBalanceContainer}>
-              {walletState.connected ? (
-                <div className={styles.userBalanceContainer}>
-                  <span
-                    className={styles.userBalance}
-                    onClick={
-                      () => {
-                        // formatNumbersWithCommas(isBuyOrder ? quoteTokenBalance.toString() : baseTokenBalance.toString(), setSendUptoSize);
-                        isBuyOrder ?
-                          handleSendUptoSizeChange(null, quoteTokenBalance.toString())
-                        :
-                        handleSendUptoSizeChange(null, baseTokenBalance.toString())
-                      }
-                    }
-                  >
-                    <i className="fa-solid fa-wallet fa-2xs"></i>
-                    {` `}
-                    {` ${isBuyOrder ? quoteTokenBalance : baseTokenBalance}`}
-                  </span>
+            ) : (
+              <></>
+            )}
+          </div>
+        </Form.Group>
+        <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+          <div className={styles.placeOrderButtonContainer}>
+            <Button
+              className={styles.placeOrderButton}
+              disabled={!walletState.connected}
+              onClick={() => {
+                handlePlaceLimitOrderAction();
+              }}
+              style={{
+                backgroundColor: isBuyOrder
+                  ? "rgba(61, 227, 131, 0.90)"
+                  : "rgba(227, 61, 61, 0.90)",
+                color: "#0a0b0e",
+              }}
+            >
+              {isPlaceOrderButtonLoading ? (
+                <div className={styles.spinnerBox}>
+                  <div
+                    className={styles.threeQuarterSpinner}
+                    style={{
+                      border: "3px solid #0a0b0e",
+                      borderTop: `3px solid transparent`,
+                    }}
+                  ></div>
                 </div>
               ) : (
-                <div className={styles.userBalanceContainer}>
-                  <span>{` `}</span>
-                </div>
+                <>{`${isBuyOrder ? "Buy" : "Sell"}`}</>
               )}
-            </div>
-          </Form.Group>
-          <Form.Group controlId="formInput" className={styles.formGroupContainer}>
-          <div className={styles.tradeInfoContainer}>
-              {
-                walletState.connected ?
-                <KeyValueComponent 
-                keyElement={
-                  <p>Total fee</p>
-                }
-                keyElementStyle={
-                  {
-
-                  }
-                }
-                valueElement={
-                  spotGridMarket ?
-                    <p>{`${(parseFloat(spotGridMarket.taker_fee_bps.toString()) + ROOT_PROTOCOL_FEE_BPS)/100}%`}</p>
-                  :
-                    <p>{`-%`}</p>
-                }
-                valueElementStyle={
-                  {
-
-                  }
-                }
-                justification={KeyValueJustification.SpaceBetween}
-                keyElementContainerStyle={
-                  {
-                    
-                  }
-                }
-              />
-              :
-              <></>
-              }
+            </Button>
           </div>
-          </Form.Group>
-          <Form.Group controlId="formInput" className={styles.formGroupContainer}>
-            <div className={styles.placeOrderButtonContainer}>
-                  <Button
-                    className={styles.placeOrderButton}
-                    disabled={!walletState.connected}
-                    onClick={() => {
-                      handlePlaceLimitOrderAction()
-                    }}
-                    style={{
-                      backgroundColor: isBuyOrder ? 'rgba(61, 227, 131, 0.90)' : 'rgba(227, 61, 61, 0.90)',
-                      color: '#0a0b0e'
-                    }}
-                  >
-                    {
-                      isPlaceOrderButtonLoading ?
-                      <div className={styles.spinnerBox}>
-                        <div
-                          className={styles.threeQuarterSpinner}
-                          style = {{
-                            border: '3px solid #0a0b0e',
-                            borderTop: `3px solid transparent`,
-                          }}
-                        ></div>
-                      </div>
-                      :
-                        <>{`${isBuyOrder ? 'Buy' : 'Sell'}`}</>
-                    }
-                  </Button>
-                </div>
-          </Form.Group>
-        </Form>
+        </Form.Group>
+      </Form>
     </div>
   );
-}
+};
 
 export default CLOBTrader;

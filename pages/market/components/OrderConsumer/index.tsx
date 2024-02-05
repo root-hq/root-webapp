@@ -4,9 +4,17 @@ import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import { EnumeratedMarketToMetadata } from "../../[market]";
 import { SeriesManagerInstance } from "./components/LightweightChart";
 
-const MarketSelectorDropdown = dynamic(() => import('./components/MarketSelectorDropdown'), { ssr: false });
-const LightweightChart = dynamic(() => import('./components/LightweightChart'), { ssr: false });
-const OrderManager = dynamic(() => import ('./components/OrderManager'), { ssr: false });
+const MarketSelectorDropdown = dynamic(
+  () => import("./components/MarketSelectorDropdown"),
+  { ssr: false },
+);
+const LightweightChart = dynamic(
+  () => import("./components/LightweightChart"),
+  { ssr: false },
+);
+const OrderManager = dynamic(() => import("./components/OrderManager"), {
+  ssr: false,
+});
 
 import { IChartApi } from "lightweight-charts";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
@@ -33,22 +41,26 @@ const OrderConsumer = ({
   seriesManagerHandler,
   chartManagerHandler,
   leastDisplayDate,
-  leastKnownBar
+  leastKnownBar,
 }: OrderConsumerProps) => {
   const [activeMarket, setActiveMarket] = useState(selectedSpotGridMarket);
-  const [activeEnumeratedMarket, setActiveEnumeratedMarket] = useState<EnumeratedMarketToMetadata>(null);
+  const [activeEnumeratedMarket, setActiveEnumeratedMarket] =
+    useState<EnumeratedMarketToMetadata>(null);
 
   useEffect(() => {
     const doStuff = () => {
-      setActiveMarket(_ => selectedSpotGridMarket);
-      
-      if(selectedSpotGridMarket) {
+      setActiveMarket((_) => selectedSpotGridMarket);
+
+      if (selectedSpotGridMarket) {
         let aem = enumeratedMarkets.find((value) => {
-          return value.spotGridMarket.spot_grid_market_address === selectedSpotGridMarket.spot_grid_market_address;
+          return (
+            value.spotGridMarket.spot_grid_market_address ===
+            selectedSpotGridMarket.spot_grid_market_address
+          );
         });
-        setActiveEnumeratedMarket(_ => aem);
+        setActiveEnumeratedMarket((_) => aem);
       }
-    }
+    };
 
     doStuff();
   }, [selectedSpotGridMarket]);

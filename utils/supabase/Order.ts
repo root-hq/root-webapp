@@ -1,40 +1,34 @@
 import axios from "axios";
 import { Order, SpotGridMarket } from ".";
 
-export const addOrder = async (
-  order: Order
-): Promise<boolean> => {
+export const addOrder = async (order: Order): Promise<boolean> => {
   try {
     const body = {
-        "order_sequence_number": order.order_sequence_number,
-        "order_type": order.order_type,
-        "phoenix_market_address": order.phoenix_market_address,
-        "trader": order.trader,
-        "price_in_ticks": order.price_in_ticks,
-        "size_in_base_lots": order.size_in_base_lots,
-        "fill_size_in_base_lots": order.fill_size_in_base_lots,
-        "place_timestamp": order.place_timestamp,
-        "status": "PLACED",
-        "is_buy_order": order.is_buy_order
+      order_sequence_number: order.order_sequence_number,
+      order_type: order.order_type,
+      phoenix_market_address: order.phoenix_market_address,
+      trader: order.trader,
+      price_in_ticks: order.price_in_ticks,
+      size_in_base_lots: order.size_in_base_lots,
+      fill_size_in_base_lots: order.fill_size_in_base_lots,
+      place_timestamp: order.place_timestamp,
+      status: "PLACED",
+      is_buy_order: order.is_buy_order,
     };
 
     const response = await axios.post(
       `${process.env.SPOT_GRID_DATABASE_SERVER_URL}/api/order/add-order`,
-      body
+      body,
     );
 
     if (response && response.status === 201) {
       return true;
     } else {
-      console.log(
-        `Failed to add order: "${order.order_sequence_number}`,
-      );
+      console.log(`Failed to add order: "${order.order_sequence_number}`);
       return false;
     }
   } catch (err) {
-    console.log(
-        `Failed to add order: "${order.order_sequence_number}`,
-    );
+    console.log(`Failed to add order: "${order.order_sequence_number}`);
     return false;
   }
 };
@@ -50,9 +44,7 @@ export const getAllOrdersForTrader = async (
     if (response && response.data && response.data.length) {
       return response.data as Order[];
     } else {
-      console.log(
-        `Failed to retrieve all orders for trader: "${trader}`,
-      );
+      console.log(`Failed to retrieve all orders for trader: "${trader}`);
       return null;
     }
   } catch (err) {

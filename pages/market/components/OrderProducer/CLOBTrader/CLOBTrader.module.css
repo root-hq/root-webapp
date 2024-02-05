@@ -1,12 +1,12 @@
 .clobTraderContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-    border-right: 1px solid rgba(87, 87, 87, 0.25);
-    box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+  border-right: 1px solid rgba(87, 87, 87, 0.25);
+  box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
@@ -17,48 +17,48 @@
 }
 
 .tabsContainer {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .buyTabContainer {
-    width: 50%;
+  width: 50%;
 }
 
 .sellTabContainer {
-    width: 50%;
+  width: 50%;
 }
 
 .buyButton {
-    width: 100%;
-    border-radius: 0rem;
-    border: none;
-    border-top: 3px solid transparent;
-    /* border-left: 1px solid rgba(87, 87, 87, 0.25);
+  width: 100%;
+  border-radius: 0rem;
+  border: none;
+  border-top: 3px solid transparent;
+  /* border-left: 1px solid rgba(87, 87, 87, 0.25);
     border-bottom: 1px solid rgba(87, 87, 87, 0.25); */
-    background-color: #12211b;
-    color: #3DE383;
-    font-weight: bolder;
-    padding: 1rem;
-    font-size: 1rem;
-    cursor: pointer;
+  background-color: #12211b;
+  color: #3de383;
+  font-weight: bolder;
+  padding: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .sellButton {
-    width: 100%;
-    border-radius: 0rem;
-    border: none;
-    border-top: 3px solid transparent;
-    /* border-right: 1px solid rgba(87, 87, 87, 0.25);
+  width: 100%;
+  border-radius: 0rem;
+  border: none;
+  border-top: 3px solid transparent;
+  /* border-right: 1px solid rgba(87, 87, 87, 0.25);
     border-bottom: 1px solid rgba(87, 87, 87, 0.25); */
-    background-color: #150e11;
-    color: #e33d3d;
-    font-weight: bolder;
-    padding: 1rem;
-    font-size: 1rem;
-    cursor: pointer;
+  background-color: #150e11;
+  color: #e33d3d;
+  font-weight: bolder;
+  padding: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .formGroupContainer {
@@ -66,124 +66,123 @@
   margin-left: 1.5rem;
   margin-right: 1.5rem;
 }
-  
-  .shortcutButtonsContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: right;
-    width: 100%;
-  }
-  
-  .resetFieldsButton {
-   cursor: pointer;
-   font-size: 0.85rem;
-  }
-  
-  .resetFieldsButton:hover {
-    font-weight: 500;
-    border-bottom: 0.5px solid rgba(255, 255, 255, 1);
-  }
 
-  .formLabelAndFieldContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-  }
-  
-  .formLabelAndFieldContainerNoBottomMargin {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-  }
-  
-  .fieldTitleContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
+.shortcutButtonsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  width: 100%;
+}
 
-  .tokenImage {
-    border-radius: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-  }
+.resetFieldsButton {
+  cursor: pointer;
+  font-size: 0.85rem;
+}
 
-  .tokenBalanceContainer {
-    margin: 0.75rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    font-size: 0.80rem;
-  }
-  
-  .userBalance {
-    cursor: pointer;
-  }
-  
-  .userBalance:hover {
-    font-weight: 500;
-  }
-  
-  .formLabelContainer {
-    width: 40%;
-  }
-  
-  .formFieldContainer {
-    width: 60%;
-  }
-  
-  .placeOrderButtonContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .placeOrderButton {
-    width: 100%;
-    font-size: 1.0rem;
-    font-weight: bold;
-    padding: 0.75rem;
-    border: 1px solid transparent;
-    border-radius: 0.25rem;
-    cursor: pointer;
-  }
-  
-  .placeOrderButton:hover {
-    border: 1px solid;
-  }
+.resetFieldsButton:hover {
+  font-weight: 500;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 1);
+}
 
-  .tradeInfoContainer {
-    width: 100%;
-    font-size: 0.90rem;
-    opacity: 0.5;
-  }
+.formLabelAndFieldContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+}
 
-  .spinnerBox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
-  }
+.formLabelAndFieldContainerNoBottomMargin {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+}
 
-  .threeQuarterSpinner {
-    width: 12px;
-    height: 12px;
-    border-top: 3px solid transparent;
-    border-radius: 50%;
-    animation: spin .5s linear 0s infinite;
-  }
-  
+.fieldTitleContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  @keyframes spin {
-    from {
-      transform: rotate(0);
-    }
-    to{
-      transform: rotate(359deg);
-    }
+.tokenImage {
+  border-radius: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.tokenBalanceContainer {
+  margin: 0.75rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  font-size: 0.8rem;
+}
+
+.userBalance {
+  cursor: pointer;
+}
+
+.userBalance:hover {
+  font-weight: 500;
+}
+
+.formLabelContainer {
+  width: 40%;
+}
+
+.formFieldContainer {
+  width: 60%;
+}
+
+.placeOrderButtonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.placeOrderButton {
+  width: 100%;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.placeOrderButton:hover {
+  border: 1px solid;
+}
+
+.tradeInfoContainer {
+  width: 100%;
+  font-size: 0.9rem;
+  opacity: 0.5;
+}
+
+.spinnerBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.threeQuarterSpinner {
+  width: 12px;
+  height: 12px;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.5s linear 0s infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
   }
+  to {
+    transform: rotate(359deg);
+  }
+}

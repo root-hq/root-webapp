@@ -1,6 +1,6 @@
-import React from 'react';
-import { useBottomStatus } from '../BottomStatusContext';
-import styles from './BottomStatusBar.module.css';
+import React from "react";
+import { useBottomStatus } from "../BottomStatusContext";
+import styles from "./BottomStatusBar.module.css";
 
 const BottomStatusBar: React.FC = () => {
   const { status, statusStyle, statusBarStyle } = useBottomStatus();
@@ -8,15 +8,11 @@ const BottomStatusBar: React.FC = () => {
   return (
     <div
       className={styles.bottomStatusBarContainer}
-      style = {
-        statusBarStyle ? statusBarStyle : {}
-      }
+      style={statusBarStyle ? statusBarStyle : {}}
     >
       <div
         className={styles.statusMessage}
-        style = {
-          statusStyle ? statusStyle : {}
-        }
+        style={statusStyle ? statusStyle : {}}
       >
         {status}
       </div>

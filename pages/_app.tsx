@@ -18,7 +18,6 @@ import BottomStatusBar from "../components/BottomStatus/BottomStatusBar";
 require("../styles/wallet.css");
 require("../styles/globals.css");
 
-
 const App: FC<AppProps> = ({ Component, pageProps }) => {
   const endpoint = useMemo(() => clusterApiUrl("mainnet-beta"), []);
 
@@ -56,7 +55,6 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
           </WalletProvider>
         </ConnectionProvider>
       </BottomStatusProvider>
-      
 
       <link
         rel="stylesheet"

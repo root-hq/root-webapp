@@ -10,9 +10,7 @@ const WalletMultiButtonDynamic = dynamic(
 
 const Header = () => {
   return (
-    <div
-      className={styles.headerContainer}
-    >
+    <div className={styles.headerContainer}>
       <div className={styles.logoContainer}>
         <div className={styles.logo}>
           <Link href="/">

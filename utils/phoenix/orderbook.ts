@@ -63,9 +63,7 @@ export const getMarketMidPrice = async (
   }
 };
 
-export const getMarketMetadata = async (
-  marketAddress: string
-) => {
+export const getMarketMetadata = async (marketAddress: string) => {
   try {
     const endpoint = process.env.RPC_ENDPOINT;
     const connection = new web3.Connection(endpoint, {
@@ -81,33 +79,35 @@ export const getMarketMetadata = async (
     console.log("Error fetching fresh market metadata on Pheonix: ", err);
     return null;
   }
-}
+};
 
 export const getOpenOrdersForTrader = async (
   phoenixClient: Client,
   marketAddress: string,
-  trader: string
+  trader: string,
 ): Promise<Order[]> => {
   try {
-      phoenixClient.refreshMarket(marketAddress, true);
+    phoenixClient.refreshMarket(marketAddress, true);
 
     const book = phoenixClient.marketStates.get(marketAddress);
-        
+
     let bids = book.data.bids.map((order, i) => {
       let traderIndex = order[1].traderIndex;
-      let traderKey = book.data.traderIndexToTraderPubkey.get(traderIndex.toNumber());
-      if(traderKey && (traderKey === trader)) {
+      let traderKey = book.data.traderIndexToTraderPubkey.get(
+        traderIndex.toNumber(),
+      );
+      if (traderKey && traderKey === trader) {
         return {
           order_sequence_number: order[0].orderSequenceNumber.toString(),
-          order_type: 'LIMIT',
+          order_type: "LIMIT",
           phoenix_market_address: marketAddress,
           trader: trader,
           price_in_ticks: order[0].priceInTicks.toString(),
           size_in_base_lots: order[1].numBaseLots.toString(),
           fill_size_in_base_lots: order[1].numBaseLots.toString(),
           place_timestamp: "0",
-          status: 'status',
-          is_buy_order: true
+          status: "status",
+          is_buy_order: true,
         } as Order;
       }
     });
@@ -115,29 +115,32 @@ export const getOpenOrdersForTrader = async (
     let asks = book.data.asks.map((order, i) => {
       let traderIndex = order[1].traderIndex;
       let traderKey = book.data.traderIndexToTraderPubkey.get(traderIndex);
-      if(traderKey && (traderKey === trader)) {
+      if (traderKey && traderKey === trader) {
         return {
           order_sequence_number: order[0].orderSequenceNumber.toString(),
-          order_type: 'LIMIT',
+          order_type: "LIMIT",
           phoenix_market_address: marketAddress,
           trader: trader,
           price_in_ticks: order[0].priceInTicks.toString(),
           size_in_base_lots: order[1].numBaseLots.toString(),
           fill_size_in_base_lots: order[1].numBaseLots.toString(),
           place_timestamp: "0",
-          status: 'status',
-          is_buy_order: false
+          status: "status",
+          is_buy_order: false,
         } as Order;
       }
     });
 
     let allOrders = [...bids, ...asks];
 
-    allOrders = allOrders.filter((element) => element !== null && element !== undefined);
+    allOrders = allOrders.filter(
+      (element) => element !== null && element !== undefined,
+    );
     return allOrders;
-  }
-  catch(err) {
-    console.log(`Error fetching open orders for trader: ${trader}, on market: ${marketAddress}: err: ${err}`);
+  } catch (err) {
+    console.log(
+      `Error fetching open orders for trader: ${trader}, on market: ${marketAddress}: err: ${err}`,
+    );
     return [];
   }
-}
+};

@@ -15,52 +15,52 @@
 }
 
 .columnNameRow {
-    color:#ddd;
-    /* font-weight: bold; */
-    font-size: 0.85rem;
-    display: flex;
-    width: 20%;
-    justify-content: center;  
-  }
-  
-  .columnSubname {
-    color:rgba(87, 87, 87, 1);
-    font-weight: bold;
-    font-size: 0.85rem;
-  }
+  color: #ddd;
+  /* font-weight: bold; */
+  font-size: 0.85rem;
+  display: flex;
+  width: 20%;
+  justify-content: center;
+}
 
-  .cancelOrderButton {
-    color: #e33d3d;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .columnNamesOuterContainer {
-      width: 95%;
-    }
-  }
+.columnSubname {
+  color: rgba(87, 87, 87, 1);
+  font-weight: bold;
+  font-size: 0.85rem;
+}
 
-  .spinnerBox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
+.cancelOrderButton {
+  color: #e33d3d;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .columnNamesOuterContainer {
+    width: 95%;
   }
-  
-  .threeQuarterSpinner {
-    width: 5px;
-    height: 5px;
-    border-top: 3px solid transparent;
-    border-radius: 50%;
-    animation: spin .5s linear 0s infinite;
+}
+
+.spinnerBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.threeQuarterSpinner {
+  width: 5px;
+  height: 5px;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.5s linear 0s infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
   }
-  
-  @keyframes spin {
-    from {
-      transform: rotate(0);
-    }
-    to{
-      transform: rotate(359deg);
-    }
+  to {
+    transform: rotate(359deg);
   }
+}
