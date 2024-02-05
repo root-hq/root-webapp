@@ -443,17 +443,20 @@ const CLOBTrader = ({
                 </button>
             </div>
        </div>
-       <div className={styles.shortcutButtonsContainer}>
-          <div className={styles.resetButtonContainer}>
-            <span
-              className={styles.resetFieldsButton}
-              onClick={() => {
-                resetAllFields()
-              }}
-            >Reset</span>
-          </div>
-        </div>
+       
        <Form>
+          <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+            <div className={styles.shortcutButtonsContainer}>
+            <div className={styles.resetButtonContainer}>
+              <span
+                className={styles.resetFieldsButton}
+                onClick={() => {
+                  resetAllFields()
+                }}
+              >Reset</span>
+            </div>
+          </div>
+          </Form.Group>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
           <div className={styles.formLabelAndFieldContainer}>
                   <Form.Label className={styles.formLabelContainer}>
@@ -611,6 +614,7 @@ const CLOBTrader = ({
               />
             </div>
           </Form.Group>
+          <Form.Group controlId="formInput" className={styles.formGroupContainer}>
           <div className={styles.tradeInfoContainer}>
               <KeyValueComponent 
                   keyElement={
@@ -640,6 +644,7 @@ const CLOBTrader = ({
                   }
                 />
           </div>
+          </Form.Group>
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
             {
               walletState.connected ?
