@@ -13,6 +13,7 @@ import { ComputeBudgetProgram, Connection } from "@solana/web3.js";
 import { Client, getPhoenixEventsFromTransactionSignature } from "@ellipsis-labs/phoenix-sdk";
 import { useBottomStatus } from "../../../../../../components/BottomStatus";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 export interface OrderManagerProps {
     enumeratedMarket: EnumeratedMarketToMetadata;
@@ -111,7 +112,7 @@ const OrderManager = ({
                 
                 updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
                 let response = await walletState.sendTransaction(transaction, connection, { skipPreflight: true});
-                green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
+                green(<span>{`Transaction confirmed `}<Link href={`https://solscan.io/tx/${response}`} target="_blank">{` ↗️`}</Link></span>, 3_000)
                 console.log("Signature: ", response);
               }
               catch(err) {

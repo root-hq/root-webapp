@@ -16,6 +16,7 @@ import { Client, OrderPacket, SelfTradeBehavior, Side, getClaimSeatIx, getCreate
 import {BN } from "@coral-xyz/anchor";
 import { getPriorityFeeEstimate } from '../../../../../utils/helius';
 import { useBottomStatus } from '../../../../../components/BottomStatus';
+import Link from 'next/link';
 
 const WalletMultiButtonDynamic = dynamic(
   async () =>
@@ -224,6 +225,7 @@ const CLOBTrader = ({
   };
 
   const handlePlaceLimitOrderAction = async () => {
+    setIsPlaceOrderButtonLoading(_ => true);
     let marketAddress = spotGridMarket.phoenix_market_address.toString();
 
     if(limitPrice && sendUptoSize) {
@@ -238,7 +240,6 @@ const CLOBTrader = ({
 
       if(isBuyOrder && parseFloat(receiveUptoSize)) {
         // console.log("Limit buy");
-        setIsPlaceOrderButtonLoading(_ => true);
         let priceInTicks = new BN(phoenixClient.floatPriceToTicks(parseFloat(limitPrice), marketAddress));
         let sizeInBaseLosts = new BN(phoenixClient.baseAtomsToBaseLots(parseFloat(receiveUptoSize) * Math.pow(10, baseTokenMetadata.decimals), marketAddress));
         // console.log(`Buying ${sizeInBaseLosts} base lots at ${priceInTicks} price in ticks`);
@@ -292,22 +293,17 @@ const CLOBTrader = ({
           
           updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(transaction, connection);
-          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
+          green(<span>{`Transaction confirmed `}<Link href={`https://solscan.io/tx/${response}`} target="_blank">{` ↗️`}</Link></span>, 3_000)
           console.log("Signature: ", response);
         }
         catch(err) {
           console.log(`Error sending limit buy order: ${err.message}`);
           red(<span>{`Failed: ${err.message}`}</span>, 2_000,)
         }
-
-        setIsPlaceOrderButtonLoading(_ => false);
       }
       else if(!isBuyOrder && parseFloat(sendUptoSize)){
-        // console.log("Limit sell");
-        setIsPlaceOrderButtonLoading(_ => true);
         let priceInTicks = new BN(phoenixClient.floatPriceToTicks(parseFloat(limitPrice), marketAddress));
         let sizeInBaseLosts = new BN(phoenixClient.baseAtomsToBaseLots(parseFloat(sendUptoSize) * Math.pow(10, baseTokenMetadata.decimals), marketAddress));
-        // console.log(`Selling ${sizeInBaseLosts} base lots at ${priceInTicks} price in ticks`);
         
         try {
           let orderPacket = {
@@ -358,7 +354,7 @@ const CLOBTrader = ({
 
           updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(transaction, connection);
-          green(<span><a href={`https://solscan.io/tx/${response}`} target="_blank">{`Transaction confirmed`}</a></span>, 4_000)
+          green(<span>{`Transaction confirmed `}<Link href={`https://solscan.io/tx/${response}`} target="_blank">{` ↗️`}</Link></span>, 3_000)
           console.log("Signature: ", response);
         }
         catch(err) {
@@ -366,9 +362,10 @@ const CLOBTrader = ({
           red(<span>{`Failed: ${err.message}`}</span>, 2_000)
         }
         
-        setIsPlaceOrderButtonLoading(_ => false);
       }
     }
+
+    setIsPlaceOrderButtonLoading(_ => false);
   }
 
   // Reset all fields
@@ -551,8 +548,8 @@ const CLOBTrader = ({
                       handlePlaceLimitOrderAction()
                     }}
                     style={{
-                      backgroundColor: isBuyOrder ? 'rgba(61, 227, 131, 0.10)' : 'rgba(227, 61, 61, 0.10)',
-                      color: isBuyOrder ? '#3DE383' : '#e33d3d'
+                      backgroundColor: isBuyOrder ? 'rgba(61, 227, 131, 0.90)' : 'rgba(227, 61, 61, 0.90)',
+                      color: '#0a0b0e'
                     }}
                   >
                     {
@@ -561,8 +558,8 @@ const CLOBTrader = ({
                         <div
                           className={styles.threeQuarterSpinner}
                           style = {{
-                            border: isBuyOrder ? `3px solid #3DE383` : `3px solid #e33d3d`,
-                            borderTop: `3px solid transparent`
+                            border: '3px solid #0a0b0e',
+                            borderTop: `3px solid transparent`,
                           }}
                         ></div>
                       </div>
