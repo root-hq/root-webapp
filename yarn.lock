@@ -374,7 +374,7 @@
     bs58 "^5.0.0"
     debug "^4.3.4"
 
-"@metaplex-foundation/beet@>=0.1.0", "@metaplex-foundation/beet@^0.7.1":
+"@metaplex-foundation/beet@>=0.1.0", "@metaplex-foundation/beet@^0.7.1", "@metaplex-foundation/beet@^0.7.2":
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/@metaplex-foundation/beet/-/beet-0.7.2.tgz#fa4726e4cfd4fb6fed6cddc9b5213c1c2a2d0b77"
   integrity sha512-K+g3WhyFxKPc0xIvcIjNyV1eaTVJTiuaHZpig7Xx0MuYRMoJLLvhLTnUXhFdR5Tu2l2QSyKwfyXDgZlzhULqFg==

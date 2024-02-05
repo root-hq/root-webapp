@@ -3,6 +3,7 @@ import styles from "./CLOBTrader.module.css";
 import {
   MAX_BPS,
   ROOT_PROTOCOL_FEE_BPS,
+  USDC_MAINNET,
   WRAPPED_SOL_MAINNET,
 } from "../../../../../constants";
 import { SpotGridMarket, TokenMetadata } from "../../../../../utils/supabase";
@@ -10,10 +11,11 @@ import {
   ComputeBudgetProgram,
   Connection,
   LAMPORTS_PER_SOL,
+  SystemProgram,
   VersionedTransaction,
 } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { getAssociatedTokenAddress } from "@solana/spl-token";
+import { TOKEN_PROGRAM_ID, getAssociatedTokenAddress } from "@solana/spl-token";
 import { web3 } from "@coral-xyz/anchor";
 import { formatNumbersWithCommas, removeCommas } from "../../../../../utils";
 import { Button, Form } from "react-bootstrap";
@@ -26,7 +28,10 @@ import { KeyValueJustification } from "../../../../../components/KeyValueCompone
 import Image from "next/image";
 import {
   Client,
+  InitializeParams,
+  MarketSizeParams,
   OrderPacket,
+  PROGRAM_ADDRESS,
   SelfTradeBehavior,
   Side,
   getClaimSeatIx,
@@ -36,6 +41,7 @@ import { BN } from "@coral-xyz/anchor";
 import { getPriorityFeeEstimate } from "../../../../../utils/helius";
 import { useBottomStatus } from "../../../../../components/BottomStatus";
 import Link from "next/link";
+import { createNewMarketInstruction } from "../../../../../utils/phoenix/initializeMarket";
 
 const WalletMultiButtonDynamic = dynamic(
   async () =>
