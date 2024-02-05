@@ -457,7 +457,7 @@ const CLOBTrader = ({
           <Form.Group controlId="formInput" className={styles.formGroupContainer}>
           <div className={styles.formLabelAndFieldContainer}>
                   <Form.Label className={styles.formLabelContainer}>
-                    <span>Limit price</span>
+                    <span>{isBuyOrder ? 'Buy' : 'Sell'} price</span>
                   </Form.Label>
                   <Form.Control
                     placeholder="0.00"
