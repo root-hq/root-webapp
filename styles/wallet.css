@@ -22,7 +22,7 @@
 }
 
 .wallet-adapter-button:not([disabled]):focus-visible {
-  outline-color: white;
+  outline-color: #eee;
 }
 
 .wallet-adapter-button:not([disabled]):hover {
@@ -159,7 +159,7 @@
 }
 
 .wallet-adapter-modal-button-close:focus-visible {
-  outline-color: white;
+  outline-color: #eee;
 }
 
 .wallet-adapter-modal-button-close svg {

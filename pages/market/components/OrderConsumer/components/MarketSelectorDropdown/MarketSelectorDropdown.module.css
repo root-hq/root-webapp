@@ -27,10 +27,9 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  background-color: #0b0d12;
+  background-color: #0a0b0e;
   border: 1px solid rgba(87, 87, 87, 1.0);
   border-radius: 0.25rem;
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
   z-index: 10;
   margin-left: 0.5rem;
   margin-top: 0.5rem;
@@ -67,7 +66,7 @@
   margin: 0.25rem;
   font-weight: bold;
   font-size: 1.1rem;
-  color: white;
+  color: #eee;
 }
 
 .caretContainer {
@@ -79,6 +78,14 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+
+.otherMarketRowContainer {
+  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .otherMarketRowContainer:hover {

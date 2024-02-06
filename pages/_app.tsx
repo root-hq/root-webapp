@@ -69,7 +69,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
             </ConnectionProvider>
           </BottomStatusProvider>
         :
-          <div style={{color: `white`}}>{`Not ready, needs hard refresh`}</div>
+          <div style={{color: `#ddd`}}>{`Not ready, needs hard refresh`}</div>
       }
 
       <link

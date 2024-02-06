@@ -7,7 +7,7 @@
   /* border-radius: 0.75rem; */
   width: 100%;
   height: 300px;
-  color: white;
+  color: #eee;
 }
 
 .topMenuContainer {
@@ -61,7 +61,7 @@
   cursor: pointer;
   background-color: #0b0d12;
   white-space: nowrap;
-  color: white;
+  color: #eee;
   border-top: 1px solid rgba(87, 87, 87, 0.25);
   border-left: 1px solid rgba(87, 87, 87, 0.25);
   border-bottom: 1px solid rgba(87, 87, 87, 0.25);
@@ -76,7 +76,7 @@
   cursor: pointer;
   background-color: #0b0d12;
   white-space: nowrap;
-  color: white;
+  color: #eee;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   border: none;
@@ -137,7 +137,7 @@
   justify-content: space-between;
   cursor: pointer;
   background-color: #0b0d12;
-  color: white;
+  color: #eee;
   border-top: 1px solid rgba(87, 87, 87, 0.25);
   border-left: 1px solid rgba(87, 87, 87, 0.25);
   border-bottom: 1px solid rgba(87, 87, 87, 0.25);
@@ -154,7 +154,7 @@
   justify-content: space-between;
   cursor: pointer;
   background-color: #0b0d12;
-  color: white;
+  color: #eee;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   border: none;
