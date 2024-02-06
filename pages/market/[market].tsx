@@ -4,9 +4,6 @@ import styles from "./MarketPage.module.css";
 const OrderConsumer = dynamic(() => import("./components/OrderConsumer"), {
   ssr: false,
 });
-const Orderbook = dynamic(() => import("./components/Orderbook"), {
-  ssr: false
-});
 const CLOBTrader = dynamic(
   () => import("./components/OrderProducer/CLOBTrader"),
   { ssr: false },
@@ -122,9 +119,6 @@ const MarketPage = ({
             connection={connection}
           />
         </div>
-        {/* <div className={styles.orderBookContainer}>
-          <Orderbook />
-        </div> */}
       </div>
       <div className={styles.orderProducerContainer}>
         <CLOBTrader
