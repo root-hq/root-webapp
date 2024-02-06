@@ -97,9 +97,9 @@ export const BottomStatusProvider = ({ children }) => {
     updateStatusCustom(
       status,
       duration,
-      { color: "#e33d3d" },
+      { color: "#0a0b0e" },
       {
-        backgroundColor: "#150e11",
+        backgroundColor: "#e33d3d",
         borderTop: `1px solid rgba(227, 61, 61, 0.25)`,
       },
     );
@@ -109,9 +109,9 @@ export const BottomStatusProvider = ({ children }) => {
     updateStatusCustom(
       status,
       duration,
-      { color: "#3DE383" },
+      { color: "#0a0b0e" },
       {
-        backgroundColor: "#12211b",
+        backgroundColor: "#3DE383",
         borderTop: `1px solid rgba(61, 227, 131, 0.25)`,
       },
     );
