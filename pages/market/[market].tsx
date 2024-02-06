@@ -20,7 +20,6 @@ import {
   getMarketForPhoenixMarket,
 } from "../../utils/supabase/SpotGridMarket";
 
-import { IChartApi } from "lightweight-charts";
 import { web3 } from "@coral-xyz/anchor";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
 import { Connection } from "@solana/web3.js";

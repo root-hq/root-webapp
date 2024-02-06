@@ -4,7 +4,7 @@ import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import { EnumeratedMarketToMetadata } from "../../[market]";
 
 import { ChartingLibraryWidgetOptions, ResolutionString } from "public/static/charting_library/charting_library";
-const TVChartContainer = dynamic(() => import("./components/TradingViewChart").then((mod) => mod.TVChartContainer), {ssr: false});
+const TVChartContainer = dynamic(() => import("./components/TradingViewChart").then((mod) => mod), {ssr: false});
 
 const MarketSelectorDropdown = dynamic(
   () => import("./components/MarketSelectorDropdown"),
@@ -17,7 +17,6 @@ const MarketStats = dynamic(() => import("./components/MarketStats"), {
   ssr: false
 });
 
-import { IChartApi } from "lightweight-charts";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
 import dynamic from "next/dynamic";
 import { Connection } from "@solana/web3.js";
