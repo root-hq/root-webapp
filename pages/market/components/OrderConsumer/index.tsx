@@ -18,6 +18,9 @@ const LightweightChart = dynamic(
 const OrderManager = dynamic(() => import("./components/OrderManager"), {
   ssr: false,
 });
+const MarketStats = dynamic(() => import("./components/MarketStats"), {
+  ssr: false
+});
 
 import { IChartApi } from "lightweight-charts";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
@@ -95,6 +98,7 @@ const OrderConsumer = ({
               />
             </div>
             <div className={styles.marketStatsContainer}>
+              <MarketStats enumeratedMarket={activeEnumeratedMarket}/>
             </div>
           </div>
           <div className={styles.tradingViewChartContainer}>

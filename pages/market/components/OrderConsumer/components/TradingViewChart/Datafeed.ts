@@ -105,7 +105,7 @@ import {
   
   export default {
     onReady: (callback: (configuration: DatafeedConfiguration) => void) => {
-      console.log('[onReady]: Method call')
+      // console.log('[onReady]: Method call')
       setTimeout(() => callback(configurationData as any))
     },
   
@@ -124,7 +124,7 @@ import {
       onResolveErrorCallback: any,
       // extension
     ) => {
-      console.log('[resolveSymbol]: Method call', symbolAddress)
+      // console.log('[resolveSymbol]: Method call', symbolAddress)
 
       let symbolItem:
         | {
@@ -168,7 +168,7 @@ import {
         format: 'price',
       }
   
-      console.log('[resolveSymbol]: Symbol resolved', symbolAddress)
+      // console.log('[resolveSymbol]: Symbol resolved', symbolAddress)
       onSymbolResolvedCallback(symbolInfo)
     },
   
@@ -190,7 +190,7 @@ import {
       onErrorCallback: (e: any) => void,
     ) => {
       const { from, to } = periodParams
-      console.log('[getBars]: Method call', symbolInfo, resolution, from, to)
+      // console.log('[getBars]: Method call', symbolInfo, resolution, from, to)
       const urlParameters = {
         address: symbolInfo.address,
         type: parseResolution(resolution),
@@ -239,10 +239,10 @@ import {
       subscriberUID,
       onResetCacheNeededCallback
     ) => {
-      console.log(
-        '[subscribeBars]: Method call with subscriberUID:',
-        subscriberUID
-      )
+      // console.log(
+      //   '[subscribeBars]: Method call with subscriberUID:',
+      //   subscriberUID
+      // )
       subscribeOnStream(
         symbolInfo,
         resolution,
@@ -254,7 +254,7 @@ import {
     },
   
     unsubscribeBars: () => {
-      console.log('[unsubscribeBars]')
+      // console.log('[unsubscribeBars]')
       unsubscribeFromStream()
     },
   }

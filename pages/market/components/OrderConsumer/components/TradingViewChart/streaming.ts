@@ -14,7 +14,7 @@ const socket = new WebSocket(
 
 // Connection opened
 socket.addEventListener('open', (event) => {
-  console.log('[socket] Connected')
+  // console.log('[socket] Connected')
 })
 
 // Listen for messages
@@ -39,7 +39,7 @@ socket.addEventListener('message', (msg) => {
       close: data.data.c,
       volume: data.data.v,
     }
-    console.log('[socket] Generate new bar')
+    // console.log('[socket] Generate new bar')
   } else {
     bar = {
       ...lastBar,
@@ -48,7 +48,7 @@ socket.addEventListener('message', (msg) => {
       close: data.data.c,
       volume: data.data.v,
     }
-    console.log('[socket] Update the latest bar by price')
+    // console.log('[socket] Update the latest bar by price')
   }
 
   subscriptionItem.lastBar = bar

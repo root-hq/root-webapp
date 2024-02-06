@@ -1,6 +1,5 @@
 import axios from "axios";
 import { TokenPrice } from ".";
-import { PRICE_CHART_DATA_SAMPLES } from "../../constants";
 
 export const getTokenPriceDataWithDate = async (
   marketAddress: string,

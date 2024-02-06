@@ -97,10 +97,7 @@ export const createNewMarketInstruction = (initializeMarketParams: InitializePar
   const logAuthority = getLogAuthority();
 
   const marketKeypair = web3.Keypair.generate();
-  console.log("New market: ", marketKeypair.publicKey.toString());
-  console.log("Base mint: ", baseMint.toString());
-  console.log("Quote mint: ", quoteMint.toString());
-  
+
   const baseVault = getPhoenixVaultAddress(marketKeypair.publicKey, baseMint);
   const quoteVault = getPhoenixVaultAddress(marketKeypair.publicKey, quoteMint);
 

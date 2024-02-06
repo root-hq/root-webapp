@@ -140,7 +140,7 @@ const CLOBTrader = ({
 
   useEffect(() => {
     if (receiveUptoSize) {
-      console.log("Receive upto size: ", receiveUptoSize);
+      // console.log("Receive upto size: ", receiveUptoSize);
       updateStatus(
         <div>
           <span

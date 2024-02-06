@@ -1,8 +1,8 @@
-export const removeCommas = (value) => {
+export const removeCommas = (value: string): string => {
   return value.replace(/,/g, "");
 };
 
-export const formatWithCommas = (value) => {
+export const formatWithCommas = (value: string): string => {
   const withoutCommas = removeCommas(value);
 
   const parts = withoutCommas.split(".");

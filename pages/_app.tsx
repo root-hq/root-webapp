@@ -47,7 +47,6 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
           src="/static/datafeeds/udf/dist/bundle.js"
           strategy="lazyOnload"
           onReady={() => {
-            console.log("Setting to ready");
             setIsScriptReady(true);
           }}
         />
