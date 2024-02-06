@@ -152,7 +152,7 @@ const CLOBTrader = ({
         </div>,
       );
     } else {
-      resetStatus();
+      // resetStatus();
     }
   }, [receiveUptoSize]);
 
