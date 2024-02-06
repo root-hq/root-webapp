@@ -72,8 +72,8 @@ const OrderConsumer = ({
   }, [selectedSpotGridMarket]);
 
   const defaultWidgetProps: Partial<ChartingLibraryWidgetOptions> = {
-    symbol: `${baseTokenMetadata.mint}`,
-    interval: "5m" as ResolutionString,
+    symbol: `${baseTokenMetadata.mint}/${quoteTokenMetadata.mint}`,
+    interval: "5" as ResolutionString,
     library_path: "/static/charting_library/",
     locale: "en",
     fullscreen: false,

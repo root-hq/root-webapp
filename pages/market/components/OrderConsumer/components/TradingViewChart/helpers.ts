@@ -5,8 +5,10 @@ export const BE_API_KEY = process.env.BIRDEYE_API_KEY;
 // Make requests to Birdeye API
 export async function makeApiRequest(path) {
   try {
+    const FULL_PATH = `https://public-api.birdeye.so/${path}`;
+
     const response = await fetch(
-      `https://public-api.birdeye.so/${path}`,
+      FULL_PATH,
       {
         headers: {
           "X-API-KEY": BE_API_KEY,
