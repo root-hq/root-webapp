@@ -15,17 +15,19 @@
 
 .marketInfoContainer {
   display: flex;
-  border-top: 1px solid rgba(87, 87, 87, 1.0);
+  /* border-top: 1px solid rgba(87, 87, 87, 1.0);
   border-left: 1px solid rgba(87, 87, 87, 1.0);
-  border-right: 1px solid rgba(87, 87, 87, 1.0);
+  border-right: 1px solid rgba(87, 87, 87, 1.0); */
   border-radius: 0.75rem 0.75rem 0rem 0rem ;
+  background-color: #0B0C11;
 }
 
 .tradingViewChartContainer {
-  border-bottom: 1px solid rgba(87, 87, 87, 1.0);
+  /* border-bottom: 1px solid rgba(87, 87, 87, 1.0);
   border-left: 1px solid rgba(87, 87, 87, 1.0);
-  border-right: 1px solid rgba(87, 87, 87, 1.0);
+  border-right: 1px solid rgba(87, 87, 87, 1.0); */
   border-radius: 0rem 0rem 0.75rem 0.75rem;
+  background-color: #0B0C11;
 }
 
 .marketSelectorContainer {
@@ -34,22 +36,6 @@
 
 .marketStatsContainer {
   width: 80%;
-}
-
-@media (max-width: 1024px) {
-  .marketInfoContainer {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .marketSelectorContainer {
-    width: 100%;
-  }
-  
-  .marketStatsContainer {
-    width: 100%;
-  }
 }
 
 .orderManagerOuterContainer {
@@ -65,6 +51,33 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border: 1px solid rgba(87, 87, 87, 1.0);
+  /* border: 1px solid rgba(87, 87, 87, 1.0); */
   border-radius: 0.75rem;
+  background-color: #0B0C11;
+}
+
+@media (max-width: 1024px) {
+  .marketInfoContainer {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .marketDataContainer {
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+
+  .orderManagerOuterContainer {
+    padding-left: 0rem;
+    padding-right: 0rem;
+  }
+
+  .marketSelectorContainer {
+    width: 100%;
+  }
+  
+  .marketStatsContainer {
+    width: 100%;
+  }
 }

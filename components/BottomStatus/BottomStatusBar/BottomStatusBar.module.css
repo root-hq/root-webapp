@@ -1,7 +1,7 @@
 .bottomStatusBarContainer {
   display: flex;
   flex-direction: row;
-  background-color: #0c0e12;
+  background-color: #0a0a0a;
   width: 100%;
   position: fixed;
   border-top: 1px solid rgba(87, 87, 87, 0.15);

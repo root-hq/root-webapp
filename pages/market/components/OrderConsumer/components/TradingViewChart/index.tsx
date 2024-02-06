@@ -9,8 +9,8 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
 
 	var customCSS =
 		`:root:not(.theme-dark) {
-		  --tv-color-platform-background: #0a0b0e;
-		  --tv-color-pane-background: #0a0b0e;
+		  --tv-color-platform-background: #0B0C11;
+		  --tv-color-pane-background: #0B0C11;
 		  --tv-color-toolbar-button-background-hover: #222222;
 		  --tv-color-toolbar-button-background-expanded: #222222;
 		  --tv-color-toolbar-button-background-active: #222222;
@@ -20,7 +20,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
 		  --tv-color-toolbar-button-text-active: #e33d3d;
 		  --tv-color-toolbar-button-text-active-hover: #fff;
 		  --tv-color-item-active-text: rgb(6, 6, 255);
-		  --tv-color-toolbar-toggle-button-background-active: #0a0b0e;
+		  --tv-color-toolbar-toggle-button-background-active: #0B0C11;
 		  --tv-color-toolbar-toggle-button-background-active-hover: #ddd;
 		  --tv-color-toolbar-divider-background: #ddd;
 	  }
@@ -44,11 +44,11 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
 			enabled_features: [ "create_volume_indicator_by_default"],
 			custom_css_url: cssBlobUrl,
 			loading_screen: {
-				backgroundColor: '#0a0b0e',
+				backgroundColor: '#0B0C11',
 				foregroundColor: '#eee',
 			},
 			overrides: {
-				"paneProperties.background": "#111111",
+				"paneProperties.background": "#0F1118",
 				"paneProperties.vertGridProperties.color": "rgba(221, 221, 221, 0.05)",
 				"paneProperties.horzGridProperties.color": "rgba(221, 221, 221, 0.05)",
 				"scalesProperties.lineColor": "rgba(221, 221, 221, 0.5)",

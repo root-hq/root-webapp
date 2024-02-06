@@ -1,20 +1,10 @@
 .clobTraderContainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   color: white;
-  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-  border-right: 1px solid rgba(87, 87, 87, 0.25);
   box-sizing: border-box;
-}
-
-@media (max-width: 1024px) {
-  .clobTraderContainer {
-    border: 1px solid rgba(87, 87, 87, 0.25);
-    margin-top: 2rem;
-    margin-bottom: 3rem;
-  }
 }
 
 .tabsContainer {

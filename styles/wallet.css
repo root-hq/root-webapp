@@ -17,7 +17,7 @@
 }
 
 .wallet-adapter-button-trigger {
-  background-color: #0a0b0e;
+  background-color: #0B0C11;
   border: 1px solid rgba(87, 87, 87, 0.25);
 }
 
@@ -74,7 +74,7 @@
   right: 0;
   margin: 0;
   list-style: none;
-  background: #0a0b0e;
+  background: #0B0C11;
   border: 1px solid rgba(87, 87, 87, 1.0);
   border-radius: 10px;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.6);
@@ -204,7 +204,7 @@
   z-index: 1050;
   max-width: 400px;
   border-radius: 10px;
-  background: #0a0b0e;
+  background: #0B0C11;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.6);
   /* font-family: 'DM Sans', 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif; */
   flex: 1;
@@ -292,7 +292,7 @@
   cursor: pointer;
   margin-top: 48px;
   width: 100%;
-  background-color: #0a0b0e;
+  background-color: #0B0C11;
   padding: 12px;
   font-size: 18px;
   border: none;

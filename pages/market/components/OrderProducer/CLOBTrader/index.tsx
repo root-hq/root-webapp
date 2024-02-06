@@ -693,7 +693,7 @@ const CLOBTrader = ({
                 backgroundColor: isBuyOrder
                   ? "rgba(61, 227, 131, 0.90)"
                   : "rgba(227, 61, 61, 0.90)",
-                color: "#0a0b0e",
+                color: "#0B0C11",
               }}
             >
               {isPlaceOrderButtonLoading ? (
@@ -701,7 +701,7 @@ const CLOBTrader = ({
                   <div
                     className={styles.threeQuarterSpinner}
                     style={{
-                      border: "3px solid #0a0b0e",
+                      border: "3px solid #0B0C11",
                       borderTop: `3px solid transparent`,
                     }}
                   ></div>
