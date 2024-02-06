@@ -15,10 +15,10 @@
 }
 
 .orderConsumerChartContainer {
-  width: 80%;
+  width: 100%;
 }
 
-.orderBookContainer {
+/* .orderBookContainer {
   width: 20%;
   border-right: 1px solid rgba(87, 87, 87, 0.25);
 }
@@ -27,16 +27,16 @@
   .orderBookContainer {
     border-bottom: 1px solid rgba(87, 87, 87, 0.25);
   }
-}
+} */
 
 @media (max-width: 1025px) {
   .orderConsumerChartContainer {
     width: 100%;
   }
 
-  .orderBookContainer {
+  /* .orderBookContainer {
     display: none;
-  }
+  } */
 }
 
 

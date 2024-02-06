@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import type { FC } from "react";
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import {
   ConnectionProvider,
@@ -12,6 +12,7 @@ import { clusterApiUrl } from "@solana/web3.js";
 import { WalletModalProvider } from "../components/Wallet";
 import { BottomStatusProvider } from "../components/BottomStatus";
 import BottomStatusBar from "../components/BottomStatus/BottomStatusBar";
+import Script from "next/script";
 
 // Use require instead of import since order matters
 // require("bootstrap/dist/css/bootstrap.min.css");
@@ -33,28 +34,43 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
     [],
   );
 
+  const [isScriptReady, setIsScriptReady] = useState(false);
+
   return (
     <>
       <Head>
         <title>Root - Efficient limit orders on Solana</title>
         <link rel="icon" href="/images/root-logo.png" />
-      </Head>
+        </Head>
 
-      <BottomStatusProvider>
-        <ConnectionProvider endpoint={endpoint}>
-          <WalletProvider wallets={wallets}>
-            <WalletModalProvider>
-              <div>
-                <Header />
-              </div>
-              <Component {...pageProps} />
-              <div>
-                <BottomStatusBar />
-              </div>
-            </WalletModalProvider>
-          </WalletProvider>
-        </ConnectionProvider>
-      </BottomStatusProvider>
+        <Script
+          src="/static/datafeeds/udf/dist/bundle.js"
+          strategy="lazyOnload"
+          onReady={() => {
+            console.log("Setting to ready");
+            setIsScriptReady(true);
+          }}
+        />
+      {
+        isScriptReady ?
+          <BottomStatusProvider>
+            <ConnectionProvider endpoint={endpoint}>
+              <WalletProvider wallets={wallets}>
+                <WalletModalProvider>
+                  <div>
+                    <Header />
+                  </div>
+                  <Component {...pageProps} />
+                  <div>
+                    <BottomStatusBar />
+                  </div>
+                </WalletModalProvider>
+              </WalletProvider>
+            </ConnectionProvider>
+          </BottomStatusProvider>
+        :
+          <div style={{color: `white`}}>{`Not ready, needs hard refresh`}</div>
+      }
 
       <link
         rel="stylesheet"

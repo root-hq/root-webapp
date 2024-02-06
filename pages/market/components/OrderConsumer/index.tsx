@@ -4,6 +4,9 @@ import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import { EnumeratedMarketToMetadata } from "../../[market]";
 import { SeriesManagerInstance } from "./components/LightweightChart";
 
+import { ChartingLibraryWidgetOptions, ResolutionString } from "public/static/charting_library/charting_library";
+const TVChartContainer = dynamic(() => import("./components/TradingViewChart").then((mod) => mod.TVChartContainer), {ssr: false});
+
 const MarketSelectorDropdown = dynamic(
   () => import("./components/MarketSelectorDropdown"),
   { ssr: false },
@@ -68,6 +71,20 @@ const OrderConsumer = ({
     doStuff();
   }, [selectedSpotGridMarket]);
 
+  const defaultWidgetProps: Partial<ChartingLibraryWidgetOptions> = {
+    symbol: "AAPL",
+    interval: "1D" as ResolutionString,
+    library_path: "/static/charting_library/",
+    locale: "en",
+    charts_storage_url: "https://saveload.tradingview.com",
+    charts_storage_api_version: "1.1",
+    client_id: "tradingview.com",
+    user_id: "public_user_id",
+    fullscreen: false,
+    autosize: true,
+  };
+
+
   return (
     <div className={styles.orderConsumerContainer}>
       <div className={styles.orderVisualContainer}>
@@ -83,7 +100,7 @@ const OrderConsumer = ({
           </div>
         </div>
         <div className={styles.lightweightChartContainer}>
-          <LightweightChart
+          {/* <LightweightChart
             selectedSpotGridMarket={activeMarket}
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
@@ -91,7 +108,8 @@ const OrderConsumer = ({
             chartManagerHandler={chartManagerHandler}
             leastDisplayDate={leastDisplayDate}
             leastKnownBar={leastKnownBar}
-          />
+          /> */}
+          <TVChartContainer {...defaultWidgetProps}/>
         </div>
       </div>
       <div className={styles.orderManagerContainer}>

@@ -122,9 +122,9 @@ const MarketPage = ({
             connection={connection}
           />
         </div>
-        <div className={styles.orderBookContainer}>
+        {/* <div className={styles.orderBookContainer}>
           <Orderbook />
-        </div>
+        </div> */}
       </div>
       <div className={styles.orderProducerContainer}>
         <CLOBTrader
