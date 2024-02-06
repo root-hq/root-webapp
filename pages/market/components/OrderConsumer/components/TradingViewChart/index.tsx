@@ -40,7 +40,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
 			container: chartContainerRef.current,
 			library_path: props.library_path,
 			locale: props.locale as LanguageCode,
-			disabled_features: ["use_localstorage_for_settings", "header_symbol_search", "header_compare", "header_undo_redo", "header_quick_search", "study_templates"],
+			disabled_features: ["use_localstorage_for_settings", "header_symbol_search", "header_compare", "header_undo_redo", "header_quick_search", "study_templates", "left_toolbar"],
 			enabled_features: [ "create_volume_indicator_by_default"],
 			custom_css_url: cssBlobUrl,
 			loading_screen: {

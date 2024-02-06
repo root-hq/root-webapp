@@ -83,39 +83,34 @@ const OrderConsumer = ({
 
   return (
     <div className={styles.orderConsumerContainer}>
-      <div className={styles.orderVisualContainer}>
-        <div className={styles.marketInfoContainer}>
-          <div className={styles.marketSelectorContainer}>
-            <MarketSelectorDropdown
-              enumeratedMarkets={enumeratedMarkets}
-              selectedBaseTokenMetadata={baseTokenMetadata}
-              selectedQuoteTokenMetadata={quoteTokenMetadata}
-              topLevelActiveMarketState={activeMarket}
-              setTopLevelActiveMarketState={setActiveMarket}
-            />
+      <div className={styles.marketDataContainer}>
+          <div className={styles.marketInfoContainer}>
+            <div className={styles.marketSelectorContainer}>
+              <MarketSelectorDropdown
+                enumeratedMarkets={enumeratedMarkets}
+                selectedBaseTokenMetadata={baseTokenMetadata}
+                selectedQuoteTokenMetadata={quoteTokenMetadata}
+                topLevelActiveMarketState={activeMarket}
+                setTopLevelActiveMarketState={setActiveMarket}
+              />
+            </div>
+            <div className={styles.marketStatsContainer}>
+            </div>
+          </div>
+          <div className={styles.tradingViewChartContainer}>
+            <TVChartContainer {...defaultWidgetProps}/>
           </div>
         </div>
-        <div className={styles.lightweightChartContainer}>
-          {/* <LightweightChart
-            selectedSpotGridMarket={activeMarket}
+      <div className={styles.orderManagerOuterContainer}>
+        <div className={styles.orderManagerContainer}>
+          <OrderManager
+            enumeratedMarket={activeEnumeratedMarket}
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
-            seriesManagerHandler={seriesManagerHandler}
-            chartManagerHandler={chartManagerHandler}
-            leastDisplayDate={leastDisplayDate}
-            leastKnownBar={leastKnownBar}
-          /> */}
-          <TVChartContainer {...defaultWidgetProps}/>
+            phoenixClient={phoenixClient}
+            connection={connection}
+          />
         </div>
-      </div>
-      <div className={styles.orderManagerContainer}>
-        <OrderManager
-          enumeratedMarket={activeEnumeratedMarket}
-          baseTokenMetadata={baseTokenMetadata}
-          quoteTokenMetadata={quoteTokenMetadata}
-          phoenixClient={phoenixClient}
-          connection={connection}
-        />
       </div>
     </div>
   );
