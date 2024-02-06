@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarketStats.module.css";
-import { makeApiRequest } from "../TradingViewChart/helpers";
+import { makeApiRequest } from "../../../../../../utils/birdeye/helpers";
 import { EnumeratedMarketToMetadata } from "pages/market/[market]";
 import { formatWithCommas } from "utils";
 import { MARKET_STATS_REFRESH_FREQUENCY_IN_MS, PRICE_REFRESH_FREQUENCY_IN_MS } from "constants/";
