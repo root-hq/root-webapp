@@ -94,7 +94,7 @@ import {
             high: bar.h,
             open: bar.o,
             close: bar.c,
-            volume: bar.v,
+            volume: bar.vQuote,
             timestamp,
           },
         ]
