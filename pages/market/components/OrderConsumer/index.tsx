@@ -72,14 +72,10 @@ const OrderConsumer = ({
   }, [selectedSpotGridMarket]);
 
   const defaultWidgetProps: Partial<ChartingLibraryWidgetOptions> = {
-    symbol: "AAPL",
-    interval: "1D" as ResolutionString,
+    symbol: `${baseTokenMetadata.mint}`,
+    interval: "5m" as ResolutionString,
     library_path: "/static/charting_library/",
     locale: "en",
-    charts_storage_url: "https://saveload.tradingview.com",
-    charts_storage_api_version: "1.1",
-    client_id: "tradingview.com",
-    user_id: "public_user_id",
     fullscreen: false,
     autosize: true,
   };
