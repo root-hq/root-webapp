@@ -11,15 +11,15 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
 		`:root:not(.theme-dark) {
 		  --tv-color-platform-background: #0B0C11;
 		  --tv-color-pane-background: #0B0C11;
-		  --tv-color-toolbar-button-background-hover: #222222;
-		  --tv-color-toolbar-button-background-expanded: #222222;
-		  --tv-color-toolbar-button-background-active: #222222;
-		  --tv-color-toolbar-button-background-active-hover: #222222;
+		  --tv-color-toolbar-button-background-hover: #12161E;
+		  --tv-color-toolbar-button-background-expanded: #12161E;
+		  --tv-color-toolbar-button-background-active: #12161E;
+		  --tv-color-toolbar-button-background-active-hover: #12161E;
 		  --tv-color-toolbar-button-text: #ddd;
 		  --tv-color-toolbar-button-text-hover: #fff;
-		  --tv-color-toolbar-button-text-active: #e33d3d;
+		  --tv-color-toolbar-button-text-active: #fff;
 		  --tv-color-toolbar-button-text-active-hover: #fff;
-		  --tv-color-item-active-text: rgb(6, 6, 255);
+		  --tv-color-item-active-text: #ddd;
 		  --tv-color-toolbar-toggle-button-background-active: #0B0C11;
 		  --tv-color-toolbar-toggle-button-background-active-hover: #ddd;
 		  --tv-color-toolbar-divider-background: #ddd;
@@ -40,7 +40,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
 			container: chartContainerRef.current,
 			library_path: props.library_path,
 			locale: props.locale as LanguageCode,
-			disabled_features: ["use_localstorage_for_settings", "header_symbol_search", "header_compare", "header_undo_redo", "header_quick_search", "study_templates", "left_toolbar"],
+			disabled_features: ["use_localstorage_for_settings", "header_symbol_search", "header_compare", "header_undo_redo", "header_quick_search", "study_templates"],
 			enabled_features: [ "create_volume_indicator_by_default"],
 			custom_css_url: cssBlobUrl,
 			loading_screen: {
