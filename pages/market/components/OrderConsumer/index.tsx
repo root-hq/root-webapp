@@ -2,17 +2,12 @@ import React, { useEffect, useState } from "react";
 import styles from "./OrderConsumer.module.css";
 import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import { EnumeratedMarketToMetadata } from "../../[market]";
-import { SeriesManagerInstance } from "./components/LightweightChart";
 
 import { ChartingLibraryWidgetOptions, ResolutionString } from "public/static/charting_library/charting_library";
 const TVChartContainer = dynamic(() => import("./components/TradingViewChart").then((mod) => mod.TVChartContainer), {ssr: false});
 
 const MarketSelectorDropdown = dynamic(
   () => import("./components/MarketSelectorDropdown"),
-  { ssr: false },
-);
-const LightweightChart = dynamic(
-  () => import("./components/LightweightChart"),
   { ssr: false },
 );
 const OrderManager = dynamic(() => import("./components/OrderManager"), {
@@ -33,10 +28,6 @@ export interface OrderConsumerProps {
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
   phoenixClient: Client;
-  seriesManagerHandler: React.MutableRefObject<SeriesManagerInstance>;
-  chartManagerHandler: React.MutableRefObject<IChartApi>;
-  leastDisplayDate: React.MutableRefObject<Date>;
-  leastKnownBar: React.MutableRefObject<number>;
   connection: Connection;
 }
 
@@ -46,10 +37,6 @@ const OrderConsumer = ({
   baseTokenMetadata,
   quoteTokenMetadata,
   phoenixClient,
-  seriesManagerHandler,
-  chartManagerHandler,
-  leastDisplayDate,
-  leastKnownBar,
   connection
 }: OrderConsumerProps) => {
   const [activeMarket, setActiveMarket] = useState(selectedSpotGridMarket);

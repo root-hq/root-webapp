@@ -20,7 +20,6 @@ import {
   getMarketForPhoenixMarket,
 } from "../../utils/supabase/SpotGridMarket";
 
-import { SeriesManagerInstance } from "./components/OrderConsumer/components/LightweightChart";
 import { IChartApi } from "lightweight-charts";
 import { web3 } from "@coral-xyz/anchor";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
@@ -47,12 +46,8 @@ const MarketPage = ({
   baseTokenMetadata,
   quoteTokenMetadata,
 }: MarketPageProps) => {
-  const seriesManager = useRef<SeriesManagerInstance>(null);
   const [phoenixClient, setPhoenixClient] = useState<Client>(null);
   const [connection, setConnection] = useState<Connection>(new web3.Connection(`https://api.mainnet-beta.solana.com`));
-  const chartManager = useRef<IChartApi>(null);
-  const leastDatedata = useRef<Date>(null);
-  const leastKnownBar = useRef<number>();
 
   const [selectedSpotGridMarket, setSelectedSpotGridMarket] =
     useState<SpotGridMarket>();
@@ -112,10 +107,6 @@ const MarketPage = ({
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
             phoenixClient={phoenixClient}
-            seriesManagerHandler={seriesManager}
-            chartManagerHandler={chartManager}
-            leastDisplayDate={leastDatedata}
-            leastKnownBar={leastKnownBar}
             connection={connection}
           />
         </div>
