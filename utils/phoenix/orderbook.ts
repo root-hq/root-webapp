@@ -1,6 +1,7 @@
 import { Client, L3UiBook, Side } from "@ellipsis-labs/phoenix-sdk";
 import { web3 } from "@coral-xyz/anchor";
 import { Order } from "..";
+import { UserGlobalBalances } from "pages/market/components/OrderConsumer/components/OrderManager";
 
 export const getL3Book = async (
   marketAddress: string,
@@ -144,3 +145,38 @@ export const getOpenOrdersForTrader = async (
     return [];
   }
 };
+
+export const getTraderState = async(
+  phoenixClient: Client,
+  marketAddress: string,
+  trader: string
+): Promise<UserGlobalBalances> => {
+  try {
+    phoenixClient.refreshMarket(marketAddress, true);
+
+    const marketState = phoenixClient.marketStates.get(marketAddress);
+
+    let userState = marketState.data.traders.get(trader);
+
+    return {
+      baseWalletBalance: 0.0,
+      quoteWalletBalance: 0.0,
+      baseActiveOrdersBalance: parseFloat(userState.baseLotsLocked.toString()),
+      quoteActiveOrdersBalance: parseFloat(userState.quoteLotsLocked.toString()),
+      baseWithdrawableBalance: parseFloat(userState.baseLotsFree.toString()),
+      quoteWithdrawableBalance: parseFloat(userState.quoteLotsFree.toString())
+    }
+  }
+  catch(err) {
+    console.log(`Error fetching trader state: ${err}`);
+  }
+
+  return {
+    baseWalletBalance: 0.0,
+    quoteWalletBalance: 0.0,
+    baseActiveOrdersBalance: 0.0,
+    quoteActiveOrdersBalance: 0.0,
+    baseWithdrawableBalance: 0.0,
+    quoteWithdrawableBalance: 0.0
+  } as UserGlobalBalances;
+}

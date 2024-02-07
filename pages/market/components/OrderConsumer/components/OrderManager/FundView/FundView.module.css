@@ -1,9 +1,9 @@
-.orderViewOuterContainer {
+.fundViewOuterContainer {
   width: 100%;
   border-bottom: 1px solid rgba(87, 87, 87, 0.15);
 }
 
-.orderViewContainer {
+.fundViewContainer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -27,38 +27,8 @@
   font-size: 0.85rem;
 }
 
-.cancelOrderButton {
-  color: #e33d3d;
-  font-weight: bold;
-  cursor: pointer;
-}
-
 @media screen and (max-width: 768px) {
   .columnNamesOuterContainer {
     width: 95%;
-  }
-}
-
-.spinnerBox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
-}
-
-.threeQuarterSpinner {
-  width: 5px;
-  height: 5px;
-  border-top: 3px solid transparent;
-  border-radius: 50%;
-  animation: spin 0.5s linear 0s infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(359deg);
   }
 }

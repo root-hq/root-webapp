@@ -19,10 +19,10 @@ const Header = () => {
         </div>
       </div>
       <div className={styles.actionButtonsContainer}>
-        <div className={styles.fundsButtonContainer}>
+        {/* <div className={styles.fundsButtonContainer}>
           <span><i className="fa-solid fa-circle-dollar-to-slot"></i></span>
           <span>Funds</span>
-        </div>
+        </div> */}
         <div className={styles.walletButtonContainer}>
           <WalletMultiButtonDynamic />
         </div>

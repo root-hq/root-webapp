@@ -2,12 +2,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* border-right: 1px solid rgba(87, 87, 87, 0.25); */
   box-sizing: border-box;
-  /* border-radius: 0.75rem; */
   width: 100%;
   height: 300px;
-  color: #eee;
 }
 
 .topMenuContainer {
@@ -18,174 +15,30 @@
   padding-bottom: 0.1rem;
 }
 
-.orderTitleContainer {
+.managerViewSelectorContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.managerViewOption {
+  cursor: pointer;
   margin-left: 1rem;
   margin-right: 1rem;
   font-size: 1.25rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: rgba(87, 87, 87, 1);
+}
+
+.managerViewOption:hover {
+  color: #888;
 }
 
 .topMenuButtonContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.allMarketsDropdownContainer {
-  margin-left: 1rem;
-  margin-right: 1rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.allMarketsDropdownInnerContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0.5rem;
-  width: 100%;
-}
-
-.allMarketsDropdownText {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-
-.allMarketsDropdownButton {
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-  background-color: #0b0d12;
-  white-space: nowrap;
-  color: #eee;
-  border-top: 1px solid rgba(87, 87, 87, 0.25);
-  border-left: 1px solid rgba(87, 87, 87, 0.25);
-  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-  border-right: 1px solid rgba(87, 87, 87, 0.25);
-  min-width: 100%;
-}
-
-.allMarketsDropdownButtonSecondary {
-  display: flex;
-  position: absolute;
-  justify-content: space-between;
-  cursor: pointer;
-  background-color: #0b0d12;
-  white-space: nowrap;
-  color: #eee;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  border: none;
-  border-top: 1px solid rgba(87, 87, 87, 0.25);
-  border-left: 1px solid rgba(87, 87, 87, 0.25);
-  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-  border-right: 1px solid rgba(87, 87, 87, 0.25);
-  min-width: 100%;
-  z-index: 10;
-}
-
-.allMarketsDropdownButtonSecondary div {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.allMarketsDropdownButtonSecondary:hover {
-  background-color: rgba(0, 0, 0, 0.95);
-}
-
-@media screen and (max-width: 600px) {
-  .allMarketsDropdownButtonSecondaryContainer {
-    width: 100%;
-  }
-
-  .allMarketsDropdownButtonSecondary {
-    width: 100%;
-    left: 0;
-    border-radius: 0;
-  }
-}
-
-.orderStatusDropdownContainer {
-  margin-left: 1rem;
-  margin-right: 1rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-
-.orderStatusDropdownInnerContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0.5rem;
-  width: 100%;
-}
-
-.orderStatusDropdownText {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-
-.orderStatusDropdownButton {
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-  background-color: #0b0d12;
-  color: #eee;
-  border-top: 1px solid rgba(87, 87, 87, 0.25);
-  border-left: 1px solid rgba(87, 87, 87, 0.25);
-  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-  border-right: 1px solid rgba(87, 87, 87, 0.25);
-  min-width: 100%;
-}
-
-.orderStatusDropdownButtonSecondaryContainer {
-  position: absolute;
-}
-
-.orderStatusDropdownButtonSecondary {
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-  background-color: #0b0d12;
-  color: #eee;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  border: none;
-  border-top: 1px solid rgba(87, 87, 87, 0.25);
-  border-left: 1px solid rgba(87, 87, 87, 0.25);
-  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-  border-right: 1px solid rgba(87, 87, 87, 0.25);
-  min-width: 100%;
-  z-index: 10;
-}
-
-.orderStatusDropdownButtonSecondary div {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.orderStatusDropdownButtonSecondary:hover {
-  background-color: rgba(0, 0, 0, 0.85);
-}
-
-@media screen and (max-width: 600px) {
-  .orderStatusDropdownButtonSecondaryContainer {
-    width: 100%;
-  }
-
-  .orderStatusDropdownButtonSecondary {
-    width: 100%;
-    left: 0;
-    border-radius: 0;
-  }
 }
 
 @media screen and (max-width: 600px) {
@@ -200,16 +53,6 @@
     justify-content: center;
     align-items: center;
     margin: 1rem;
-  }
-
-  .allMarketsDropdownContainer {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .orderStatusDropdownContainer {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
   }
 }
 
@@ -273,7 +116,6 @@
 
 .columnNameRow {
   display: flex;
-  width: 20%;
   justify-content: center;
 }
 
@@ -291,9 +133,13 @@
   margin: 0.1rem;
 }
 
-.ordersDisplayContainer {
+.managerViewContainer {
   display: flex;
   justify-content: center;
+  width: 100%;
+}
+
+.ordersDisplayContainer {
   width: 100%;
 }
 
