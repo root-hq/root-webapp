@@ -24,12 +24,15 @@ import {
   ComputeBudgetProgram,
   Connection,
   LAMPORTS_PER_SOL,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
 } from "@solana/web3.js";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
 import { useBottomStatus } from "../../../../../../components/BottomStatus";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { getAssociatedTokenAddress } from "@solana/spl-token";
+import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import FundView from "./FundView";
 
 export interface OrderManagerProps {
@@ -92,7 +95,7 @@ const OrderManager = ({
         priorityFeeLevels = (await getPriorityFeeEstimate([marketAddress]))
           .priorityFeeLevels;
       } catch (err) {
-        console.log(`Error fetching priority fee levels`);
+        // console.log(`Error fetching priority fee levels`);
       }
 
       if (activeManagerView === ManagerView.OpenOrders) {
@@ -140,7 +143,44 @@ const OrderManager = ({
         phxClient = phoenixClient;
       }
 
+      let wrapSOLIxs: TransactionInstruction[] = [];
+      let unwrapSOLIxs: TransactionInstruction[] = [];
+
+      // Add wrap/unwrap SOL ixs here
+      if((baseTokenMetadata.mint === WRAPPED_SOL_MAINNET || quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET)) {
+        const wSOLAta = await getAssociatedTokenAddress(new web3.PublicKey(WRAPPED_SOL_MAINNET), walletState.publicKey);
+
+        let nativeSOLLamports = await connection.getBalance(
+          walletState.publicKey,
+        );
+        let nativeSOLBalance = nativeSOLLamports / LAMPORTS_PER_SOL;
+
+        let transferIx = SystemProgram.transfer({
+          fromPubkey: walletState.publicKey,
+          toPubkey: wSOLAta,
+          lamports: parseInt((nativeSOLBalance * 0.99 * Math.pow(10, 9)).toString()),
+        });
+
+        // sync wrapped SOL balance
+        let syncNativeIx = createSyncNativeInstruction(wSOLAta);
+
+        wrapSOLIxs.push(transferIx);
+        wrapSOLIxs.push(syncNativeIx);
+
+        let withdrawIx = createCloseAccountInstruction(
+          wSOLAta,
+          walletState.publicKey,
+          walletState.publicKey
+        );
+
+        unwrapSOLIxs.push(withdrawIx);
+      }
+
       try {
+        for(let ix of wrapSOLIxs) {
+          transaction.add(ix);
+        }
+
         if (activeManagerView === ManagerView.OpenOrders) {
           let cancelAllIx =
             phxClient.createCancelAllOrdersWithFreeFundsInstruction(
@@ -163,6 +203,10 @@ const OrderManager = ({
           );
           transaction.add(withdrawFundsIx);
         }
+        
+        for(let ix of unwrapSOLIxs) {
+          transaction.add(ix);
+        }
 
         updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
         let response = await walletState.sendTransaction(
@@ -180,9 +224,9 @@ const OrderManager = ({
           </span>,
           3_000,
         );
-        console.log("Signature: ", response);
+        // console.log("Signature: ", response);
       } catch (err) {
-        console.log(`Error placing cancel all request: ${err}`);
+        // console.log(`Error placing cancel all request: ${err}`);
         red(<span>{`Failed: ${err.message}`}</span>, 2_000);
       }
     }
@@ -231,9 +275,8 @@ const OrderManager = ({
             enumeratedMarket.spotGridMarket.phoenix_market_address,
             walletState.publicKey.toString(),
           );
-          // console.log("orders: ", orders);
         } catch (err) {
-          console.log(`Error fetching active orders: ${err}`);
+          // console.log(`Error fetching active orders: ${err}`);
         }
 
         if (orders.length > 0) {
@@ -258,27 +301,29 @@ const OrderManager = ({
 
   useEffect(() => {
     const fetchUserGlobalBalances = async () => {
+      if(enumeratedMarket && enumeratedMarket.spotGridMarket) {
+        let marketAddress = enumeratedMarket.spotGridMarket.phoenix_market_address;
+
       if (walletState.connected) {
-        console.log("Fetching new balances: ");
         let userState = await getTraderState(
           phoenixClient,
-          enumeratedMarket.spotGridMarket.phoenix_market_address,
+          marketAddress,
           walletState.publicKey.toString(),
         );
 
-        userState.baseActiveOrdersBalance /= Math.pow(
+        userState.baseActiveOrdersBalance = phoenixClient.baseLotsToBaseAtoms(userState.baseActiveOrdersBalance, marketAddress) / Math.pow(
           10,
           enumeratedMarket.baseTokenMetadata.decimals,
         );
-        userState.baseWithdrawableBalance /= Math.pow(
+        userState.baseWithdrawableBalance = phoenixClient.baseLotsToBaseAtoms(userState.baseWithdrawableBalance, marketAddress) / Math.pow(
           10,
           enumeratedMarket.baseTokenMetadata.decimals,
         );
-        userState.quoteActiveOrdersBalance /= Math.pow(
+        userState.quoteActiveOrdersBalance = phoenixClient.quoteLotsToQuoteAtoms(userState.quoteActiveOrdersBalance, marketAddress) / Math.pow(
           10,
           enumeratedMarket.quoteTokenMetadata.decimals,
         );
-        userState.quoteWithdrawableBalance /= Math.pow(
+        userState.quoteWithdrawableBalance = phoenixClient.quoteLotsToQuoteAtoms(userState.quoteWithdrawableBalance, marketAddress) / Math.pow(
           10,
           enumeratedMarket.quoteTokenMetadata.decimals,
         );
@@ -298,7 +343,7 @@ const OrderManager = ({
             await connection.getTokenAccountBalance(baseTokenAddress)
           ).value.uiAmount;
         } catch (Err) {
-          console.log(`Error fetching base ata balance`);
+          // console.log(`Error fetching base ata balance`);
           baseBalance = 0;
         }
 
@@ -308,7 +353,7 @@ const OrderManager = ({
             await connection.getTokenAccountBalance(quoteTokenAddress)
           ).value.uiAmount;
         } catch (err) {
-          console.log(`Error fetching quote ata balance`);
+          // console.log(`Error fetching quote ata balance`);
           quoteBalance = 0;
         }
 
@@ -328,8 +373,8 @@ const OrderManager = ({
         userState.baseWalletBalance = baseBalance;
         userState.quoteWalletBalance = quoteBalance;
 
-        console.log("Setting balances: ", userState);
         setUserGlobalBalances((_) => userState);
+      }
       }
     };
 

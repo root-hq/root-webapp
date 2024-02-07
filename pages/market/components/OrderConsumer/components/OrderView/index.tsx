@@ -5,7 +5,7 @@ import { EnumeratedMarketToMetadata } from "../../../../[market]";
 import Image from "next/image";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useBottomStatus } from "../../../../../../components/BottomStatus";
-import { ComputeBudgetProgram, Connection } from "@solana/web3.js";
+import { ComputeBudgetProgram, Connection, LAMPORTS_PER_SOL, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
 import { getPriorityFeeEstimate } from "../../../../../../utils/helius";
 import { BN, web3 } from "@coral-xyz/anchor";
 import {
@@ -15,6 +15,8 @@ import {
   sideBeet,
 } from "@ellipsis-labs/phoenix-sdk";
 import Link from "next/link";
+import { WRAPPED_SOL_MAINNET } from "constants/";
+import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 
 export interface OrderViewProps {
   enumeratedMarket: EnumeratedMarketToMetadata | null;
@@ -58,7 +60,7 @@ const OrderView = ({
         priorityFeeLevels = (await getPriorityFeeEstimate([marketAddress]))
           .priorityFeeLevels;
       } catch (err) {
-        console.log(`Error fetching priority fee levels`);
+        // console.log(`Error fetching priority fee levels`);
       }
 
       try {
@@ -99,6 +101,48 @@ const OrderView = ({
           phxClient = phoenixClient;
         }
 
+        let wrapSOLIxs: TransactionInstruction[] = [];
+        let unwrapSOLIxs: TransactionInstruction[] = [];
+
+        if(enumeratedMarket) {
+          let baseTokenMetadata = enumeratedMarket.baseTokenMetadata;
+          let quoteTokenMetadata = enumeratedMarket.quoteTokenMetadata;
+
+          // Add wrap/unwrap SOL ixs here
+        if((baseTokenMetadata.mint === WRAPPED_SOL_MAINNET || quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET)) {
+          const wSOLAta = await getAssociatedTokenAddress(new web3.PublicKey(WRAPPED_SOL_MAINNET), walletState.publicKey);
+
+          let nativeSOLLamports = await connection.getBalance(
+            walletState.publicKey,
+          );
+          let nativeSOLBalance = nativeSOLLamports / LAMPORTS_PER_SOL;
+
+          let transferIx = SystemProgram.transfer({
+            fromPubkey: walletState.publicKey,
+            toPubkey: wSOLAta,
+            lamports: parseInt((nativeSOLBalance * 0.99 * Math.pow(10, 9)).toString()),
+          });
+
+          // sync wrapped SOL balance
+          let syncNativeIx = createSyncNativeInstruction(wSOLAta);
+
+          wrapSOLIxs.push(transferIx);
+          wrapSOLIxs.push(syncNativeIx);
+
+          let withdrawIx = createCloseAccountInstruction(
+            wSOLAta,
+            walletState.publicKey,
+            walletState.publicKey
+          );
+
+          unwrapSOLIxs.push(withdrawIx);
+        }
+        }
+
+        for(let ix of wrapSOLIxs) {
+          transaction.add(ix);
+        }
+
         let priceInTicksBN = new BN(order.price_in_ticks);
         let orderSequenceNumberBN = new BN(order.order_sequence_number);
 
@@ -131,6 +175,10 @@ const OrderView = ({
         transaction.add(cancelOrderIx);
         transaction.add(withdrawFundsIx);
 
+        for(let ix of unwrapSOLIxs) {
+          transaction.add(ix);
+        }
+
         updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
         let response = await walletState.sendTransaction(
           transaction,
@@ -147,9 +195,9 @@ const OrderView = ({
           </span>,
           3_000,
         );
-        console.log("Signature: ", response);
+        // console.log("Signature: ", response);
       } catch (err) {
-        console.log(`Error placing cancel order request: ${err}`);
+        // console.log(`Error placing cancel order request: ${err}`);
         red(<span>{`Failed: ${err.message}`}</span>, 2_000);
       }
     }

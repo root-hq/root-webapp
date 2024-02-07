@@ -12,11 +12,11 @@ export const getAllTokenMetadata = async (): Promise<
     if (response) {
       return response.data as TokenMetadata[];
     } else {
-      console.log(`Failed to retrieve all token metadata`);
+      // console.log(`Failed to retrieve all token metadata`);
       return null;
     }
   } catch (err) {
-    console.log(`Error fetching active all token metadata: ${err}`);
+    // console.log(`Error fetching active all token metadata: ${err}`);
   }
 };
 
@@ -31,12 +31,12 @@ export const getTokenMetadata = async (
     if (response && response.data && response.data.length) {
       return response.data[0] as TokenMetadata;
     } else {
-      console.log(`Failed to retrieve data on token:"${tokenMint}`);
+      // console.log(`Failed to retrieve data on token:"${tokenMint}`);
       return null;
     }
   } catch (err) {
-    console.log(
-      `Error fetching info on this token:${tokenMint} \n Error: ${err}`,
-    );
+    // console.log(
+    //   `Error fetching info on this token:${tokenMint} \n Error: ${err}`,
+    // );
   }
 };

@@ -17,7 +17,7 @@ export const getL3Book = async (
     const book = client.getL3UiBook(marketAddress, depthPerSide);
     return book;
   } catch (err) {
-    console.log("Error fetching orderbook data on Pheonix: ", err);
+    // console.log("Error fetching orderbook data on Pheonix: ", err);
     return {
       bids: [
         {
@@ -59,7 +59,7 @@ export const getMarketMidPrice = async (
     const midPrice = (l1Book.bids[0].price + l1Book.asks[0].price) / 2;
     return midPrice;
   } catch (err) {
-    console.log("Error fetching fresh market mid price on Pheonix: ", err);
+    // console.log("Error fetching fresh market mid price on Pheonix: ", err);
     return 0;
   }
 };
@@ -77,7 +77,7 @@ export const getMarketMetadata = async (marketAddress: string) => {
 
     return metadata;
   } catch (err) {
-    console.log("Error fetching fresh market metadata on Pheonix: ", err);
+    // console.log("Error fetching fresh market metadata on Pheonix: ", err);
     return null;
   }
 };
@@ -115,7 +115,10 @@ export const getOpenOrdersForTrader = async (
 
     let asks = book.data.asks.map((order, i) => {
       let traderIndex = order[1].traderIndex;
-      let traderKey = book.data.traderIndexToTraderPubkey.get(traderIndex);
+      let traderKey = book.data.traderIndexToTraderPubkey.get(
+        traderIndex.toNumber(),
+      );
+      
       if (traderKey && traderKey === trader) {
         return {
           order_sequence_number: order[0].orderSequenceNumber,
@@ -139,9 +142,9 @@ export const getOpenOrdersForTrader = async (
     );
     return allOrders;
   } catch (err) {
-    console.log(
-      `Error fetching open orders for trader: ${trader}, on market: ${marketAddress}: err: ${err}`,
-    );
+    // console.log(
+    //   `Error fetching open orders for trader: ${trader}, on market: ${marketAddress}: err: ${err}`,
+    // );
     return [];
   }
 };
@@ -169,7 +172,7 @@ export const getTraderState = async (
       quoteWithdrawableBalance: parseFloat(userState.quoteLotsFree.toString()),
     };
   } catch (err) {
-    console.log(`Error fetching trader state: ${err}`);
+    // console.log(`Error fetching trader state: ${err}`);
   }
 
   return {

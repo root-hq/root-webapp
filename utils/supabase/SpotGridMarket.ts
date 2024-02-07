@@ -12,15 +12,15 @@ export const getMarket = async (
     if (response && response.data && response.data.length) {
       return response.data[0] as SpotGridMarket;
     } else {
-      console.log(
-        `Failed to retrieve data on spot grid market:"${marketAddress}`,
-      );
+      // console.log(
+      //   `Failed to retrieve data on spot grid market:"${marketAddress}`,
+      // );
       return null;
     }
   } catch (err) {
-    console.log(
-      `Error fetching info on this spot grid market:${marketAddress} \n Error: ${err}`,
-    );
+    // console.log(
+    //   `Error fetching info on this spot grid market:${marketAddress} \n Error: ${err}`,
+    // );
   }
 };
 
@@ -35,15 +35,15 @@ export const getMarketForPhoenixMarket = async (
     if (response && response.data && response.data.length) {
       return response.data[0] as SpotGridMarket;
     } else {
-      console.log(
-        `Failed to retrieve data on phoenix market:"${phoenixMarketAddress}`,
-      );
+      // console.log(
+      //   `Failed to retrieve data on phoenix market:"${phoenixMarketAddress}`,
+      // );
       return null;
     }
   } catch (err) {
-    console.log(
-      `Error fetching info on phoenix market:${phoenixMarketAddress} \n Error: ${err}`,
-    );
+    // console.log(
+    //   `Error fetching info on phoenix market:${phoenixMarketAddress} \n Error: ${err}`,
+    // );
   }
 };
 
@@ -56,10 +56,10 @@ export const getAllMarkets = async (): Promise<SpotGridMarket[]> => {
     if (response && response.data && response.data.length) {
       return response.data as SpotGridMarket[];
     } else {
-      console.log(`Failed to retrieve data on all spot grid markets`);
+      // console.log(`Failed to retrieve data on all spot grid markets`);
       return null;
     }
   } catch (err) {
-    console.log(`Error fetching info on all spot grid markets`);
+    // console.log(`Error fetching info on all spot grid markets`);
   }
 };

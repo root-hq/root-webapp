@@ -18,12 +18,12 @@ export const getMarketVolume = async (
     if (response && response.data) {
       return response.data as VolumeResult;
     } else {
-      console.log(`Failed to retrieve volume data on market: ${marketAddress}`);
+      // console.log(`Failed to retrieve volume data on market: ${marketAddress}`);
       return null;
     }
   } catch (err) {
-    console.log(
-      `Error fetching volume data on market :${marketAddress} \n Error: ${err}`,
-    );
+    // console.log(
+    //   `Error fetching volume data on market :${marketAddress} \n Error: ${err}`,
+    // );
   }
 };

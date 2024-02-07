@@ -16,9 +16,9 @@ export const getTokenPriceDataWithDate = async (
     if (response && response.data && response.data.length) {
       return response.data as TokenPrice[];
     } else {
-      console.log(
-        `Failed to retrieve data on token price for file:"${fileName}`,
-      );
+      // console.log(
+      //   `Failed to retrieve data on token price for file:"${fileName}`,
+      // );
       return [
         {
           marketAddress: "",
@@ -28,9 +28,9 @@ export const getTokenPriceDataWithDate = async (
       ];
     }
   } catch (err) {
-    console.log(
-      `Error fetching info on token price for file:${fileName} \n Error: ${err}`,
-    );
+    // console.log(
+    //   `Error fetching info on token price for file:${fileName} \n Error: ${err}`,
+    // );
     return [];
   }
 };

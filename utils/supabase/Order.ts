@@ -24,11 +24,11 @@ export const addOrder = async (order: Order): Promise<boolean> => {
     if (response && response.status === 201) {
       return true;
     } else {
-      console.log(`Failed to add order: "${order.order_sequence_number}`);
+      // console.log(`Failed to add order: "${order.order_sequence_number}`);
       return false;
     }
   } catch (err) {
-    console.log(`Failed to add order: "${order.order_sequence_number}`);
+    // console.log(`Failed to add order: "${order.order_sequence_number}`);
     return false;
   }
 };
@@ -44,13 +44,13 @@ export const getAllOrdersForTrader = async (
     if (response && response.data && response.data.length) {
       return response.data as Order[];
     } else {
-      console.log(`Failed to retrieve all orders for trader: "${trader}`);
+      // console.log(`Failed to retrieve all orders for trader: "${trader}`);
       return null;
     }
   } catch (err) {
-    console.log(
-      `Error fetching all orders for trader: ${trader} \n Error: ${err}`,
-    );
+    // console.log(
+    //   `Error fetching all orders for trader: ${trader} \n Error: ${err}`,
+    // );
   }
 };
 
@@ -63,10 +63,10 @@ export const getAllOrders = async (): Promise<Order[]> => {
     if (response && response.data && response.data.length) {
       return response.data as Order[];
     } else {
-      console.log(`Failed to retrieve data on all order`);
+      // console.log(`Failed to retrieve data on all order`);
       return null;
     }
   } catch (err) {
-    console.log(`Error fetching info on all orders`);
+    // console.log(`Error fetching info on all orders`);
   }
 };

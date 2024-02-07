@@ -95,7 +95,7 @@ const CLOBTrader = ({
             await connection.getTokenAccountBalance(baseTokenAddress)
           ).value.uiAmount;
         } catch (Err) {
-          console.log(`Error fetching base ata balance`);
+          // console.log(`Error fetching base ata balance`);
           baseBalance = 0;
         }
 
@@ -105,7 +105,7 @@ const CLOBTrader = ({
             await connection.getTokenAccountBalance(quoteTokenAddress)
           ).value.uiAmount;
         } catch (err) {
-          console.log(`Error fetching quote ata balance`);
+          // console.log(`Error fetching quote ata balance`);
           quoteBalance = 0;
         }
 
@@ -297,7 +297,7 @@ const CLOBTrader = ({
         priorityFeeLevels = (await getPriorityFeeEstimate([marketAddress]))
           .priorityFeeLevels;
       } catch (err) {
-        console.log(`Error fetching priority fee levels`);
+        // console.log(`Error fetching priority fee levels`);
       }
 
       updateStatus(<span>{`Preparing limit order transaction...`}</span>);
@@ -435,9 +435,9 @@ const CLOBTrader = ({
             </span>,
             3_000,
           );
-          console.log("Signature: ", response);
+          // console.log("Signature: ", response);
         } catch (err) {
-          console.log(`Error sending limit buy order: ${err.message}`);
+          // console.log(`Error sending limit buy order: ${err.message}`);
           red(<span>{`Failed: ${err.message}`}</span>, 2_000);
         }
       } else if (!isBuyOrder && parseFloat(sendUptoSize)) {
@@ -494,9 +494,9 @@ const CLOBTrader = ({
             </span>,
             3_000,
           );
-          console.log("Signature: ", response);
+          // console.log("Signature: ", response);
         } catch (err) {
-          console.log(`Error sending limit sell order: ${err}`);
+          // console.log(`Error sending limit sell order: ${err}`);
           red(<span>{`Failed: ${err.message}`}</span>, 2_000);
         }
       }
