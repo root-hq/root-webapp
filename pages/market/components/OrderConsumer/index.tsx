@@ -26,6 +26,7 @@ const MarketStats = dynamic(() => import("./components/MarketStats"), {
 import { Client } from "@ellipsis-labs/phoenix-sdk";
 import dynamic from "next/dynamic";
 import { Connection } from "@solana/web3.js";
+import { ChartType } from "constants/";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -47,6 +48,18 @@ const OrderConsumer = ({
   const [activeMarket, setActiveMarket] = useState(selectedSpotGridMarket);
   const [activeEnumeratedMarket, setActiveEnumeratedMarket] =
     useState<EnumeratedMarketToMetadata>(null);
+
+  const [chartType, setChartType] = useState<ChartType>(ChartType.Simple);
+
+  const handleChartTypeToggle = () => {
+    if(chartType === ChartType.Simple) {
+      setChartType(_ => ChartType.Advanced);
+    }
+
+    else if(chartType === ChartType.Advanced) {
+      setChartType(_ => ChartType.Simple);
+    }
+  }
 
   useEffect(() => {
     const doStuff = () => {
@@ -93,7 +106,34 @@ const OrderConsumer = ({
           </div>
         </div>
         <div className={styles.tradingViewChartContainer}>
-          <TVChartContainer {...defaultWidgetProps} />
+          <TVChartContainer props={defaultWidgetProps} chartType={chartType} />
+        </div>
+        <div className={styles.chartTypeToggleContainer}>
+          <div className={styles.chartTypeToggle}
+            onClick={
+              () => {
+                handleChartTypeToggle()
+              }
+            }
+          >
+            <span className={styles.chartTypeTextSimple}
+              style={{
+                color: chartType === ChartType.Simple ? `#477df2` : ``,
+                fontWeight: chartType === ChartType.Simple ? `bold` : ``,
+              }}
+            >
+              {`Simple`}
+            </span>
+            <span className={styles.chartTypeToggleIcon}><i className="fa-solid fa-right-left"></i></span>
+            <span className={styles.chartTypeTextAdvanced}
+              style={{
+                color: chartType === ChartType.Advanced ? `#477df2` : ``,
+                fontWeight: chartType === ChartType.Advanced ? `bold` : ``
+              }}
+            >
+              {`Advanced`}
+            </span>
+          </div>
         </div>
       </div>
       <div className={styles.orderManagerOuterContainer}>

@@ -28,8 +28,6 @@
 .statKey {
   color: rgba(87, 87, 87, 1);
   font-size: 0.65rem;
-  font-weight: bold;
-  /* padding: 0.25rem; */
 }
 
 .statValue {

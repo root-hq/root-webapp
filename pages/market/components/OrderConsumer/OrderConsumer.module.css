@@ -24,11 +24,45 @@
   background-color: #0b0c11;
 }
 
+.chartTypeToggleContainer {
+  display: flex;
+  justify-content: start;
+  padding: 1rem;
+  color: #777;
+  font-size: 0.9rem;
+  background-color: #0b0c11;
+  border-radius: 0rem 0rem 0.75rem 0.75rem;
+}
+
+.chartTypeToggle:hover {
+  cursor: pointer;
+}
+
+.chartTypeToggleIcon {
+  font-size: 0.75rem;
+  margin-top: 0.15rem;
+}
+
+.chartTypeTextSimple {
+  margin-right: 0.5rem;
+}
+
+.chartTypeTextSimple:hover {
+  color: #fff;
+}
+
+.chartTypeTextAdvanced {
+  margin-left: 0.5rem;
+}
+
+.chartTypeTextAdvanced:hover {
+  color: #fff;
+}
+
 .tradingViewChartContainer {
   /* border-bottom: 1px solid rgba(87, 87, 87, 1.0);
   border-left: 1px solid rgba(87, 87, 87, 1.0);
   border-right: 1px solid rgba(87, 87, 87, 1.0); */
-  border-radius: 0rem 0rem 0.75rem 0.75rem;
   background-color: #0b0c11;
 }
 
