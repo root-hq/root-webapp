@@ -3,7 +3,6 @@ import styles from "./CLOBTrader.module.css";
 import {
   MAX_BPS,
   ROOT_PROTOCOL_FEE_BPS,
-  USDC_MAINNET,
   WRAPPED_SOL_MAINNET,
 } from "../../../../../constants";
 import { SpotGridMarket, TokenMetadata } from "../../../../../utils/supabase";
@@ -11,11 +10,9 @@ import {
   ComputeBudgetProgram,
   Connection,
   LAMPORTS_PER_SOL,
-  SystemProgram,
-  VersionedTransaction,
 } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { TOKEN_PROGRAM_ID, getAssociatedTokenAddress } from "@solana/spl-token";
+import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { web3 } from "@coral-xyz/anchor";
 import { formatNumbersWithCommas, removeCommas } from "../../../../../utils";
 import { Button, Form } from "react-bootstrap";
@@ -68,6 +65,7 @@ const CLOBTrader = ({
 
   const [baseTokenBalance, setBaseTokenBalance] = useState(0.0);
   const [quoteTokenBalance, setQuoteTokenBalance] = useState(0.0);
+  const [nativeSOLBalance, setNativeSOLBalance] = useState(0.0);
   const [limitPrice, setLimitPrice] = useState("");
   const [sendUptoSize, setSendUptoSize] = useState("");
   const [receiveUptoSize, setReceiveUptoSize] = useState("");
@@ -99,12 +97,6 @@ const CLOBTrader = ({
           baseBalance = 0;
         }
 
-        if (baseTokenMetadata.mint === WRAPPED_SOL_MAINNET) {
-          let sol_lamports = await connection.getBalance(walletState.publicKey);
-          let sol_balance = sol_lamports / LAMPORTS_PER_SOL;
-          baseBalance += sol_balance;
-        }
-
         let quoteBalance = 0;
         try {
           quoteBalance = (
@@ -115,14 +107,12 @@ const CLOBTrader = ({
           quoteBalance = 0;
         }
 
-        if (quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET) {
-          let sol_lamports = await connection.getBalance(walletState.publicKey);
-          let sol_balance = sol_lamports / LAMPORTS_PER_SOL;
-          quoteBalance += sol_balance;
-        }
+        let nativeSOLLamports = await connection.getBalance(walletState.publicKey);
+        let nativeSOLBalance = nativeSOLLamports / LAMPORTS_PER_SOL;
 
         setBaseTokenBalance((_) => baseBalance);
         setQuoteTokenBalance((_) => quoteBalance);
+        setNativeSOLBalance((_) => nativeSOLBalance);
       } else {
         setBaseTokenBalance((_) => 0);
         setQuoteTokenBalance((_) => 0);
@@ -306,6 +296,51 @@ const CLOBTrader = ({
         console.log(`Error fetching priority fee levels`);
       }
 
+      updateStatus(<span>{`Preparing limit order transaction...`}</span>);
+      let transaction = new web3.Transaction();
+
+      // Create the priority fee instructions
+      let unitsPrice = 10;
+      if (priorityFeeLevels) {
+        unitsPrice = priorityFeeLevels["high"];
+      }
+
+      const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: unitsPrice,
+      });
+
+      const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({
+        units: 200_000,
+      });
+      transaction.add(computePriceIx);
+      transaction.add(computeLimitIx);
+
+      transaction.add(
+        getClaimSeatIx(
+          new web3.PublicKey(marketAddress),
+          walletState.publicKey,
+        ),
+      );
+
+      let baseAtaInitIxs = await getCreateTokenAccountInstructions(
+        connection,
+        walletState.publicKey,
+        walletState.publicKey,
+        new web3.PublicKey(baseTokenMetadata.mint),
+      );
+      let quoteAtaInitIxs = await getCreateTokenAccountInstructions(
+        connection,
+        walletState.publicKey,
+        walletState.publicKey,
+        new web3.PublicKey(quoteTokenMetadata.mint),
+      );
+      for (let ix of baseAtaInitIxs) {
+        transaction.add(ix);
+      }
+      for (let ix of quoteAtaInitIxs) {
+        transaction.add(ix);
+      }
+
       if (isBuyOrder && parseFloat(receiveUptoSize)) {
         // console.log("Limit buy");
         let priceInTicks = new BN(
@@ -337,50 +372,6 @@ const CLOBTrader = ({
             lastValidUnixTimestampInSeconds: null,
             clientOrderId: new BN(1234),
           } as OrderPacket;
-          updateStatus(<span>{`Preparing limit order transaction...`}</span>);
-          let transaction = new web3.Transaction();
-
-          // Create the priority fee instructions
-          let unitsPrice = 10;
-          if (priorityFeeLevels) {
-            unitsPrice = priorityFeeLevels["high"];
-          }
-
-          const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
-            microLamports: unitsPrice,
-          });
-
-          const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({
-            units: 200_000,
-          });
-          transaction.add(computePriceIx);
-          transaction.add(computeLimitIx);
-
-          transaction.add(
-            getClaimSeatIx(
-              new web3.PublicKey(marketAddress),
-              walletState.publicKey,
-            ),
-          );
-
-          let baseAtaInitIxs = await getCreateTokenAccountInstructions(
-            connection,
-            walletState.publicKey,
-            walletState.publicKey,
-            new web3.PublicKey(baseTokenMetadata.mint),
-          );
-          let quoteAtaInitIxs = await getCreateTokenAccountInstructions(
-            connection,
-            walletState.publicKey,
-            walletState.publicKey,
-            new web3.PublicKey(quoteTokenMetadata.mint),
-          );
-          for (let ix of baseAtaInitIxs) {
-            transaction.add(ix);
-          }
-          for (let ix of quoteAtaInitIxs) {
-            transaction.add(ix);
-          }
 
           let ix = phoenixClient.createPlaceLimitOrderInstruction(
             orderPacket,
@@ -437,51 +428,6 @@ const CLOBTrader = ({
             lastValidUnixTimestampInSeconds: null,
             clientOrderId: new BN(1234),
           } as OrderPacket;
-          let transaction = new web3.Transaction();
-
-          // Create the priority fee instructions
-          let unitsPrice = 10;
-          if (priorityFeeLevels) {
-            unitsPrice = priorityFeeLevels["high"];
-          }
-
-          const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
-            microLamports: unitsPrice,
-          });
-
-          const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({
-            units: 200_000,
-          });
-          transaction.add(computePriceIx);
-          transaction.add(computeLimitIx);
-
-          transaction.add(
-            getClaimSeatIx(
-              new web3.PublicKey(marketAddress),
-              walletState.publicKey,
-            ),
-          );
-
-          let baseAtaInitIxs = await getCreateTokenAccountInstructions(
-            connection,
-            walletState.publicKey,
-            walletState.publicKey,
-            new web3.PublicKey(baseTokenMetadata.mint),
-          );
-          let quoteAtaInitIxs = await getCreateTokenAccountInstructions(
-            connection,
-            walletState.publicKey,
-            walletState.publicKey,
-            new web3.PublicKey(quoteTokenMetadata.mint),
-          );
-          for (let ix of baseAtaInitIxs) {
-            transaction.add(ix);
-          }
-          for (let ix of quoteAtaInitIxs) {
-            transaction.add(ix);
-          }
-
-          updateStatus(<span>{`Preparing limit order transaction...`}</span>);
           let ix = phoenixClient.createPlaceLimitOrderInstruction(
             orderPacket,
             marketAddress,
@@ -649,7 +595,21 @@ const CLOBTrader = ({
                 >
                   <i className="fa-solid fa-wallet fa-2xs"></i>
                   {` `}
-                  {` ${isBuyOrder ? quoteTokenBalance : baseTokenBalance}`}
+                  {
+                    baseTokenMetadata && quoteTokenMetadata ?
+                      isBuyOrder ?
+                        quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET ?
+                          quoteTokenBalance + nativeSOLBalance
+                        :
+                          quoteTokenBalance
+                      :
+                        baseTokenMetadata.mint === WRAPPED_SOL_MAINNET ?
+                          baseTokenBalance + nativeSOLBalance
+                        :
+                          baseTokenBalance
+                    :
+                      `0.0`
+                  }
                 </span>
               </div>
             ) : (
