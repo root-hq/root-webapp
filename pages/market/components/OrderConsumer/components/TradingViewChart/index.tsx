@@ -17,9 +17,9 @@ const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) => {
 		  --tv-color-toolbar-button-background-expanded: #12161E;
 		  --tv-color-toolbar-button-background-active: #12161E;
 		  --tv-color-toolbar-button-background-active-hover: #12161E;
-		  --tv-color-toolbar-button-text: #ddd;
+		  --tv-color-toolbar-button-text: #ccc;
 		  --tv-color-toolbar-button-text-hover: #fff;
-		  --tv-color-toolbar-button-text-active: #fff;
+		  --tv-color-toolbar-button-text-active: #e33d3d;
 		  --tv-color-toolbar-button-text-active-hover: #fff;
 		  --tv-color-item-active-text: #ddd;
 		  --tv-color-toolbar-toggle-button-background-active: #0B0C11;
