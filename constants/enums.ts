@@ -46,21 +46,17 @@ export const getAllOrderStatus = () => {
 
 export enum ManagerView {
   OpenOrders,
-  Funds
+  Funds,
 }
 
 export const getManagerViewText = (managerView: ManagerView) => {
-  if(managerView === ManagerView.OpenOrders) {
+  if (managerView === ManagerView.OpenOrders) {
     return "openOrders";
-  }
-  else if(managerView === ManagerView.Funds) {
+  } else if (managerView === ManagerView.Funds) {
     return "funds";
   }
-}
+};
 
 export const getAllManagerView = () => {
-  return [
-    ManagerView.OpenOrders,
-    ManagerView.Funds
-  ];
-}
+  return [ManagerView.OpenOrders, ManagerView.Funds];
+};

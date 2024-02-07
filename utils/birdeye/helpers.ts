@@ -7,14 +7,11 @@ export async function makeApiRequest(path) {
   try {
     const FULL_PATH = `https://public-api.birdeye.so/${path}`;
 
-    const response = await fetch(
-      FULL_PATH,
-      {
-        headers: {
-          "X-API-KEY": BE_API_KEY,
-        }
-      }
-    );
+    const response = await fetch(FULL_PATH, {
+      headers: {
+        "X-API-KEY": BE_API_KEY,
+      },
+    });
     return response.json();
   } catch (error) {
     throw new Error(`Birdeye request error: ${error.status}`);
@@ -57,7 +54,7 @@ export function getNextBarTime(lastBar, resolution = "1D") {
       break;
 
     default:
-        //@ts-ignore
+      //@ts-ignore
       nextBarTime = resolution * 60 * 1000 + lastBar.time;
       break;
   }

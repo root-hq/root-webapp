@@ -146,10 +146,10 @@ export const getOpenOrdersForTrader = async (
   }
 };
 
-export const getTraderState = async(
+export const getTraderState = async (
   phoenixClient: Client,
   marketAddress: string,
-  trader: string
+  trader: string,
 ): Promise<UserGlobalBalances> => {
   try {
     phoenixClient.refreshMarket(marketAddress, true);
@@ -162,12 +162,13 @@ export const getTraderState = async(
       baseWalletBalance: 0.0,
       quoteWalletBalance: 0.0,
       baseActiveOrdersBalance: parseFloat(userState.baseLotsLocked.toString()),
-      quoteActiveOrdersBalance: parseFloat(userState.quoteLotsLocked.toString()),
+      quoteActiveOrdersBalance: parseFloat(
+        userState.quoteLotsLocked.toString(),
+      ),
       baseWithdrawableBalance: parseFloat(userState.baseLotsFree.toString()),
-      quoteWithdrawableBalance: parseFloat(userState.quoteLotsFree.toString())
-    }
-  }
-  catch(err) {
+      quoteWithdrawableBalance: parseFloat(userState.quoteLotsFree.toString()),
+    };
+  } catch (err) {
     console.log(`Error fetching trader state: ${err}`);
   }
 
@@ -177,6 +178,6 @@ export const getTraderState = async(
     baseActiveOrdersBalance: 0.0,
     quoteActiveOrdersBalance: 0.0,
     baseWithdrawableBalance: 0.0,
-    quoteWithdrawableBalance: 0.0
+    quoteWithdrawableBalance: 0.0,
   } as UserGlobalBalances;
-}
+};

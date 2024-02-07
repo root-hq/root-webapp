@@ -13,14 +13,13 @@ const FundView = ({
   tokenMetadata,
   walletBalance,
   activeOrdersBalance,
-  withdrawableBalance
+  withdrawableBalance,
 }: FundViewProps) => {
-
   const [totalBalance, setTotalBalance] = useState<number>();
 
   useEffect(() => {
     let balance = walletBalance + activeOrdersBalance + withdrawableBalance;
-    setTotalBalance(_ => balance);
+    setTotalBalance((_) => balance);
   }, [tokenMetadata, walletBalance, activeOrdersBalance, withdrawableBalance]);
 
   return (
@@ -28,27 +27,27 @@ const FundView = ({
       <div className={styles.fundViewContainer}>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {tokenMetadata ? tokenMetadata.ticker: ''}
+            {tokenMetadata ? tokenMetadata.ticker : ""}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {walletBalance ? walletBalance.toFixed(4): '0.0'}
+            {walletBalance ? walletBalance.toFixed(4) : "0.0"}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {activeOrdersBalance ? activeOrdersBalance.toFixed(4): '0.0'}
+            {activeOrdersBalance ? activeOrdersBalance.toFixed(4) : "0.0"}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {withdrawableBalance ? withdrawableBalance.toFixed(4): '0.0'}
+            {withdrawableBalance ? withdrawableBalance.toFixed(4) : "0.0"}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {totalBalance ? totalBalance.toFixed(4): '0.0'}
+            {totalBalance ? totalBalance.toFixed(4) : "0.0"}
           </span>
         </div>
       </div>

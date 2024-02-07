@@ -27,11 +27,12 @@ const OrderView = ({
   enumeratedMarket,
   order,
   phoenixClient,
-  connection
+  connection,
 }: OrderViewProps) => {
   const [floatPrice, setFloatPrice] = useState(0);
   const [floatSizeInBaseUnits, setFloatSizeInBaseUnits] = useState(0);
-  const [floatTotalSizeInQuoteUnits, setFloatTotalSizeInQuoteUnits] = useState(0);
+  const [floatTotalSizeInQuoteUnits, setFloatTotalSizeInQuoteUnits] =
+    useState(0);
   const [fillSizeInBaseUnits, setFillSizeInBaseUnits] = useState(0);
 
   const [isCancelOrderActionActive, setIsCancelOrderActionActive] =
@@ -99,9 +100,7 @@ const OrderView = ({
         }
 
         let priceInTicksBN = new BN(order.price_in_ticks);
-        let orderSequenceNumberBN = new BN(
-          order.order_sequence_number,
-        );
+        let orderSequenceNumberBN = new BN(order.order_sequence_number);
 
         let cancelOrderIx = phxClient.createCancelMultipleOrdersByIdInstruction(
           {
@@ -158,16 +157,27 @@ const OrderView = ({
   };
 
   useEffect(() => {
-    if(enumeratedMarket) {
-      let floatPrice = phoenixClient.ticksToFloatPrice(parseInt(order.price_in_ticks), enumeratedMarket.spotGridMarket.phoenix_market_address);
-      let floatSizeInBaseUnits = phoenixClient.baseLotsToBaseAtoms(parseInt(order.size_in_base_lots), enumeratedMarket.spotGridMarket.phoenix_market_address) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
+    if (enumeratedMarket) {
+      let floatPrice = phoenixClient.ticksToFloatPrice(
+        parseInt(order.price_in_ticks),
+        enumeratedMarket.spotGridMarket.phoenix_market_address,
+      );
+      let floatSizeInBaseUnits =
+        phoenixClient.baseLotsToBaseAtoms(
+          parseInt(order.size_in_base_lots),
+          enumeratedMarket.spotGridMarket.phoenix_market_address,
+        ) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
       let floatTotalSizeInQuoteUnits = floatPrice * floatSizeInBaseUnits;
-      let fillSizeInBaseUnits =  phoenixClient.baseLotsToBaseAtoms(parseInt(order.fill_size_in_base_lots), enumeratedMarket.spotGridMarket.phoenix_market_address) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
+      let fillSizeInBaseUnits =
+        phoenixClient.baseLotsToBaseAtoms(
+          parseInt(order.fill_size_in_base_lots),
+          enumeratedMarket.spotGridMarket.phoenix_market_address,
+        ) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
 
-      setFloatPrice(_ => floatPrice);
-      setFloatSizeInBaseUnits(_ => floatSizeInBaseUnits);
-      setFloatTotalSizeInQuoteUnits(_ => floatTotalSizeInQuoteUnits);
-      setFillSizeInBaseUnits(_ => fillSizeInBaseUnits);
+      setFloatPrice((_) => floatPrice);
+      setFloatSizeInBaseUnits((_) => floatSizeInBaseUnits);
+      setFloatTotalSizeInQuoteUnits((_) => floatTotalSizeInQuoteUnits);
+      setFillSizeInBaseUnits((_) => fillSizeInBaseUnits);
     }
   }, [order, phoenixClient, connection, enumeratedMarket]);
 
@@ -175,31 +185,28 @@ const OrderView = ({
     <div className={styles.orderViewOuterContainer}>
       <div className={styles.orderViewContainer}>
         <div className={styles.columnNameRow}>
-          {
-            order ?
-              <span
-                style={{
-                  color: order.is_buy_order ? `#3DE383` : `#e33d3d`,
-                }}
-              >
-                {order ? (
-                  order.is_buy_order ? (
-                    <span>{`BUY`}</span>
-                  ) : (
-                    <span>{`SELL`}</span>
-                  )
+          {order ? (
+            <span
+              style={{
+                color: order.is_buy_order ? `#3DE383` : `#e33d3d`,
+              }}
+            >
+              {order ? (
+                order.is_buy_order ? (
+                  <span>{`BUY`}</span>
                 ) : (
-                  <></>
+                  <span>{`SELL`}</span>
+                )
+              ) : (
+                <></>
               )}
             </span>
-            :
+          ) : (
             <></>
-          }
+          )}
         </div>
         <div className={styles.columnNameRow}>
-          <span className={styles.columnName}>
-            {floatPrice.toFixed(4)}
-          </span>
+          <span className={styles.columnName}>{floatPrice.toFixed(4)}</span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>

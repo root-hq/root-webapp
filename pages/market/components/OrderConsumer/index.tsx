@@ -3,8 +3,14 @@ import styles from "./OrderConsumer.module.css";
 import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import { EnumeratedMarketToMetadata } from "../../[market]";
 
-import { ChartingLibraryWidgetOptions, ResolutionString } from "public/static/charting_library/charting_library";
-const TVChartContainer = dynamic(() => import("./components/TradingViewChart").then((mod) => mod), {ssr: false});
+import {
+  ChartingLibraryWidgetOptions,
+  ResolutionString,
+} from "public/static/charting_library/charting_library";
+const TVChartContainer = dynamic(
+  () => import("./components/TradingViewChart").then((mod) => mod),
+  { ssr: false },
+);
 
 const MarketSelectorDropdown = dynamic(
   () => import("./components/MarketSelectorDropdown"),
@@ -14,7 +20,7 @@ const OrderManager = dynamic(() => import("./components/OrderManager"), {
   ssr: false,
 });
 const MarketStats = dynamic(() => import("./components/MarketStats"), {
-  ssr: false
+  ssr: false,
 });
 
 import { Client } from "@ellipsis-labs/phoenix-sdk";
@@ -36,7 +42,7 @@ const OrderConsumer = ({
   baseTokenMetadata,
   quoteTokenMetadata,
   phoenixClient,
-  connection
+  connection,
 }: OrderConsumerProps) => {
   const [activeMarket, setActiveMarket] = useState(selectedSpotGridMarket);
   const [activeEnumeratedMarket, setActiveEnumeratedMarket] =
@@ -69,28 +75,27 @@ const OrderConsumer = ({
     autosize: true,
   };
 
-
   return (
     <div className={styles.orderConsumerContainer}>
       <div className={styles.marketDataContainer}>
-          <div className={styles.marketInfoContainer}>
-            <div className={styles.marketSelectorContainer}>
-              <MarketSelectorDropdown
-                enumeratedMarkets={enumeratedMarkets}
-                selectedBaseTokenMetadata={baseTokenMetadata}
-                selectedQuoteTokenMetadata={quoteTokenMetadata}
-                topLevelActiveMarketState={activeMarket}
-                setTopLevelActiveMarketState={setActiveMarket}
-              />
-            </div>
-            <div className={styles.marketStatsContainer}>
-              <MarketStats enumeratedMarket={activeEnumeratedMarket}/>
-            </div>
+        <div className={styles.marketInfoContainer}>
+          <div className={styles.marketSelectorContainer}>
+            <MarketSelectorDropdown
+              enumeratedMarkets={enumeratedMarkets}
+              selectedBaseTokenMetadata={baseTokenMetadata}
+              selectedQuoteTokenMetadata={quoteTokenMetadata}
+              topLevelActiveMarketState={activeMarket}
+              setTopLevelActiveMarketState={setActiveMarket}
+            />
           </div>
-          <div className={styles.tradingViewChartContainer}>
-            <TVChartContainer {...defaultWidgetProps}/>
+          <div className={styles.marketStatsContainer}>
+            <MarketStats enumeratedMarket={activeEnumeratedMarket} />
           </div>
         </div>
+        <div className={styles.tradingViewChartContainer}>
+          <TVChartContainer {...defaultWidgetProps} />
+        </div>
+      </div>
       <div className={styles.orderManagerOuterContainer}>
         <div className={styles.orderManagerContainer}>
           <OrderManager

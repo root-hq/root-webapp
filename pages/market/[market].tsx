@@ -46,7 +46,9 @@ const MarketPage = ({
   quoteTokenMetadata,
 }: MarketPageProps) => {
   const [phoenixClient, setPhoenixClient] = useState<Client>(null);
-  const [connection, setConnection] = useState<Connection>(new web3.Connection(`https://api.mainnet-beta.solana.com`));
+  const [connection, setConnection] = useState<Connection>(
+    new web3.Connection(`https://api.mainnet-beta.solana.com`),
+  );
 
   const [selectedSpotGridMarket, setSelectedSpotGridMarket] =
     useState<SpotGridMarket>();
@@ -70,9 +72,7 @@ const MarketPage = ({
 
           const client = await Client.create(connection);
 
-          client.addMarket(
-            spotGridMarketOnPage.phoenix_market_address,
-          );
+          client.addMarket(spotGridMarketOnPage.phoenix_market_address);
           // console.log("New client initialized");
           // console.log("Client: ", client);
           setPhoenixClient((_) => client);
@@ -89,10 +89,10 @@ const MarketPage = ({
         let conn = new Connection(process.env.RPC_ENDPOINT, {
           commitment: "processed",
         });
-        setConnection(_ => conn);
+        setConnection((_) => conn);
       }
-    }
-    
+    };
+
     setUpConnection();
   }, []);
 
@@ -159,9 +159,7 @@ export const getServerSideProps = async ({ params }) => {
         });
 
         quoteTokenMetadata = allTokenMetadata.find((value) => {
-          return (
-            value.mint === spotGridMarketOnPage.quote_token_mint
-          );
+          return value.mint === spotGridMarketOnPage.quote_token_mint;
         });
       }
 

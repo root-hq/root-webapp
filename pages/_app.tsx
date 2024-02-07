@@ -41,35 +41,34 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
       <Head>
         <title>Root - Efficient limit orders on Solana</title>
         <link rel="icon" href="/images/root-logo.png" />
-        </Head>
+      </Head>
 
-        <Script
-          src="/static/datafeeds/udf/dist/bundle.js"
-          strategy="lazyOnload"
-          onReady={() => {
-            setIsScriptReady(true);
-          }}
-        />
-      {
-        isScriptReady ?
-          <BottomStatusProvider>
-            <ConnectionProvider endpoint={endpoint}>
-              <WalletProvider wallets={wallets}>
-                <WalletModalProvider>
-                  <div>
-                    <Header />
-                  </div>
-                  <Component {...pageProps} />
-                  <div>
-                    <BottomStatusBar />
-                  </div>
-                </WalletModalProvider>
-              </WalletProvider>
-            </ConnectionProvider>
-          </BottomStatusProvider>
-        :
-          <div style={{color: `#ddd`}}>{`Not ready, needs hard refresh`}</div>
-      }
+      <Script
+        src="/static/datafeeds/udf/dist/bundle.js"
+        strategy="lazyOnload"
+        onReady={() => {
+          setIsScriptReady(true);
+        }}
+      />
+      {isScriptReady ? (
+        <BottomStatusProvider>
+          <ConnectionProvider endpoint={endpoint}>
+            <WalletProvider wallets={wallets}>
+              <WalletModalProvider>
+                <div>
+                  <Header />
+                </div>
+                <Component {...pageProps} />
+                <div>
+                  <BottomStatusBar />
+                </div>
+              </WalletModalProvider>
+            </WalletProvider>
+          </ConnectionProvider>
+        </BottomStatusProvider>
+      ) : (
+        <div style={{ color: `#ddd` }}>{`Not ready, needs hard refresh`}</div>
+      )}
 
       <link
         rel="stylesheet"
@@ -81,7 +80,10 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
 
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+        rel="stylesheet"
+      />
     </>
   );
 };

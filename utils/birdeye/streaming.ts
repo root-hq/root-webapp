@@ -1,34 +1,34 @@
 import { parseResolution, getNextBarTime, BE_API_KEY } from "./helpers";
 
 let subscriptionItem = {
-    lastBar: null,
-    resolution: null,
-    callback: (bar: any) => {}
+  lastBar: null,
+  resolution: null,
+  callback: (bar: any) => {},
 };
 
 // Create WebSocket connection.
 const socket = new WebSocket(
   `wss://public-api.birdeye.so/socket?x-api-key=${BE_API_KEY}`,
-  'echo-protocol'
-)
+  "echo-protocol",
+);
 
 // Connection opened
-socket.addEventListener('open', (event) => {
+socket.addEventListener("open", (event) => {
   // console.log('[socket] Connected')
-})
+});
 
 // Listen for messages
-socket.addEventListener('message', (msg) => {
-  const data = JSON.parse(msg.data)
+socket.addEventListener("message", (msg) => {
+  const data = JSON.parse(msg.data);
 
-  if (data.type !== 'PRICE_DATA') return console.log(data)
+  if (data.type !== "PRICE_DATA") return console.log(data);
 
-  const currTime = data.data.unixTime * 1000
-  const lastBar = subscriptionItem.lastBar
-  const resolution = subscriptionItem.resolution
-  const nextBarTime = getNextBarTime(lastBar, resolution)
+  const currTime = data.data.unixTime * 1000;
+  const lastBar = subscriptionItem.lastBar;
+  const resolution = subscriptionItem.resolution;
+  const nextBarTime = getNextBarTime(lastBar, resolution);
 
-  let bar
+  let bar;
 
   if (currTime >= nextBarTime) {
     bar = {
@@ -38,7 +38,7 @@ socket.addEventListener('message', (msg) => {
       low: data.data.l,
       close: data.data.c,
       volume: data.data.v,
-    }
+    };
     // console.log('[socket] Generate new bar')
   } else {
     bar = {
@@ -47,13 +47,13 @@ socket.addEventListener('message', (msg) => {
       low: Math.min(lastBar.low, data.data.l),
       close: data.data.c,
       volume: data.data.v,
-    }
+    };
     // console.log('[socket] Update the latest bar by price')
   }
 
-  subscriptionItem.lastBar = bar
-  subscriptionItem.callback(bar)
-})
+  subscriptionItem.lastBar = bar;
+  subscriptionItem.callback(bar);
+});
 
 export function subscribeOnStream(
   symbolInfo,
@@ -61,30 +61,30 @@ export function subscribeOnStream(
   onRealtimeCallback,
   subscriberUID,
   onResetCacheNeededCallback,
-  lastBar
+  lastBar,
 ) {
   subscriptionItem = {
     resolution,
     lastBar,
     callback: onRealtimeCallback,
-  }
+  };
 
   const msg = {
-    type: 'SUBSCRIBE_PRICE',
+    type: "SUBSCRIBE_PRICE",
     data: {
       chartType: parseResolution(resolution),
       address: symbolInfo.address,
-      currency: 'usd',
+      currency: "usd",
     },
-  }
+  };
 
-  socket.send(JSON.stringify(msg))
+  socket.send(JSON.stringify(msg));
 }
 
 export function unsubscribeFromStream() {
   const msg = {
-    type: 'UNSUBSCRIBE_PRICE',
-  }
+    type: "UNSUBSCRIBE_PRICE",
+  };
 
-  socket.send(JSON.stringify(msg))
+  socket.send(JSON.stringify(msg));
 }

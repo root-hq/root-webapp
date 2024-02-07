@@ -59,7 +59,7 @@ const CLOBTrader = ({
   baseTokenMetadata,
   quoteTokenMetadata,
   phoenixClient,
-  connection
+  connection,
 }: CLOBTraderProps) => {
   const [isBuyOrder, setIsBuyOrder] = useState(true);
 
@@ -107,7 +107,9 @@ const CLOBTrader = ({
           quoteBalance = 0;
         }
 
-        let nativeSOLLamports = await connection.getBalance(walletState.publicKey);
+        let nativeSOLLamports = await connection.getBalance(
+          walletState.publicKey,
+        );
         let nativeSOLBalance = nativeSOLLamports / LAMPORTS_PER_SOL;
 
         setBaseTokenBalance((_) => baseBalance);
@@ -595,21 +597,15 @@ const CLOBTrader = ({
                 >
                   <i className="fa-solid fa-wallet fa-2xs"></i>
                   {` `}
-                  {
-                    baseTokenMetadata && quoteTokenMetadata ?
-                      isBuyOrder ?
-                        quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET ?
-                          quoteTokenBalance + nativeSOLBalance
-                        :
-                          quoteTokenBalance
-                      :
-                        baseTokenMetadata.mint === WRAPPED_SOL_MAINNET ?
-                          baseTokenBalance + nativeSOLBalance
-                        :
-                          baseTokenBalance
-                    :
-                      `0.0`
-                  }
+                  {baseTokenMetadata && quoteTokenMetadata
+                    ? isBuyOrder
+                      ? quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET
+                        ? quoteTokenBalance + nativeSOLBalance
+                        : quoteTokenBalance
+                      : baseTokenMetadata.mint === WRAPPED_SOL_MAINNET
+                        ? baseTokenBalance + nativeSOLBalance
+                        : baseTokenBalance
+                    : `0.0`}
                 </span>
               </div>
             ) : (
