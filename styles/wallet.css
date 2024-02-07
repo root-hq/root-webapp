@@ -3,7 +3,7 @@
 .wallet-adapter-button {
   background-color: transparent;
   border: none;
-  color: #ddd;
+  color: #eee;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -17,7 +17,8 @@
 }
 
 .wallet-adapter-button-trigger {
-  background-color: #0B0C11;
+  background-color: #ddd;
+  color: #0B0C11;
   border: 1px solid rgba(87, 87, 87, 0.25);
 }
 
@@ -27,6 +28,10 @@
 
 .wallet-adapter-button:not([disabled]):hover {
   background-color: #12161E;
+}
+
+.wallet-adapter-button-trigger:not([disabled]):hover {
+  background-color: #fff;
 }
 
 .wallet-adapter-button[disabled] {

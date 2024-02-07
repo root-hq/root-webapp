@@ -210,7 +210,9 @@ const OrderManager = ({
   return (
     <div className={styles.orderManagerContainer}>
       <div className={styles.topMenuContainer}>
-        <span className={styles.orderTitleContainer}>Orders</span>
+        <div className={styles.titleContainer}>
+          <span className={styles.orderTitleContainer}>Orders</span>
+        </div>
         <div className={styles.topMenuButtonContainer}>
           <div
             className={styles.cancelAllButtonContainer}

@@ -18,8 +18,12 @@ const Header = () => {
           </Link>
         </div>
       </div>
-      <div className={styles.walletButtonContainer}>
-        <div className={styles.walletButton}>
+      <div className={styles.actionButtonsContainer}>
+        <div className={styles.fundsButtonContainer}>
+          <span><i className="fa-solid fa-circle-dollar-to-slot"></i></span>
+          <span>Funds</span>
+        </div>
+        <div className={styles.walletButtonContainer}>
           <WalletMultiButtonDynamic />
         </div>
       </div>

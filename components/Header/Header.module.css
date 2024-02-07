@@ -13,9 +13,28 @@
   align-items: center;
   margin-left: 1rem;
 }
-.walletButtonContainer {
+
+.actionButtonsContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 1rem;
+}
+
+.fundsButtonContainer {
+  margin-right: 2rem;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  background-color: #ddd;
+  color: #0B0C11;
+  border: 1px solid rgba(87, 87, 87, 0.25);
+  cursor: pointer;
+  width: 75px;
+  font-weight: 600;
+  border-radius: 0.25rem;
+}
+
+.fundsButtonContainer:hover {
+  background-color: #fff;
 }
