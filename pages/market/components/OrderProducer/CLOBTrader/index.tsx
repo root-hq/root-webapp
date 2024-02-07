@@ -14,7 +14,7 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
+import { TOKEN_PROGRAM_ID, createCloseAccountInstruction, createSyncNativeInstruction, createTransferInstruction, getAssociatedTokenAddress, getMinimumBalanceForRentExemptAccount } from "@solana/spl-token";
 import { web3 } from "@coral-xyz/anchor";
 import { formatNumbersWithCommas, removeCommas } from "../../../../../utils";
 import { Button, Form } from "react-bootstrap";
@@ -352,10 +352,12 @@ const CLOBTrader = ({
       if((isBuyOrder && quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET) || (!isBuyOrder && baseTokenMetadata.mint === WRAPPED_SOL_MAINNET)) {
         const wSOLAta = await getAssociatedTokenAddress(new web3.PublicKey(WRAPPED_SOL_MAINNET), walletState.publicKey);
 
+        let balance = parseInt((nativeSOLBalance * 0.99 * Math.pow(10, 9)).toString());
+
         let transferIx = SystemProgram.transfer({
           fromPubkey: walletState.publicKey,
           toPubkey: wSOLAta,
-          lamports: parseInt((nativeSOLBalance * 0.99 * Math.pow(10, 9)).toString()),
+          lamports: balance,
         });
 
         // sync wrapped SOL balance
@@ -364,7 +366,7 @@ const CLOBTrader = ({
         wrapSOLIxs.push(transferIx);
         wrapSOLIxs.push(syncNativeIx);
 
-        let withdrawIx = await createCloseAccountInstruction(
+        let withdrawIx = createCloseAccountInstruction(
           wSOLAta,
           walletState.publicKey,
           walletState.publicKey

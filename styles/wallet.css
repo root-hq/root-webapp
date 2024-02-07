@@ -3,7 +3,7 @@
 .wallet-adapter-button {
   background-color: transparent;
   border: none;
-  color: #eee;
+  color: #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -17,13 +17,13 @@
 }
 
 .wallet-adapter-button-trigger {
-  background-color: #ccc;
+  background-color: #ddd;
   color: #0b0c11;
   border: 1px solid rgba(87, 87, 87, 0.25);
 }
 
 .wallet-adapter-button:not([disabled]):focus-visible {
-  outline-color: #eee;
+  outline-color: #fff;
 }
 
 .wallet-adapter-button:not([disabled]):hover {

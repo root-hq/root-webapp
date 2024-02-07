@@ -28,7 +28,7 @@ import {
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { Client } from "@ellipsis-labs/phoenix-sdk";
+import { Client, getCreateTokenAccountInstructions } from "@ellipsis-labs/phoenix-sdk";
 import { useBottomStatus } from "../../../../../../components/BottomStatus";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -141,6 +141,25 @@ const OrderManager = ({
         // console.log("Client: ", client);
       } else {
         phxClient = phoenixClient;
+      }
+
+      let baseAtaInitIxs = await getCreateTokenAccountInstructions(
+        connection,
+        walletState.publicKey,
+        walletState.publicKey,
+        new web3.PublicKey(enumeratedMarket.baseTokenMetadata.mint),
+      );
+      let quoteAtaInitIxs = await getCreateTokenAccountInstructions(
+        connection,
+        walletState.publicKey,
+        walletState.publicKey,
+        new web3.PublicKey(enumeratedMarket.quoteTokenMetadata.mint),
+      );
+      for (let ix of baseAtaInitIxs) {
+        transaction.add(ix);
+      }
+      for (let ix of quoteAtaInitIxs) {
+        transaction.add(ix);
       }
 
       let wrapSOLIxs: TransactionInstruction[] = [];
@@ -379,6 +398,12 @@ const OrderManager = ({
     };
 
     fetchUserGlobalBalances();
+
+    const intervalId = setInterval(() => {
+      fetchUserGlobalBalances();
+    }, ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS);
+
+    return () => clearInterval(intervalId);
   }, [walletState, enumeratedMarket]);
 
   return (

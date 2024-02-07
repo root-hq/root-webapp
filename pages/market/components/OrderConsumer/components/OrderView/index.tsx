@@ -12,6 +12,7 @@ import {
   CancelOrderParams,
   Client,
   Side,
+  getCreateTokenAccountInstructions,
   sideBeet,
 } from "@ellipsis-labs/phoenix-sdk";
 import Link from "next/link";
@@ -101,6 +102,25 @@ const OrderView = ({
           phxClient = phoenixClient;
         }
 
+        let baseAtaInitIxs = await getCreateTokenAccountInstructions(
+          connection,
+          walletState.publicKey,
+          walletState.publicKey,
+          new web3.PublicKey(enumeratedMarket.baseTokenMetadata.mint),
+        );
+        let quoteAtaInitIxs = await getCreateTokenAccountInstructions(
+          connection,
+          walletState.publicKey,
+          walletState.publicKey,
+          new web3.PublicKey(enumeratedMarket.quoteTokenMetadata.mint),
+        );
+        for (let ix of baseAtaInitIxs) {
+          transaction.add(ix);
+        }
+        for (let ix of quoteAtaInitIxs) {
+          transaction.add(ix);
+        }
+
         let wrapSOLIxs: TransactionInstruction[] = [];
         let unwrapSOLIxs: TransactionInstruction[] = [];
 
@@ -117,10 +137,12 @@ const OrderView = ({
           );
           let nativeSOLBalance = nativeSOLLamports / LAMPORTS_PER_SOL;
 
+          let balance = parseInt((nativeSOLBalance * 0.99 * Math.pow(10, 9)).toString());
+
           let transferIx = SystemProgram.transfer({
             fromPubkey: walletState.publicKey,
             toPubkey: wSOLAta,
-            lamports: parseInt((nativeSOLBalance * 0.99 * Math.pow(10, 9)).toString()),
+            lamports: balance,
           });
 
           // sync wrapped SOL balance
