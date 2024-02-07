@@ -10,9 +10,11 @@ import {
   ComputeBudgetProgram,
   Connection,
   LAMPORTS_PER_SOL,
+  SystemProgram,
+  TransactionInstruction,
 } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { getAssociatedTokenAddress } from "@solana/spl-token";
+import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import { web3 } from "@coral-xyz/anchor";
 import { formatNumbersWithCommas, removeCommas } from "../../../../../utils";
 import { Button, Form } from "react-bootstrap";
@@ -343,6 +345,38 @@ const CLOBTrader = ({
         transaction.add(ix);
       }
 
+      let wrapSOLIxs: TransactionInstruction[] = [];
+      let unwrapSOLIxs: TransactionInstruction[] = [];
+
+      // Add wrap/unwrap SOL ixs here
+      if((isBuyOrder && quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET) || (!isBuyOrder && baseTokenMetadata.mint === WRAPPED_SOL_MAINNET)) {
+        const wSOLAta = await getAssociatedTokenAddress(new web3.PublicKey(WRAPPED_SOL_MAINNET), walletState.publicKey);
+
+        let transferIx = SystemProgram.transfer({
+          fromPubkey: walletState.publicKey,
+          toPubkey: wSOLAta,
+          lamports: parseInt((nativeSOLBalance * 0.99 * Math.pow(10, 9)).toString()),
+        });
+
+        // sync wrapped SOL balance
+        let syncNativeIx = createSyncNativeInstruction(wSOLAta);
+
+        wrapSOLIxs.push(transferIx);
+        wrapSOLIxs.push(syncNativeIx);
+
+        let withdrawIx = await createCloseAccountInstruction(
+          wSOLAta,
+          walletState.publicKey,
+          walletState.publicKey
+        );
+
+        unwrapSOLIxs.push(withdrawIx);
+      }
+
+      for(let ix of wrapSOLIxs) {
+        transaction.add(ix);
+      }
+
       if (isBuyOrder && parseFloat(receiveUptoSize)) {
         // console.log("Limit buy");
         let priceInTicks = new BN(
@@ -381,6 +415,10 @@ const CLOBTrader = ({
             walletState.publicKey,
           );
           transaction.add(ix);
+
+          for(let ix of unwrapSOLIxs) {
+            transaction.add(ix);
+          }
 
           updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(
@@ -436,6 +474,10 @@ const CLOBTrader = ({
             walletState.publicKey,
           );
           transaction.add(ix);
+
+          for(let ix of unwrapSOLIxs) {
+            transaction.add(ix);
+          }
 
           updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
           let response = await walletState.sendTransaction(
