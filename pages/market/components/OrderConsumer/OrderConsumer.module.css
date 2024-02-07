@@ -26,7 +26,7 @@
 
 .chartTypeToggleContainer {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   padding: 1rem;
   color: #777;
   font-size: 0.9rem;
