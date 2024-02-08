@@ -2,6 +2,9 @@
   display: flex;
   justify-content: center;
   box-sizing: border-box;
+  background-color: #0b0c11;
+  height: 580px;
+  border-radius: 0.75rem;
 }
 
 .orderBookTitleContainer {
