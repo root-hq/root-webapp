@@ -9,4 +9,5 @@ export interface SpotGridMarket {
   min_order_spacing_in_ticks: string;
   min_order_size_in_base_lots: string;
   taker_fee_bps: string;
+  tick_size: string;
 }

@@ -153,7 +153,7 @@ export default {
       };
     }
 
-    const [baseMint, quoteMint] = symbolAddress.split("/");
+    const [baseMint, quoteMint, tickSize] = symbolAddress.split("/");
 
     const symbolInfo: SymbolInfo = {
       base_token: baseMint,
@@ -167,6 +167,7 @@ export default {
       timezone: "Etc/UTC",
       minmov: 1,
       pricescale: 10 ** 4,
+      variable_tick_size: tickSize,
       has_intraday: true,
       has_weekly_and_monthly: false,
       has_empty_bars: true,

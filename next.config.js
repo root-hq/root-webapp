@@ -4,11 +4,10 @@ const nextConfig = {
     domains: [`raw.githubusercontent.com`, "metadata.jito.network"],
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "quei6zhlcfsxdfyes577gy7bkxmuz7qqakyt72xlbkyh7fysmoza.arweave.net",
-      },
-    ],
-
+         protocol: "https",
+         hostname: "**",
+       },
+      ],
   },
   env: {
     RPC_ENDPOINT: process.env.RPC_ENDPOINT,
