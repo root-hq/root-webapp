@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./OrderConsumer.module.css";
 import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import { EnumeratedMarketToMetadata } from "../../[market]";
@@ -29,7 +29,7 @@ const Orderbook = dynamic(() => import("./components/Orderbook"), {
 import { Client } from "@ellipsis-labs/phoenix-sdk";
 import dynamic from "next/dynamic";
 import { Connection } from "@solana/web3.js";
-import { ChartType } from "constants/";
+import { ChartType, USDC_MAINNET, WRAPPED_SOL_MAINNET } from "constants/";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -88,7 +88,7 @@ const OrderConsumer = ({
   }, [selectedSpotGridMarket]);
 
   const defaultWidgetProps: Partial<ChartingLibraryWidgetOptions> = {
-    symbol: `${baseTokenMetadata.mint}/${quoteTokenMetadata.mint}/${selectedSpotGridMarket ? selectedSpotGridMarket.tick_size : `0.001`}`,
+    symbol: `${baseTokenMetadata ? baseTokenMetadata.mint : WRAPPED_SOL_MAINNET}/${quoteTokenMetadata ? quoteTokenMetadata.mint : USDC_MAINNET}/${selectedSpotGridMarket ? selectedSpotGridMarket.tick_size : `0.001`}`,
     interval: "5" as ResolutionString,
     library_path: "/static/charting_library/",
     locale: "en",
@@ -179,7 +179,7 @@ const OrderConsumer = ({
             display: !showOrderBook ? `none` : ``
           }}
         >
-          <Orderbook />
+          <Orderbook enumeratedMarket={activeEnumeratedMarket}/>
         </div>
       </div>
       <div className={styles.orderManagerOuterContainer}>

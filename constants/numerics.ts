@@ -4,3 +4,5 @@ export const ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS = 5_000;
 
 export const MAX_BPS = 10_000;
 export const ROOT_PROTOCOL_FEE_BPS = 0;
+
+export const MAX_ACCOUNT_SIZE_BYTES = 1723488 * 2;

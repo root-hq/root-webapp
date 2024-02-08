@@ -1,6 +1,6 @@
 .orderBookContainer {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   box-sizing: border-box;
   background-color: #0b0c11;
   height: 580px;
@@ -8,6 +8,74 @@
 }
 
 .orderBookTitleContainer {
+  display: flex;
+  align-self: center;
   color: #ddd;
   margin: 1rem;
+}
+
+.bookContainer {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  justify-content: flex-start;
+}
+
+.bookSideContainer {
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  height: 220px;
+  border: 1px solid rgba(87, 87, 87, 0.15);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.midPriceAndSpreadContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+
+.midPrice {
+  color: #ccc;
+  font-size: 1rem;
+}
+
+.spread {
+  color: #ccc;
+  font-size: 1rem;
+}
+
+.l3UiOrder {
+  padding-top: 1rem;
+}
+
+.l3UiBid {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: #3DE383;
+  padding: 0.15rem;
+  font-size: 0.8rem;
+  opacity: 0.65;
+  width: 100%;
+}
+
+.l3UiAsk {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: #e33d3d;
+  padding: 0.15rem;
+  font-size: 0.8rem;
+  opacity: 0.65;
+  width: 100%;
+}
+
+.priceAndSize {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
 }

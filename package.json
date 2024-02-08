@@ -26,7 +26,8 @@
     "next": "13.5.4",
     "react": "^18",
     "react-bootstrap": "^2.9.0",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "zstddec": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^20",
