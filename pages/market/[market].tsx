@@ -109,6 +109,8 @@ const MarketPage = ({
             connection={connection}
           />
         </div>
+        <div className={styles.orderBookContainer}>
+        </div>
       </div>
       <div className={styles.orderProducerContainer}>
         <CLOBTrader

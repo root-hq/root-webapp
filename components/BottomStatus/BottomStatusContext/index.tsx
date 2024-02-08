@@ -94,7 +94,7 @@ export const BottomStatusProvider = ({ children }) => {
   };
 
   const red = async (status: React.JSX.Element, duration: number) => {
-    updateStatusCustom(
+    await updateStatusCustom(
       status,
       duration,
       { color: "#0B0C11" },
@@ -103,10 +103,11 @@ export const BottomStatusProvider = ({ children }) => {
         borderTop: `1px solid rgba(227, 61, 61, 0.25)`,
       },
     );
+    resetStatus();
   };
 
   const green = async (status: React.JSX.Element, duration: number) => {
-    updateStatusCustom(
+    await updateStatusCustom(
       status,
       duration,
       { color: "#0B0C11" },
@@ -115,6 +116,7 @@ export const BottomStatusProvider = ({ children }) => {
         borderTop: `1px solid rgba(61, 227, 131, 0.25)`,
       },
     );
+    resetStatus();
   };
 
   const value = {

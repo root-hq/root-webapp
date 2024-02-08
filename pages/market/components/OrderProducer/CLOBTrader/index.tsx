@@ -502,7 +502,6 @@ const CLOBTrader = ({
           red(<span>{`Failed: ${err.message}`}</span>, 2_000);
         }
       }
-      resetAllFields();
     }
 
     setIsPlaceOrderButtonLoading((_) => false);
@@ -513,6 +512,7 @@ const CLOBTrader = ({
     setLimitPrice("");
     setSendUptoSize("");
     setReceiveUptoSize("");
+    resetStatus();
   };
 
   return (
