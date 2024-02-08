@@ -14,7 +14,7 @@ export async function makeApiRequest(path) {
     });
     return response.json();
   } catch (error) {
-    throw new Error(`Birdeye request error: ${error.status}`);
+    throw new Error(`Birdeye request error: ${error}`);
   }
 }
 

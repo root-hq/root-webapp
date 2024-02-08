@@ -54,3 +54,9 @@ export const decimalPlacesFromTickSize = (tickSize: string): number => {
   
   return decimalPlaces;
 }
+
+export function toScientificNotation(num: number): string {
+  const exponent = Math.floor(Math.log10(Math.abs(num)));
+  const coefficient = num / Math.pow(10, exponent);
+  return `${coefficient.toFixed(2)}e${exponent}`;
+}

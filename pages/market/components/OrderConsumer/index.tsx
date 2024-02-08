@@ -179,7 +179,12 @@ const OrderConsumer = ({
             display: !showOrderBook ? `none` : ``
           }}
         >
-          <Orderbook enumeratedMarket={activeEnumeratedMarket}/>
+          {
+            showOrderBook ?
+              <Orderbook enumeratedMarket={activeEnumeratedMarket}/>
+            :
+              <></>
+          }
         </div>
       </div>
       <div className={styles.orderManagerOuterContainer}>

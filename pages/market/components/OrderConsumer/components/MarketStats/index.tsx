@@ -27,22 +27,27 @@ const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
         return;
       }
 
-      const currentTimeMillis = Date.now();
-      const oneSecondBefore = Math.floor((currentTimeMillis - 1000) / 1000);
-      const oneDayBefore = Math.floor(
-        (currentTimeMillis - 24 * 60 * 60 * 1000) / 1000,
-      );
+      try {
+        const currentTimeMillis = Date.now();
+        const oneSecondBefore = Math.floor((currentTimeMillis - 1000) / 1000);
+        const oneDayBefore = Math.floor(
+          (currentTimeMillis - 24 * 60 * 60 * 1000) / 1000,
+        );
 
-      const freshStatsData = await makeApiRequest(
-        `defi/ohlcv/base_quote?base_address=${enumeratedMarket.baseTokenMetadata.mint}&quote_address=${enumeratedMarket.quoteTokenMetadata.mint}&type=1D&time_from=${oneDayBefore}&time_to=${oneSecondBefore}`,
-      );
+        const freshStatsData = await makeApiRequest(
+          `defi/ohlcv/base_quote?base_address=${enumeratedMarket.baseTokenMetadata.mint}&quote_address=${enumeratedMarket.quoteTokenMetadata.mint}&type=1D&time_from=${oneDayBefore}&time_to=${oneSecondBefore}`,
+        );
 
-      if (freshStatsData.success) {
-        const data = freshStatsData.data.items[0];
-        setDailyHigh((_) => data.h);
-        setDailyLow((_) => data.l);
-        setDailyVolumeBase((_) => data.vBase);
-        setDailyVolumeQuote((_) => data.vQuote);
+        if (freshStatsData.success) {
+          const data = freshStatsData.data.items[0];
+          setDailyHigh((_) => data.h);
+          setDailyLow((_) => data.l);
+          setDailyVolumeBase((_) => data.vBase);
+          setDailyVolumeQuote((_) => data.vQuote);
+        }
+      }
+      catch(err) {
+        console.log(`Error refreshing market stats: `, err);
       }
     };
 
@@ -61,25 +66,30 @@ const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
         return;
       }
 
-      const currentTimeMillis = Date.now();
-      const oneSecondBefore = Math.floor((currentTimeMillis - 1_000) / 1000);
-      const oneMinuteBefore = Math.floor((currentTimeMillis - 60_000) / 1000);
+      try {
+        const currentTimeMillis = Date.now();
+        const oneSecondBefore = Math.floor((currentTimeMillis - 1_000) / 1000);
+        const oneMinuteBefore = Math.floor((currentTimeMillis - 60_000) / 1000);
 
-      const freshStatsData = await makeApiRequest(
-        `defi/ohlcv/base_quote?base_address=${enumeratedMarket.baseTokenMetadata.mint}&quote_address=${enumeratedMarket.quoteTokenMetadata.mint}&type=1m&time_from=${oneMinuteBefore}&time_to=${oneSecondBefore}`,
-      );
+        const freshStatsData = await makeApiRequest(
+          `defi/ohlcv/base_quote?base_address=${enumeratedMarket.baseTokenMetadata.mint}&quote_address=${enumeratedMarket.quoteTokenMetadata.mint}&type=1m&time_from=${oneMinuteBefore}&time_to=${oneSecondBefore}`,
+        );
 
-      if (freshStatsData.success) {
-        const data = freshStatsData.data.items[0];
-        let newPrice = (data.o + data.c) / 2.0;
+        if (freshStatsData.success) {
+          const data = freshStatsData.data.items[0];
+          let newPrice = (data.o + data.c) / 2.0;
 
-        if (newPrice > currentPrice.current) {
-          setInstantaneousPriceIncrease((_) => true);
-        } else if (currentPrice.current > newPrice) {
-          setInstantaneousPriceIncrease((_) => false);
+          if (newPrice > currentPrice.current) {
+            setInstantaneousPriceIncrease((_) => true);
+          } else if (currentPrice.current > newPrice) {
+            setInstantaneousPriceIncrease((_) => false);
+          }
+
+          currentPrice.current = newPrice;
         }
-
-        currentPrice.current = newPrice;
+      }
+      catch(err) {
+        console.log(`Error refreshing price: `, err);
       }
     };
 
