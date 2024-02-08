@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./OrderView.module.css";
-import { Order } from "../../../../../../utils";
+import { Order, decimalPlacesFromTickSize } from "../../../../../../utils";
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
 import Image from "next/image";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -276,21 +276,21 @@ const OrderView = ({
           )}
         </div>
         <div className={styles.columnNameRow}>
-          <span className={styles.columnName}>{floatPrice.toFixed(4)}</span>
+          <span className={styles.columnName}>{floatPrice.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {floatSizeInBaseUnits.toFixed(4)}
+            {floatSizeInBaseUnits.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {floatTotalSizeInQuoteUnits.toFixed(4)}
+            {floatTotalSizeInQuoteUnits.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {fillSizeInBaseUnits.toFixed(4)}
+            {fillSizeInBaseUnits.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
           </span>
         </div>
         <div className={styles.columnNameRow}>

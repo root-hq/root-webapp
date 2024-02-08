@@ -29,3 +29,28 @@ export const formatNumbersWithCommas = (
 export const delay = (time) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
+
+export const decimalPlacesFromTickSize = (tickSize: string): number => {
+
+  if (tickSize.includes('e')) {
+    // Splitting the string into base and exponent parts
+    const [base, exponent] = tickSize.split('e');
+    // Removing leading zeros from the base
+    const baseWithoutZeros = base.replace(/^0+/, '');
+    // Calculating the number of decimal places
+    return -1 * parseInt(exponent) + (baseWithoutZeros.length - 1);
+  }
+  
+  // Find the position of the decimal point
+  const decimalPointIndex: number = tickSize.indexOf('.');
+  
+  // If there is no decimal point, return 0
+  if (decimalPointIndex === -1) {
+      return 0;
+  }
+  
+  // Calculate the number of decimal places
+  const decimalPlaces: number = tickSize.length - decimalPointIndex - 1;
+  
+  return decimalPlaces;
+}

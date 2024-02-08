@@ -32,22 +32,22 @@ const FundView = ({
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {walletBalance ? walletBalance.toFixed(4) : "0.0"}
+            {walletBalance ? walletBalance.toFixed(tokenMetadata ? tokenMetadata.decimals : 4) : "0.0"}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {activeOrdersBalance ? activeOrdersBalance.toFixed(4) : "0.0"}
+            {activeOrdersBalance ? activeOrdersBalance.toFixed(tokenMetadata ? tokenMetadata.decimals : 4) : "0.0"}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {withdrawableBalance ? withdrawableBalance.toFixed(4) : "0.0"}
+            {withdrawableBalance ? withdrawableBalance.toFixed(tokenMetadata ? tokenMetadata.decimals : 4) : "0.0"}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {totalBalance ? totalBalance.toFixed(4) : "0.0"}
+            {totalBalance ? totalBalance.toFixed(tokenMetadata ? tokenMetadata.decimals : 4) : "0.0"}
           </span>
         </div>
       </div>

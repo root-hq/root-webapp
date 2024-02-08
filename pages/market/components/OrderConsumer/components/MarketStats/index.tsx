@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarketStats.module.css";
 import { makeApiRequest } from "../../../../../../utils/birdeye/helpers";
 import { EnumeratedMarketToMetadata } from "pages/market/[market]";
-import { formatWithCommas } from "utils";
+import { decimalPlacesFromTickSize, formatWithCommas } from "utils";
 import {
   MARKET_STATS_REFRESH_FREQUENCY_IN_MS,
   PRICE_REFRESH_FREQUENCY_IN_MS,
@@ -101,25 +101,25 @@ const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
             color: instantaneousPriceIncrease ? `#3DE383` : "#e33d3d",
           }}
         >
-          {currentPrice.current.toFixed(4)}
+          {currentPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
         </div>
       </div>
       <div className={styles.marketStat}>
         <div className={styles.statKey}>24h High</div>
-        <div className={styles.statValue}>{dailyHigh.toFixed(4)}</div>
+        <div className={styles.statValue}>{dailyHigh.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</div>
       </div>
       <div className={styles.marketStat}>
         <div className={styles.statKey}>24h Low</div>
-        <div className={styles.statValue}>{dailyLow.toFixed(4)}</div>
+        <div className={styles.statValue}>{dailyLow.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</div>
       </div>
       <div className={styles.marketStat}>
-        <div className={styles.statKey}>24h Volume(SOL)</div>
+        <div className={styles.statKey}>24h Volume({`${enumeratedMarket ? enumeratedMarket.baseTokenMetadata.ticker : ``}`})</div>
         <div className={styles.statValue}>
           {formatWithCommas(dailyVolumeBase.toFixed(2))}
         </div>
       </div>
       <div className={styles.marketStat}>
-        <div className={styles.statKey}>24h Volume(USDC)</div>
+        <div className={styles.statKey}>24h Volume({`${enumeratedMarket ? enumeratedMarket.quoteTokenMetadata.ticker : ``}`})</div>
         <div className={styles.statValue}>
           {formatWithCommas(dailyVolumeQuote.toFixed(2))}
         </div>
