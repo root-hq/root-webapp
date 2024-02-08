@@ -52,15 +52,15 @@ const OrderConsumer = ({
   const [activeEnumeratedMarket, setActiveEnumeratedMarket] =
     useState<EnumeratedMarketToMetadata>(null);
 
-  const [chartType, setChartType] = useState<ChartType>(ChartType.Simple);
+  const [chartType, setChartType] = useState<ChartType>(ChartType.Lite);
 
   const handleChartTypeToggle = () => {
-    if(chartType === ChartType.Simple) {
-      setChartType(_ => ChartType.Advanced);
+    if(chartType === ChartType.Lite) {
+      setChartType(_ => ChartType.Pro);
     }
 
-    else if(chartType === ChartType.Advanced) {
-      setChartType(_ => ChartType.Simple);
+    else if(chartType === ChartType.Pro) {
+      setChartType(_ => ChartType.Lite);
     }
   }
 
@@ -96,7 +96,7 @@ const OrderConsumer = ({
       <div className={styles.marketDataContainer}>
         <div className={styles.chartContainer}
           style = {{
-            width: chartType === ChartType.Simple ? `100%` : ``
+            width: chartType === ChartType.Lite ? `100%` : ``
           }}
         >
           <div className={styles.marketInfoContainer}>
@@ -124,29 +124,29 @@ const OrderConsumer = ({
                 }
               }
             >
-              <span className={styles.chartTypeTextSimple}
+              <span className={styles.chartTypeTextLite}
                 style={{
-                  color: chartType === ChartType.Simple ? `#477df2` : ``,
-                  fontWeight: chartType === ChartType.Simple ? `bold` : ``,
+                  color: chartType === ChartType.Lite ? `#477df2` : ``,
+                  fontWeight: chartType === ChartType.Lite ? `bold` : ``,
                 }}
               >
-                {`Simple`}
+                {`Lite`}
               </span>
               <span className={styles.chartTypeToggleIcon}><i className="fa-solid fa-right-left"></i></span>
-              <span className={styles.chartTypeTextAdvanced}
+              <span className={styles.chartTypeTextPro}
                 style={{
-                  color: chartType === ChartType.Advanced ? `#477df2` : ``,
-                  fontWeight: chartType === ChartType.Advanced ? `bold` : ``
+                  color: chartType === ChartType.Pro ? `#477df2` : ``,
+                  fontWeight: chartType === ChartType.Pro ? `bold` : ``
                 }}
               >
-                {`Advanced`}
+                {`Pro`}
               </span>
             </div>
           </div>
         </div>
         <div className={styles.orderBookContainer}
           style = {{
-            display: chartType === ChartType.Simple ? `none` : ``
+            display: chartType === ChartType.Lite ? `none` : ``
           }}
         >
           <Orderbook />

@@ -63,19 +63,19 @@
   margin-top: 0.15rem;
 }
 
-.chartTypeTextSimple {
+.chartTypeTextLite {
   margin-right: 0.5rem;
 }
 
-.chartTypeTextSimple:hover {
+.chartTypeTextLite:hover {
   color: #fff;
 }
 
-.chartTypeTextAdvanced {
+.chartTypeTextPro {
   margin-left: 0.5rem;
 }
 
-.chartTypeTextAdvanced:hover {
+.chartTypeTextPro:hover {
   color: #fff;
 }
 

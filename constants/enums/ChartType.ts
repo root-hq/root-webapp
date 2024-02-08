@@ -1,20 +1,20 @@
 export enum ChartType {
-    Simple,
-    Advanced   
+    Lite,
+    Pro   
 }
 
 export const getChartTypeText = (chartType: ChartType) => {
-    if (chartType === ChartType.Simple) {
-      return "simple";
+    if (chartType === ChartType.Lite) {
+      return "lite";
     }
-    else if(chartType === ChartType.Advanced) {
-        return "advanced";
+    else if(chartType === ChartType.Pro) {
+        return "pro";
     }
   };
   
   export const getAllChartTypes = () => {
     return [
-      ChartType.Simple,
-      ChartType.Advanced
+      ChartType.Lite,
+      ChartType.Pro
     ];
   };

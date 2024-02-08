@@ -56,7 +56,7 @@ const TVChartContainer = ({
     "legend_widget"
   ];
 
-  if(chartType === ChartType.Simple) {
+  if(chartType === ChartType.Lite) {
     DEFAULT_DISABLED_FEATURES = [
       "use_localstorage_for_settings",
       "header_symbol_search",
@@ -126,10 +126,10 @@ const TVChartContainer = ({
       // 	);
       // 	button.innerHTML = "Check API";
       // });
-      if(chartType === ChartType.Simple) {
+      if(chartType === ChartType.Lite) {
         tvWidget.activeChart().setChartType(3);
       }
-      else if(chartType === ChartType.Advanced) {
+      else if(chartType === ChartType.Pro) {
         tvWidget.activeChart().setChartType(1);
       }
     });
