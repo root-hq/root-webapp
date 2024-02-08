@@ -2,17 +2,21 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import type { FC } from "react";
 import React, { useState } from "react";
-import Header from "../components/Header";
 import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import { useMemo } from "react";
 import { clusterApiUrl } from "@solana/web3.js";
+
 import { WalletModalProvider } from "../components/Wallet";
 import { BottomStatusProvider } from "../components/BottomStatus";
-import BottomStatusBar from "../components/BottomStatus/BottomStatusBar";
+
+const BottomStatusBar = dynamic(() => import("../components/BottomStatus/BottomStatusBar"));
+const Header = dynamic(() => import("../components/Header"));
+
 import Script from "next/script";
+import dynamic from "next/dynamic";
 
 // Use require instead of import since order matters
 // require("bootstrap/dist/css/bootstrap.min.css");
@@ -67,7 +71,15 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
           </ConnectionProvider>
         </BottomStatusProvider>
       ) : (
-        <div style={{ color: `#ddd` }}>{`Not ready, needs hard refresh`}</div>
+        <div style={{
+          color: `#ddd`,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          margin: 'auto'
+        }}>{`Loading data...`}</div>
       )}
 
       <link
