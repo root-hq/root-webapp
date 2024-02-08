@@ -22,6 +22,9 @@ const OrderManager = dynamic(() => import("./components/OrderManager"), {
 const MarketStats = dynamic(() => import("./components/MarketStats"), {
   ssr: false,
 });
+const Orderbook = dynamic(() => import("./components/Orderbook"), {
+  ssr: false
+});
 
 import { Client } from "@ellipsis-labs/phoenix-sdk";
 import dynamic from "next/dynamic";
@@ -91,49 +94,62 @@ const OrderConsumer = ({
   return (
     <div className={styles.orderConsumerContainer}>
       <div className={styles.marketDataContainer}>
-        <div className={styles.marketInfoContainer}>
-          <div className={styles.marketSelectorContainer}>
-            <MarketSelectorDropdown
-              enumeratedMarkets={enumeratedMarkets}
-              selectedBaseTokenMetadata={baseTokenMetadata}
-              selectedQuoteTokenMetadata={quoteTokenMetadata}
-              topLevelActiveMarketState={activeMarket}
-              setTopLevelActiveMarketState={setActiveMarket}
-            />
+        <div className={styles.chartContainer}
+          style = {{
+            width: chartType === ChartType.Simple ? `100%` : ``
+          }}
+        >
+          <div className={styles.marketInfoContainer}>
+            <div className={styles.marketSelectorContainer}>
+              <MarketSelectorDropdown
+                enumeratedMarkets={enumeratedMarkets}
+                selectedBaseTokenMetadata={baseTokenMetadata}
+                selectedQuoteTokenMetadata={quoteTokenMetadata}
+                topLevelActiveMarketState={activeMarket}
+                setTopLevelActiveMarketState={setActiveMarket}
+              />
+            </div>
+            <div className={styles.marketStatsContainer}>
+              <MarketStats enumeratedMarket={activeEnumeratedMarket} />
+            </div>
           </div>
-          <div className={styles.marketStatsContainer}>
-            <MarketStats enumeratedMarket={activeEnumeratedMarket} />
+          <div className={styles.tradingViewChartContainer}>
+            <TVChartContainer props={defaultWidgetProps} chartType={chartType} />
           </div>
-        </div>
-        <div className={styles.tradingViewChartContainer}>
-          <TVChartContainer props={defaultWidgetProps} chartType={chartType} />
-        </div>
-        <div className={styles.chartTypeToggleContainer}>
-          <div className={styles.chartTypeToggle}
-            onClick={
-              () => {
-                handleChartTypeToggle()
+          <div className={styles.chartTypeToggleContainer}>
+            <div className={styles.chartTypeToggle}
+              onClick={
+                () => {
+                  handleChartTypeToggle()
+                }
               }
-            }
-          >
-            <span className={styles.chartTypeTextSimple}
-              style={{
-                color: chartType === ChartType.Simple ? `#477df2` : ``,
-                fontWeight: chartType === ChartType.Simple ? `bold` : ``,
-              }}
             >
-              {`Simple`}
-            </span>
-            <span className={styles.chartTypeToggleIcon}><i className="fa-solid fa-right-left"></i></span>
-            <span className={styles.chartTypeTextAdvanced}
-              style={{
-                color: chartType === ChartType.Advanced ? `#477df2` : ``,
-                fontWeight: chartType === ChartType.Advanced ? `bold` : ``
-              }}
-            >
-              {`Advanced`}
-            </span>
+              <span className={styles.chartTypeTextSimple}
+                style={{
+                  color: chartType === ChartType.Simple ? `#477df2` : ``,
+                  fontWeight: chartType === ChartType.Simple ? `bold` : ``,
+                }}
+              >
+                {`Simple`}
+              </span>
+              <span className={styles.chartTypeToggleIcon}><i className="fa-solid fa-right-left"></i></span>
+              <span className={styles.chartTypeTextAdvanced}
+                style={{
+                  color: chartType === ChartType.Advanced ? `#477df2` : ``,
+                  fontWeight: chartType === ChartType.Advanced ? `bold` : ``
+                }}
+              >
+                {`Advanced`}
+              </span>
+            </div>
           </div>
+        </div>
+        <div className={styles.orderBookContainer}
+          style = {{
+            display: chartType === ChartType.Simple ? `none` : ``
+          }}
+        >
+          <Orderbook />
         </div>
       </div>
       <div className={styles.orderManagerOuterContainer}>
