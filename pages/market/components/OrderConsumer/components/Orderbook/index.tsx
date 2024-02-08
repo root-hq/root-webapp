@@ -3,6 +3,7 @@ import styles from "./Orderbook.module.css";
 import { EnumeratedMarketToMetadata } from "pages/market/[market]";
 import { L3UiBook, L3UiOrder, MarketData, deserializeMarketData, getMarketL3UiBook } from "@ellipsis-labs/phoenix-sdk";
 import { decimalPlacesFromTickSize, toScientificNotation } from "utils";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export interface OrderBookProps {
   enumeratedMarket: EnumeratedMarketToMetadata;
@@ -19,6 +20,8 @@ const Orderbook = ({
   const [asks, setAsks] = useState<L3UiOrder[]>([]);
 
   const bidBookContainerRef = useRef<HTMLDivElement>(null);
+
+  const walletState = useWallet();
 
   useEffect(() => {
     if(enumeratedMarket) {
@@ -108,7 +111,7 @@ const Orderbook = ({
                                 <i className="fa-solid fa-circle"
                                 style={{
                                   fontSize: `0.3rem`,
-                                  color: order.makerPubkey !== "LUKAzPV8dDbVykTVT14pCGKzFfNcgZgRbAXB8AGdKx3" ? `yellow` : `transparent`,
+                                  color: walletState && walletState.connected && order.makerPubkey !== walletState.publicKey.toString() ? `yellow` : `transparent`,
                                   marginRight: `0.4rem`,
                                 }}
                                 ></i>
@@ -167,7 +170,7 @@ const Orderbook = ({
                                 <i className="fa-solid fa-circle"
                                 style={{
                                   fontSize: `0.3rem`,
-                                  color: order.makerPubkey !== "LUKAzPV8dDbVykTVT14pCGKzFfNcgZgRbAXB8AGdKx3" ? `yellow` : `transparent`,
+                                  color: walletState && walletState.connected && order.makerPubkey !== walletState.publicKey.toString() ? `yellow` : `transparent`,
                                   marginRight: `0.4rem`,
                                 }}
                                 ></i>
