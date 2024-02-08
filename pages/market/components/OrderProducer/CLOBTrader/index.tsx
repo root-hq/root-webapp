@@ -574,7 +574,7 @@ const CLOBTrader = ({
               <span>Limit price</span>
             </Form.Label>
             <Form.Control
-              placeholder="0.00"
+              placeholder={spotGridMarket ? spotGridMarket.tick_size : ``}
               // disabled={!walletState.connected}
               style={{
                 backgroundColor: "transparent",
@@ -602,7 +602,7 @@ const CLOBTrader = ({
               </span>
             </Form.Label>
             <Form.Control
-              placeholder={`0.00 ${isBuyOrder ? (quoteTokenMetadata ? quoteTokenMetadata.ticker : "") : baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
+              placeholder={`${spotGridMarket ? spotGridMarket.tick_size : ``} ${isBuyOrder ? (quoteTokenMetadata ? quoteTokenMetadata.ticker : "") : baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
               // disabled={!walletState.connected}
               style={{
                 backgroundColor: "transparent",
