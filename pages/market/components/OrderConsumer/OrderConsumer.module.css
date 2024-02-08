@@ -44,14 +44,21 @@
   margin: auto;
 }
 
-.chartTypeToggleContainer {
+.toggleContainer {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   padding: 1rem;
   color: #777;
   font-size: 0.9rem;
   background-color: #0b0c11;
+  border-top: 1px solid rgba(87, 87, 87, 0.25);
   border-radius: 0rem 0rem 0.75rem 0.75rem;
+}
+
+.chartTypeToggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .chartTypeToggle:hover {
@@ -68,7 +75,7 @@
 }
 
 .chartTypeTextLite:hover {
-  color: #fff;
+  color: #ccc;
 }
 
 .chartTypeTextPro {
@@ -77,6 +84,26 @@
 
 .chartTypeTextPro:hover {
   color: #fff;
+}
+
+.showOrderBookToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.showOrderBookToggle:hover {
+  cursor: pointer;
+  color: #fff
+}
+
+.showOrderBookToggleIcon {
+  font-size: 1.2rem;
+  margin-top: 0.15rem;
+}
+
+.showOrderBookText {
+  margin-left: 0.5rem;
 }
 
 .tradingViewChartContainer {
@@ -104,6 +131,11 @@
   .chartContainer {
     width: 100%
   }
+
+  .showOrderBookToggle {
+    display: none;
+  }
+  
   .orderBookContainer {
     display: none;
   }

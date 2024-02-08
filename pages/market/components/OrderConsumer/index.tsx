@@ -53,6 +53,7 @@ const OrderConsumer = ({
     useState<EnumeratedMarketToMetadata>(null);
 
   const [chartType, setChartType] = useState<ChartType>(ChartType.Lite);
+  const [showOrderBook, setShowOrderBook] = useState<boolean>(false);
 
   const handleChartTypeToggle = () => {
     if(chartType === ChartType.Lite) {
@@ -62,6 +63,10 @@ const OrderConsumer = ({
     else if(chartType === ChartType.Pro) {
       setChartType(_ => ChartType.Lite);
     }
+  }
+
+  const handleShowOrderBookToggle = () => {
+    setShowOrderBook(prev  => !prev);
   }
 
   useEffect(() => {
@@ -96,7 +101,7 @@ const OrderConsumer = ({
       <div className={styles.marketDataContainer}>
         <div className={styles.chartContainer}
           style = {{
-            width: chartType === ChartType.Lite ? `100%` : ``
+            width: !showOrderBook ? `100%` : ``
           }}
         >
           <div className={styles.marketInfoContainer}>
@@ -116,7 +121,7 @@ const OrderConsumer = ({
           <div className={styles.tradingViewChartContainer}>
             <TVChartContainer props={defaultWidgetProps} chartType={chartType} />
           </div>
-          <div className={styles.chartTypeToggleContainer}>
+          <div className={styles.toggleContainer}>
             <div className={styles.chartTypeToggle}
               onClick={
                 () => {
@@ -142,11 +147,36 @@ const OrderConsumer = ({
                 {`Pro`}
               </span>
             </div>
+            <div className={styles.showOrderBookToggle}
+              onClick={
+                () => {
+                  handleShowOrderBookToggle()
+                }
+              }
+              style={{
+                color: showOrderBook ? `#477df2` : ``,
+                // fontWeight: showOrderBook ? `bold` : ``,
+              }}
+            >
+              <span className={styles.showOrderBookToggleIcon}>
+                {
+                  showOrderBook ?
+                    <i
+                    className="fa-solid fa-toggle-on"></i>
+                  :
+                    <i className="fa-solid fa-toggle-off"></i>
+                }
+              </span>
+              <span className={styles.showOrderBookText}
+              >
+                {`Orderbook`}
+              </span>
+            </div>
           </div>
         </div>
         <div className={styles.orderBookContainer}
           style = {{
-            display: chartType === ChartType.Lite ? `none` : ``
+            display: !showOrderBook ? `none` : ``
           }}
         >
           <Orderbook />
