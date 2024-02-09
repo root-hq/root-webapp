@@ -26,10 +26,9 @@ const Orderbook = dynamic(() => import("./components/Orderbook"), {
   ssr: false
 });
 
-import { Client } from "@ellipsis-labs/phoenix-sdk";
 import dynamic from "next/dynamic";
 import { Connection } from "@solana/web3.js";
-import { ChartType, USDC_MAINNET, WRAPPED_SOL_MAINNET } from "constants/";
+import { ChartType, DEFAULT_RESOLUTION, USDC_MAINNET, WRAPPED_SOL_MAINNET } from "constants/";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -52,6 +51,8 @@ const OrderConsumer = ({
 
   const [chartType, setChartType] = useState<ChartType>(ChartType.Pro);
   const [showOrderBook, setShowOrderBook] = useState<boolean>(true);
+
+  const dummyCounter = useRef<number>(0);
 
   const handleChartTypeToggle = () => {
     if(chartType === ChartType.Lite) {
@@ -87,16 +88,31 @@ const OrderConsumer = ({
     doStuff();
   }, [selectedSpotGridMarket]);
 
+  useEffect(() => {
+    const incrementer = () => {
+      dummyCounter.current += 1;
+      console.log(`Dummy counter: ${dummyCounter.current}`);
+    }
+
+    incrementer();
+
+    const intervalId = setInterval(() => {
+      incrementer();
+    }, DEFAULT_RESOLUTION * 1_000 * 60);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   const defaultWidgetProps: Partial<ChartingLibraryWidgetOptions> = {
     symbol: `${baseTokenMetadata ? baseTokenMetadata.mint : WRAPPED_SOL_MAINNET}/${quoteTokenMetadata ? quoteTokenMetadata.mint : USDC_MAINNET}/${selectedSpotGridMarket ? selectedSpotGridMarket.tick_size : `0.001`}`,
-    interval: "5" as ResolutionString,
+    interval: `${DEFAULT_RESOLUTION}` as ResolutionString,
     library_path: "/static/charting_library/",
     locale: "en",
     fullscreen: false,
     autosize: true,
   };
 
-  const memoizedTradingViewChart = useMemo(() => <TVChartContainer props={defaultWidgetProps} chartType={chartType} />, [chartType, selectedSpotGridMarket]);
+  const memoizedTradingViewChart = useMemo(() => <TVChartContainer props={defaultWidgetProps} chartType={chartType} />, [chartType, selectedSpotGridMarket, dummyCounter.current]);
   const memoizedOrderbook = useMemo(() => {
     return (
       <Orderbook enumeratedMarket={activeEnumeratedMarket}/>
