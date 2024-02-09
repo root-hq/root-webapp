@@ -2,7 +2,7 @@ import { web3 } from "@coral-xyz/anchor";
 import { Client, L3UiOrder, MarketData, deserializeMarketData, getMarketL3UiBook } from "@ellipsis-labs/phoenix-sdk";
 import { WalletContextState, useWallet } from "@solana/wallet-adapter-react";
 import { MAX_ACCOUNT_SIZE_BYTES } from "constants/";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { MutableRefObject, createContext, useContext, useEffect, useRef, useState } from "react";
 import { ZSTDDecoder } from "zstddec";
 
 interface RootStateContextType {
@@ -10,7 +10,9 @@ interface RootStateContextType {
     phoenixClient: Client;
     bids: L3UiOrder[];
     asks: L3UiOrder[];
-    midPrice: number;
+    midPrice: MutableRefObject<number>;
+    spread: MutableRefObject<number>;
+    instantaneousPriceIncrease: boolean;
     refreshBidsAndAsks: (zstdEncodedBuffer: Buffer) => void;
     setConnection: (newConn: web3.Connection) => void;
     setPhoenixClient: (newClient: Client) => void;
@@ -32,7 +34,9 @@ export const RootStateProvider = ({ children }) => {
     const [phoenixClient, setPhoenixClient] = useState<Client | undefined>(undefined);
     const [bids, setBids] = useState<L3UiOrder[]>([]);
     const [asks, setAsks] = useState<L3UiOrder[]>([]);
-    const [midPrice, setMidPrice] = useState<number>(0.0);
+    const midPrice = useRef<number>(0.0);
+    const spread = useRef<number>(0.0);
+    const [instantaneousPriceIncrease, setInstantaneousPriceIncrease] = useState<boolean>(true);
 
     const loadConnection = async () => {
         const c = new web3.Connection(process.env.RPC_ENDPOINT, 'processed');
@@ -62,8 +66,17 @@ export const RootStateProvider = ({ children }) => {
             setAsks(_ => freshUiBook.asks.sort((a: L3UiOrder, b: L3UiOrder) => b.price - a.price));
 
             let newPrice = ((freshUiBook.bids[0].price) + (freshUiBook.asks[0].price)) / 2.0;
+            let newSpread = freshUiBook.asks[0].price - freshUiBook.bids[0].price;
 
-            setMidPrice(_ => newPrice);
+            if(newPrice > midPrice.current) {
+                setInstantaneousPriceIncrease((_) => true);
+            }
+            else if(midPrice.current > newPrice) {
+                setInstantaneousPriceIncrease((_) => false);
+            }
+
+            midPrice.current = newPrice;
+            spread.current = newSpread;
         }
     }
 
@@ -82,6 +95,8 @@ export const RootStateProvider = ({ children }) => {
         bids,
         asks,
         midPrice,
+        spread,
+        instantaneousPriceIncrease,
         refreshBidsAndAsks,
         setConnection,
         setPhoenixClient

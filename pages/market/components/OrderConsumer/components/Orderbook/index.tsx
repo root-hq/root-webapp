@@ -13,7 +13,7 @@ const Orderbook = ({
   enumeratedMarket
 }: OrderBookProps) => {
 
-  const { bids, asks } = useRootState();
+  const { bids, asks, midPrice, instantaneousPriceIncrease, spread } = useRootState();
 
   const walletState = useWallet();
 
@@ -143,11 +143,16 @@ const Orderbook = ({
         </div>
         {askSideContainerComponent}
         <div className={styles.midPriceAndSpreadContainer}>
-          <div className={styles.midPrice}>
-            <span>{`${bids && bids.length && asks && asks.length ? ((bids[0].price + asks[asks.length - 1].price) / 2.0).toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`)) : ''}`}</span>
+          <div className={styles.midPrice}
+          style={{
+            color: instantaneousPriceIncrease ? `#3DE383` : "#e33d3d",
+            fontWeight: 'bold'
+          }}
+          >
+            <span>{`${midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}`}</span>
           </div>
           <div className={styles.spread}>
-            <span>{`${bids && bids.length && asks && asks.length ? (asks[asks.length - 1].price - bids[0].price).toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`)) : ''}`}</span>
+            <span>{`${spread.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}`}</span>
           </div>
         </div>
         {bidSideContainerComponent}

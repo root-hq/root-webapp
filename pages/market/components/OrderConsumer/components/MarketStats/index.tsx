@@ -13,11 +13,8 @@ export interface MarketStatsProps {
 }
 
 const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
-  const { midPrice } = useRootState();
+  const { midPrice, instantaneousPriceIncrease } = useRootState();
 
-  const currentPrice = useRef<number>(0.0);
-  const [instantaneousPriceIncrease, setInstantaneousPriceIncrease] =
-    useState<boolean>(true);
   const [dailyHigh, setDailyHigh] = useState<number>(0.0);
   const [dailyLow, setDailyLow] = useState<number>(0.0);
   const [dailyVolumeBase, setDailyVolumeBase] = useState<number>(0.0);
@@ -92,10 +89,10 @@ const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
         <div
           className={styles.currentPrice}
           style={{
-            // color: instantaneousPriceIncrease ? `#3DE383` : "#e33d3d",
+            color: instantaneousPriceIncrease ? `#3DE383` : "#e33d3d",
           }}
         >
-          {midPrice.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
+          {midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
         </div>
       </div>
       <div className={styles.marketStat}>

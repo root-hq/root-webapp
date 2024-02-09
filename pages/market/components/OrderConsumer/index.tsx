@@ -51,15 +51,17 @@ const OrderConsumer = ({
     useState<EnumeratedMarketToMetadata>(null);
 
   const [chartType, setChartType] = useState<ChartType>(ChartType.Lite);
-  const [showOrderBook, setShowOrderBook] = useState<boolean>(true);
+  const [showOrderBook, setShowOrderBook] = useState<boolean>(false);
 
   const handleChartTypeToggle = () => {
     if(chartType === ChartType.Lite) {
       setChartType(_ => ChartType.Pro);
+      setShowOrderBook(_ => true);
     }
 
     else if(chartType === ChartType.Pro) {
       setChartType(_ => ChartType.Lite);
+      setShowOrderBook(_ => false);
     }
   }
 
@@ -97,10 +99,7 @@ const OrderConsumer = ({
   const memoizedTradingViewChart = useMemo(() => <TVChartContainer props={defaultWidgetProps} chartType={chartType} />, [chartType, selectedSpotGridMarket]);
   const memoizedOrderbook = useMemo(() => {
     return (
-      showOrderBook ?
-        <Orderbook enumeratedMarket={activeEnumeratedMarket}/>
-      :
-        <></>
+      <Orderbook enumeratedMarket={activeEnumeratedMarket}/>
     );
   }, [selectedSpotGridMarket]);
 
@@ -187,7 +186,12 @@ const OrderConsumer = ({
             display: !showOrderBook ? `none` : ``
           }}
         >
-          {memoizedOrderbook}
+          {
+            showOrderBook ?
+              memoizedOrderbook
+            :
+              <></>
+          }
         </div>
       </div>
       <div className={styles.orderManagerOuterContainer}>
