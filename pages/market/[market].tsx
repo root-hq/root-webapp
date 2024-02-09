@@ -25,6 +25,7 @@ import { Client } from "@ellipsis-labs/phoenix-sdk";
 import { Connection } from "@solana/web3.js";
 
 import dynamic from "next/dynamic";
+import { useRootState } from "./RootStateContextType";
 
 export interface EnumeratedMarketToMetadata {
   spotGridMarket: SpotGridMarket;
@@ -45,10 +46,7 @@ const MarketPage = ({
   baseTokenMetadata,
   quoteTokenMetadata,
 }: MarketPageProps) => {
-  const [phoenixClient, setPhoenixClient] = useState<Client>(null);
-  const [connection, setConnection] = useState<Connection>(
-    new web3.Connection(`https://api.mainnet-beta.solana.com`),
-  );
+  let { phoenixClient, setPhoenixClient, connection, setConnection } = useRootState();
 
   const [selectedSpotGridMarket, setSelectedSpotGridMarket] =
     useState<SpotGridMarket>();
@@ -59,7 +57,7 @@ const MarketPage = ({
 
   useEffect(() => {
     const setupPhoenixClient = async () => {
-      if (spotGridMarketOnPage) {
+      if (spotGridMarketOnPage) {        
         if (!phoenixClient) {
           let endpoint = process.env.RPC_ENDPOINT;
           if (!endpoint) {
@@ -73,9 +71,8 @@ const MarketPage = ({
           const client = await Client.create(connection);
 
           client.addMarket(spotGridMarketOnPage.phoenix_market_address);
-          // console.log("New client initialized");
-          // console.log("Client: ", client);
-          setPhoenixClient((_) => client);
+
+          setPhoenixClient(client);
         }
       }
     };
@@ -89,7 +86,7 @@ const MarketPage = ({
         let conn = new Connection(process.env.RPC_ENDPOINT, {
           commitment: "processed",
         });
-        setConnection((_) => conn);
+        setConnection(conn);
       }
     };
 
