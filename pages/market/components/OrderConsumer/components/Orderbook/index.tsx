@@ -32,7 +32,7 @@ const Orderbook = ({
                             <i className="fa-solid fa-circle"
                             style={{
                               fontSize: `0.3rem`,
-                              color: walletState && walletState.connected && order.makerPubkey !== walletState.publicKey.toString() ? `yellow` : `transparent`,
+                              color: walletState && walletState.connected && order.makerPubkey === walletState.publicKey.toString() ? `yellow` : `transparent`,
                               marginRight: `0.4rem`,
                             }}
                             ></i>
@@ -88,7 +88,7 @@ const Orderbook = ({
                             <i className="fa-solid fa-circle"
                             style={{
                               fontSize: `0.3rem`,
-                              color: walletState && walletState.connected && order.makerPubkey !== walletState.publicKey.toString() ? `yellow` : `transparent`,
+                              color: walletState && walletState.connected && order.makerPubkey === walletState.publicKey.toString() ? `yellow` : `transparent`,
                               marginRight: `0.4rem`,
                             }}
                             ></i>
