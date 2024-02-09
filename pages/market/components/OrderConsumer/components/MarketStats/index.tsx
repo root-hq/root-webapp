@@ -13,7 +13,7 @@ export interface MarketStatsProps {
 }
 
 const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
-  const {bids, midPrice, asks} = useRootState();
+  const { midPrice } = useRootState();
 
   const currentPrice = useRef<number>(0.0);
   const [instantaneousPriceIncrease, setInstantaneousPriceIncrease] =

@@ -25,8 +25,6 @@ import { Client } from "@ellipsis-labs/phoenix-sdk";
 
 import dynamic from "next/dynamic";
 import { useRootState } from "./RootStateContextType";
-import { ZSTDDecoder } from "zstddec";
-import { MAX_ACCOUNT_SIZE_BYTES } from "constants/";
 
 export interface EnumeratedMarketToMetadata {
   spotGridMarket: SpotGridMarket;
