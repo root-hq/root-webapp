@@ -41,7 +41,7 @@ import { getPriorityFeeEstimate } from "../../../../../utils/helius";
 import { useBottomStatus } from "../../../../../components/BottomStatus";
 import Link from "next/link";
 import { createNewMarketInstruction } from "../../../../../utils/phoenix/initializeMarket";
-import { useRootState } from "pages/market/RootStateContextType";
+import { useRootState } from "components/RootStateContextType";
 
 const WalletMultiButtonDynamic = dynamic(
   async () =>

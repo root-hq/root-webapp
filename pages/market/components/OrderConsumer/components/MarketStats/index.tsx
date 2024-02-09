@@ -6,7 +6,7 @@ import { decimalPlacesFromTickSize, formatWithCommas } from "utils";
 import {
   MARKET_STATS_REFRESH_FREQUENCY_IN_MS,
 } from "constants/";
-import { useRootState } from "pages/market/RootStateContextType";
+import { useRootState } from "components/RootStateContextType";
 
 export interface MarketStatsProps {
   enumeratedMarket: EnumeratedMarketToMetadata;

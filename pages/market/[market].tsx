@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./MarketPage.module.css";
 
 const OrderConsumer = dynamic(() => import("./components/OrderConsumer"), {
@@ -24,7 +24,7 @@ import { web3 } from "@coral-xyz/anchor";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
 
 import dynamic from "next/dynamic";
-import { useRootState } from "./RootStateContextType";
+import { useRootState } from "../../components/RootStateContextType";
 
 export interface EnumeratedMarketToMetadata {
   spotGridMarket: SpotGridMarket;

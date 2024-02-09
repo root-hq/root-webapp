@@ -18,7 +18,7 @@ import {
 import Link from "next/link";
 import { WRAPPED_SOL_MAINNET } from "constants/";
 import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
-import { useRootState } from "pages/market/RootStateContextType";
+import { useRootState } from "components/RootStateContextType";
 
 export interface OrderViewProps {
   enumeratedMarket: EnumeratedMarketToMetadata | null;

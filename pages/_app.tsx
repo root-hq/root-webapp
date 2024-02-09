@@ -17,7 +17,7 @@ const Header = dynamic(() => import("../components/Header"));
 
 import Script from "next/script";
 import dynamic from "next/dynamic";
-import { RootStateProvider } from "./market/RootStateContextType";
+import { RootStateProvider } from "../components/RootStateContextType";
 
 // Use require instead of import since order matters
 // require("bootstrap/dist/css/bootstrap.min.css");

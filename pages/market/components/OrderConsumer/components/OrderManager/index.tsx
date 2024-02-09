@@ -34,7 +34,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import FundView from "./FundView";
-import { useRootState } from "pages/market/RootStateContextType";
+import { useRootState } from "components/RootStateContextType";
 
 export interface OrderManagerProps {
   enumeratedMarket: EnumeratedMarketToMetadata;

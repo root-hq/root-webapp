@@ -3,7 +3,7 @@ import styles from "./Orderbook.module.css";
 import { EnumeratedMarketToMetadata } from "pages/market/[market]";
 import { decimalPlacesFromTickSize, toScientificNotation } from "utils";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useRootState } from "pages/market/RootStateContextType";
+import { useRootState } from "components/RootStateContextType";
 
 export interface OrderBookProps {
   enumeratedMarket: EnumeratedMarketToMetadata;
