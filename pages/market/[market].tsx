@@ -25,6 +25,7 @@ import { Client } from "@ellipsis-labs/phoenix-sdk";
 
 import dynamic from "next/dynamic";
 import { useRootState } from "../../components/RootStateContextType";
+import { WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS } from "constants/";
 
 export interface EnumeratedMarketToMetadata {
   spotGridMarket: SpotGridMarket;
@@ -51,6 +52,8 @@ const MarketPage = ({
     useState<SpotGridMarket>();
 
   const [marketDataBuffer, setMarketDataBuffer] = useState<Buffer>(null);
+
+  let lastMessageTimestamp = 0;
 
   useEffect(() => {
     setSelectedSpotGridMarket((prev) => spotGridMarketOnPage);
@@ -109,16 +112,21 @@ const MarketPage = ({
 
       // Handle incoming messages
       ws.onmessage = async (event) => {
+        const currentTime = Date.now();
         const data = JSON.parse(event.data);
-        if (data.method === 'accountNotification') {
-          const accountData = data.params.result.value;
-          if (accountData?.data[0] === undefined) {
-            console.log(`Error fetching orderbook data`);
-            return;
+        if(currentTime - lastMessageTimestamp > WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS) {
+          if (data.method === 'accountNotification') {
+            const accountData = data.params.result.value;
+            if (accountData?.data[0] === undefined) {
+              console.log(`Error fetching orderbook data`);
+              return;
+            }
+  
+            const compressedMarketData = Buffer.from(accountData?.data[0], "base64");
+            setMarketDataBuffer(_ => compressedMarketData);
           }
 
-          const compressedMarketData = Buffer.from(accountData?.data[0], "base64");
-          setMarketDataBuffer(_ => compressedMarketData);
+          lastMessageTimestamp = currentTime;
         }
       };
 

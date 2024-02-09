@@ -5,3 +5,5 @@ export const MAX_BPS = 10_000;
 export const ROOT_PROTOCOL_FEE_BPS = 0;
 
 export const MAX_ACCOUNT_SIZE_BYTES = 1723488 * 2;
+
+export const WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS = 3_000;

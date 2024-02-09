@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./OrderConsumer.module.css";
 import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
 import { EnumeratedMarketToMetadata } from "../../[market]";
@@ -94,6 +94,16 @@ const OrderConsumer = ({
     autosize: true,
   };
 
+  const memoizedTradingViewChart = useMemo(() => <TVChartContainer props={defaultWidgetProps} chartType={chartType} />, [chartType, selectedSpotGridMarket]);
+  const memoizedOrderbook = useMemo(() => {
+    return (
+      showOrderBook ?
+        <Orderbook enumeratedMarket={activeEnumeratedMarket}/>
+      :
+        <></>
+    );
+  }, [selectedSpotGridMarket]);
+
   return (
     <div className={styles.orderConsumerContainer}>
       <div className={styles.marketDataContainer}>
@@ -117,7 +127,7 @@ const OrderConsumer = ({
             </div>
           </div>
           <div className={styles.tradingViewChartContainer}>
-            {/* <TVChartContainer props={defaultWidgetProps} chartType={chartType} /> */}
+            {memoizedTradingViewChart}
           </div>
           <div className={styles.toggleContainer}>
             <div className={styles.chartTypeToggle}
@@ -177,12 +187,7 @@ const OrderConsumer = ({
             display: !showOrderBook ? `none` : ``
           }}
         >
-          {
-            showOrderBook ?
-              <Orderbook enumeratedMarket={activeEnumeratedMarket}/>
-            :
-              <></>
-          }
+          {memoizedOrderbook}
         </div>
       </div>
       <div className={styles.orderManagerOuterContainer}>
