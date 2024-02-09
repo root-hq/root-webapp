@@ -74,6 +74,9 @@ const MarketPage = ({
 
           setPhoenixClient(client);
         }
+        else {
+          console.log("Root state loaded all fine");
+        }
       }
     };
 
@@ -102,7 +105,6 @@ const MarketPage = ({
             selectedSpotGridMarket={selectedSpotGridMarket}
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
-            phoenixClient={phoenixClient}
             connection={connection}
           />
         </div>
@@ -112,8 +114,6 @@ const MarketPage = ({
           spotGridMarket={selectedSpotGridMarket}
           baseTokenMetadata={baseTokenMetadata}
           quoteTokenMetadata={quoteTokenMetadata}
-          phoenixClient={phoenixClient}
-          connection={connection}
         />
       </div>
     </div>

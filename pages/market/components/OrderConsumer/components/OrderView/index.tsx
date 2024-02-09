@@ -18,20 +18,19 @@ import {
 import Link from "next/link";
 import { WRAPPED_SOL_MAINNET } from "constants/";
 import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
+import { useRootState } from "pages/market/RootStateContextType";
 
 export interface OrderViewProps {
   enumeratedMarket: EnumeratedMarketToMetadata | null;
   order: Order;
-  phoenixClient: Client;
-  connection: Connection;
 }
 
 const OrderView = ({
   enumeratedMarket,
   order,
-  phoenixClient,
-  connection,
 }: OrderViewProps) => {
+  let { phoenixClient, setPhoenixClient, connection, setConnection } = useRootState();
+
   const [floatPrice, setFloatPrice] = useState(0);
   const [floatSizeInBaseUnits, setFloatSizeInBaseUnits] = useState(0);
   const [floatTotalSizeInQuoteUnits, setFloatTotalSizeInQuoteUnits] =
@@ -91,15 +90,12 @@ const OrderView = ({
             endpoint = `https://api.mainnet-beta.solana.com`;
           }
 
-          const connection = new web3.Connection(endpoint, {
-            commitment: "processed",
-          });
-
           const client = await Client.create(connection);
 
           client.addMarket(marketAddress);
         } else {
           phxClient = phoenixClient;
+          setPhoenixClient(phxClient);
         }
 
         let baseAtaInitIxs = await getCreateTokenAccountInstructions(

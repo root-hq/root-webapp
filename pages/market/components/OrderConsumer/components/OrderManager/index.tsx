@@ -34,13 +34,12 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import FundView from "./FundView";
+import { useRootState } from "pages/market/RootStateContextType";
 
 export interface OrderManagerProps {
   enumeratedMarket: EnumeratedMarketToMetadata;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
-  phoenixClient: Client;
-  connection: Connection;
 }
 
 export interface UserGlobalBalances {
@@ -56,9 +55,9 @@ const OrderManager = ({
   enumeratedMarket,
   baseTokenMetadata,
   quoteTokenMetadata,
-  phoenixClient,
-  connection,
 }: OrderManagerProps) => {
+  let { phoenixClient, setPhoenixClient, connection, setConnection } = useRootState();
+
   const [isCancelAllActionActive, setIsCancelAllActionActive] = useState(false);
   let [activeOrdersForTrader, setActiveOrdersForTrader] = useState<Order[]>([]);
   let [activeManagerView, setActiveManagerView] = useState<ManagerView>(
@@ -130,10 +129,6 @@ const OrderManager = ({
           endpoint = `https://api.mainnet-beta.solana.com`;
         }
 
-        const connection = new web3.Connection(endpoint, {
-          commitment: "processed",
-        });
-
         const client = await Client.create(connection);
 
         client.addMarket(marketAddress);
@@ -141,6 +136,7 @@ const OrderManager = ({
         // console.log("Client: ", client);
       } else {
         phxClient = phoenixClient;
+        setPhoenixClient(phxClient);
       }
 
       let baseAtaInitIxs = await getCreateTokenAccountInstructions(
@@ -274,10 +270,6 @@ const OrderManager = ({
               endpoint = `https://api.mainnet-beta.solana.com`;
             }
 
-            const connection = new web3.Connection(endpoint, {
-              commitment: "processed",
-            });
-
             const client = await Client.create(connection);
 
             client.addMarket(
@@ -287,6 +279,7 @@ const OrderManager = ({
             // console.log("Client: ", client);
           } else {
             phxClient = phoenixClient;
+            setPhoenixClient(phxClient);
           }
 
           orders = await getOpenOrdersForTrader(
@@ -566,8 +559,6 @@ const OrderManager = ({
                         <OrderView
                           order={order}
                           enumeratedMarket={enumeratedMarket}
-                          phoenixClient={phoenixClient}
-                          connection={connection}
                         />
                       </div>
                     );

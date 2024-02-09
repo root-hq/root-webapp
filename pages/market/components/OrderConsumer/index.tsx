@@ -36,7 +36,6 @@ export interface OrderConsumerProps {
   selectedSpotGridMarket: SpotGridMarket;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
-  phoenixClient: Client;
   connection: Connection;
 }
 
@@ -45,7 +44,6 @@ const OrderConsumer = ({
   selectedSpotGridMarket,
   baseTokenMetadata,
   quoteTokenMetadata,
-  phoenixClient,
   connection,
 }: OrderConsumerProps) => {
   const [activeMarket, setActiveMarket] = useState(selectedSpotGridMarket);
@@ -193,8 +191,6 @@ const OrderConsumer = ({
             enumeratedMarket={activeEnumeratedMarket}
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
-            phoenixClient={phoenixClient}
-            connection={connection}
           />
         </div>
       </div>

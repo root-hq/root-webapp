@@ -41,6 +41,7 @@ import { getPriorityFeeEstimate } from "../../../../../utils/helius";
 import { useBottomStatus } from "../../../../../components/BottomStatus";
 import Link from "next/link";
 import { createNewMarketInstruction } from "../../../../../utils/phoenix/initializeMarket";
+import { useRootState } from "pages/market/RootStateContextType";
 
 const WalletMultiButtonDynamic = dynamic(
   async () =>
@@ -52,17 +53,15 @@ export interface CLOBTraderProps {
   spotGridMarket: SpotGridMarket;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
-  phoenixClient: Client;
-  connection: Connection;
 }
 
 const CLOBTrader = ({
   spotGridMarket,
   baseTokenMetadata,
   quoteTokenMetadata,
-  phoenixClient,
-  connection,
 }: CLOBTraderProps) => {
+  let { phoenixClient, setPhoenixClient, connection, setConnection } = useRootState();
+
   const [isBuyOrder, setIsBuyOrder] = useState(true);
 
   const [baseTokenBalance, setBaseTokenBalance] = useState(0.0);
