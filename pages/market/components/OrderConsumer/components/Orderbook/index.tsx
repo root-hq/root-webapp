@@ -24,7 +24,7 @@ const Orderbook = ({
             bids && bids.length > 0 ?
               <div className={styles.l3UiOrderLadder}>
                 {
-                  bids.map((order, i) => {
+                  bids.slice(0, 11).map((order, i) => {
                     return (
                       <div className={styles.l3UiBid} key={order.orderSequenceNumber}>                        
                         <div className={styles.priceAndSize}>
@@ -80,7 +80,7 @@ const Orderbook = ({
             asks && asks.length > 0 ?
               <div className={styles.l3UiOrderLadder}>
                 {
-                  asks.map((order, i) => {
+                  asks.slice(-11).map((order, i) => {
                     return (
                       <div className={styles.l3UiAsk} key={order.orderSequenceNumber}>
                         <div className={styles.priceAndSize}>

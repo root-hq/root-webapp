@@ -60,7 +60,7 @@ export const RootStateProvider = ({ children }) => {
             );
         
             let marketData = deserializeMarketData(Buffer.from(marketBuffer));
-            let freshUiBook = getMarketL3UiBook(marketData, 11);
+            let freshUiBook = getMarketL3UiBook(marketData, -1);
 
             setBids(_ => freshUiBook.bids);
             setAsks(_ => freshUiBook.asks.sort((a: L3UiOrder, b: L3UiOrder) => b.price - a.price));
