@@ -266,7 +266,6 @@ const OrderManager = ({
         try {
           for(let bid of bids) {
             if(bid.makerPubkey === userKey) {
-              console.log("Found bid: ", bid);
               orders.push({
                 order_sequence_number: bid.orderSequenceNumber,
                 order_type: `LIMIT`,

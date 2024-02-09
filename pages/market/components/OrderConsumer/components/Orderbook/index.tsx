@@ -38,7 +38,7 @@ const Orderbook = ({
                             ></i>
                             {
                               enumeratedMarket ?
-                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) > 5 ?
+                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >= 5 ?
                                   toScientificNotation(order.price)
                                 :
                                   order.price
@@ -49,7 +49,7 @@ const Orderbook = ({
                           <span className={styles.size}>
                             {
                               enumeratedMarket ?
-                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) > 5 ?
+                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >= 5 ?
                                   toScientificNotation(order.size)
                                 :
                                   order.size
@@ -94,7 +94,7 @@ const Orderbook = ({
                             ></i>
                             {
                               enumeratedMarket ?
-                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) > 5 ?
+                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >= 5 ?
                                   toScientificNotation(order.price)
                                 :
                                   order.price
@@ -105,7 +105,7 @@ const Orderbook = ({
                           <span className={styles.size}>
                             {
                               enumeratedMarket ?
-                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) > 5 ?
+                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >= 5 ?
                                   toScientificNotation(order.size)
                                 :
                                   order.size

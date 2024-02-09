@@ -101,7 +101,7 @@ const OrderConsumer = ({
     return (
       <Orderbook enumeratedMarket={activeEnumeratedMarket}/>
     );
-  }, [selectedSpotGridMarket]);
+  }, [selectedSpotGridMarket, activeEnumeratedMarket]);
 
   return (
     <div className={styles.orderConsumerContainer}>

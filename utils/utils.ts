@@ -38,6 +38,7 @@ export const decimalPlacesFromTickSize = (tickSize: string): number => {
     // Removing leading zeros from the base
     const baseWithoutZeros = base.replace(/^0+/, '');
     // Calculating the number of decimal places
+    console.log("DecimalPlaces: ", -1 * parseInt(exponent) + (baseWithoutZeros.length - 1));
     return -1 * parseInt(exponent) + (baseWithoutZeros.length - 1);
   }
   
