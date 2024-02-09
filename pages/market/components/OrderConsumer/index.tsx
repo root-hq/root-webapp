@@ -50,8 +50,8 @@ const OrderConsumer = ({
   const [activeEnumeratedMarket, setActiveEnumeratedMarket] =
     useState<EnumeratedMarketToMetadata>(null);
 
-  const [chartType, setChartType] = useState<ChartType>(ChartType.Lite);
-  const [showOrderBook, setShowOrderBook] = useState<boolean>(false);
+  const [chartType, setChartType] = useState<ChartType>(ChartType.Pro);
+  const [showOrderBook, setShowOrderBook] = useState<boolean>(true);
 
   const handleChartTypeToggle = () => {
     if(chartType === ChartType.Lite) {
