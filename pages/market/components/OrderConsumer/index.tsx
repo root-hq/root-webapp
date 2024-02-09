@@ -51,7 +51,7 @@ const OrderConsumer = ({
     useState<EnumeratedMarketToMetadata>(null);
 
   const [chartType, setChartType] = useState<ChartType>(ChartType.Lite);
-  const [showOrderBook, setShowOrderBook] = useState<boolean>(false);
+  const [showOrderBook, setShowOrderBook] = useState<boolean>(true);
 
   const handleChartTypeToggle = () => {
     if(chartType === ChartType.Lite) {
@@ -117,7 +117,7 @@ const OrderConsumer = ({
             </div>
           </div>
           <div className={styles.tradingViewChartContainer}>
-            <TVChartContainer props={defaultWidgetProps} chartType={chartType} />
+            {/* <TVChartContainer props={defaultWidgetProps} chartType={chartType} /> */}
           </div>
           <div className={styles.toggleContainer}>
             <div className={styles.chartTypeToggle}

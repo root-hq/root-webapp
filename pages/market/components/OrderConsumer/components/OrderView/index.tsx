@@ -224,21 +224,10 @@ const OrderView = ({
 
   useEffect(() => {
     if (enumeratedMarket) {
-      let floatPrice = phoenixClient.ticksToFloatPrice(
-        parseInt(order.price_in_ticks),
-        enumeratedMarket.spotGridMarket.phoenix_market_address,
-      );
-      let floatSizeInBaseUnits =
-        phoenixClient.baseLotsToBaseAtoms(
-          parseInt(order.size_in_base_lots),
-          enumeratedMarket.spotGridMarket.phoenix_market_address,
-        ) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
-      let floatTotalSizeInQuoteUnits = floatPrice * floatSizeInBaseUnits;
-      let fillSizeInBaseUnits =
-        phoenixClient.baseLotsToBaseAtoms(
-          parseInt(order.fill_size_in_base_lots),
-          enumeratedMarket.spotGridMarket.phoenix_market_address,
-        ) / Math.pow(10, enumeratedMarket.baseTokenMetadata.decimals);
+      let floatPrice = parseFloat(order.price_in_ticks);
+      let floatSizeInBaseUnits = parseFloat(order.size_in_base_lots);
+      let floatTotalSizeInQuoteUnits = parseFloat(order.price_in_ticks) * parseFloat(order.size_in_base_lots);
+      let fillSizeInBaseUnits = 0;
 
       setFloatPrice((_) => floatPrice);
       setFloatSizeInBaseUnits((_) => floatSizeInBaseUnits);

@@ -56,7 +56,7 @@ const OrderManager = ({
   baseTokenMetadata,
   quoteTokenMetadata,
 }: OrderManagerProps) => {
-  let { phoenixClient, setPhoenixClient, connection, setConnection } = useRootState();
+  let { phoenixClient, setPhoenixClient, connection, setConnection, bids, asks } = useRootState();
 
   const [isCancelAllActionActive, setIsCancelAllActionActive] = useState(false);
   let [activeOrdersForTrader, setActiveOrdersForTrader] = useState<Order[]>([]);
@@ -256,37 +256,47 @@ const OrderManager = ({
     const refreshActiveOrdersForTrader = async () => {
       if (
         walletState.connected &&
-        enumeratedMarket &&
-        enumeratedMarket.spotGridMarket
+        bids && bids.length &&
+        asks && asks.length &&
+        enumeratedMarket
       ) {
         let orders: Order[] = [];
+        let userKey = walletState.publicKey.toString();
 
         try {
-          let phxClient: Client = null;
-          if (!phoenixClient) {
-            // console.log("Refresh orders > Creating fallback phxClient");
-            let endpoint = process.env.RPC_ENDPOINT;
-            if (!endpoint) {
-              endpoint = `https://api.mainnet-beta.solana.com`;
+          for(let bid of bids) {
+            if(bid.makerPubkey === userKey) {
+              orders.push({
+                order_sequence_number: bid.orderSequenceNumber,
+                order_type: `LIMIT`,
+                phoenix_market_address: enumeratedMarket.spotGridMarket.phoenix_market_address,
+                trader: userKey,
+                price_in_ticks: bid.price.toString(),
+                size_in_base_lots: bid.size.toString(),
+                fill_size_in_base_lots: bid.size.toString(),
+                place_timestamp: ``,
+                status: ``,
+                is_buy_order: true
+              } as Order)
             }
-
-            const client = await Client.create(connection);
-
-            client.addMarket(
-              enumeratedMarket.spotGridMarket.phoenix_market_address,
-            );
-            // console.log("New client initialized");
-            // console.log("Client: ", client);
-          } else {
-            phxClient = phoenixClient;
-            setPhoenixClient(phxClient);
           }
 
-          orders = await getOpenOrdersForTrader(
-            phxClient,
-            enumeratedMarket.spotGridMarket.phoenix_market_address,
-            walletState.publicKey.toString(),
-          );
+          for(let ask of asks) {
+            if(ask.makerPubkey === userKey) {
+              orders.push({
+                order_sequence_number: ask.orderSequenceNumber,
+                order_type: `LIMIT`,
+                phoenix_market_address: enumeratedMarket.spotGridMarket.phoenix_market_address,
+                trader: userKey,
+                price_in_ticks: ask.price.toString(),
+                size_in_base_lots: ask.size.toString(),
+                fill_size_in_base_lots: ask.size.toString(),
+                place_timestamp: ``,
+                status: ``,
+                is_buy_order: false
+              } as Order)
+            }
+          }
         } catch (err) {
           // console.log(`Error fetching active orders: ${err}`);
         }

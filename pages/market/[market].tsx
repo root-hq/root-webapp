@@ -22,10 +22,11 @@ import {
 
 import { web3 } from "@coral-xyz/anchor";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
-import { Connection } from "@solana/web3.js";
 
 import dynamic from "next/dynamic";
 import { useRootState } from "./RootStateContextType";
+import { ZSTDDecoder } from "zstddec";
+import { MAX_ACCOUNT_SIZE_BYTES } from "constants/";
 
 export interface EnumeratedMarketToMetadata {
   spotGridMarket: SpotGridMarket;
@@ -46,17 +47,19 @@ const MarketPage = ({
   baseTokenMetadata,
   quoteTokenMetadata,
 }: MarketPageProps) => {
-  let { phoenixClient, setPhoenixClient, connection, setConnection } = useRootState();
+  let { phoenixClient, setPhoenixClient, connection, setConnection, refreshBidsAndAsks } = useRootState();
 
   const [selectedSpotGridMarket, setSelectedSpotGridMarket] =
     useState<SpotGridMarket>();
+
+  const [marketDataBuffer, setMarketDataBuffer] = useState<Buffer>(null);
 
   useEffect(() => {
     setSelectedSpotGridMarket((prev) => spotGridMarketOnPage);
   }, [spotGridMarketOnPage]);
 
   useEffect(() => {
-    const setupPhoenixClient = async () => {
+    const setupConnectionBackup = async () => {
       if (spotGridMarketOnPage) {        
         if (!phoenixClient) {
           let endpoint = process.env.RPC_ENDPOINT;
@@ -64,15 +67,19 @@ const MarketPage = ({
             endpoint = `https://api.mainnet-beta.solana.com`;
           }
 
-          const connection = new web3.Connection(endpoint, {
-            commitment: "processed",
-          });
+          let conn = connection;
+          if(!conn) {
+            conn = new web3.Connection(endpoint, {
+              commitment: "processed",
+            });
+          }
 
-          const client = await Client.create(connection);
+          const client = await Client.create(conn);
 
           client.addMarket(spotGridMarketOnPage.phoenix_market_address);
 
           setPhoenixClient(client);
+          setConnection(conn);
         }
         else {
           console.log("Root state loaded all fine");
@@ -80,21 +87,53 @@ const MarketPage = ({
       }
     };
 
-    setupPhoenixClient();
+    setupConnectionBackup();
   }, [spotGridMarketOnPage, connection]);
 
   useEffect(() => {
-    const setUpConnection = () => {
-      if (process.env.RPC_ENDPOINT) {
-        let conn = new Connection(process.env.RPC_ENDPOINT, {
-          commitment: "processed",
-        });
-        setConnection(conn);
-      }
-    };
+    if(spotGridMarketOnPage) {
+      const ws = new WebSocket(process.env.WS_ENDPOINT);
 
-    setUpConnection();
-  }, []);
+      ws.onopen = () => {
+        ws.send(JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'accountSubscribe',
+          params: [
+            spotGridMarketOnPage.phoenix_market_address,
+            {
+              "encoding": "base64+zstd",
+              "commitment": "processed"
+            }
+          ]
+        }));
+      };
+
+      // Handle incoming messages
+      ws.onmessage = async (event) => {
+        const data = JSON.parse(event.data);
+        if (data.method === 'accountNotification') {
+          const accountData = data.params.result.value;
+          if (accountData?.data[0] === undefined) {
+            console.log(`Error fetching orderbook data`);
+            return;
+          }
+
+          const compressedMarketData = Buffer.from(accountData?.data[0], "base64");
+          setMarketDataBuffer(_ => compressedMarketData);
+        }
+      };
+
+      // Clean up WebSocket connection
+      return () => {
+        ws.close();
+      };
+    }
+  }, [spotGridMarketOnPage]);
+
+  useEffect(() => {
+    refreshBidsAndAsks(marketDataBuffer);
+  }, [marketDataBuffer]);
 
   return (
     <div className={styles.marketPageContainer}>

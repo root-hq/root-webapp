@@ -5,14 +5,16 @@ import { EnumeratedMarketToMetadata } from "pages/market/[market]";
 import { decimalPlacesFromTickSize, formatWithCommas } from "utils";
 import {
   MARKET_STATS_REFRESH_FREQUENCY_IN_MS,
-  PRICE_REFRESH_FREQUENCY_IN_MS,
 } from "constants/";
+import { useRootState } from "pages/market/RootStateContextType";
 
 export interface MarketStatsProps {
   enumeratedMarket: EnumeratedMarketToMetadata;
 }
 
 const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
+  const {bids, midPrice, asks} = useRootState();
+
   const currentPrice = useRef<number>(0.0);
   const [instantaneousPriceIncrease, setInstantaneousPriceIncrease] =
     useState<boolean>(true);
@@ -60,47 +62,29 @@ const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
     return () => clearInterval(intervalId);
   }, [enumeratedMarket]);
 
-  useEffect(() => {
-    const refreshLatestPrice = async () => {
-      if (!enumeratedMarket) {
-        return;
-      }
+  // useEffect(() => {
+  //   const refreshLatestPrice = async () => {
+  //     if (!enumeratedMarket) {
+  //       return;
+  //     }
 
-      try {
-        const currentTimeMillis = Date.now();
-        const oneSecondBefore = Math.floor((currentTimeMillis - 1_000) / 1000);
-        const oneMinuteBefore = Math.floor((currentTimeMillis - 60_000) / 1000);
+  //     if (midPrice > currentPrice.current) {
+  //       setInstantaneousPriceIncrease((_) => true);
+  //     } else if (currentPrice.current > midPrice) {
+  //       setInstantaneousPriceIncrease((_) => false);
+  //     }
 
-        const freshStatsData = await makeApiRequest(
-          `defi/ohlcv/base_quote?base_address=${enumeratedMarket.baseTokenMetadata.mint}&quote_address=${enumeratedMarket.quoteTokenMetadata.mint}&type=1m&time_from=${oneMinuteBefore}&time_to=${oneSecondBefore}`,
-        );
+  //     currentPrice.current = midPrice;
+  //   };
 
-        if (freshStatsData.success) {
-          const data = freshStatsData.data.items[0];
-          let newPrice = (data.o + data.c) / 2.0;
+  //   refreshLatestPrice();
 
-          if (newPrice > currentPrice.current) {
-            setInstantaneousPriceIncrease((_) => true);
-          } else if (currentPrice.current > newPrice) {
-            setInstantaneousPriceIncrease((_) => false);
-          }
+  //   const intervalId = setInterval(() => {
+  //     refreshLatestPrice();
+  //   }, PRICE_REFRESH_FREQUENCY_IN_MS);
 
-          currentPrice.current = newPrice;
-        }
-      }
-      catch(err) {
-        console.log(`Error refreshing price: `, err);
-      }
-    };
-
-    refreshLatestPrice();
-
-    const intervalId = setInterval(() => {
-      refreshLatestPrice();
-    }, PRICE_REFRESH_FREQUENCY_IN_MS);
-
-    return () => clearInterval(intervalId);
-  }, [enumeratedMarket]);
+  //   return () => clearInterval(intervalId);
+  // }, [enumeratedMarket]);
 
   return (
     <div className={styles.marketStatsContainer}>
@@ -108,10 +92,10 @@ const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
         <div
           className={styles.currentPrice}
           style={{
-            color: instantaneousPriceIncrease ? `#3DE383` : "#e33d3d",
+            // color: instantaneousPriceIncrease ? `#3DE383` : "#e33d3d",
           }}
         >
-          {currentPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
+          {midPrice.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
         </div>
       </div>
       <div className={styles.marketStat}>
