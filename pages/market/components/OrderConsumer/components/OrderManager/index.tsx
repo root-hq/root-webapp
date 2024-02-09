@@ -319,7 +319,7 @@ const OrderManager = ({
     }, ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS);
 
     return () => clearInterval(intervalId);
-  }, [walletState, enumeratedMarket]);
+  }, [walletState, enumeratedMarket, bids, asks]);
 
   useEffect(() => {
     const fetchUserGlobalBalances = async () => {
