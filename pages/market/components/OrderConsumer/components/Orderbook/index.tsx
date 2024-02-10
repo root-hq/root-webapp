@@ -17,6 +17,32 @@ const Orderbook = ({
 
   const walletState = useWallet();
 
+  const [bidDepth, setBidDepth] = useState<number>(0.0);
+  const [askDepth, setAskDepth] = useState<number>(0.0);
+
+  useEffect(() => {
+    const refreshDepth = () => {
+      let totalBidDepth = 0;
+      let totalAskDepth = 0;
+
+      let bidsSlice = bids.slice(0, 11);
+      let asksSlice = bids.slice(-11);
+
+      for(let bid of bidsSlice) {
+        totalBidDepth += bid.price * bid.size;
+      }
+
+      for(let ask of asksSlice) {
+        totalAskDepth += ask.price * ask.size;
+      }
+
+      setBidDepth(_ => totalBidDepth);
+      setAskDepth(_ => totalAskDepth);
+    }
+
+    refreshDepth();
+  }, [bids, asks]);
+
   const bidSideContainerComponent = useMemo(() => {
     return (
       <div className={styles.bookSideContainer}>
@@ -24,9 +50,14 @@ const Orderbook = ({
             bids && bids.length > 0 ?
               <div className={styles.l3UiOrderLadder}>
                 {
-                  bids.slice(0,11).map((order, i) => {
+                  bids.slice(0, 11).map((order, i) => {
                     return (
-                      <div className={styles.l3UiBid} key={order.orderSequenceNumber}>                        
+                      <div className={styles.l3UiBid}
+                        key={order.orderSequenceNumber}
+                        style = {{
+                          backgroundImage: `linear-gradient(to right, transparent ${(90 - (((order.price * order.size) / bidDepth) * 100))}%, rgba(61, 227, 131, 0.20) ${(90 - (((order.price * order.size) / bidDepth) * 100))}%)`,
+                        }}
+                      >                        
                         <div className={styles.priceAndSize}>
                           <span className={styles.price}>
                             <i className="fa-solid fa-circle"
@@ -82,7 +113,12 @@ const Orderbook = ({
                 {
                   asks.slice(-11).map((order, i) => {
                     return (
-                      <div className={styles.l3UiAsk} key={order.orderSequenceNumber}>
+                      <div
+                        className={styles.l3UiAsk} key={order.orderSequenceNumber}
+                        style={{
+                          backgroundImage: `linear-gradient(to right, transparent ${(90 - (((order.price * order.size) / bidDepth) * 100))}%, rgba(227, 61, 61, 0.20) ${(90 - (((order.price * order.size) / bidDepth) * 100))}%)`,
+                        }}
+                      >
                         <div className={styles.priceAndSize}>
                           <span className={styles.price}>
                             <i className="fa-solid fa-circle"
