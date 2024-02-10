@@ -161,8 +161,9 @@ const OrderView = ({
           transaction.add(ix);
         }
 
-        let priceInTicksBN = new BN(order.price_in_ticks);
+        let priceInTicksBN = new BN(phoenixClient.floatPriceToTicks(parseFloat(order.price_in_ticks), marketAddress));
         let orderSequenceNumberBN = new BN(order.order_sequence_number);
+        console.log("Order ID: ", orderSequenceNumberBN.toString());
 
         let cancelOrderIx = phxClient.createCancelMultipleOrdersByIdInstruction(
           {

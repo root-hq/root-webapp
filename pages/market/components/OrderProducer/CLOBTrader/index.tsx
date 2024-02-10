@@ -138,10 +138,10 @@ const CLOBTrader = ({
         <div>
           <span
             style={{ color: `#3DE383` }}
-          >{`+ ${receiveUptoSize} ${isBuyOrder ? baseTokenMetadata.ticker : quoteTokenMetadata.ticker}`}</span>
+          >{`+ ${isBuyOrder ? sendUptoSize : receiveUptoSize} ${isBuyOrder ? baseTokenMetadata.ticker : quoteTokenMetadata.ticker}`}</span>
           <span
             style={{ color: `#e33d3d`, marginLeft: `1rem` }}
-          >{`- ${sendUptoSize} ${isBuyOrder ? quoteTokenMetadata.ticker : baseTokenMetadata.ticker}`}</span>
+          >{`- ${isBuyOrder ? receiveUptoSize : sendUptoSize} ${isBuyOrder ? quoteTokenMetadata.ticker : baseTokenMetadata.ticker}`}</span>
         </div>,
       );
     } else {
@@ -261,7 +261,7 @@ const CLOBTrader = ({
 
       if (isBuyOrder) {
         let receivingAmount =
-          parseFloat(removeCommas(sendUptoSize)) /
+          parseFloat(removeCommas(sendUptoSize)) *
           parseFloat(removeCommas(limitPrice));
         let amountPostFee =
           receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
@@ -272,7 +272,7 @@ const CLOBTrader = ({
         );
       } else {
         let receivingAmount =
-          parseFloat(removeCommas(sendUptoSize)) *
+          parseFloat(removeCommas(sendUptoSize)) /
           parseFloat(removeCommas(limitPrice));
         let amountPostFee =
           receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
@@ -378,7 +378,7 @@ const CLOBTrader = ({
         transaction.add(ix);
       }
 
-      if (isBuyOrder && parseFloat(receiveUptoSize)) {
+      if (isBuyOrder && parseFloat(sendUptoSize)) {
         // console.log("Limit buy");
         let priceInTicks = new BN(
           phoenixClient.floatPriceToTicks(
@@ -388,7 +388,7 @@ const CLOBTrader = ({
         );
         let sizeInBaseLosts = new BN(
           phoenixClient.baseAtomsToBaseLots(
-            parseFloat(receiveUptoSize) *
+            parseFloat(sendUptoSize) *
               Math.pow(10, baseTokenMetadata.decimals),
             marketAddress,
           ),
@@ -601,7 +601,7 @@ const CLOBTrader = ({
               </span>
             </Form.Label>
             <Form.Control
-              placeholder={`${spotGridMarket ? spotGridMarket.tick_size : ``} ${isBuyOrder ? (quoteTokenMetadata ? quoteTokenMetadata.ticker : "") : baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
+              placeholder={`${spotGridMarket ? spotGridMarket.tick_size : ``} ${baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
               // disabled={!walletState.connected}
               style={{
                 backgroundColor: "transparent",

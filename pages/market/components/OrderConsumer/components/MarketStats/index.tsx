@@ -104,7 +104,7 @@ const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
         <div className={styles.statValue}>{dailyLow.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</div>
       </div>
       <div className={styles.marketStat}>
-        <div className={styles.statKey}>24h Volume({`${enumeratedMarket ? enumeratedMarket.quoteTokenMetadata.ticker : ``}`})</div>
+        <div className={styles.statKey}>24h volume({`${enumeratedMarket ? enumeratedMarket.quoteTokenMetadata.ticker : ``}`})</div>
         <div className={styles.statValue}>
           {formatWithCommas(((dailyVolumeBase * (dailyHigh + dailyLow / 2.0)) + dailyVolumeQuote).toFixed(2))}
         </div>

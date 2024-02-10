@@ -28,6 +28,7 @@
 .statKey {
   color: rgba(87, 87, 87, 1);
   font-size: 0.65rem;
+  margin-bottom: 0.25rem;
 }
 
 .statValue {
