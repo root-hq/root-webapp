@@ -10,6 +10,7 @@
   bottom: 0;
   color: rgba(170, 170, 170, 0.65);
   font-size: 0.9rem;
+  z-index: 2000;
 }
 
 .statusMessage {
