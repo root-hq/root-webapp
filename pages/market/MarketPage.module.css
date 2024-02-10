@@ -3,14 +3,16 @@
   width: 90%;
   top: 0;
   left: 0;
-  height: 500px;
-  margin-top: 30%;
+  height: 70%;
+  margin-top: 5%;
   margin-left: 5%;
   background-color: #0b0d11;
   color: white;
   border: 1px solid rgba(87, 87, 87, 1.0);
   border-radius: 0 0 0.25rem 0.25rem;
   z-index: 2000;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
 }
 
 .marketPageContainer {
