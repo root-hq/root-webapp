@@ -15,13 +15,6 @@
   width: 100%;
 }
 
-@media (max-width: 1024px) {
-  .dropdownButton {
-    border-radius: 0.75rem 0.75rem 0rem 0rem;
-    border-right: 0px solid rgba(87, 87, 87, 0.25);
-  }
-}
-
 .dropdownContent {
   position: absolute;
   display: flex;
@@ -94,10 +87,28 @@
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-@media screen and (max-width: 600px) {
+
+@media (max-width: 1024px) {
+  .dropdownButton {
+    border-radius: 0.75rem 0rem 0rem 0rem;
+    border-right: 0px solid rgba(87, 87, 87, 0.25);
+  }
+
+  .tickerText {
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 1024px) {
   .dropdownContent {
     width: 100%;
+    font-size: 0.8rem;
     left: 0;
     border-radius: 0;
+    height: 150px;
+  }
+
+  .otherMarketRowContainer {
+    padding: 0rem;
   }
 }

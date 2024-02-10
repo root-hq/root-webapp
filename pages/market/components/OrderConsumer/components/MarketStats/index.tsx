@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarketStats.module.css";
 import { makeApiRequest } from "../../../../../../utils/birdeye/helpers";
 import { EnumeratedMarketToMetadata } from "pages/market/[market]";
-import { decimalPlacesFromTickSize, formatWithCommas } from "utils";
+import { decimalPlacesFromTickSize, formatWithCommas, toScientificNotation } from "utils";
 import {
   MARKET_STATS_REFRESH_FREQUENCY_IN_MS,
 } from "constants/";
@@ -60,29 +60,27 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
     return () => clearInterval(intervalId);
   }, [enumeratedMarket]);
 
-  // useEffect(() => {
-  //   const refreshLatestPrice = async () => {
-  //     if (!enumeratedMarket) {
-  //       return;
-  //     }
+  const [isMobile, setIsMobile] = useState(false);
 
-  //     if (midPrice > currentPrice.current) {
-  //       setInstantaneousPriceIncrease((_) => true);
-  //     } else if (currentPrice.current > midPrice) {
-  //       setInstantaneousPriceIncrease((_) => false);
-  //     }
+  useEffect(() => {
+    const handleResize = () => {
+      if(window.innerWidth <= 700) {
+        console.log("isMobile");
+      }
+      else {
+        console.log("isNotMobile");
+      }
+      setIsMobile(window.innerWidth <= 700); // Adjust the max-width according to your preference
+    };
 
-  //     currentPrice.current = midPrice;
-  //   };
+    handleResize(); // Call it initially
 
-  //   refreshLatestPrice();
+    window.addEventListener('resize', handleResize);
 
-  //   const intervalId = setInterval(() => {
-  //     refreshLatestPrice();
-  //   }, PRICE_REFRESH_FREQUENCY_IN_MS);
-
-  //   return () => clearInterval(intervalId);
-  // }, [enumeratedMarket]);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <div className={styles.marketStatsContainer}>
@@ -98,7 +96,19 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
             fontSize: showOrderBook ? `1.1rem` : ``
           }}
         >
-          {midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
+          {
+            !isMobile ?
+              <>{midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</>
+            :
+              <>
+              {
+                decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`) >= 5 ?
+                  <>{toScientificNotation(midPrice.current)}</>
+                :
+                  <>{midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</>
+              }
+              </>
+          }
         </div>
       </div>
       <div className={styles.marketStat}>

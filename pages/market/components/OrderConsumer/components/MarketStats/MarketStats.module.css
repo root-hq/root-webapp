@@ -37,8 +37,33 @@
   /* padding: 0.25rem; */
 }
 
+@media (max-width: 850px) {
+  .currentPrice {
+    font-size: 0.95rem;
+  }
+}
+
+
 @media (max-width: 768px) {
-  .marketStatsContainer {
+  .marketStat {
     display: none;
+  }
+}
+
+@media (max-width: 425px) {
+  .currentPrice {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .currentPrice {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .currentPrice {
+    font-size: 0.75rem;
   }
 }
