@@ -8,6 +8,10 @@ const CLOBTrader = dynamic(
   () => import("./components/OrderProducer/CLOBTrader"),
   { ssr: false },
 );
+const FloatingTradeButton = dynamic(
+  () => import("../../components/FloatingTradeButton"),
+  { ssr: false },
+);
 
 import {
   SpotGridMarket,
@@ -160,6 +164,9 @@ const MarketPage = ({
           baseTokenMetadata={baseTokenMetadata}
           quoteTokenMetadata={quoteTokenMetadata}
         />
+      </div>
+      <div>
+        <FloatingTradeButton />
       </div>
     </div>
   );

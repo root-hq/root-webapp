@@ -18,6 +18,12 @@
   background-color: #000;
 }
 
+@media only screen and (max-width: 1024px) {
+  .orderProducerContainer {
+    display: none; /* Hide the button on devices larger than 768px */
+  }
+}
+
 .orderConsumerChartContainer {
   width: 100%;
 }

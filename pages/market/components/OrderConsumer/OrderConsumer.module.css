@@ -129,7 +129,7 @@
   background-color: #0b0c11;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .marketDataContainer {
     flex-direction: column;
   }
@@ -172,5 +172,9 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
     display: none;
+  }
+  
+  .orderManagerContainer {
+    margin-bottom: 3rem;
   }
 }
