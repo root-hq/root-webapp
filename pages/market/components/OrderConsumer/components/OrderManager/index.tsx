@@ -231,7 +231,7 @@ const OrderManager = ({
         );
         green(
           <span>
-            {`Transaction confirmed `}
+            {`All orders cancelled `}
             <Link
               href={`https://solscan.io/tx/${response}`}
               target="_blank"

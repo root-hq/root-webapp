@@ -110,6 +110,7 @@ const OrderConsumer = ({
     locale: "en",
     fullscreen: false,
     autosize: true,
+    client_id: "root.exchange"
   };
 
   const memoizedTradingViewChart = useMemo(() => <TVChartContainer props={defaultWidgetProps} chartType={chartType} />, [chartType, selectedSpotGridMarket, dummyCounter.current]);
@@ -138,7 +139,7 @@ const OrderConsumer = ({
               />
             </div>
             <div className={styles.marketStatsContainer}>
-              <MarketStats enumeratedMarket={activeEnumeratedMarket} />
+              <MarketStats enumeratedMarket={activeEnumeratedMarket} showOrderBook ={showOrderBook} />
             </div>
           </div>
           <div className={styles.tradingViewChartContainer}>

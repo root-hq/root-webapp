@@ -102,7 +102,7 @@ const TVChartContainer = ({
       },
       charts_storage_url: props.charts_storage_url,
       charts_storage_api_version: props.charts_storage_api_version,
-      client_id: props.client_id,
+      client_id: "root.exchange",
       user_id: props.user_id,
       fullscreen: props.fullscreen,
       autosize: props.autosize,

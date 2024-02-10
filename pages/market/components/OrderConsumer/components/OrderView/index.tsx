@@ -206,7 +206,7 @@ const OrderView = ({
         );
         green(
           <span>
-            {`Order canceled `}
+            {`Order cancelled `}
             <Link
               href={`https://solscan.io/tx/${response}`}
               target="_blank"
@@ -271,7 +271,7 @@ const OrderView = ({
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {floatTotalSizeInQuoteUnits.toFixed(4)}
+            {justFormatNumbersWithCommas(floatTotalSizeInQuoteUnits.toFixed(4))}
           </span>
         </div>
         <div className={styles.columnNameRow}>

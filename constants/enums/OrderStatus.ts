@@ -14,7 +14,7 @@ export enum OrderStatus {
     } else if (orderStatus === OrderStatus.Filled) {
       return "Filled";
     } else if (orderStatus === OrderStatus.Canceled) {
-      return "Canceled";
+      return "Cancelled";
     }
   };
   

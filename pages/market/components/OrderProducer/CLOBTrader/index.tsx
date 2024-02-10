@@ -431,7 +431,7 @@ const CLOBTrader = ({
           );
           green(
             <span>
-              {`Transaction confirmed `}
+              {`Order placed `}
               <Link
                 href={`https://solscan.io/tx/${response}`}
                 target="_blank"
@@ -490,7 +490,7 @@ const CLOBTrader = ({
           );
           green(
             <span>
-              {`Transaction confirmed `}
+              {`Order placed `}
               <Link
                 href={`https://solscan.io/tx/${response}`}
                 target="_blank"

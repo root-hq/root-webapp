@@ -10,9 +10,10 @@ import { useRootState } from "components/RootStateContextType";
 
 export interface MarketStatsProps {
   enumeratedMarket: EnumeratedMarketToMetadata;
+  showOrderBook: boolean;
 }
 
-const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
+const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
   const { midPrice, instantaneousPriceIncrease } = useRootState();
 
   const [dailyHigh, setDailyHigh] = useState<number>(0.0);
@@ -85,11 +86,16 @@ const MarketStats = ({ enumeratedMarket }: MarketStatsProps) => {
 
   return (
     <div className={styles.marketStatsContainer}>
-      <div className={styles.currentPriceContainer}>
+      <div className={styles.currentPriceContainer}
+        style ={{
+          marginLeft: showOrderBook ? `1rem`: ``,
+        }}
+      >
         <div
           className={styles.currentPrice}
           style={{
             color: instantaneousPriceIncrease ? `#3DE383` : "#e33d3d",
+            fontSize: showOrderBook ? `1.1rem` : ``
           }}
         >
           {midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
