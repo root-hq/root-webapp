@@ -61,15 +61,13 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
   }, [enumeratedMarket]);
 
   const [isMobile, setIsMobile] = useState(false);
+  const [windowWidth, setWindowWidth] = useState<number>(0.0);
+  const [windowHeight, setWindowHeight] = useState<number>(0.0);
 
   useEffect(() => {
     const handleResize = () => {
-      if(window.innerWidth <= 700) {
-        console.log("isMobile");
-      }
-      else {
-        console.log("isNotMobile");
-      }
+      setWindowWidth(_ => window.innerWidth);
+      setWindowHeight(_ => window.innerHeight);
       setIsMobile(window.innerWidth <= 700); // Adjust the max-width according to your preference
     };
 
@@ -85,15 +83,13 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
   return (
     <div className={styles.marketStatsContainer}>
       <div className={styles.currentPriceContainer}
-        style ={{
-          marginLeft: showOrderBook ? `1rem`: ``,
-        }}
+        
       >
         <div
           className={styles.currentPrice}
           style={{
             color: instantaneousPriceIncrease ? `#3DE383` : "#e33d3d",
-            fontSize: showOrderBook ? `1.1rem` : ``
+            fontSize: windowWidth < 400 ? `0.95rem` : ``,
           }}
         >
           {
