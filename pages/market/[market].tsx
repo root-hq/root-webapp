@@ -153,7 +153,11 @@ const MarketPage = ({
 
   return (
     <div className={styles.mainContainer}>
-      <div className={styles.marketPageContainer}>
+      <div className={styles.marketPageContainer}
+        style={{
+          filter: !isMobileTradeModalOpen ? `` : `blur(5px)`
+        }}
+      >
         <div className={styles.orderConsumerContainer}>
           <div className={styles.orderConsumerChartContainer}>
             <OrderConsumer
@@ -183,11 +187,22 @@ const MarketPage = ({
       {
         isMobileTradeModalOpen ?
           <div className={styles.mobileTradeModalContainer}>
-            <CLOBTrader
-            spotGridMarket={selectedSpotGridMarket}
-            baseTokenMetadata={baseTokenMetadata}
-            quoteTokenMetadata={quoteTokenMetadata}
-          />
+              <CLOBTrader
+              spotGridMarket={selectedSpotGridMarket}
+              baseTokenMetadata={baseTokenMetadata}
+              quoteTokenMetadata={quoteTokenMetadata}
+              />
+
+            <div
+              onClick={() => {
+                handleMobileTradeModalToggle()
+              }}
+              style={{
+                filter: `none`
+              }}
+            >
+              <FloatingTradeButton isMobileTradeModalOpen = {isMobileTradeModalOpen} />
+            </div>
           </div>
         :
           <></>

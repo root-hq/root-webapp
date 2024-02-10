@@ -9,15 +9,15 @@ const FloatingTradeButton = ({
     isMobileTradeModalOpen
 }: FloatingTradeButtonProps) => {
 
-    const [showText, setShowText] = useState<string>(`Trade`);
+    const [showElement, setShowElement] = useState<React.JSX.Element>(<span><i className="fa-solid fa-plus"></i></span>);
 
     useEffect(() => {
         const toggle = () => {
             if(isMobileTradeModalOpen) {
-                setShowText(_ => `Close`);
+                setShowElement(_ => <span><i className="fa-solid fa-xmark"></i></span>);
             }
             else {
-                setShowText(_ => `Trade`);
+                setShowElement(_ => <span><i className="fa-solid fa-plus"></i></span>);
             }
         }
         
@@ -25,8 +25,14 @@ const FloatingTradeButton = ({
     }, [isMobileTradeModalOpen]);
     
     return (
-        <div className={styles.floatingTradeButtonContainer}>
-            <span>{showText}</span>
+        <div className={styles.floatingTradeButtonContainer}
+            style={{
+                backgroundColor: isMobileTradeModalOpen ? `#e33d3d` : ``
+            }}
+        >
+            <span>{
+                showElement
+            }</span>
         </div>
     )
 }

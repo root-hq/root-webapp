@@ -2,18 +2,27 @@
     position: fixed;
     bottom: 40px;
     right: 30px;
-    background-color: #111;
-    font-size: 0.85rem;
-    padding: 0.75rem;
+    background-color: rgba(71, 125, 242, 1.0);
+    font-size: 1.5rem;
     color: #ddd;
     border: 1px solid rgba(87, 87, 87, 1.0);
     cursor: pointer;
-    border-radius: 0.25rem;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     z-index: 1000;
 }
 
 .floatingTradeButtonContainer:hover {
-    background-color: #222;
+    background-color: rgba(71, 125, 242, 0.5);;
+}
+
+.floatingTradeButtonContainer:active {
+    background-color: #e33d3d;
 }
 
 @media only screen and (min-width: 1025px) {
