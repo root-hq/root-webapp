@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./OrderView.module.css";
-import { Order, decimalPlacesFromTickSize } from "../../../../../../utils";
+import { Order, decimalPlacesFromTickSize, formatNumbersWithCommas, justFormatNumbersWithCommas, toScientificNotation } from "../../../../../../utils";
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
 import Image from "next/image";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -262,21 +262,16 @@ const OrderView = ({
           )}
         </div>
         <div className={styles.columnNameRow}>
-          <span className={styles.columnName}>{floatPrice.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</span>
+          <span className={styles.columnName}>{enumeratedMarket ? decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >=5 ? toScientificNotation(floatPrice) : floatPrice.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`)) : floatPrice}</span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {floatSizeInBaseUnits.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
+            {justFormatNumbersWithCommas(floatSizeInBaseUnits.toFixed(2))}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {floatTotalSizeInQuoteUnits.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
-          </span>
-        </div>
-        <div className={styles.columnNameRow}>
-          <span className={styles.columnName}>
-            {fillSizeInBaseUnits.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}
+            {floatTotalSizeInQuoteUnits.toFixed(4)}
           </span>
         </div>
         <div className={styles.columnNameRow}>

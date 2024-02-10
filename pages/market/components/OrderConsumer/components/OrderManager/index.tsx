@@ -484,37 +484,31 @@ const OrderManager = ({
           <div className={styles.columnNamesContainer}>
             <div
               className={styles.columnNameRow}
-              style={{ width: `${100 / 6}%` }}
+              style={{ width: `${100 / 5}%` }}
             >
               <span className={styles.columnName}>{`Side`}</span>
             </div>
             <div
               className={styles.columnNameRow}
-              style={{ width: `${100 / 6}%` }}
+              style={{ width: `${100 / 5}%` }}
             >
               <span className={styles.columnName}>{`Price`}</span>
             </div>
             <div
               className={styles.columnNameRow}
-              style={{ width: `${100 / 6}%` }}
+              style={{ width: `${100 / 5}%` }}
             >
               <span className={styles.columnName}>{`Size`}</span>
             </div>
             <div
               className={styles.columnNameRow}
-              style={{ width: `${100 / 6}%` }}
+              style={{ width: `${100 / 5}%` }}
             >
               <span className={styles.columnName}>{`Total`}</span>
             </div>
             <div
               className={styles.columnNameRow}
-              style={{ width: `${100 / 6}%` }}
-            >
-              <span className={styles.columnName}>{`Filled`}</span>
-            </div>
-            <div
-              className={styles.columnNameRow}
-              style={{ width: `${100 / 6}%` }}
+              style={{ width: `${100 / 5}%` }}
             >
               <span className={styles.columnName}>{``}</span>
             </div>

@@ -26,6 +26,19 @@ export const formatNumbersWithCommas = (
   }
 };
 
+export const justFormatNumbersWithCommas = (
+  val: string,
+) => {
+  if (val === "") {
+    return "";
+  }
+
+  if (val.match(/^[+]?[0-9]+(\.[0-9]*)?$/)) {
+    const formattedAgain = formatWithCommas(val);
+    return formattedAgain;
+  }
+};
+
 export const delay = (time) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
@@ -38,7 +51,6 @@ export const decimalPlacesFromTickSize = (tickSize: string): number => {
     // Removing leading zeros from the base
     const baseWithoutZeros = base.replace(/^0+/, '');
     // Calculating the number of decimal places
-    console.log("DecimalPlaces: ", -1 * parseInt(exponent) + (baseWithoutZeros.length - 1));
     return -1 * parseInt(exponent) + (baseWithoutZeros.length - 1);
   }
   

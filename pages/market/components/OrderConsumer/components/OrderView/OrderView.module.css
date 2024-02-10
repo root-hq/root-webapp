@@ -11,6 +11,8 @@
   width: 100%;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
 }
 
 .columnNameRow {
@@ -36,6 +38,13 @@
 @media screen and (max-width: 768px) {
   .columnNamesOuterContainer {
     width: 95%;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .columnNameRow {
+    font-size: 0.65rem;
+    width: 100%;
   }
 }
 

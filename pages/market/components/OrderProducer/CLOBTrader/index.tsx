@@ -16,7 +16,7 @@ import {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { TOKEN_PROGRAM_ID, createCloseAccountInstruction, createSyncNativeInstruction, createTransferInstruction, getAssociatedTokenAddress, getMinimumBalanceForRentExemptAccount } from "@solana/spl-token";
 import { web3 } from "@coral-xyz/anchor";
-import { formatNumbersWithCommas, removeCommas } from "../../../../../utils";
+import { decimalPlacesFromTickSize, formatNumbersWithCommas, removeCommas } from "../../../../../utils";
 import { Button, Form } from "react-bootstrap";
 import dynamic from "next/dynamic";
 const KeyValueComponent = dynamic(
@@ -378,7 +378,7 @@ const CLOBTrader = ({
         transaction.add(ix);
       }
 
-      if (isBuyOrder && parseFloat(sendUptoSize)) {
+      if (isBuyOrder && parseFloat(removeCommas(sendUptoSize))) {
         // console.log("Limit buy");
         let priceInTicks = new BN(
           phoenixClient.floatPriceToTicks(
@@ -388,11 +388,11 @@ const CLOBTrader = ({
         );
         let sizeInBaseLosts = new BN(
           phoenixClient.baseAtomsToBaseLots(
-            parseFloat(sendUptoSize) *
+            parseFloat(removeCommas(sendUptoSize)) *
               Math.pow(10, baseTokenMetadata.decimals),
             marketAddress,
           ),
-        );
+        );        
         // console.log(`Buying ${sizeInBaseLosts} base lots at ${priceInTicks} price in ticks`);
 
         try {
@@ -425,6 +425,9 @@ const CLOBTrader = ({
           let response = await walletState.sendTransaction(
             transaction,
             connection,
+            {
+              skipPreflight: true
+            }
           );
           green(
             <span>
@@ -441,7 +444,7 @@ const CLOBTrader = ({
           // console.log(`Error sending limit buy order: ${err.message}`);
           red(<span>{`Failed: ${err.message}`}</span>, 2_000);
         }
-      } else if (!isBuyOrder && parseFloat(sendUptoSize)) {
+      } else if (!isBuyOrder && parseFloat(removeCommas(sendUptoSize))) {
         let priceInTicks = new BN(
           phoenixClient.floatPriceToTicks(
             parseFloat(limitPrice),
@@ -450,7 +453,7 @@ const CLOBTrader = ({
         );
         let sizeInBaseLosts = new BN(
           phoenixClient.baseAtomsToBaseLots(
-            parseFloat(sendUptoSize) * Math.pow(10, baseTokenMetadata.decimals),
+            parseFloat(removeCommas(sendUptoSize)) * Math.pow(10, baseTokenMetadata.decimals),
             marketAddress,
           ),
         );
@@ -573,7 +576,7 @@ const CLOBTrader = ({
               <span>Limit price</span>
             </Form.Label>
             <Form.Control
-              placeholder={spotGridMarket ? spotGridMarket.tick_size : ``}
+              placeholder={spotGridMarket ? decimalPlacesFromTickSize(spotGridMarket.tick_size) >= 5 ? `0.00001` : spotGridMarket.tick_size : ``}
               // disabled={!walletState.connected}
               style={{
                 backgroundColor: "transparent",
@@ -601,7 +604,7 @@ const CLOBTrader = ({
               </span>
             </Form.Label>
             <Form.Control
-              placeholder={`${spotGridMarket ? spotGridMarket.tick_size : ``} ${baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
+              placeholder={`${spotGridMarket ? decimalPlacesFromTickSize(spotGridMarket.tick_size) >= 5 ? `0.00001` : spotGridMarket.tick_size : ``} ${baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
               // disabled={!walletState.connected}
               style={{
                 backgroundColor: "transparent",
