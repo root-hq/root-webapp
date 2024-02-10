@@ -57,6 +57,12 @@ const MarketPage = ({
 
   const [marketDataBuffer, setMarketDataBuffer] = useState<Buffer>(null);
 
+  const [isMobileTradeModalOpen, setIsMobileTradeModalOpen] = useState<boolean>(false);
+
+  const handleMobileTradeModalToggle = () => {
+    setIsMobileTradeModalOpen(_ => !isMobileTradeModalOpen);
+  }
+
   let lastMessageTimestamp = 0;
 
   useEffect(() => {
@@ -146,28 +152,46 @@ const MarketPage = ({
   }, [marketDataBuffer]);
 
   return (
-    <div className={styles.marketPageContainer}>
-      <div className={styles.orderConsumerContainer}>
-        <div className={styles.orderConsumerChartContainer}>
-          <OrderConsumer
-            enumeratedMarkets={enumeratedMarkets}
-            selectedSpotGridMarket={selectedSpotGridMarket}
+    <div className={styles.mainContainer}>
+      <div className={styles.marketPageContainer}>
+        <div className={styles.orderConsumerContainer}>
+          <div className={styles.orderConsumerChartContainer}>
+            <OrderConsumer
+              enumeratedMarkets={enumeratedMarkets}
+              selectedSpotGridMarket={selectedSpotGridMarket}
+              baseTokenMetadata={baseTokenMetadata}
+              quoteTokenMetadata={quoteTokenMetadata}
+              connection={connection}
+            />
+          </div>
+        </div>
+        <div className={styles.orderProducerContainer}>
+          <CLOBTrader
+            spotGridMarket={selectedSpotGridMarket}
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
-            connection={connection}
           />
         </div>
+        <div
+          onClick={() => {
+            handleMobileTradeModalToggle()
+          }}
+        >
+          <FloatingTradeButton isMobileTradeModalOpen = {isMobileTradeModalOpen} />
+        </div>
       </div>
-      <div className={styles.orderProducerContainer}>
-        <CLOBTrader
-          spotGridMarket={selectedSpotGridMarket}
-          baseTokenMetadata={baseTokenMetadata}
-          quoteTokenMetadata={quoteTokenMetadata}
-        />
-      </div>
-      <div>
-        <FloatingTradeButton />
-      </div>
+      {
+        isMobileTradeModalOpen ?
+          <div className={styles.mobileTradeModalContainer}>
+            <CLOBTrader
+            spotGridMarket={selectedSpotGridMarket}
+            baseTokenMetadata={baseTokenMetadata}
+            quoteTokenMetadata={quoteTokenMetadata}
+          />
+          </div>
+        :
+          <></>
+      }
     </div>
   );
 };

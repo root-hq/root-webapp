@@ -4,12 +4,12 @@
     right: 30px;
     background-color: #111;
     font-size: 0.85rem;
-    padding: 0.5rem;
+    padding: 0.75rem;
     color: #ddd;
     border: 1px solid rgba(87, 87, 87, 1.0);
     cursor: pointer;
     border-radius: 0.25rem;
-    z-index: 1000; /* Ensure it's above other content */
+    z-index: 1000;
 }
 
 .floatingTradeButtonContainer:hover {
@@ -18,7 +18,7 @@
 
 @media only screen and (min-width: 1025px) {
     .floatingTradeButtonContainer {
-      display: none; /* Hide the button on devices larger than 768px */
+      display: none;
     }
 }
   
