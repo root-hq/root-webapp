@@ -176,3 +176,9 @@
     transform: rotate(359deg);
   }
 }
+
+@media (max-width: 1025px) {
+  .placeOrderButtonContainer {
+    margin-bottom: 4rem;
+  }
+}
