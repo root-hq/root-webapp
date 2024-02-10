@@ -91,7 +91,6 @@ const OrderConsumer = ({
   useEffect(() => {
     const incrementer = () => {
       dummyCounter.current += 1;
-      console.log(`Dummy counter: ${dummyCounter.current}`);
     }
 
     incrementer();
