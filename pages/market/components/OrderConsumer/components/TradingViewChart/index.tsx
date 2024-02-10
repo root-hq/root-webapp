@@ -86,7 +86,7 @@ const TVChartContainer = ({
       library_path: props.library_path,
       locale: props.locale as LanguageCode,
       disabled_features: [...DEFAULT_DISABLED_FEATURES],
-      enabled_features: ["create_volume_indicator_by_default"],
+      enabled_features: ["create_volume_indicator_by_default", "header_in_fullscreen_mode"],
       custom_css_url: cssBlobUrl,
       loading_screen: {
         backgroundColor: "#0B0C11",
