@@ -96,14 +96,14 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
             !isMobile ?
               <>{midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</>
             :
-              <>
+              <span style={{fontSize: `0.9rem`}}>
               {
                 decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`) >= 5 ?
                   <>{toScientificNotation(midPrice.current)}</>
                 :
                   <>{midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</>
               }
-              </>
+              </span>
           }
         </div>
       </div>

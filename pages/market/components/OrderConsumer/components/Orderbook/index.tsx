@@ -190,7 +190,16 @@ const Orderbook = ({
             <span>{`${midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}`}</span>
           </div>
           <div className={styles.spread}>
-            <span>{`${spread.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}`}</span>
+            <span>{`
+              ${
+              enumeratedMarket ?
+                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >= 5 ?
+                toScientificNotation(spread.current)
+                :
+                  spread.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))
+              :
+                spread.current
+              }`}</span>
           </div>
         </div>
         {bidSideContainerComponent}
