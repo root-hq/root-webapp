@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./OrderView.module.css";
-import { Order, decimalPlacesFromTickSize, formatNumbersWithCommas, justFormatNumbersWithCommas, toScientificNotation } from "../../../../../../utils";
+import { Order, decimalPlacesFromTickSize, justFormatNumbersWithCommas, toScientificNotation } from "../../../../../../utils";
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
 import Image from "next/image";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -162,9 +162,10 @@ const OrderView = ({
         }
 
         let priceInTicksBN = new BN(phoenixClient.floatPriceToTicks(parseFloat(order.price_in_ticks), marketAddress));
-        let orderSequenceNumberBN = new BN(order.order_sequence_number);
-        console.log("Order ID: ", orderSequenceNumberBN.toString());
-
+        let orderSequenceNumberBN = new BN(parseInt(order.order_sequence_number));
+        if(order.is_buy_order) {
+          orderSequenceNumberBN = (BigInt(2) ** BigInt(64)) - BigInt(order.order_sequence_number) - BigInt(1);
+        }
         let cancelOrderIx = phxClient.createCancelMultipleOrdersByIdInstruction(
           {
             params: {
