@@ -19,14 +19,15 @@ const Orderbook = ({
 
   const [bidDepth, setBidDepth] = useState<number>(0.0);
   const [askDepth, setAskDepth] = useState<number>(0.0);
+  const [totalDepth, setTotalDepth] = useState<number>(0.0);
 
   useEffect(() => {
     const refreshDepth = () => {
       let totalBidDepth = 0;
       let totalAskDepth = 0;
 
-      let bidsSlice = bids.slice(0, 11);
-      let asksSlice = bids.slice(-11);
+      let bidsSlice = bids.slice(0, 10);
+      let asksSlice = asks.slice(-10);
 
       for(let bid of bidsSlice) {
         totalBidDepth += bid.price * bid.size;
@@ -38,6 +39,7 @@ const Orderbook = ({
 
       setBidDepth(_ => totalBidDepth);
       setAskDepth(_ => totalAskDepth);
+      setTotalDepth(_ => totalBidDepth + totalAskDepth);
     }
 
     refreshDepth();
@@ -50,12 +52,12 @@ const Orderbook = ({
             bids && bids.length > 0 ?
               <div className={styles.l3UiOrderLadder}>
                 {
-                  bids.slice(0, 11).map((order, i) => {
+                  bids.slice(0, 10).map((order, i) => {
                     return (
                       <div className={styles.l3UiBid}
                         key={order.orderSequenceNumber}
                         style = {{
-                          backgroundImage: `linear-gradient(to right, transparent ${(90 - (((order.price * order.size) / bidDepth) * 100))}%, rgba(61, 227, 131, 0.20) ${(90 - (((order.price * order.size) / bidDepth) * 100))}%)`,
+                          backgroundImage: `linear-gradient(to right, transparent ${90 - (((order.price * order.size) / totalDepth) * 100)}%, rgba(61, 227, 131, 0.20) ${(order.price * order.size) / totalDepth}%)`,
                         }}
                       >                        
                         <div className={styles.priceAndSize}>
@@ -111,12 +113,12 @@ const Orderbook = ({
             asks && asks.length > 0 ?
               <div className={styles.l3UiOrderLadder}>
                 {
-                  asks.slice(-11).map((order, i) => {
+                  asks.slice(-10).map((order, i) => {
                     return (
                       <div
                         className={styles.l3UiAsk} key={order.orderSequenceNumber}
                         style={{
-                          backgroundImage: `linear-gradient(to right, transparent ${(90 - (((order.price * order.size) / bidDepth) * 100))}%, rgba(227, 61, 61, 0.20) ${(90 - (((order.price * order.size) / bidDepth) * 100))}%)`,
+                          backgroundImage: `linear-gradient(to right, transparent ${90 - (((order.price * order.size) / totalDepth) * 100)}%, rgba(227, 61, 61, 0.20) ${(order.price * order.size) / totalDepth}%)`,
                         }}
                       >
                         <div className={styles.priceAndSize}>
@@ -192,6 +194,27 @@ const Orderbook = ({
           </div>
         </div>
         {bidSideContainerComponent}
+      </div>
+      <div>
+        <div className={styles.orderSkewnessContainer}>
+          <div
+            className={styles.orderSkewness}
+            style={{
+              backgroundImage: `linear-gradient(to right, rgba(61, 227, 131, 0.25) ${(bidDepth * 100) / totalDepth}%, rgba(227, 61, 61, 0.25) ${(100 - ((bidDepth * 100) / totalDepth))}%)`,
+            }}
+          >
+            <div className={styles.bidDepth}>
+              <span> 
+                {`${((bidDepth * 100) / totalDepth).toFixed(2)}%`}
+              </span>
+            </div>
+            <div className={styles.askDepth}>
+              <span> 
+              {`${((askDepth * 100) / totalDepth).toFixed(2)}%`}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

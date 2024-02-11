@@ -45,13 +45,24 @@
 .bookSideContainer {
   overflow-y: scroll;
   scroll-behavior: smooth;
-  height: 220px;
+  height: 200px;
   border: 1px solid rgba(87, 87, 87, 0.15);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
 
+.orderSkewnessContainer {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 0.5rem;
+  box-sizing: border-box;
+  padding-left: 0.2rem;
+  padding-right: 0.5rem;
+}
+
 .midPriceAndSpreadContainer {
+  margin-left: 1rem;
+  margin-right: 1rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -83,11 +94,32 @@
   width: 100%;
 }
 
+.bidDepth {
+  color: #3DE383;
+  padding: 0.25rem;
+}
+
 .l3UiAsk {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   color: #e33d3d;
+  padding: 0.15rem;
+  font-size: 0.8rem;
+  opacity: 0.65;
+  width: 100%;
+}
+
+.askDepth {
+  color: #e33d3d;
+  padding: 0.25rem;
+
+}
+
+.orderSkewness {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   padding: 0.15rem;
   font-size: 0.8rem;
   opacity: 0.65;
