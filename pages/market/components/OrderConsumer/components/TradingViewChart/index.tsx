@@ -10,6 +10,7 @@ import { widget } from "public/static/charting_library/charting_library.esm";
 import Datafeed from "../../../../../../utils/birdeye/Datafeed";
 import React from "react";
 import { ChartType } from "constants/";
+import { useRootState } from "components/RootStateContextType";
 
 export interface TVChartContainerProps {
   props: Partial<ChartingLibraryWidgetOptions>;
@@ -19,6 +20,8 @@ export interface TVChartContainerProps {
 const TVChartContainer = ({ props, chartType }: TVChartContainerProps) => {
   const chartContainerRef =
     useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
+
+  const { isMobile } = useRootState();
 
   var customCSS = `:root:not(.theme-dark) {
 		  --tv-color-platform-background: #0B0C11;
@@ -64,13 +67,16 @@ const TVChartContainer = ({ props, chartType }: TVChartContainerProps) => {
       "legend_widget",
 
       "header_indicators",
-      "left_toolbar",
       "main_series_scale_menu",
       "header_settings",
       "header_chart_type",
       "header_resolutions",
       "context_menus",
     ];
+  }
+
+  if(chartType === ChartType.Lite || isMobile.current) {
+    DEFAULT_DISABLED_FEATURES.push("left_toolbar");
   }
 
   useEffect(() => {

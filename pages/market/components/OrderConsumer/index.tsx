@@ -34,6 +34,7 @@ import {
   USDC_MAINNET,
   WRAPPED_SOL_MAINNET,
 } from "constants/";
+import { useRootState } from "components/RootStateContextType";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -50,12 +51,14 @@ const OrderConsumer = ({
   quoteTokenMetadata,
   connection,
 }: OrderConsumerProps) => {
+  const { isMobile } = useRootState();
+
   const [activeMarket, setActiveMarket] = useState(selectedPhoenixMarket);
   const [activeEnumeratedMarket, setActiveEnumeratedMarket] =
     useState<EnumeratedMarketToMetadata>(null);
 
-  const [chartType, setChartType] = useState<ChartType>(ChartType.Pro);
-  const [showOrderBook, setShowOrderBook] = useState<boolean>(true);
+  const [chartType, setChartType] = useState<ChartType>(isMobile.current ? ChartType.Lite : ChartType.Pro);
+  const [showOrderBook, setShowOrderBook] = useState<boolean>(isMobile.current ? false : true);
 
   const dummyCounter = useRef<number>(0);
 
