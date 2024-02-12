@@ -75,7 +75,7 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
                       ></i>
                       {enumeratedMarket
                         ? decimalPlacesFromTickSize(
-                            enumeratedMarket.spotGridMarket.tick_size,
+                            enumeratedMarket.phoenixMarket.tick_size,
                           ) >= 5
                           ? toScientificNotation(order.price)
                           : order.price
@@ -84,7 +84,7 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
                     <span className={styles.size}>
                       {enumeratedMarket
                         ? decimalPlacesFromTickSize(
-                            enumeratedMarket.spotGridMarket.tick_size,
+                            enumeratedMarket.phoenixMarket.tick_size,
                           ) >= 5
                           ? toScientificNotation(order.size)
                           : order.size
@@ -137,7 +137,7 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
                       ></i>
                       {enumeratedMarket
                         ? decimalPlacesFromTickSize(
-                            enumeratedMarket.spotGridMarket.tick_size,
+                            enumeratedMarket.phoenixMarket.tick_size,
                           ) >= 5
                           ? toScientificNotation(order.price)
                           : order.price
@@ -146,7 +146,7 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
                     <span className={styles.size}>
                       {enumeratedMarket
                         ? decimalPlacesFromTickSize(
-                            enumeratedMarket.spotGridMarket.tick_size,
+                            enumeratedMarket.phoenixMarket.tick_size,
                           ) >= 5
                           ? toScientificNotation(order.size)
                           : order.size
@@ -188,20 +188,20 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
               fontWeight: "bold",
             }}
           >
-            <span>{`${midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}`}</span>
+            <span>{`${midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.phoenixMarket.tick_size : `0.001`))}`}</span>
           </div>
           <div className={styles.spread}>
             <span>{`
               ${
                 enumeratedMarket
                   ? decimalPlacesFromTickSize(
-                      enumeratedMarket.spotGridMarket.tick_size,
+                      enumeratedMarket.phoenixMarket.tick_size,
                     ) >= 5
                     ? toScientificNotation(spread.current)
                     : spread.current.toFixed(
                         decimalPlacesFromTickSize(
                           enumeratedMarket
-                            ? enumeratedMarket.spotGridMarket.tick_size
+                            ? enumeratedMarket.phoenixMarket.tick_size
                             : `0.001`,
                         ),
                       )

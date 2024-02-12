@@ -3,7 +3,7 @@ import styles from "./MarketOrderView.module.css";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useBottomStatus } from "components/BottomStatus";
 import {
-  SpotGridMarket,
+  PhoenixMarket,
   TokenMetadata,
   decimalPlacesFromTickSize,
   formatNumbersWithCommas,
@@ -26,7 +26,7 @@ import { useRootState } from "components/RootStateContextType";
 import { fetchQuote, swapOnJupiterTx } from "utils/jupiter";
 
 export interface MarketOrderViewProps {
-  spotGridMarket: SpotGridMarket;
+  phoenixMarket: PhoenixMarket;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
   isBuyOrder: boolean;
@@ -37,7 +37,7 @@ export interface MarketOrderViewProps {
 }
 
 const MarketOrderView = ({
-  spotGridMarket,
+  phoenixMarket,
   baseTokenMetadata,
   quoteTokenMetadata,
   isBuyOrder,
@@ -142,7 +142,7 @@ const MarketOrderView = ({
     updateStatus(<span>{`Preparing swap transaction...`}</span>);
     if (isBuyOrder) {
       let size =
-        parseFloat(sendUptoSize) * Math.pow(10, quoteTokenMetadata.decimals);
+        parseFloat(removeCommas(sendUptoSize)) * Math.pow(10, quoteTokenMetadata.decimals);
 
       const tx = await swapOnJupiterTx({
         userPublicKey: walletState.publicKey.toString(),
@@ -156,7 +156,7 @@ const MarketOrderView = ({
       serializedTx = tx;
     } else {
       let size =
-        parseFloat(sendUptoSize) * Math.pow(10, baseTokenMetadata.decimals);
+        parseFloat(removeCommas(sendUptoSize)) * Math.pow(10, baseTokenMetadata.decimals);
 
       const tx = await swapOnJupiterTx({
         userPublicKey: walletState.publicKey.toString(),
@@ -251,10 +251,10 @@ const MarketOrderView = ({
             </Form.Label>
             <Form.Control
               placeholder={`${
-                spotGridMarket
-                  ? decimalPlacesFromTickSize(spotGridMarket.tick_size) >= 5
+                phoenixMarket
+                  ? decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 5
                     ? `0.00001`
-                    : spotGridMarket.tick_size
+                    : phoenixMarket.tick_size
                   : ``
               } ${baseTokenMetadata && quoteTokenMetadata ? (isBuyOrder ? quoteTokenMetadata.ticker : baseTokenMetadata.ticker) : ``}`}
               // disabled={!walletState.connected}
@@ -326,7 +326,7 @@ const MarketOrderView = ({
               </Form.Label>
               <Form.Label className={styles.formFieldContainerShortWidth}>
                 <span className={styles.fieldTitleContainer}>
-                  <span>{`${spotGridMarket ? justFormatNumbersWithCommas(parseFloat(receiveUptoSize).toFixed(decimalPlacesFromTickSize(spotGridMarket.tick_size))) : justFormatNumbersWithCommas(receiveUptoSize)} ${
+                  <span>{`${phoenixMarket ? justFormatNumbersWithCommas(parseFloat(receiveUptoSize).toFixed(decimalPlacesFromTickSize(phoenixMarket.tick_size))) : justFormatNumbersWithCommas(receiveUptoSize)} ${
                     baseTokenMetadata && quoteTokenMetadata
                       ? isBuyOrder
                         ? baseTokenMetadata.ticker
@@ -347,8 +347,8 @@ const MarketOrderView = ({
                 keyElement={<p>Total fee</p>}
                 keyElementStyle={{}}
                 valueElement={
-                  spotGridMarket ? (
-                    <p>{`${(parseFloat(spotGridMarket.taker_fee_bps) + ROOT_PROTOCOL_FEE_BPS) / 100}%`}</p>
+                  phoenixMarket ? (
+                    <p>{`${(parseFloat(phoenixMarket.taker_fee_bps) + ROOT_PROTOCOL_FEE_BPS) / 100}%`}</p>
                   ) : (
                     <p>{`-%`}</p>
                   )

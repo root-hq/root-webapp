@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./OrderConsumer.module.css";
-import { SpotGridMarket, TokenMetadata } from "../../../../utils/supabase";
+import { PhoenixMarket, TokenMetadata } from "../../../../utils/supabase";
 import { EnumeratedMarketToMetadata } from "../../[market]";
 
 import {
@@ -37,7 +37,7 @@ import {
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
-  selectedSpotGridMarket: SpotGridMarket;
+  selectedPhoenixMarket: PhoenixMarket;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
   connection: Connection;
@@ -45,12 +45,12 @@ export interface OrderConsumerProps {
 
 const OrderConsumer = ({
   enumeratedMarkets,
-  selectedSpotGridMarket,
+  selectedPhoenixMarket,
   baseTokenMetadata,
   quoteTokenMetadata,
   connection,
 }: OrderConsumerProps) => {
-  const [activeMarket, setActiveMarket] = useState(selectedSpotGridMarket);
+  const [activeMarket, setActiveMarket] = useState(selectedPhoenixMarket);
   const [activeEnumeratedMarket, setActiveEnumeratedMarket] =
     useState<EnumeratedMarketToMetadata>(null);
 
@@ -75,13 +75,13 @@ const OrderConsumer = ({
 
   useEffect(() => {
     const doStuff = () => {
-      setActiveMarket((_) => selectedSpotGridMarket);
+      setActiveMarket((_) => selectedPhoenixMarket);
 
-      if (selectedSpotGridMarket) {
+      if (selectedPhoenixMarket) {
         let aem = enumeratedMarkets.find((value) => {
           return (
-            value.spotGridMarket.spot_grid_market_address ===
-            selectedSpotGridMarket.spot_grid_market_address
+            value.phoenixMarket.phoenix_market_address ===
+            selectedPhoenixMarket.phoenix_market_address
           );
         });
         setActiveEnumeratedMarket((_) => aem);
@@ -89,7 +89,7 @@ const OrderConsumer = ({
     };
 
     doStuff();
-  }, [selectedSpotGridMarket]);
+  }, [selectedPhoenixMarket]);
 
   useEffect(() => {
     const incrementer = () => {
@@ -109,7 +109,7 @@ const OrderConsumer = ({
   }, []);
 
   const defaultWidgetProps: Partial<ChartingLibraryWidgetOptions> = {
-    symbol: `${baseTokenMetadata ? baseTokenMetadata.mint : WRAPPED_SOL_MAINNET}/${quoteTokenMetadata ? quoteTokenMetadata.mint : USDC_MAINNET}/${selectedSpotGridMarket ? selectedSpotGridMarket.tick_size : `0.001`}`,
+    symbol: `${baseTokenMetadata ? baseTokenMetadata.mint : WRAPPED_SOL_MAINNET}/${quoteTokenMetadata ? quoteTokenMetadata.mint : USDC_MAINNET}/${selectedPhoenixMarket ? selectedPhoenixMarket.tick_size : `0.001`}`,
     interval: `${DEFAULT_RESOLUTION}` as ResolutionString,
     library_path: "/static/charting_library/",
     locale: "en",
@@ -120,11 +120,11 @@ const OrderConsumer = ({
 
   const memoizedTradingViewChart = useMemo(
     () => <TVChartContainer props={defaultWidgetProps} chartType={chartType} />,
-    [chartType, selectedSpotGridMarket, dummyCounter.current],
+    [chartType, selectedPhoenixMarket, dummyCounter.current],
   );
   const memoizedOrderbook = useMemo(() => {
     return <Orderbook enumeratedMarket={activeEnumeratedMarket} />;
-  }, [selectedSpotGridMarket, activeEnumeratedMarket]);
+  }, [selectedPhoenixMarket, activeEnumeratedMarket]);
 
   return (
     <div className={styles.orderConsumerContainer}>

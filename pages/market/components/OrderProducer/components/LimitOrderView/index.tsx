@@ -3,7 +3,7 @@ import styles from "./LimitOrderView.module.css";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useBottomStatus } from "components/BottomStatus";
 import {
-  SpotGridMarket,
+  PhoenixMarket,
   TokenMetadata,
   decimalPlacesFromTickSize,
   formatNumbersWithCommas,
@@ -43,7 +43,7 @@ import {
 import { useRootState } from "components/RootStateContextType";
 
 export interface LimitOrderViewProps {
-  spotGridMarket: SpotGridMarket;
+  phoenixMarket: PhoenixMarket;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
   isBuyOrder: boolean;
@@ -54,7 +54,7 @@ export interface LimitOrderViewProps {
 }
 
 const LimitOrderView = ({
-  spotGridMarket,
+  phoenixMarket,
   baseTokenMetadata,
   quoteTokenMetadata,
   isBuyOrder,
@@ -119,7 +119,7 @@ const LimitOrderView = ({
     let limitPriceFloat = parseFloat(limitPrice);
 
     if (limitPriceFloat && sendUptoSizeFloat) {
-      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps);
+      let takerFeeBps = parseFloat(phoenixMarket.taker_fee_bps);
 
       if (isBuyOrder) {
         let receivingAmount = sendUptoSizeFloat * limitPriceFloat;
@@ -172,7 +172,7 @@ const LimitOrderView = ({
     }
 
     if (limitPriceFloat && sendUptoSizeFloat) {
-      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps);
+      let takerFeeBps = parseFloat(phoenixMarket.taker_fee_bps);
 
       if (isBuyOrder) {
         let receivingAmount =
@@ -202,7 +202,7 @@ const LimitOrderView = ({
 
   const handlePlaceLimitOrderAction = async () => {
     setIsPlaceOrderButtonLoading((_) => true);
-    let marketAddress = spotGridMarket.phoenix_market_address;
+    let marketAddress = phoenixMarket.phoenix_market_address;
 
     if (limitPrice && sendUptoSize) {
       let priorityFeeLevels = null;
@@ -443,10 +443,10 @@ const LimitOrderView = ({
             </Form.Label>
             <Form.Control
               placeholder={
-                spotGridMarket
-                  ? decimalPlacesFromTickSize(spotGridMarket.tick_size) >= 5
+                phoenixMarket
+                  ? decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 5
                     ? `0.00001`
-                    : spotGridMarket.tick_size
+                    : phoenixMarket.tick_size
                   : ``
               }
               // disabled={!walletState.connected}
@@ -479,7 +479,7 @@ const LimitOrderView = ({
               </span>
             </Form.Label>
             <Form.Control
-              placeholder={`${spotGridMarket ? (decimalPlacesFromTickSize(spotGridMarket.tick_size) >= 5 ? `0.00001` : spotGridMarket.tick_size) : ``} ${baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
+              placeholder={`${phoenixMarket ? (decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 5 ? `0.00001` : phoenixMarket.tick_size) : ``} ${baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
               // disabled={!walletState.connected}
               style={{
                 backgroundColor: "transparent",
@@ -549,7 +549,7 @@ const LimitOrderView = ({
               </Form.Label>
               <Form.Label className={styles.formFieldContainerShortWidth}>
                 <span className={styles.fieldTitleContainer}>
-                  <span>{`${spotGridMarket ? justFormatNumbersWithCommas(parseFloat(receiveUptoSize).toFixed(decimalPlacesFromTickSize(spotGridMarket.tick_size))) : justFormatNumbersWithCommas(receiveUptoSize)} ${
+                  <span>{`${phoenixMarket ? justFormatNumbersWithCommas(parseFloat(receiveUptoSize).toFixed(decimalPlacesFromTickSize(phoenixMarket.tick_size))) : justFormatNumbersWithCommas(receiveUptoSize)} ${
                     quoteTokenMetadata ? quoteTokenMetadata.ticker : ``
                   }`}</span>
                 </span>
@@ -566,8 +566,8 @@ const LimitOrderView = ({
                 keyElement={<p>Total fee</p>}
                 keyElementStyle={{}}
                 valueElement={
-                  spotGridMarket ? (
-                    <p>{`${(parseFloat(spotGridMarket.taker_fee_bps) + ROOT_PROTOCOL_FEE_BPS) / 100}%`}</p>
+                  phoenixMarket ? (
+                    <p>{`${(parseFloat(phoenixMarket.taker_fee_bps) + ROOT_PROTOCOL_FEE_BPS) / 100}%`}</p>
                   ) : (
                     <p>{`-%`}</p>
                   )

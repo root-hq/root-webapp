@@ -62,11 +62,11 @@ const OrderView = ({ enumeratedMarket, order }: OrderViewProps) => {
 
     if (
       enumeratedMarket &&
-      enumeratedMarket.spotGridMarket &&
+      enumeratedMarket.phoenixMarket &&
       walletState.connected
     ) {
       let marketAddress =
-        enumeratedMarket.spotGridMarket.phoenix_market_address;
+        enumeratedMarket.phoenixMarket.phoenix_market_address;
 
       let priorityFeeLevels = null;
 
@@ -299,13 +299,13 @@ const OrderView = ({ enumeratedMarket, order }: OrderViewProps) => {
           <span className={styles.columnName}>
             {enumeratedMarket
               ? decimalPlacesFromTickSize(
-                  enumeratedMarket.spotGridMarket.tick_size,
+                  enumeratedMarket.phoenixMarket.tick_size,
                 ) >= 5
                 ? toScientificNotation(floatPrice)
                 : floatPrice.toFixed(
                     decimalPlacesFromTickSize(
                       enumeratedMarket
-                        ? enumeratedMarket.spotGridMarket.tick_size
+                        ? enumeratedMarket.phoenixMarket.tick_size
                         : `0.001`,
                     ),
                   )

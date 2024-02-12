@@ -96,11 +96,11 @@ const OrderManager = ({
 
     if (
       enumeratedMarket &&
-      enumeratedMarket.spotGridMarket &&
+      enumeratedMarket.phoenixMarket &&
       walletState.connected
     ) {
       let marketAddress =
-        enumeratedMarket.spotGridMarket.phoenix_market_address;
+        enumeratedMarket.phoenixMarket.phoenix_market_address;
 
       let priorityFeeLevels = null;
 
@@ -307,7 +307,7 @@ const OrderManager = ({
                 order_sequence_number: bid.orderSequenceNumber,
                 order_type: `LIMIT`,
                 phoenix_market_address:
-                  enumeratedMarket.spotGridMarket.phoenix_market_address,
+                  enumeratedMarket.phoenixMarket.phoenix_market_address,
                 trader: userKey,
                 price_in_ticks: bid.price.toString(),
                 size_in_base_lots: bid.size.toString(),
@@ -325,7 +325,7 @@ const OrderManager = ({
                 order_sequence_number: ask.orderSequenceNumber,
                 order_type: `LIMIT`,
                 phoenix_market_address:
-                  enumeratedMarket.spotGridMarket.phoenix_market_address,
+                  enumeratedMarket.phoenixMarket.phoenix_market_address,
                 trader: userKey,
                 price_in_ticks: ask.price.toString(),
                 size_in_base_lots: ask.size.toString(),
@@ -362,9 +362,9 @@ const OrderManager = ({
 
   useEffect(() => {
     const fetchUserGlobalBalances = async () => {
-      if (enumeratedMarket && enumeratedMarket.spotGridMarket) {
+      if (enumeratedMarket && enumeratedMarket.phoenixMarket) {
         let marketAddress =
-          enumeratedMarket.spotGridMarket.phoenix_market_address;
+          enumeratedMarket.phoenixMarket.phoenix_market_address;
 
         if (walletState.connected) {
           let userState = await getTraderState(

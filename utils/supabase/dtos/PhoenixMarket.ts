@@ -1,4 +1,4 @@
-export interface SpotGridMarket {
+export interface PhoenixMarket {
   phoenix_market_address: string;
   base_token_mint: string;
   quote_token_mint: string;

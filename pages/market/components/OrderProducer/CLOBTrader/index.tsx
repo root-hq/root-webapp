@@ -5,7 +5,7 @@ import {
   getAllOrderTypes,
   getOrderTypeText,
 } from "../../../../../constants";
-import { SpotGridMarket, TokenMetadata } from "../../../../../utils/supabase";
+import { PhoenixMarket, TokenMetadata } from "../../../../../utils/supabase";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
@@ -21,13 +21,13 @@ const LimitOrderView = dynamic(() => import("../components/LimitOrderView"), {
 });
 
 export interface CLOBTraderProps {
-  spotGridMarket: SpotGridMarket;
+  phoenixMarket: PhoenixMarket;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
 }
 
 const CLOBTrader = ({
-  spotGridMarket,
+  phoenixMarket,
   baseTokenMetadata,
   quoteTokenMetadata,
 }: CLOBTraderProps) => {
@@ -96,7 +96,7 @@ const CLOBTrader = ({
 
     updateBalance();
   }, [
-    spotGridMarket,
+    phoenixMarket,
     walletState,
     connection,
     baseTokenMetadata,
@@ -256,7 +256,7 @@ const CLOBTrader = ({
       <div>
         {orderType === OrderType.Limit ? (
           <LimitOrderView
-            spotGridMarket={spotGridMarket}
+            phoenixMarket={phoenixMarket}
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
             nativeSOLBalance={nativeSOLBalance}
@@ -267,7 +267,7 @@ const CLOBTrader = ({
           />
         ) : orderType === OrderType.Market ? (
           <MarketOrderView
-            spotGridMarket={spotGridMarket}
+            phoenixMarket={phoenixMarket}
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
             nativeSOLBalance={nativeSOLBalance}

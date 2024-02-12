@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import {
-  SpotGridMarket,
+  PhoenixMarket,
   TokenMetadata,
 } from "../../../../../../utils/supabase";
 import styles from "./MarketSelectorDropdown.module.css";
@@ -14,9 +14,9 @@ export interface MarketSelectorDropdownProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
   selectedBaseTokenMetadata: TokenMetadata;
   selectedQuoteTokenMetadata: TokenMetadata;
-  topLevelActiveMarketState: SpotGridMarket;
+  topLevelActiveMarketState: PhoenixMarket;
   setTopLevelActiveMarketState: React.Dispatch<
-    React.SetStateAction<SpotGridMarket>
+    React.SetStateAction<PhoenixMarket>
   >;
 }
 
@@ -39,7 +39,7 @@ const MarketSelectorDropdown = ({
   );
 
   const handleMarketChange = (
-    market: SpotGridMarket,
+    market: PhoenixMarket,
     baseMetadata: TokenMetadata,
     quoteMetadata: TokenMetadata,
   ) => {
@@ -148,10 +148,10 @@ const MarketSelectorDropdown = ({
           {enumeratedMarkets.map((enumeratedMarket, index) => (
             <div
               className={styles.otherMarketRowContainer}
-              key={enumeratedMarket.spotGridMarket.phoenix_market_address}
+              key={enumeratedMarket.phoenixMarket.phoenix_market_address}
               onClick={() =>
                 handleMarketChange(
-                  enumeratedMarket.spotGridMarket,
+                  enumeratedMarket.phoenixMarket,
                   enumeratedMarket.baseTokenMetadata,
                   enumeratedMarket.quoteTokenMetadata,
                 )

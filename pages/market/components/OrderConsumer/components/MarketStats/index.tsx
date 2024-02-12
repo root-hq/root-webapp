@@ -5,6 +5,7 @@ import { EnumeratedMarketToMetadata } from "pages/market/[market]";
 import {
   decimalPlacesFromTickSize,
   formatWithCommas,
+  justFormatNumbersWithCommas,
   toScientificNotation,
 } from "utils";
 import { MARKET_STATS_REFRESH_FREQUENCY_IN_MS } from "constants/";
@@ -74,31 +75,39 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
         >
           {!isMobile.current ? (
             <span>
-              {midPrice.current.toFixed(
-                decimalPlacesFromTickSize(
-                  enumeratedMarket
-                    ? enumeratedMarket.spotGridMarket.tick_size
-                    : `0.001`,
-                ),
-              )}
+              {
+                justFormatNumbersWithCommas(
+                  midPrice.current.toFixed(
+                    decimalPlacesFromTickSize(
+                      enumeratedMarket
+                        ? enumeratedMarket.phoenixMarket.tick_size
+                        : `0.001`,
+                    ),
+                  )
+                )
+              }
             </span>
           ) : (
             <span style={{ fontSize: `0.9rem` }}>
               {decimalPlacesFromTickSize(
                 enumeratedMarket
-                  ? enumeratedMarket.spotGridMarket.tick_size
+                  ? enumeratedMarket.phoenixMarket.tick_size
                   : `0.001`,
               ) >= 5 ? (
                 <>{toScientificNotation(midPrice.current)}</>
               ) : (
                 <>
-                  {midPrice.current.toFixed(
-                    decimalPlacesFromTickSize(
-                      enumeratedMarket
-                        ? enumeratedMarket.spotGridMarket.tick_size
-                        : `0.001`,
-                    ),
-                  )}
+                  {
+                    justFormatNumbersWithCommas(
+                      midPrice.current.toFixed(
+                        decimalPlacesFromTickSize(
+                          enumeratedMarket
+                            ? enumeratedMarket.phoenixMarket.tick_size
+                            : `0.001`,
+                        ),
+                      )
+                    )
+                  }
                 </>
               )}
             </span>
@@ -111,7 +120,7 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
           {dailyHigh.toFixed(
             decimalPlacesFromTickSize(
               enumeratedMarket
-                ? enumeratedMarket.spotGridMarket.tick_size
+                ? enumeratedMarket.phoenixMarket.tick_size
                 : `0.001`,
             ),
           )}
@@ -123,7 +132,7 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
           {dailyLow.toFixed(
             decimalPlacesFromTickSize(
               enumeratedMarket
-                ? enumeratedMarket.spotGridMarket.tick_size
+                ? enumeratedMarket.phoenixMarket.tick_size
                 : `0.001`,
             ),
           )}

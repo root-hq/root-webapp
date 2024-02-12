@@ -14,15 +14,15 @@ const FloatingTradeButton = dynamic(
 );
 
 import {
-  SpotGridMarket,
+  PhoenixMarket,
   TokenMetadata,
   getAllTokenMetadata,
 } from "../../utils/supabase";
 
 import {
   getAllMarkets,
-  getMarketForPhoenixMarket,
-} from "../../utils/supabase/SpotGridMarket";
+  getMarket,
+} from "../../utils/supabase/PhoenixMarket";
 
 import { web3 } from "@coral-xyz/anchor";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
@@ -32,21 +32,21 @@ import { useRootState } from "../../components/RootStateContextType";
 import { WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS } from "constants/";
 
 export interface EnumeratedMarketToMetadata {
-  spotGridMarket: SpotGridMarket;
+  phoenixMarket: PhoenixMarket;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
 }
 
 export interface MarketPageProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
-  spotGridMarketOnPage: SpotGridMarket;
+  phoenixMarketOnPage: PhoenixMarket;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
 }
 
 const MarketPage = ({
   enumeratedMarkets,
-  spotGridMarketOnPage,
+  phoenixMarketOnPage,
   baseTokenMetadata,
   quoteTokenMetadata,
 }: MarketPageProps) => {
@@ -61,8 +61,8 @@ const MarketPage = ({
     isMobile,
   } = useRootState();
 
-  const [selectedSpotGridMarket, setSelectedSpotGridMarket] =
-    useState<SpotGridMarket>();
+  const [selectedPhoenixMarket, setSelectedPhoenixMarket] =
+    useState<PhoenixMarket>();
 
   const [marketDataBuffer, setMarketDataBuffer] = useState<Buffer>(null);
 
@@ -76,8 +76,9 @@ const MarketPage = ({
   let lastMessageTimestamp = 0;
 
   useEffect(() => {
-    setSelectedSpotGridMarket((prev) => spotGridMarketOnPage);
-  }, [spotGridMarketOnPage]);
+    console.log("Selected SPM: ", phoenixMarketOnPage);
+    setSelectedPhoenixMarket((prev) => phoenixMarketOnPage);
+  }, [phoenixMarketOnPage]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -97,7 +98,7 @@ const MarketPage = ({
 
   useEffect(() => {
     const setupConnectionBackup = async () => {
-      if (spotGridMarketOnPage) {
+      if (phoenixMarketOnPage) {
         if (!phoenixClient) {
           let endpoint = process.env.RPC_ENDPOINT;
           if (!endpoint) {
@@ -113,7 +114,7 @@ const MarketPage = ({
 
           const client = await Client.create(conn);
 
-          client.addMarket(spotGridMarketOnPage.phoenix_market_address);
+          client.addMarket(phoenixMarketOnPage.phoenix_market_address);
 
           setPhoenixClient(client);
           setConnection(conn);
@@ -124,10 +125,10 @@ const MarketPage = ({
     };
 
     setupConnectionBackup();
-  }, [spotGridMarketOnPage, connection]);
+  }, [phoenixMarketOnPage, connection]);
 
   useEffect(() => {
-    if (spotGridMarketOnPage) {
+    if (phoenixMarketOnPage) {
       const ws = new WebSocket(process.env.WS_ENDPOINT);
 
       ws.onopen = () => {
@@ -137,7 +138,7 @@ const MarketPage = ({
             id: 1,
             method: "accountSubscribe",
             params: [
-              spotGridMarketOnPage.phoenix_market_address,
+              phoenixMarketOnPage.phoenix_market_address,
               {
                 encoding: "base64+zstd",
                 commitment: "processed",
@@ -178,7 +179,7 @@ const MarketPage = ({
         ws.close();
       };
     }
-  }, [spotGridMarketOnPage]);
+  }, [phoenixMarketOnPage]);
 
   useEffect(() => {
     refreshBidsAndAsks(marketDataBuffer);
@@ -198,7 +199,7 @@ const MarketPage = ({
           <div className={styles.orderConsumerChartContainer}>
             <OrderConsumer
               enumeratedMarkets={enumeratedMarkets}
-              selectedSpotGridMarket={selectedSpotGridMarket}
+              selectedPhoenixMarket={selectedPhoenixMarket}
               baseTokenMetadata={baseTokenMetadata}
               quoteTokenMetadata={quoteTokenMetadata}
               connection={connection}
@@ -207,7 +208,7 @@ const MarketPage = ({
         </div>
         <div className={styles.orderProducerContainer}>
           <CLOBTrader
-            spotGridMarket={selectedSpotGridMarket}
+            phoenixMarket={selectedPhoenixMarket}
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
           />
@@ -225,7 +226,7 @@ const MarketPage = ({
       {isMobileTradeModalOpen && isMobile.current ? (
         <div className={styles.mobileTradeModalContainer}>
           <CLOBTrader
-            spotGridMarket={selectedSpotGridMarket}
+            phoenixMarket={selectedPhoenixMarket}
             baseTokenMetadata={baseTokenMetadata}
             quoteTokenMetadata={quoteTokenMetadata}
           />
@@ -253,22 +254,22 @@ const MarketPage = ({
 export const getServerSideProps = async ({ params }) => {
   const { market } = params;
 
-  let spotGridMarketOnPage: SpotGridMarket = null;
+  let phoenixMarketOnPage: PhoenixMarket = null;
   let allTokenMetadata: TokenMetadata[] = null;
   let baseTokenMetadata: TokenMetadata = null;
   let quoteTokenMetadata: TokenMetadata = null;
-  let allSpotGridMarkets: SpotGridMarket[] = [];
+  let allPhoenixMarkets: PhoenixMarket[] = [];
   let enumeratedMarkets: EnumeratedMarketToMetadata[] = [];
 
-  [spotGridMarketOnPage, allTokenMetadata, allSpotGridMarkets] =
+  [phoenixMarketOnPage, allTokenMetadata, allPhoenixMarkets] =
     await Promise.all([
-      getMarketForPhoenixMarket(market),
+      getMarket(market),
       getAllTokenMetadata(),
       getAllMarkets(),
     ]);
 
-  if (allSpotGridMarkets && allSpotGridMarkets.length > 0) {
-    allSpotGridMarkets.forEach((market) => {
+  if (allPhoenixMarkets && allPhoenixMarkets.length > 0) {
+    allPhoenixMarkets.forEach((market) => {
       let baseMetadata = allTokenMetadata.find((value) => {
         return value.mint === market.base_token_mint;
       });
@@ -278,20 +279,20 @@ export const getServerSideProps = async ({ params }) => {
       });
 
       if (
-        market.spot_grid_market_address ===
-        spotGridMarketOnPage.spot_grid_market_address
+        market.phoenix_market_address ===
+        phoenixMarketOnPage.phoenix_market_address
       ) {
         baseTokenMetadata = allTokenMetadata.find((value) => {
-          return value.mint === spotGridMarketOnPage.base_token_mint;
+          return value.mint === phoenixMarketOnPage.base_token_mint;
         });
 
         quoteTokenMetadata = allTokenMetadata.find((value) => {
-          return value.mint === spotGridMarketOnPage.quote_token_mint;
+          return value.mint === phoenixMarketOnPage.quote_token_mint;
         });
       }
 
       enumeratedMarkets.push({
-        spotGridMarket: market,
+        phoenixMarket: market,
         baseTokenMetadata: baseMetadata,
         quoteTokenMetadata: quoteMetadata,
       } as EnumeratedMarketToMetadata);
@@ -300,7 +301,7 @@ export const getServerSideProps = async ({ params }) => {
 
   return {
     props: {
-      spotGridMarketOnPage: spotGridMarketOnPage ? spotGridMarketOnPage : null,
+      phoenixMarketOnPage: phoenixMarketOnPage ? phoenixMarketOnPage : null,
       enumeratedMarkets: enumeratedMarkets ? enumeratedMarkets : null,
       baseTokenMetadata:
         baseTokenMetadata === undefined ? null : baseTokenMetadata,
