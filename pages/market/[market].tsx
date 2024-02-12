@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "./MarketPage.module.css";
-
 const OrderConsumer = dynamic(() => import("./components/OrderConsumer"), {
   ssr: false,
 });
@@ -30,6 +29,10 @@ import { Client } from "@ellipsis-labs/phoenix-sdk";
 import dynamic from "next/dynamic";
 import { useRootState } from "../../components/RootStateContextType";
 import { WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS } from "constants/";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { getWhitelistStatus } from "utils/supabase/UserWhitelist";
+import Link from "next/link";
+import Image from "next/image";
 
 export interface EnumeratedMarketToMetadata {
   phoenixMarket: PhoenixMarket;
@@ -185,68 +188,99 @@ const MarketPage = ({
     refreshBidsAndAsks(marketDataBuffer);
   }, [marketDataBuffer]);
 
+  const walletState = useWallet();
+  const [whitelistStatus, setWhitelistStatus] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkWhitelistStatus = async () => {
+      if(walletState.connected) {
+        const status = await getWhitelistStatus(walletState.publicKey.toString());
+        console.log("Fetched status: ", status);
+        setWhitelistStatus(_ => status);
+      }
+    }
+
+    checkWhitelistStatus();
+  }, [walletState]);
+
   return (
     <div className={styles.mainContainer}>
-      <div
-        className={styles.marketPageContainer}
-        style={{
-          filter: !(isMobile.current && isMobileTradeModalOpen)
-            ? ``
-            : `blur(5px)`,
-        }}
-      >
-        <div className={styles.orderConsumerContainer}>
-          <div className={styles.orderConsumerChartContainer}>
-            <OrderConsumer
-              enumeratedMarkets={enumeratedMarkets}
-              selectedPhoenixMarket={selectedPhoenixMarket}
-              baseTokenMetadata={baseTokenMetadata}
-              quoteTokenMetadata={quoteTokenMetadata}
-              connection={connection}
-            />
-          </div>
-        </div>
-        <div className={styles.orderProducerContainer}>
-          <CLOBTrader
-            phoenixMarket={selectedPhoenixMarket}
-            baseTokenMetadata={baseTokenMetadata}
-            quoteTokenMetadata={quoteTokenMetadata}
-          />
-        </div>
-        <div
-          onClick={() => {
-            handleMobileTradeModalToggle();
-          }}
-        >
-          <FloatingTradeButton
-            isMobileTradeModalOpen={isMobileTradeModalOpen}
-          />
-        </div>
-      </div>
-      {isMobileTradeModalOpen && isMobile.current ? (
-        <div className={styles.mobileTradeModalContainer}>
-          <CLOBTrader
-            phoenixMarket={selectedPhoenixMarket}
-            baseTokenMetadata={baseTokenMetadata}
-            quoteTokenMetadata={quoteTokenMetadata}
-          />
-
+      {
+        walletState && walletState.connected && whitelistStatus ?
+          <div>
           <div
-            onClick={() => {
-              handleMobileTradeModalToggle();
-            }}
+            className={styles.marketPageContainer}
             style={{
-              filter: `none`,
+              filter: !(isMobile.current && isMobileTradeModalOpen)
+                ? ``
+                : `blur(5px)`,
             }}
           >
-            <FloatingTradeButton
-              isMobileTradeModalOpen={isMobileTradeModalOpen}
-            />
+            <div className={styles.orderConsumerContainer}>
+              <div className={styles.orderConsumerChartContainer}>
+                <OrderConsumer
+                  enumeratedMarkets={enumeratedMarkets}
+                  selectedPhoenixMarket={selectedPhoenixMarket}
+                  baseTokenMetadata={baseTokenMetadata}
+                  quoteTokenMetadata={quoteTokenMetadata}
+                  connection={connection}
+                />
+              </div>
+            </div>
+            <div className={styles.orderProducerContainer}>
+              <CLOBTrader
+                phoenixMarket={selectedPhoenixMarket}
+                baseTokenMetadata={baseTokenMetadata}
+                quoteTokenMetadata={quoteTokenMetadata}
+              />
+            </div>
+            <div
+              onClick={() => {
+                handleMobileTradeModalToggle();
+              }}
+            >
+              <FloatingTradeButton
+                isMobileTradeModalOpen={isMobileTradeModalOpen}
+              />
+            </div>
           </div>
-        </div>
-      ) : (
-        <></>
-      )}
+          {isMobileTradeModalOpen && isMobile.current ? (
+            <div className={styles.mobileTradeModalContainer}>
+              <CLOBTrader
+                phoenixMarket={selectedPhoenixMarket}
+                baseTokenMetadata={baseTokenMetadata}
+                quoteTokenMetadata={quoteTokenMetadata}
+              />
+    
+              <div
+                onClick={() => {
+                  handleMobileTradeModalToggle();
+                }}
+                style={{
+                  filter: `none`,
+                }}
+              >
+                <FloatingTradeButton
+                  isMobileTradeModalOpen={isMobileTradeModalOpen}
+                />
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+          </div>
+        :
+          <div className={styles.notEligibleOuterContainer}>
+            <div className={styles.notEligibleContainer}>
+            <span style={{fontSize: !isMobile.current ? `72px` : `48px`, fontWeight: 'bold', textAlign: `center`, color: `#ddd`}}>Root Exchange</span>
+            <span style={{fontSize: !isMobile.current ? `24px` : `18px`, textAlign: `center`, marginTop: `2rem`, color: `#ddd`}}>The best on-chain limit orders on Solana</span>
+            <span style={{fontSize: !isMobile.current ? `20px` : `14px`, textAlign: `center`, marginTop: `4rem`, color: `#ddd`}}>Powered by <Link href="https://x.com/phoenixtrade" target="_blank">@PhoenixTrade</Link></span>
+            <span style={{fontSize: !isMobile.current ? `18px` : `14px`, textAlign: `center`, position: `fixed`, bottom: `50px`, color: `#ddd`}}>
+              DM <Link href="https://x.com/mmdhrumil" target="_blank">@mmdhrumil</Link> or <Link href="https://x.com/roothq_" target="_blank">@roothq_</Link> for early access
+            </span>
+            </div>
+          </div>
+      }
     </div>
   );
 };

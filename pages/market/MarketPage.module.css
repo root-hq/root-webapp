@@ -1,3 +1,18 @@
+.notEligibleContainer {
+  display: flex;
+  flex-direction: row; 
+}
+
+.notEligibleContainer {
+  color: #ddd;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  height: 500px; 
+}
+
 .mobileTradeModalContainer {
   position: fixed;
   width: 100%;
