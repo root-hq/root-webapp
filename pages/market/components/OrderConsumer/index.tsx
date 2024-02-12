@@ -112,7 +112,7 @@ const OrderConsumer = ({
   }, []);
 
   const defaultWidgetProps: Partial<ChartingLibraryWidgetOptions> = {
-    symbol: `${baseTokenMetadata ? baseTokenMetadata.mint : WRAPPED_SOL_MAINNET}/${quoteTokenMetadata ? quoteTokenMetadata.mint : USDC_MAINNET}/${selectedPhoenixMarket ? selectedPhoenixMarket.tick_size : `0.001`}`,
+    symbol: `${baseTokenMetadata ? baseTokenMetadata.mint : WRAPPED_SOL_MAINNET}/${baseTokenMetadata ? baseTokenMetadata.ticker: `SOL`}/${quoteTokenMetadata ? quoteTokenMetadata.mint : USDC_MAINNET}/${quoteTokenMetadata ? quoteTokenMetadata.ticker : `USDC`}/${selectedPhoenixMarket ? selectedPhoenixMarket.tick_size : `0.001`}`,
     interval: `${DEFAULT_RESOLUTION}` as ResolutionString,
     library_path: "/static/charting_library/",
     locale: "en",

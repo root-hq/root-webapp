@@ -153,7 +153,7 @@ export default {
       };
     }
 
-    const [baseMint, quoteMint, tickSize] = symbolAddress.split("/");
+    const [baseMint, baseTicker, quoteMint, quoteTicker, tickSize] = symbolAddress.split("/");
 
     const symbolInfo: SymbolInfo = {
       base_token: baseMint,
@@ -161,7 +161,7 @@ export default {
       address: symbolItem.address,
       ticker: symbolItem.address,
       name: symbolItem.symbol,
-      description: symbolItem.symbol + "/USD",
+      description: `${baseTicker}/${quoteTicker}`,
       type: symbolItem.type,
       session: "24x7",
       timezone: "Etc/UTC",
