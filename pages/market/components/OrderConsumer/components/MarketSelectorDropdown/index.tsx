@@ -29,7 +29,7 @@ const MarketSelectorDropdown = ({
 }: MarketSelectorDropdownProps) => {
   const router = useRouter();
 
-  const dropdownRef = useRef(null);
+  const marketSelectorDropdownRef = useRef(null);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [activeBaseTokenMetadata, setActiveBaseTokenMetadata] = useState(
     selectedBaseTokenMetadata,
@@ -123,7 +123,7 @@ const MarketSelectorDropdown = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (marketSelectorDropdownRef.current && !marketSelectorDropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
     };
@@ -136,7 +136,7 @@ const MarketSelectorDropdown = ({
   }, []);
 
   return (
-    <div className={styles.marketDropdown} ref={dropdownRef}>
+    <div className={styles.marketDropdown} ref={marketSelectorDropdownRef}>
       <button className={styles.dropdownButton} onClick={toggleDropdown}>
         {getTokenPair(activeBaseTokenMetadata, activeQuoteTokenMetadata, true)}
       </button>

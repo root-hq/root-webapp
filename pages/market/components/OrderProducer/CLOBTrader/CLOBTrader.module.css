@@ -21,13 +21,11 @@
   width: 50%;
 }
 
-.buyButton {
+.buyTabButton {
   width: 100%;
   border-radius: 0rem;
   border: none;
   border-top: 3px solid transparent;
-  /* border-left: 1px solid rgba(87, 87, 87, 0.25);
-    border-bottom: 1px solid rgba(87, 87, 87, 0.25); */
   background-color: #12211b;
   color: #3de383;
   font-weight: bolder;
@@ -36,13 +34,11 @@
   cursor: pointer;
 }
 
-.sellButton {
+.sellTabButton {
   width: 100%;
   border-radius: 0rem;
   border: none;
   border-top: 3px solid transparent;
-  /* border-right: 1px solid rgba(87, 87, 87, 0.25);
-    border-bottom: 1px solid rgba(87, 87, 87, 0.25); */
   background-color: #150e11;
   color: #e33d3d;
   font-weight: bolder;
@@ -51,10 +47,18 @@
   cursor: pointer;
 }
 
-.formGroupContainer {
-  margin: 1rem;
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
+.orderTypeFormAndResetFieldsContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 0.75rem;
+  box-sizing: border-box;
+}
+
+.orderTypeFormAndResetFields {
+  width: 100%;
 }
 
 .shortcutButtonsContainer {
@@ -74,124 +78,74 @@
   border-bottom: 0.5px solid rgba(255, 255, 255, 1);
 }
 
-.formLabelAndFieldContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-}
-
-.formLabelAndFieldContainerNoBottomMargin {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
-}
-
-.formLabelAndFieldContainerReceiveUptoSize {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 3rem;
-}
-
-.fieldTitleContainer {
-  display: flex;
-  flex-direction: row;
-  /* justify-content: space-between; */
-  align-items: center;
-}
-
-.tokenImage {
-  border-radius: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-.tokenBalanceContainer {
-  margin: 0.75rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  font-size: 0.8rem;
-}
-
-.userBalance {
-  cursor: pointer;
-}
-
-.userBalance:hover {
-  font-weight: 500;
-}
-
-.formLabelContainer {
-  width: 40%;
-}
-
-.formFieldContainer {
-  width: 40%;
-}
-
-.formFieldContainerShortWidth {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.placeOrderButtonContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
-.placeOrderButton {
+.orderTypeChooseContainer {
   width: 100%;
-  font-size: 1rem;
-  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 1rem;
+}
+
+.dropdownInnerContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   padding: 0.75rem;
-  border: 1px solid transparent;
-  border-radius: 0.25rem;
+  width: 100%;
+}
+
+.dropdownButton {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  background-color: #0a0b0f;
+  color: white;
+  font-size: 0.9rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border-top: 1px solid rgba(87, 87, 87, 0.25);
+  border-left: 1px solid rgba(87, 87, 87, 0.25);
+  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+  border-right: 1px solid rgba(87, 87, 87, 0.25);
+  width: 100%;
+}
+
+.dropdownButtonSecondaryContainer {
+  width: 100%;
+}
+
+.dropdownButtonSecondary {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  position: absolute;
+  background-color: #0a0b0f;
+  color: white;
+  font-size: 0.9rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border: none;
+  border-left: 1px solid rgba(87, 87, 87, 0.25);
+  border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+  border-right: 1px solid rgba(87, 87, 87, 0.25);
+  width: 100%;
+  z-index: 10;
+}
+
+.dropdownButtonSecondary div {
+  display: flex;
+  align-items: center;
   cursor: pointer;
 }
 
-.placeOrderButton:hover {
-  border: 1px solid;
+.dropdownButtonSecondary:hover {
+  background-color: #0f1118;
 }
 
-.tradeInfoContainer {
-  width: 100%;
-  font-size: 0.9rem;
-  opacity: 0.5;
-}
-
-.spinnerBox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
-}
-
-.threeQuarterSpinner {
-  width: 12px;
-  height: 12px;
-  border-top: 3px solid transparent;
-  border-radius: 50%;
-  animation: spin 0.5s linear 0s infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(359deg);
-  }
-}
-
-@media (max-width: 1025px) {
-  .placeOrderButtonContainer {
-    margin-bottom: 4rem;
+@media screen and (max-width: 600px) {
+  .dropdownButtonSecondary {
+    width: 100%;
+    left: 0;
+    border-radius: 0;
   }
 }

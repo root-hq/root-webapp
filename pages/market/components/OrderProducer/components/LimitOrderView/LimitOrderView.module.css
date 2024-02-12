@@ -1,0 +1,123 @@
+
+.limitOrderViewContainer {
+  margin-top: 1rem;
+}
+  .formGroupContainer {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    padding-top: 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  .formLabelAndFieldContainerNoBottomMargin {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+  }
+  
+  .formLabelAndFieldContainerReceiveUptoSize {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: #3de383;
+  }
+  
+  .fieldTitleContainer {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    align-items: center;
+  }
+
+  
+  .tokenBalanceContainer {
+    margin: 0.75rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    font-size: 0.8rem;
+  }
+  
+  .userBalance {
+    cursor: pointer;
+  }
+  
+  .userBalance:hover {
+    font-weight: 500;
+  }
+  
+  .formLabelContainer {
+    width: 40%;
+  }
+  
+  .formFieldContainer {
+    width: 40%;
+  }
+  
+  .formFieldContainerShortWidth {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .placeOrderButtonContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .placeOrderButton {
+    width: 100%;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.75rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+  
+  .placeOrderButton:hover {
+    border: 1px solid;
+  }
+  
+  .tradeInfoContainer {
+    width: 100%;
+    font-size: 0.9rem;
+    opacity: 0.5;
+  }
+  
+  .spinnerBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+  }
+  
+  .threeQuarterSpinner {
+    width: 12px;
+    height: 12px;
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    animation: spin 0.5s linear 0s infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
+  
+  @media (max-width: 1025px) {
+    .placeOrderButtonContainer {
+      margin-bottom: 4rem;
+    }
+  }
