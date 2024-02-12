@@ -1,17 +1,17 @@
 import axios from "axios";
 
 export interface JupiterQuote {
-  inputMint: String;
+  inputMint: string;
   inAmount: number;
-  outputMint: String;
+  outputMint: string;
   outAmount: number;
   priceImpactPct: number;
 }
 
 export interface JupiterSwapParams {
-  userPublicKey: String;
-  inputMint: String;
-  outputMint: String;
+  userPublicKey: string;
+  inputMint: string;
+  outputMint: string;
   amountIn: number;
   slippage: number;
   priorityFeeInMicroLamportsPerUnit: number;

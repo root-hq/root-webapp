@@ -445,7 +445,7 @@ const LimitOrderView = ({
               placeholder={
                 phoenixMarket
                   ? decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 5
-                    ? `0.00001`
+                    ? `0.0001`
                     : phoenixMarket.tick_size
                   : ``
               }
@@ -479,7 +479,7 @@ const LimitOrderView = ({
               </span>
             </Form.Label>
             <Form.Control
-              placeholder={`${phoenixMarket ? (decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 5 ? `0.00001` : phoenixMarket.tick_size) : ``} ${baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
+              placeholder={`${phoenixMarket ? (decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 5 ? `0.0001` : phoenixMarket.tick_size) : ``} ${baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
               // disabled={!walletState.connected}
               style={{
                 backgroundColor: "transparent",
@@ -499,7 +499,7 @@ const LimitOrderView = ({
             />
           </div>
           <div className={styles.tokenBalanceContainer}>
-            {walletState.connected ? (
+            {walletState.connected && !isBuyOrder ? (
               <div className={styles.userBalanceContainer}>
                 <span
                   className={styles.userBalance}
@@ -549,7 +549,7 @@ const LimitOrderView = ({
               </Form.Label>
               <Form.Label className={styles.formFieldContainerShortWidth}>
                 <span className={styles.fieldTitleContainer}>
-                  <span>{`${phoenixMarket ? justFormatNumbersWithCommas(parseFloat(receiveUptoSize).toFixed(decimalPlacesFromTickSize(phoenixMarket.tick_size))) : justFormatNumbersWithCommas(receiveUptoSize)} ${
+                  <span>{`${phoenixMarket ? justFormatNumbersWithCommas(parseFloat(removeCommas(receiveUptoSize)).toFixed(decimalPlacesFromTickSize(phoenixMarket.tick_size))) : justFormatNumbersWithCommas(receiveUptoSize)} ${
                     quoteTokenMetadata ? quoteTokenMetadata.ticker : ``
                   }`}</span>
                 </span>

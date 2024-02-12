@@ -253,7 +253,7 @@ const MarketOrderView = ({
               placeholder={`${
                 phoenixMarket
                   ? decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 5
-                    ? `0.00001`
+                    ? `0.0001`
                     : phoenixMarket.tick_size
                   : ``
               } ${baseTokenMetadata && quoteTokenMetadata ? (isBuyOrder ? quoteTokenMetadata.ticker : baseTokenMetadata.ticker) : ``}`}
@@ -348,7 +348,7 @@ const MarketOrderView = ({
                 keyElementStyle={{}}
                 valueElement={
                   phoenixMarket ? (
-                    <p>{`${(parseFloat(phoenixMarket.taker_fee_bps) + ROOT_PROTOCOL_FEE_BPS) / 100}%`}</p>
+                    <p>{`${(ROOT_PROTOCOL_FEE_BPS) / 100}%`}</p>
                   ) : (
                     <p>{`-%`}</p>
                   )
