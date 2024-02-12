@@ -10,6 +10,7 @@ import styles from "./MarketSelectorDropdown.module.css";
 import Image from "next/image";
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
 import { Form } from "react-bootstrap";
+import { useRootState } from "components/RootStateContextType";
 
 export interface MarketSelectorDropdownProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -29,6 +30,8 @@ const MarketSelectorDropdown = ({
   setTopLevelActiveMarketState,
 }: MarketSelectorDropdownProps) => {
   const router = useRouter();
+
+  const { isMobile } = useRootState();
 
   const marketSelectorDropdownRef = useRef(null);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -161,8 +164,7 @@ const MarketSelectorDropdown = ({
                   style={{
                     backgroundColor: "transparent",
                     border: "1px solid rgba(87, 87, 87, 0.25)",
-                    fontSize: "0.8rem",
-                    fontWeight: "bold",
+                    fontSize: !isMobile.current ? "1.0rem" : "0.8rem",
                     textAlign: "left",
                     color: "#ddd",
                     caretColor: "#ddd",
