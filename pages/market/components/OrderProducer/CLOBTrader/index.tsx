@@ -3,12 +3,10 @@ import styles from "./CLOBTrader.module.css";
 import {
   OrderType,
   getAllOrderTypes,
-  getOrderTypeText
+  getOrderTypeText,
 } from "../../../../../constants";
 import { SpotGridMarket, TokenMetadata } from "../../../../../utils/supabase";
-import {
-  LAMPORTS_PER_SOL,
-} from "@solana/web3.js";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { web3 } from "@coral-xyz/anchor";
@@ -19,7 +17,7 @@ import { useRootState } from "components/RootStateContextType";
 import MarketOrderView from "../components/MarketOrderView";
 
 const LimitOrderView = dynamic(() => import("../components/LimitOrderView"), {
-  ssr: false
+  ssr: false,
 });
 
 export interface CLOBTraderProps {
@@ -107,23 +105,26 @@ const CLOBTrader = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (orderTypeDropdownRef.current && !orderTypeDropdownRef.current.contains(event.target)) {
+      if (
+        orderTypeDropdownRef.current &&
+        !orderTypeDropdownRef.current.contains(event.target)
+      ) {
         setOrderTypeDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   let allOrderTypes = getAllOrderTypes();
 
   const triggerResetFieldsSignal = () => {
-    setResetFieldsCounter(_ => resetFieldsCounter + 1);
-  }
+    setResetFieldsCounter((_) => resetFieldsCounter + 1);
+  };
 
   const handleBuySellToggle = (type: string) => {
     if (type === "buy") {
@@ -135,11 +136,8 @@ const CLOBTrader = ({
     }
   };
 
-  const handleOrderTypeUpdate = (
-    newOrderType: OrderType
-  ) => {
-
-    setOrderType(_ => newOrderType);
+  const handleOrderTypeUpdate = (newOrderType: OrderType) => {
+    setOrderType((_) => newOrderType);
     triggerResetFieldsSignal();
   };
 
@@ -182,8 +180,8 @@ const CLOBTrader = ({
         </div>
       </div>
       <div className={styles.orderTypeFormAndResetFieldsContainer}>
-      <Form className={styles.orderTypeFormAndResetFields}>
-        <Form.Group controlId="formInput">
+        <Form className={styles.orderTypeFormAndResetFields}>
+          <Form.Group controlId="formInput">
             <div className={styles.shortcutButtonsContainer}>
               <div className={styles.resetButtonContainer}>
                 <span
@@ -198,89 +196,89 @@ const CLOBTrader = ({
             </div>
           </Form.Group>
           <Form.Group controlId="formInput">
-            <div className={styles.orderTypeChooseContainer} ref={orderTypeDropdownRef}>
+            <div
+              className={styles.orderTypeChooseContainer}
+              ref={orderTypeDropdownRef}
+            >
               <div
-                  className={styles.dropdownButtonContainer}
-                  onClick={
-                      (e) => {
-                          toggleOrderTypeDropdown(e)
-                      }
-                  }
+                className={styles.dropdownButtonContainer}
+                onClick={(e) => {
+                  toggleOrderTypeDropdown(e);
+                }}
               >
-                  <button className={styles.dropdownButton}>
-                      <div className={styles.dropdownInnerContainer}>
-                          <span>{getOrderTypeText(orderType)}</span>
-                          <div className={styles.caretContainer}>
-                              {isOrderTypeDropdownOpen ? (
-                              <i className="fa-solid fa-caret-up"></i>
-                              ) : (
-                              <i className="fa-solid fa-caret-down"></i>
-                              )}
-                          </div>
-                      </div>
-                  </button>
+                <button className={styles.dropdownButton}>
+                  <div className={styles.dropdownInnerContainer}>
+                    <span>{getOrderTypeText(orderType)}</span>
+                    <div className={styles.caretContainer}>
+                      {isOrderTypeDropdownOpen ? (
+                        <i className="fa-solid fa-caret-up"></i>
+                      ) : (
+                        <i className="fa-solid fa-caret-down"></i>
+                      )}
+                    </div>
+                  </div>
+                </button>
               </div>
               <div>
-                {
-                  isOrderTypeDropdownOpen ?
-                    <div className={styles.dropdownButtonSecondaryContainer}>
-                      {
-                        allOrderTypes.map((type) => {
-                          if(type !== orderType) {
-                            return (
-                              <div className={styles.dropdownButtonSecondaryEntry} key = {type.toString()}>
-                                <button className={styles.dropdownButtonSecondary} onClick={
-                                  (e) => {
-                                      toggleOrderTypeDropdown(e)
-                                      handleOrderTypeUpdate(type)
-                                  }
-                                }>
-                                  <div className={styles.dropdownInnerContainer}>
-                                    <span>{getOrderTypeText(type)}</span>
-                                  </div>
-                                </button>
-                              </div> 
-                            )
-                          }
-                        })
+                {isOrderTypeDropdownOpen ? (
+                  <div className={styles.dropdownButtonSecondaryContainer}>
+                    {allOrderTypes.map((type) => {
+                      if (type !== orderType) {
+                        return (
+                          <div
+                            className={styles.dropdownButtonSecondaryEntry}
+                            key={type.toString()}
+                          >
+                            <button
+                              className={styles.dropdownButtonSecondary}
+                              onClick={(e) => {
+                                toggleOrderTypeDropdown(e);
+                                handleOrderTypeUpdate(type);
+                              }}
+                            >
+                              <div className={styles.dropdownInnerContainer}>
+                                <span>{getOrderTypeText(type)}</span>
+                              </div>
+                            </button>
+                          </div>
+                        );
                       }
-                    </div>
-                  :
-                    <></>
-                }
+                    })}
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
           </Form.Group>
         </Form>
       </div>
       <div>
-        {
-          orderType === OrderType.Limit ?
-          <LimitOrderView 
-              spotGridMarket={spotGridMarket}
-              baseTokenMetadata={baseTokenMetadata}
-              quoteTokenMetadata={quoteTokenMetadata}
-              nativeSOLBalance={nativeSOLBalance}
-              baseTokenBalance={baseTokenBalance}
-              quoteTokenBalance={quoteTokenBalance}
-              isBuyOrder={isBuyOrder}
-              resetFieldsSignal={resetFieldsCounter}
-            />
-        :
-          orderType === OrderType.Market ?
-            <MarketOrderView 
-                spotGridMarket={spotGridMarket}
-                baseTokenMetadata={baseTokenMetadata}
-                quoteTokenMetadata={quoteTokenMetadata}
-                nativeSOLBalance={nativeSOLBalance}
-                baseTokenBalance={baseTokenBalance}
-                quoteTokenBalance={quoteTokenBalance}
-                isBuyOrder={isBuyOrder}
-                resetFieldsSignal={resetFieldsCounter}
-            />
-          :
-            <></>
-        }
+        {orderType === OrderType.Limit ? (
+          <LimitOrderView
+            spotGridMarket={spotGridMarket}
+            baseTokenMetadata={baseTokenMetadata}
+            quoteTokenMetadata={quoteTokenMetadata}
+            nativeSOLBalance={nativeSOLBalance}
+            baseTokenBalance={baseTokenBalance}
+            quoteTokenBalance={quoteTokenBalance}
+            isBuyOrder={isBuyOrder}
+            resetFieldsSignal={resetFieldsCounter}
+          />
+        ) : orderType === OrderType.Market ? (
+          <MarketOrderView
+            spotGridMarket={spotGridMarket}
+            baseTokenMetadata={baseTokenMetadata}
+            quoteTokenMetadata={quoteTokenMetadata}
+            nativeSOLBalance={nativeSOLBalance}
+            baseTokenBalance={baseTokenBalance}
+            quoteTokenBalance={quoteTokenBalance}
+            isBuyOrder={isBuyOrder}
+            resetFieldsSignal={resetFieldsCounter}
+          />
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

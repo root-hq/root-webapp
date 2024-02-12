@@ -123,7 +123,10 @@ const MarketSelectorDropdown = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (marketSelectorDropdownRef.current && !marketSelectorDropdownRef.current.contains(event.target)) {
+      if (
+        marketSelectorDropdownRef.current &&
+        !marketSelectorDropdownRef.current.contains(event.target)
+      ) {
         setDropdownOpen(false);
       }
     };

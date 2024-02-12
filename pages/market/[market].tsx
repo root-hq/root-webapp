@@ -50,18 +50,28 @@ const MarketPage = ({
   baseTokenMetadata,
   quoteTokenMetadata,
 }: MarketPageProps) => {
-  let { phoenixClient, setPhoenixClient, connection, setConnection, refreshBidsAndAsks, innerWidth, innerHeight, isMobile } = useRootState();
+  let {
+    phoenixClient,
+    setPhoenixClient,
+    connection,
+    setConnection,
+    refreshBidsAndAsks,
+    innerWidth,
+    innerHeight,
+    isMobile,
+  } = useRootState();
 
   const [selectedSpotGridMarket, setSelectedSpotGridMarket] =
     useState<SpotGridMarket>();
 
   const [marketDataBuffer, setMarketDataBuffer] = useState<Buffer>(null);
 
-  const [isMobileTradeModalOpen, setIsMobileTradeModalOpen] = useState<boolean>(false);
+  const [isMobileTradeModalOpen, setIsMobileTradeModalOpen] =
+    useState<boolean>(false);
 
   const handleMobileTradeModalToggle = () => {
-    setIsMobileTradeModalOpen(_ => !isMobileTradeModalOpen);
-  }
+    setIsMobileTradeModalOpen((_) => !isMobileTradeModalOpen);
+  };
 
   let lastMessageTimestamp = 0;
 
@@ -78,16 +88,16 @@ const MarketPage = ({
 
     handleResize(); // Call it initially
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   useEffect(() => {
     const setupConnectionBackup = async () => {
-      if (spotGridMarketOnPage) {        
+      if (spotGridMarketOnPage) {
         if (!phoenixClient) {
           let endpoint = process.env.RPC_ENDPOINT;
           if (!endpoint) {
@@ -95,7 +105,7 @@ const MarketPage = ({
           }
 
           let conn = connection;
-          if(!conn) {
+          if (!conn) {
             conn = new web3.Connection(endpoint, {
               commitment: "processed",
             });
@@ -107,8 +117,7 @@ const MarketPage = ({
 
           setPhoenixClient(client);
           setConnection(conn);
-        }
-        else {
+        } else {
           console.log("Root state loaded all fine");
         }
       }
@@ -118,38 +127,46 @@ const MarketPage = ({
   }, [spotGridMarketOnPage, connection]);
 
   useEffect(() => {
-    if(spotGridMarketOnPage) {
+    if (spotGridMarketOnPage) {
       const ws = new WebSocket(process.env.WS_ENDPOINT);
 
       ws.onopen = () => {
-        ws.send(JSON.stringify({
-          jsonrpc: '2.0',
-          id: 1,
-          method: 'accountSubscribe',
-          params: [
-            spotGridMarketOnPage.phoenix_market_address,
-            {
-              "encoding": "base64+zstd",
-              "commitment": "processed"
-            }
-          ]
-        }));
+        ws.send(
+          JSON.stringify({
+            jsonrpc: "2.0",
+            id: 1,
+            method: "accountSubscribe",
+            params: [
+              spotGridMarketOnPage.phoenix_market_address,
+              {
+                encoding: "base64+zstd",
+                commitment: "processed",
+              },
+            ],
+          }),
+        );
       };
 
       // Handle incoming messages
       ws.onmessage = async (event) => {
         const currentTime = Date.now();
         const data = JSON.parse(event.data);
-        if(currentTime - lastMessageTimestamp > WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS) {
-          if (data.method === 'accountNotification') {
+        if (
+          currentTime - lastMessageTimestamp >
+          WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS
+        ) {
+          if (data.method === "accountNotification") {
             const accountData = data.params.result.value;
             if (accountData?.data[0] === undefined) {
               console.log(`Error fetching orderbook data`);
               return;
             }
-  
-            const compressedMarketData = Buffer.from(accountData?.data[0], "base64");
-            setMarketDataBuffer(_ => compressedMarketData);
+
+            const compressedMarketData = Buffer.from(
+              accountData?.data[0],
+              "base64",
+            );
+            setMarketDataBuffer((_) => compressedMarketData);
           }
 
           lastMessageTimestamp = currentTime;
@@ -169,9 +186,12 @@ const MarketPage = ({
 
   return (
     <div className={styles.mainContainer}>
-      <div className={styles.marketPageContainer}
+      <div
+        className={styles.marketPageContainer}
         style={{
-          filter: !(isMobile.current && isMobileTradeModalOpen) ? `` : `blur(5px)`
+          filter: !(isMobile.current && isMobileTradeModalOpen)
+            ? ``
+            : `blur(5px)`,
         }}
       >
         <div className={styles.orderConsumerContainer}>
@@ -194,35 +214,38 @@ const MarketPage = ({
         </div>
         <div
           onClick={() => {
-            handleMobileTradeModalToggle()
+            handleMobileTradeModalToggle();
           }}
         >
-          <FloatingTradeButton isMobileTradeModalOpen = {isMobileTradeModalOpen} />
+          <FloatingTradeButton
+            isMobileTradeModalOpen={isMobileTradeModalOpen}
+          />
         </div>
       </div>
-      {
-        isMobileTradeModalOpen && isMobile.current ?
-          <div className={styles.mobileTradeModalContainer}>
-              <CLOBTrader
-              spotGridMarket={selectedSpotGridMarket}
-              baseTokenMetadata={baseTokenMetadata}
-              quoteTokenMetadata={quoteTokenMetadata}
-              />
+      {isMobileTradeModalOpen && isMobile.current ? (
+        <div className={styles.mobileTradeModalContainer}>
+          <CLOBTrader
+            spotGridMarket={selectedSpotGridMarket}
+            baseTokenMetadata={baseTokenMetadata}
+            quoteTokenMetadata={quoteTokenMetadata}
+          />
 
-            <div
-              onClick={() => {
-                handleMobileTradeModalToggle()
-              }}
-              style={{
-                filter: `none`
-              }}
-            >
-              <FloatingTradeButton isMobileTradeModalOpen = {isMobileTradeModalOpen} />
-            </div>
+          <div
+            onClick={() => {
+              handleMobileTradeModalToggle();
+            }}
+            style={{
+              filter: `none`,
+            }}
+          >
+            <FloatingTradeButton
+              isMobileTradeModalOpen={isMobileTradeModalOpen}
+            />
           </div>
-        :
-          <></>
-      }
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

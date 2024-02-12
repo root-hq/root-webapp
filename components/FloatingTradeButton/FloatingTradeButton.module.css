@@ -1,27 +1,26 @@
 .floatingTradeButtonContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    bottom: 60px;
-    right: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 60px;
+  right: 30px;
 
-    border: 1px solid rgba(87, 87, 87, 1.0);
-    border-radius: 0.25rem;
+  border: 1px solid rgba(87, 87, 87, 1);
+  border-radius: 0.25rem;
 
-    background-color: #ddd;
-    padding: 0.5rem;
-    z-index: 1000;
+  background-color: #ddd;
+  padding: 0.5rem;
+  z-index: 1000;
 
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #000;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #000;
 }
 
 @media only screen and (min-width: 1025px) {
-    .floatingTradeButtonContainer {
-      display: none;
-    }
+  .floatingTradeButtonContainer {
+    display: none;
+  }
 }
-  

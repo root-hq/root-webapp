@@ -12,7 +12,9 @@ import { clusterApiUrl } from "@solana/web3.js";
 import { WalletModalProvider } from "../components/Wallet";
 import { BottomStatusProvider } from "../components/BottomStatus";
 
-const BottomStatusBar = dynamic(() => import("../components/BottomStatus/BottomStatusBar"));
+const BottomStatusBar = dynamic(
+  () => import("../components/BottomStatus/BottomStatusBar"),
+);
 const Header = dynamic(() => import("../components/Header"));
 
 import Script from "next/script";
@@ -74,15 +76,17 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
           </ConnectionProvider>
         </BottomStatusProvider>
       ) : (
-        <div style={{
-          color: `#ddd`,
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-          margin: 'auto'
-        }}>{`Loading data...`}</div>
+        <div
+          style={{
+            color: `#ddd`,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            margin: "auto",
+          }}
+        >{`Loading data...`}</div>
       )}
 
       <link

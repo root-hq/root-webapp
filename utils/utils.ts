@@ -26,9 +26,7 @@ export const formatNumbersWithCommas = (
   }
 };
 
-export const justFormatNumbersWithCommas = (
-  val: string,
-) => {
+export const justFormatNumbersWithCommas = (val: string) => {
   if (val === "") {
     return "";
   }
@@ -44,29 +42,28 @@ export const delay = (time) => {
 };
 
 export const decimalPlacesFromTickSize = (tickSize: string): number => {
-
-  if (tickSize.includes('e')) {
+  if (tickSize.includes("e")) {
     // Splitting the string into base and exponent parts
-    const [base, exponent] = tickSize.split('e');
+    const [base, exponent] = tickSize.split("e");
     // Removing leading zeros from the base
-    const baseWithoutZeros = base.replace(/^0+/, '');
+    const baseWithoutZeros = base.replace(/^0+/, "");
     // Calculating the number of decimal places
     return -1 * parseInt(exponent) + (baseWithoutZeros.length - 1);
   }
-  
+
   // Find the position of the decimal point
-  const decimalPointIndex: number = tickSize.indexOf('.');
-  
+  const decimalPointIndex: number = tickSize.indexOf(".");
+
   // If there is no decimal point, return 0
   if (decimalPointIndex === -1) {
-      return 0;
+    return 0;
   }
-  
+
   // Calculate the number of decimal places
   const decimalPlaces: number = tickSize.length - decimalPointIndex - 1;
-  
+
   return decimalPlaces;
-}
+};
 
 export function toScientificNotation(num: number): string {
   const exponent = Math.floor(Math.log10(Math.abs(num)));

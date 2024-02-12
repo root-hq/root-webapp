@@ -1,16 +1,16 @@
 export enum ManagerView {
-    OpenOrders,
-    Funds,
+  OpenOrders,
+  Funds,
+}
+
+export const getManagerViewText = (managerView: ManagerView) => {
+  if (managerView === ManagerView.OpenOrders) {
+    return "openOrders";
+  } else if (managerView === ManagerView.Funds) {
+    return "funds";
   }
-  
-  export const getManagerViewText = (managerView: ManagerView) => {
-    if (managerView === ManagerView.OpenOrders) {
-      return "openOrders";
-    } else if (managerView === ManagerView.Funds) {
-      return "funds";
-    }
-  };
-  
-  export const getAllManagerView = () => {
-    return [ManagerView.OpenOrders, ManagerView.Funds];
-  };
+};
+
+export const getAllManagerView = () => {
+  return [ManagerView.OpenOrders, ManagerView.Funds];
+};

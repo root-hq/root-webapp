@@ -32,22 +32,30 @@ const FundView = ({
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {walletBalance ? justFormatNumbersWithCommas(walletBalance.toFixed(4)) : "0.0"}
+            {walletBalance
+              ? justFormatNumbersWithCommas(walletBalance.toFixed(4))
+              : "0.0"}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {activeOrdersBalance ? justFormatNumbersWithCommas(activeOrdersBalance.toFixed(4)) : "0.0"}
+            {activeOrdersBalance
+              ? justFormatNumbersWithCommas(activeOrdersBalance.toFixed(4))
+              : "0.0"}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {withdrawableBalance ? justFormatNumbersWithCommas(withdrawableBalance.toFixed(4)) : "0.0"}
+            {withdrawableBalance
+              ? justFormatNumbersWithCommas(withdrawableBalance.toFixed(4))
+              : "0.0"}
           </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>
-            {totalBalance ? justFormatNumbersWithCommas(totalBalance.toFixed(4)) : "0.0"}
+            {totalBalance
+              ? justFormatNumbersWithCommas(totalBalance.toFixed(4))
+              : "0.0"}
           </span>
         </div>
       </div>

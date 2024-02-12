@@ -9,11 +9,9 @@ export interface OrderBookProps {
   enumeratedMarket: EnumeratedMarketToMetadata;
 }
 
-const Orderbook = ({
-  enumeratedMarket
-}: OrderBookProps) => {
-
-  const { bids, asks, midPrice, instantaneousPriceIncrease, spread } = useRootState();
+const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
+  const { bids, asks, midPrice, instantaneousPriceIncrease, spread } =
+    useRootState();
 
   const walletState = useWallet();
 
@@ -29,18 +27,18 @@ const Orderbook = ({
       let bidsSlice = bids.slice(0, 10);
       let asksSlice = asks.slice(-10);
 
-      for(let bid of bidsSlice) {
+      for (let bid of bidsSlice) {
         totalBidDepth += bid.price * bid.size;
       }
 
-      for(let ask of asksSlice) {
+      for (let ask of asksSlice) {
         totalAskDepth += ask.price * ask.size;
       }
 
-      setBidDepth(_ => totalBidDepth);
-      setAskDepth(_ => totalAskDepth);
-      setTotalDepth(_ => totalBidDepth + totalAskDepth);
-    }
+      setBidDepth((_) => totalBidDepth);
+      setAskDepth((_) => totalAskDepth);
+      setTotalDepth((_) => totalBidDepth + totalAskDepth);
+    };
 
     refreshDepth();
   }, [bids, asks]);
@@ -48,122 +46,124 @@ const Orderbook = ({
   const bidSideContainerComponent = useMemo(() => {
     return (
       <div className={styles.bookSideContainer}>
-          {
-            bids && bids.length > 0 ?
-              <div className={styles.l3UiOrderLadder}>
-                {
-                  bids.slice(0, 10).map((order, i) => {
-                    return (
-                      <div className={styles.l3UiBid}
-                        key={order.orderSequenceNumber}
-                        style = {{
-                          backgroundImage: `linear-gradient(to right, transparent ${90 - (((order.price * order.size) / totalDepth) * 100)}%, rgba(61, 227, 131, 0.20) ${(order.price * order.size) / totalDepth}%)`,
+        {bids && bids.length > 0 ? (
+          <div className={styles.l3UiOrderLadder}>
+            {bids.slice(0, 10).map((order, i) => {
+              return (
+                <div
+                  className={styles.l3UiBid}
+                  key={order.orderSequenceNumber}
+                  style={{
+                    backgroundImage: `linear-gradient(to right, transparent ${90 - ((order.price * order.size) / totalDepth) * 100}%, rgba(61, 227, 131, 0.20) ${(order.price * order.size) / totalDepth}%)`,
+                  }}
+                >
+                  <div className={styles.priceAndSize}>
+                    <span className={styles.price}>
+                      <i
+                        className="fa-solid fa-circle"
+                        style={{
+                          fontSize: `0.3rem`,
+                          color:
+                            walletState &&
+                            walletState.connected &&
+                            order.makerPubkey ===
+                              walletState.publicKey.toString()
+                              ? `yellow`
+                              : `transparent`,
+                          marginRight: `0.4rem`,
                         }}
-                      >                        
-                        <div className={styles.priceAndSize}>
-                          <span className={styles.price}>
-                            <i className="fa-solid fa-circle"
-                            style={{
-                              fontSize: `0.3rem`,
-                              color: walletState && walletState.connected && order.makerPubkey === walletState.publicKey.toString() ? `yellow` : `transparent`,
-                              marginRight: `0.4rem`,
-                            }}
-                            ></i>
-                            {
-                              enumeratedMarket ?
-                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >= 5 ?
-                                  toScientificNotation(order.price)
-                                :
-                                  order.price
-                              :
-                                order.price
-                            }
-                          </span>
-                          <span className={styles.size}>
-                            {
-                              enumeratedMarket ?
-                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >= 5 ?
-                                  toScientificNotation(order.size)
-                                :
-                                  order.size
-                              :
-                                order.size
-                            }
-                          </span>
-                        </div>
-                        <div className={styles.totalSize}>
-                          <span>{`${(order.size * order.price).toFixed(2)}`}</span>
-                        </div>
-                      </div>
-                    );
-                  })
-                }
-              </div>
-            :
-              <></>
-          }
-        </div>
-    )
+                      ></i>
+                      {enumeratedMarket
+                        ? decimalPlacesFromTickSize(
+                            enumeratedMarket.spotGridMarket.tick_size,
+                          ) >= 5
+                          ? toScientificNotation(order.price)
+                          : order.price
+                        : order.price}
+                    </span>
+                    <span className={styles.size}>
+                      {enumeratedMarket
+                        ? decimalPlacesFromTickSize(
+                            enumeratedMarket.spotGridMarket.tick_size,
+                          ) >= 5
+                          ? toScientificNotation(order.size)
+                          : order.size
+                        : order.size}
+                    </span>
+                  </div>
+                  <div className={styles.totalSize}>
+                    <span>{`${(order.size * order.price).toFixed(2)}`}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
+    );
   }, [bids]);
 
   const askSideContainerComponent = useMemo(() => {
     return (
       <div className={styles.bookSideContainer}>
-          {
-            asks && asks.length > 0 ?
-              <div className={styles.l3UiOrderLadder}>
-                {
-                  asks.slice(-10).map((order, i) => {
-                    return (
-                      <div
-                        className={styles.l3UiAsk} key={order.orderSequenceNumber}
+        {asks && asks.length > 0 ? (
+          <div className={styles.l3UiOrderLadder}>
+            {asks.slice(-10).map((order, i) => {
+              return (
+                <div
+                  className={styles.l3UiAsk}
+                  key={order.orderSequenceNumber}
+                  style={{
+                    backgroundImage: `linear-gradient(to right, transparent ${90 - ((order.price * order.size) / totalDepth) * 100}%, rgba(227, 61, 61, 0.20) ${(order.price * order.size) / totalDepth}%)`,
+                  }}
+                >
+                  <div className={styles.priceAndSize}>
+                    <span className={styles.price}>
+                      <i
+                        className="fa-solid fa-circle"
                         style={{
-                          backgroundImage: `linear-gradient(to right, transparent ${90 - (((order.price * order.size) / totalDepth) * 100)}%, rgba(227, 61, 61, 0.20) ${(order.price * order.size) / totalDepth}%)`,
+                          fontSize: `0.3rem`,
+                          color:
+                            walletState &&
+                            walletState.connected &&
+                            order.makerPubkey ===
+                              walletState.publicKey.toString()
+                              ? `yellow`
+                              : `transparent`,
+                          marginRight: `0.4rem`,
                         }}
-                      >
-                        <div className={styles.priceAndSize}>
-                          <span className={styles.price}>
-                            <i className="fa-solid fa-circle"
-                            style={{
-                              fontSize: `0.3rem`,
-                              color: walletState && walletState.connected && order.makerPubkey === walletState.publicKey.toString() ? `yellow` : `transparent`,
-                              marginRight: `0.4rem`,
-                            }}
-                            ></i>
-                            {
-                              enumeratedMarket ?
-                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >= 5 ?
-                                  toScientificNotation(order.price)
-                                :
-                                  order.price
-                              :
-                                order.price
-                            }
-                          </span>
-                          <span className={styles.size}>
-                            {
-                              enumeratedMarket ?
-                                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >= 5 ?
-                                  toScientificNotation(order.size)
-                                :
-                                  order.size
-                              :
-                                order.size
-                            }
-                          </span>
-                        </div>
-                        <div className={styles.totalSize}>
-                          <span>{`${(order.size * order.price).toFixed(2)}`}</span>
-                        </div>
-                      </div>
-                    );
-                  })
-                }
-              </div>
-            :
-              <></>
-          }
-        </div>
+                      ></i>
+                      {enumeratedMarket
+                        ? decimalPlacesFromTickSize(
+                            enumeratedMarket.spotGridMarket.tick_size,
+                          ) >= 5
+                          ? toScientificNotation(order.price)
+                          : order.price
+                        : order.price}
+                    </span>
+                    <span className={styles.size}>
+                      {enumeratedMarket
+                        ? decimalPlacesFromTickSize(
+                            enumeratedMarket.spotGridMarket.tick_size,
+                          ) >= 5
+                          ? toScientificNotation(order.size)
+                          : order.size
+                        : order.size}
+                    </span>
+                  </div>
+                  <div className={styles.totalSize}>
+                    <span>{`${(order.size * order.price).toFixed(2)}`}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
     );
   }, [asks]);
 
@@ -172,7 +172,7 @@ const Orderbook = ({
       <div className={styles.bookContainer}>
         <div className={styles.bookTitleContainer}>
           <div className={styles.priceAndSize}>
-            <span style={{marginLeft: `1.5rem`}}>{`Price`}</span>
+            <span style={{ marginLeft: `1.5rem` }}>{`Price`}</span>
             <span>{`Size`}</span>
           </div>
           <div className={styles.totalSize}>
@@ -181,24 +181,31 @@ const Orderbook = ({
         </div>
         {askSideContainerComponent}
         <div className={styles.midPriceAndSpreadContainer}>
-          <div className={styles.midPrice}
-          style={{
-            color: instantaneousPriceIncrease ? `#3DE383` : "#e33d3d",
-            fontWeight: 'bold'
-          }}
+          <div
+            className={styles.midPrice}
+            style={{
+              color: instantaneousPriceIncrease ? `#3DE383` : "#e33d3d",
+              fontWeight: "bold",
+            }}
           >
             <span>{`${midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}`}</span>
           </div>
           <div className={styles.spread}>
             <span>{`
               ${
-              enumeratedMarket ?
-                decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >= 5 ?
-                toScientificNotation(spread.current)
-                :
-                  spread.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))
-              :
-                spread.current
+                enumeratedMarket
+                  ? decimalPlacesFromTickSize(
+                      enumeratedMarket.spotGridMarket.tick_size,
+                    ) >= 5
+                    ? toScientificNotation(spread.current)
+                    : spread.current.toFixed(
+                        decimalPlacesFromTickSize(
+                          enumeratedMarket
+                            ? enumeratedMarket.spotGridMarket.tick_size
+                            : `0.001`,
+                        ),
+                      )
+                  : spread.current
               }`}</span>
           </div>
         </div>
@@ -216,27 +223,23 @@ const Orderbook = ({
               className={styles.bidDepth}
               style={{
                 backgroundColor: `rgba(61, 227, 131, 0.25)`,
-                width: `${(bidDepth * 100 / totalDepth)}%`,
+                width: `${(bidDepth * 100) / totalDepth}%`,
                 display: `flex`,
-                justifyContent: `flex-start`
-              }}  
+                justifyContent: `flex-start`,
+              }}
             >
-              <span> 
-                {`${((bidDepth * 100) / totalDepth).toFixed(2)}%`}
-              </span>
+              <span>{`${((bidDepth * 100) / totalDepth).toFixed(2)}%`}</span>
             </div>
             <div
               className={styles.askDepth}
               style={{
                 backgroundColor: `rgba(227, 61, 61, 0.25)`,
-                width: `${(100 - (bidDepth * 100 / totalDepth))}%`,
+                width: `${100 - (bidDepth * 100) / totalDepth}%`,
                 display: `flex`,
-                justifyContent: `flex-end`
-              }} 
+                justifyContent: `flex-end`,
+              }}
             >
-              <span> 
-              {`${((askDepth * 100) / totalDepth).toFixed(2)}%`}
-              </span>
+              <span>{`${((askDepth * 100) / totalDepth).toFixed(2)}%`}</span>
             </div>
           </div>
         </div>

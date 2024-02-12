@@ -12,14 +12,11 @@ import React from "react";
 import { ChartType } from "constants/";
 
 export interface TVChartContainerProps {
-  props: Partial<ChartingLibraryWidgetOptions>,
-  chartType: ChartType
+  props: Partial<ChartingLibraryWidgetOptions>;
+  chartType: ChartType;
 }
 
-const TVChartContainer = ({
-  props,
-  chartType
-}: TVChartContainerProps) => {
+const TVChartContainer = ({ props, chartType }: TVChartContainerProps) => {
   const chartContainerRef =
     useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
 
@@ -53,10 +50,10 @@ const TVChartContainer = ({
     "header_undo_redo",
     "header_quick_search",
     "study_templates",
-    "legend_widget"
+    "legend_widget",
   ];
 
-  if(chartType === ChartType.Lite) {
+  if (chartType === ChartType.Lite) {
     DEFAULT_DISABLED_FEATURES = [
       "use_localstorage_for_settings",
       "header_symbol_search",
@@ -65,14 +62,14 @@ const TVChartContainer = ({
       "header_quick_search",
       "study_templates",
       "legend_widget",
-      
+
       "header_indicators",
       "left_toolbar",
       "main_series_scale_menu",
       "header_settings",
       "header_chart_type",
       "header_resolutions",
-      "context_menus"
+      "context_menus",
     ];
   }
 
@@ -86,7 +83,10 @@ const TVChartContainer = ({
       library_path: props.library_path,
       locale: props.locale as LanguageCode,
       disabled_features: [...DEFAULT_DISABLED_FEATURES],
-      enabled_features: ["create_volume_indicator_by_default", "header_in_fullscreen_mode"],
+      enabled_features: [
+        "create_volume_indicator_by_default",
+        "header_in_fullscreen_mode",
+      ],
       custom_css_url: cssBlobUrl,
       loading_screen: {
         backgroundColor: "#0B0C11",
@@ -126,10 +126,9 @@ const TVChartContainer = ({
       // 	);
       // 	button.innerHTML = "Check API";
       // });
-      if(chartType === ChartType.Lite) {
+      if (chartType === ChartType.Lite) {
         tvWidget.activeChart().setChartType(3);
-      }
-      else if(chartType === ChartType.Pro) {
+      } else if (chartType === ChartType.Pro) {
         tvWidget.activeChart().setChartType(1);
       }
     });

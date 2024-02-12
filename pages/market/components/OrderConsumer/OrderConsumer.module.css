@@ -36,7 +36,6 @@
   background-color: #0b0c11;
 }
 
-
 .marketSelectorContainer {
   width: 30%;
 }
@@ -96,7 +95,7 @@
 
 .showOrderBookToggle:hover {
   cursor: pointer;
-  color: #fff
+  color: #fff;
 }
 
 .showOrderBookToggleIcon {
@@ -135,9 +134,9 @@
   }
 
   .chartContainer {
-    width: 100%
+    width: 100%;
   }
-    
+
   .orderBookContainer {
     width: 100%;
     margin-left: 0rem;
@@ -165,7 +164,7 @@
   .marketSelectorContainer {
     width: 100%;
   }
-  
+
   .orderManagerContainer {
     /* margin-bottom: 2rem; */
   }

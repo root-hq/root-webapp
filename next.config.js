@@ -4,10 +4,10 @@ const nextConfig = {
     domains: [`raw.githubusercontent.com`, "metadata.jito.network"],
     remotePatterns: [
       {
-         protocol: "https",
-         hostname: "**",
-       },
-      ],
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
   },
   env: {
     DATABASE_SERVER_URL: process.env.DATABASE_SERVER_URL,

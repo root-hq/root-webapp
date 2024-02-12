@@ -23,12 +23,17 @@ const MarketStats = dynamic(() => import("./components/MarketStats"), {
   ssr: false,
 });
 const Orderbook = dynamic(() => import("./components/Orderbook"), {
-  ssr: false
+  ssr: false,
 });
 
 import dynamic from "next/dynamic";
 import { Connection } from "@solana/web3.js";
-import { ChartType, DEFAULT_RESOLUTION, USDC_MAINNET, WRAPPED_SOL_MAINNET } from "constants/";
+import {
+  ChartType,
+  DEFAULT_RESOLUTION,
+  USDC_MAINNET,
+  WRAPPED_SOL_MAINNET,
+} from "constants/";
 
 export interface OrderConsumerProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -55,20 +60,18 @@ const OrderConsumer = ({
   const dummyCounter = useRef<number>(0);
 
   const handleChartTypeToggle = () => {
-    if(chartType === ChartType.Lite) {
-      setChartType(_ => ChartType.Pro);
-      setShowOrderBook(_ => true);
+    if (chartType === ChartType.Lite) {
+      setChartType((_) => ChartType.Pro);
+      setShowOrderBook((_) => true);
+    } else if (chartType === ChartType.Pro) {
+      setChartType((_) => ChartType.Lite);
+      setShowOrderBook((_) => false);
     }
-
-    else if(chartType === ChartType.Pro) {
-      setChartType(_ => ChartType.Lite);
-      setShowOrderBook(_ => false);
-    }
-  }
+  };
 
   const handleShowOrderBookToggle = () => {
-    setShowOrderBook(prev  => !prev);
-  }
+    setShowOrderBook((prev) => !prev);
+  };
 
   useEffect(() => {
     const doStuff = () => {
@@ -91,13 +94,16 @@ const OrderConsumer = ({
   useEffect(() => {
     const incrementer = () => {
       dummyCounter.current += 1;
-    }
+    };
 
     incrementer();
 
-    const intervalId = setInterval(() => {
-      incrementer();
-    }, DEFAULT_RESOLUTION * 1_000 * 60);
+    const intervalId = setInterval(
+      () => {
+        incrementer();
+      },
+      DEFAULT_RESOLUTION * 1_000 * 60,
+    );
 
     return () => clearInterval(intervalId);
   }, []);
@@ -109,22 +115,24 @@ const OrderConsumer = ({
     locale: "en",
     fullscreen: false,
     autosize: true,
-    client_id: "root.exchange"
+    client_id: "root.exchange",
   };
 
-  const memoizedTradingViewChart = useMemo(() => <TVChartContainer props={defaultWidgetProps} chartType={chartType} />, [chartType, selectedSpotGridMarket, dummyCounter.current]);
+  const memoizedTradingViewChart = useMemo(
+    () => <TVChartContainer props={defaultWidgetProps} chartType={chartType} />,
+    [chartType, selectedSpotGridMarket, dummyCounter.current],
+  );
   const memoizedOrderbook = useMemo(() => {
-    return (
-      <Orderbook enumeratedMarket={activeEnumeratedMarket}/>
-    );
+    return <Orderbook enumeratedMarket={activeEnumeratedMarket} />;
   }, [selectedSpotGridMarket, activeEnumeratedMarket]);
 
   return (
     <div className={styles.orderConsumerContainer}>
       <div className={styles.marketDataContainer}>
-        <div className={styles.chartContainer}
-          style = {{
-            width: !showOrderBook ? `100%` : ``
+        <div
+          className={styles.chartContainer}
+          style={{
+            width: !showOrderBook ? `100%` : ``,
           }}
         >
           <div className={styles.marketInfoContainer}>
@@ -138,21 +146,24 @@ const OrderConsumer = ({
               />
             </div>
             <div className={styles.marketStatsContainer}>
-              <MarketStats enumeratedMarket={activeEnumeratedMarket} showOrderBook ={showOrderBook} />
+              <MarketStats
+                enumeratedMarket={activeEnumeratedMarket}
+                showOrderBook={showOrderBook}
+              />
             </div>
           </div>
           <div className={styles.tradingViewChartContainer}>
             {memoizedTradingViewChart}
           </div>
           <div className={styles.toggleContainer}>
-            <div className={styles.chartTypeToggle}
-              onClick={
-                () => {
-                  handleChartTypeToggle()
-                }
-              }
+            <div
+              className={styles.chartTypeToggle}
+              onClick={() => {
+                handleChartTypeToggle();
+              }}
             >
-              <span className={styles.chartTypeTextLite}
+              <span
+                className={styles.chartTypeTextLite}
                 style={{
                   color: chartType === ChartType.Lite ? `#477df2` : ``,
                   fontWeight: chartType === ChartType.Lite ? `bold` : ``,
@@ -160,54 +171,47 @@ const OrderConsumer = ({
               >
                 {`Lite`}
               </span>
-              <span className={styles.chartTypeToggleIcon}><i className="fa-solid fa-right-left"></i></span>
-              <span className={styles.chartTypeTextPro}
+              <span className={styles.chartTypeToggleIcon}>
+                <i className="fa-solid fa-right-left"></i>
+              </span>
+              <span
+                className={styles.chartTypeTextPro}
                 style={{
                   color: chartType === ChartType.Pro ? `#477df2` : ``,
-                  fontWeight: chartType === ChartType.Pro ? `bold` : ``
+                  fontWeight: chartType === ChartType.Pro ? `bold` : ``,
                 }}
               >
                 {`Pro`}
               </span>
             </div>
-            <div className={styles.showOrderBookToggle}
-              onClick={
-                () => {
-                  handleShowOrderBookToggle()
-                }
-              }
+            <div
+              className={styles.showOrderBookToggle}
+              onClick={() => {
+                handleShowOrderBookToggle();
+              }}
               style={{
                 color: showOrderBook ? `#477df2` : ``,
                 // fontWeight: showOrderBook ? `bold` : ``,
               }}
             >
               <span className={styles.showOrderBookToggleIcon}>
-                {
-                  showOrderBook ?
-                    <i
-                    className="fa-solid fa-toggle-on"></i>
-                  :
-                    <i className="fa-solid fa-toggle-off"></i>
-                }
+                {showOrderBook ? (
+                  <i className="fa-solid fa-toggle-on"></i>
+                ) : (
+                  <i className="fa-solid fa-toggle-off"></i>
+                )}
               </span>
-              <span className={styles.showOrderBookText}
-              >
-                {`Orderbook`}
-              </span>
+              <span className={styles.showOrderBookText}>{`Orderbook`}</span>
             </div>
           </div>
         </div>
-        <div className={styles.orderBookContainer}
-          style = {{
-            display: !showOrderBook ? `none` : ``
+        <div
+          className={styles.orderBookContainer}
+          style={{
+            display: !showOrderBook ? `none` : ``,
           }}
         >
-          {
-            showOrderBook ?
-              memoizedOrderbook
-            :
-              <></>
-          }
+          {showOrderBook ? memoizedOrderbook : <></>}
         </div>
       </div>
       <div className={styles.orderManagerOuterContainer}>

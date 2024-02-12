@@ -39,7 +39,7 @@ export const getOpenOrdersForTrader = async (
       let traderKey = book.data.traderIndexToTraderPubkey.get(
         traderIndex.toNumber(),
       );
-      
+
       if (traderKey && traderKey === trader) {
         return {
           order_sequence_number: order[0].orderSequenceNumber,

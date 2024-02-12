@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styles from "./OrderView.module.css";
-import { Order, decimalPlacesFromTickSize, justFormatNumbersWithCommas, toScientificNotation } from "../../../../../../utils";
+import {
+  Order,
+  decimalPlacesFromTickSize,
+  justFormatNumbersWithCommas,
+  toScientificNotation,
+} from "../../../../../../utils";
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
 import Image from "next/image";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useBottomStatus } from "../../../../../../components/BottomStatus";
-import { ComputeBudgetProgram, Connection, LAMPORTS_PER_SOL, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
+import {
+  ComputeBudgetProgram,
+  Connection,
+  LAMPORTS_PER_SOL,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
 import { getPriorityFeeEstimate } from "../../../../../../utils/helius";
 import { BN, web3 } from "@coral-xyz/anchor";
 import {
@@ -17,7 +29,11 @@ import {
 } from "@ellipsis-labs/phoenix-sdk";
 import Link from "next/link";
 import { WRAPPED_SOL_MAINNET } from "constants/";
-import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
+import {
+  createCloseAccountInstruction,
+  createSyncNativeInstruction,
+  getAssociatedTokenAddress,
+} from "@solana/spl-token";
 import { useRootState } from "components/RootStateContextType";
 
 export interface OrderViewProps {
@@ -25,11 +41,9 @@ export interface OrderViewProps {
   order: Order;
 }
 
-const OrderView = ({
-  enumeratedMarket,
-  order,
-}: OrderViewProps) => {
-  let { phoenixClient, setPhoenixClient, connection, setConnection } = useRootState();
+const OrderView = ({ enumeratedMarket, order }: OrderViewProps) => {
+  let { phoenixClient, setPhoenixClient, connection, setConnection } =
+    useRootState();
 
   const [floatPrice, setFloatPrice] = useState(0);
   const [floatSizeInBaseUnits, setFloatSizeInBaseUnits] = useState(0);
@@ -120,51 +134,69 @@ const OrderView = ({
         let wrapSOLIxs: TransactionInstruction[] = [];
         let unwrapSOLIxs: TransactionInstruction[] = [];
 
-        if(enumeratedMarket) {
+        if (enumeratedMarket) {
           let baseTokenMetadata = enumeratedMarket.baseTokenMetadata;
           let quoteTokenMetadata = enumeratedMarket.quoteTokenMetadata;
 
           // Add wrap/unwrap SOL ixs here
-        if((baseTokenMetadata.mint === WRAPPED_SOL_MAINNET || quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET)) {
-          const wSOLAta = await getAssociatedTokenAddress(new web3.PublicKey(WRAPPED_SOL_MAINNET), walletState.publicKey);
+          if (
+            baseTokenMetadata.mint === WRAPPED_SOL_MAINNET ||
+            quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET
+          ) {
+            const wSOLAta = await getAssociatedTokenAddress(
+              new web3.PublicKey(WRAPPED_SOL_MAINNET),
+              walletState.publicKey,
+            );
 
-          let nativeSOLLamports = await connection.getBalance(
-            walletState.publicKey,
-          );
-          let nativeSOLBalance = nativeSOLLamports / LAMPORTS_PER_SOL;
+            let nativeSOLLamports = await connection.getBalance(
+              walletState.publicKey,
+            );
+            let nativeSOLBalance = nativeSOLLamports / LAMPORTS_PER_SOL;
 
-          let balance = parseInt((nativeSOLBalance * 0.99 * Math.pow(10, 9)).toString());
+            let balance = parseInt(
+              (nativeSOLBalance * 0.99 * Math.pow(10, 9)).toString(),
+            );
 
-          let transferIx = SystemProgram.transfer({
-            fromPubkey: walletState.publicKey,
-            toPubkey: wSOLAta,
-            lamports: balance,
-          });
+            let transferIx = SystemProgram.transfer({
+              fromPubkey: walletState.publicKey,
+              toPubkey: wSOLAta,
+              lamports: balance,
+            });
 
-          // sync wrapped SOL balance
-          let syncNativeIx = createSyncNativeInstruction(wSOLAta);
+            // sync wrapped SOL balance
+            let syncNativeIx = createSyncNativeInstruction(wSOLAta);
 
-          wrapSOLIxs.push(transferIx);
-          wrapSOLIxs.push(syncNativeIx);
+            wrapSOLIxs.push(transferIx);
+            wrapSOLIxs.push(syncNativeIx);
 
-          let withdrawIx = createCloseAccountInstruction(
-            wSOLAta,
-            walletState.publicKey,
-            walletState.publicKey
-          );
+            let withdrawIx = createCloseAccountInstruction(
+              wSOLAta,
+              walletState.publicKey,
+              walletState.publicKey,
+            );
 
-          unwrapSOLIxs.push(withdrawIx);
+            unwrapSOLIxs.push(withdrawIx);
+          }
         }
-        }
 
-        for(let ix of wrapSOLIxs) {
+        for (let ix of wrapSOLIxs) {
           transaction.add(ix);
         }
 
-        let priceInTicksBN = new BN(phoenixClient.floatPriceToTicks(parseFloat(order.price_in_ticks), marketAddress));
-        let orderSequenceNumberBN = new BN(parseInt(order.order_sequence_number));
-        if(order.is_buy_order) {
-          orderSequenceNumberBN = (BigInt(2) ** BigInt(64)) - BigInt(order.order_sequence_number) - BigInt(1);
+        let priceInTicksBN = new BN(
+          phoenixClient.floatPriceToTicks(
+            parseFloat(order.price_in_ticks),
+            marketAddress,
+          ),
+        );
+        let orderSequenceNumberBN = new BN(
+          parseInt(order.order_sequence_number),
+        );
+        if (order.is_buy_order) {
+          orderSequenceNumberBN =
+            BigInt(2) ** BigInt(64) -
+            BigInt(order.order_sequence_number) -
+            BigInt(1);
         }
         let cancelOrderIx = phxClient.createCancelMultipleOrdersByIdInstruction(
           {
@@ -195,7 +227,7 @@ const OrderView = ({
         transaction.add(cancelOrderIx);
         transaction.add(withdrawFundsIx);
 
-        for(let ix of unwrapSOLIxs) {
+        for (let ix of unwrapSOLIxs) {
           transaction.add(ix);
         }
 
@@ -228,7 +260,8 @@ const OrderView = ({
     if (enumeratedMarket) {
       let floatPrice = parseFloat(order.price_in_ticks);
       let floatSizeInBaseUnits = parseFloat(order.size_in_base_lots);
-      let floatTotalSizeInQuoteUnits = parseFloat(order.price_in_ticks) * parseFloat(order.size_in_base_lots);
+      let floatTotalSizeInQuoteUnits =
+        parseFloat(order.price_in_ticks) * parseFloat(order.size_in_base_lots);
       let fillSizeInBaseUnits = 0;
 
       setFloatPrice((_) => floatPrice);
@@ -263,7 +296,21 @@ const OrderView = ({
           )}
         </div>
         <div className={styles.columnNameRow}>
-          <span className={styles.columnName}>{enumeratedMarket ? decimalPlacesFromTickSize(enumeratedMarket.spotGridMarket.tick_size) >=5 ? toScientificNotation(floatPrice) : floatPrice.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`)) : floatPrice}</span>
+          <span className={styles.columnName}>
+            {enumeratedMarket
+              ? decimalPlacesFromTickSize(
+                  enumeratedMarket.spotGridMarket.tick_size,
+                ) >= 5
+                ? toScientificNotation(floatPrice)
+                : floatPrice.toFixed(
+                    decimalPlacesFromTickSize(
+                      enumeratedMarket
+                        ? enumeratedMarket.spotGridMarket.tick_size
+                        : `0.001`,
+                    ),
+                  )
+              : floatPrice}
+          </span>
         </div>
         <div className={styles.columnNameRow}>
           <span className={styles.columnName}>

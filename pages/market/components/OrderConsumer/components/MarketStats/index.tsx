@@ -2,10 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarketStats.module.css";
 import { makeApiRequest } from "../../../../../../utils/birdeye/helpers";
 import { EnumeratedMarketToMetadata } from "pages/market/[market]";
-import { decimalPlacesFromTickSize, formatWithCommas, toScientificNotation } from "utils";
 import {
-  MARKET_STATS_REFRESH_FREQUENCY_IN_MS,
-} from "constants/";
+  decimalPlacesFromTickSize,
+  formatWithCommas,
+  toScientificNotation,
+} from "utils";
+import { MARKET_STATS_REFRESH_FREQUENCY_IN_MS } from "constants/";
 import { useRootState } from "components/RootStateContextType";
 
 export interface MarketStatsProps {
@@ -14,7 +16,8 @@ export interface MarketStatsProps {
 }
 
 const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
-  const { midPrice, instantaneousPriceIncrease, innerWidth, isMobile } = useRootState();
+  const { midPrice, instantaneousPriceIncrease, innerWidth, isMobile } =
+    useRootState();
 
   const [dailyHigh, setDailyHigh] = useState<number>(0.0);
   const [dailyLow, setDailyLow] = useState<number>(0.0);
@@ -45,8 +48,7 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
           setDailyVolumeBase((_) => data.vBase);
           setDailyVolumeQuote((_) => data.vQuote);
         }
-      }
-      catch(err) {
+      } catch (err) {
         console.log(`Error refreshing market stats: `, err);
       }
     };
@@ -62,9 +64,7 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
 
   return (
     <div className={styles.marketStatsContainer}>
-      <div className={styles.currentPriceContainer}
-        
-      >
+      <div className={styles.currentPriceContainer}>
         <div
           className={styles.currentPrice}
           style={{
@@ -72,33 +72,76 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
             fontSize: innerWidth.current < 400 ? `0.95rem` : ``,
           }}
         >
-          {
-            !isMobile.current ?
-              <span>{midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</span>
-            :
-              <span style={{fontSize: `0.9rem`}}>
-              {
-                decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`) >= 5 ?
-                  <>{toScientificNotation(midPrice.current)}</>
-                :
-                  <>{midPrice.current.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</>
-              }
-              </span>
-          }
+          {!isMobile.current ? (
+            <span>
+              {midPrice.current.toFixed(
+                decimalPlacesFromTickSize(
+                  enumeratedMarket
+                    ? enumeratedMarket.spotGridMarket.tick_size
+                    : `0.001`,
+                ),
+              )}
+            </span>
+          ) : (
+            <span style={{ fontSize: `0.9rem` }}>
+              {decimalPlacesFromTickSize(
+                enumeratedMarket
+                  ? enumeratedMarket.spotGridMarket.tick_size
+                  : `0.001`,
+              ) >= 5 ? (
+                <>{toScientificNotation(midPrice.current)}</>
+              ) : (
+                <>
+                  {midPrice.current.toFixed(
+                    decimalPlacesFromTickSize(
+                      enumeratedMarket
+                        ? enumeratedMarket.spotGridMarket.tick_size
+                        : `0.001`,
+                    ),
+                  )}
+                </>
+              )}
+            </span>
+          )}
         </div>
       </div>
       <div className={styles.marketStat}>
         <div className={styles.statKey}>24h High</div>
-        <div className={styles.statValue}>{dailyHigh.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</div>
+        <div className={styles.statValue}>
+          {dailyHigh.toFixed(
+            decimalPlacesFromTickSize(
+              enumeratedMarket
+                ? enumeratedMarket.spotGridMarket.tick_size
+                : `0.001`,
+            ),
+          )}
+        </div>
       </div>
       <div className={styles.marketStat}>
         <div className={styles.statKey}>24h Low</div>
-        <div className={styles.statValue}>{dailyLow.toFixed(decimalPlacesFromTickSize(enumeratedMarket ? enumeratedMarket.spotGridMarket.tick_size : `0.001`))}</div>
+        <div className={styles.statValue}>
+          {dailyLow.toFixed(
+            decimalPlacesFromTickSize(
+              enumeratedMarket
+                ? enumeratedMarket.spotGridMarket.tick_size
+                : `0.001`,
+            ),
+          )}
+        </div>
       </div>
       <div className={styles.marketStat}>
-        <div className={styles.statKey}>24h volume({`${enumeratedMarket ? enumeratedMarket.quoteTokenMetadata.ticker : ``}`})</div>
+        <div className={styles.statKey}>
+          24h volume(
+          {`${enumeratedMarket ? enumeratedMarket.quoteTokenMetadata.ticker : ``}`}
+          )
+        </div>
         <div className={styles.statValue}>
-          {formatWithCommas(((dailyVolumeBase * (dailyHigh + dailyLow / 2.0)) + dailyVolumeQuote).toFixed(2))}
+          {formatWithCommas(
+            (
+              dailyVolumeBase * (dailyHigh + dailyLow / 2.0) +
+              dailyVolumeQuote
+            ).toFixed(2),
+          )}
         </div>
       </div>
     </div>
