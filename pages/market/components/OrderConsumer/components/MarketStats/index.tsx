@@ -14,7 +14,7 @@ export interface MarketStatsProps {
 }
 
 const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
-  const { midPrice, instantaneousPriceIncrease } = useRootState();
+  const { midPrice, instantaneousPriceIncrease, innerWidth, isMobile } = useRootState();
 
   const [dailyHigh, setDailyHigh] = useState<number>(0.0);
   const [dailyLow, setDailyLow] = useState<number>(0.0);
@@ -60,26 +60,6 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
     return () => clearInterval(intervalId);
   }, [enumeratedMarket]);
 
-  const [isMobile, setIsMobile] = useState(false);
-  const [windowWidth, setWindowWidth] = useState<number>(0.0);
-  const [windowHeight, setWindowHeight] = useState<number>(0.0);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(_ => window.innerWidth);
-      setWindowHeight(_ => window.innerHeight);
-      setIsMobile(window.innerWidth <= 700); // Adjust the max-width according to your preference
-    };
-
-    handleResize(); // Call it initially
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
   return (
     <div className={styles.marketStatsContainer}>
       <div className={styles.currentPriceContainer}
@@ -89,7 +69,7 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
           className={styles.currentPrice}
           style={{
             color: instantaneousPriceIncrease ? `#3DE383` : "#e33d3d",
-            fontSize: windowWidth < 400 ? `0.95rem` : ``,
+            fontSize: innerWidth.current < 400 ? `0.95rem` : ``,
           }}
         >
           {

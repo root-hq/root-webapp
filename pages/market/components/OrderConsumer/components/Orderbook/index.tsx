@@ -208,19 +208,32 @@ const Orderbook = ({
         <div className={styles.orderSkewnessContainer}>
           <div
             className={styles.orderSkewness}
-            style={{
-              backgroundImage: bidDepth > askDepth ?
-                `linear-gradient(to right, rgba(61, 227, 131, 0.25) ${(bidDepth * 100) / totalDepth}%, rgba(227, 61, 61, 0.25) ${(100 - ((bidDepth * 100) / totalDepth))}%)`
-              :
-              `linear-gradient(to right, rgba(61, 227, 131, 0.25) ${100 - ((bidDepth * 100) / totalDepth)}%, rgba(227, 61, 61, 0.25) ${(((bidDepth * 100) / totalDepth))}%)`,
-            }}
+            // style={{
+            //   backgroundImage:                 `linear-gradient(to right, rgba(61, 227, 131, 0.25) ${(bidDepth * 100) / totalDepth}%, rgba(227, 61, 61, 0.25) ${(100 - ((bidDepth * 100) / totalDepth))}%)`
+            // }}
           >
-            <div className={styles.bidDepth}>
+            <div
+              className={styles.bidDepth}
+              style={{
+                backgroundColor: `rgba(61, 227, 131, 0.25)`,
+                width: `${(bidDepth * 100 / totalDepth)}%`,
+                display: `flex`,
+                justifyContent: `flex-start`
+              }}  
+            >
               <span> 
                 {`${((bidDepth * 100) / totalDepth).toFixed(2)}%`}
               </span>
             </div>
-            <div className={styles.askDepth}>
+            <div
+              className={styles.askDepth}
+              style={{
+                backgroundColor: `rgba(227, 61, 61, 0.25)`,
+                width: `${(100 - (bidDepth * 100 / totalDepth))}%`,
+                display: `flex`,
+                justifyContent: `flex-end`
+              }} 
+            >
               <span> 
               {`${((askDepth * 100) / totalDepth).toFixed(2)}%`}
               </span>

@@ -85,15 +85,23 @@
 .formLabelAndFieldContainerNoBottomMargin {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+}
+
+.formLabelAndFieldContainerReceiveUptoSize {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
 }
 
 .fieldTitleContainer {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
 }
 
@@ -123,7 +131,12 @@
 }
 
 .formFieldContainer {
-  width: 60%;
+  width: 40%;
+}
+
+.formFieldContainerShortWidth {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .placeOrderButtonContainer {

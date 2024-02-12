@@ -50,7 +50,7 @@ const MarketPage = ({
   baseTokenMetadata,
   quoteTokenMetadata,
 }: MarketPageProps) => {
-  let { phoenixClient, setPhoenixClient, connection, setConnection, refreshBidsAndAsks } = useRootState();
+  let { phoenixClient, setPhoenixClient, connection, setConnection, refreshBidsAndAsks, innerWidth, innerHeight, isMobile } = useRootState();
 
   const [selectedSpotGridMarket, setSelectedSpotGridMarket] =
     useState<SpotGridMarket>();
@@ -68,6 +68,22 @@ const MarketPage = ({
   useEffect(() => {
     setSelectedSpotGridMarket((prev) => spotGridMarketOnPage);
   }, [spotGridMarketOnPage]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      innerWidth.current = window.innerWidth;
+      innerHeight.current = window.innerHeight;
+      isMobile.current = window.innerWidth <= 700;
+    };
+
+    handleResize(); // Call it initially
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const setupConnectionBackup = async () => {

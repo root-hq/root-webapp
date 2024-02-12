@@ -13,6 +13,9 @@ interface RootStateContextType {
     midPrice: MutableRefObject<number>;
     spread: MutableRefObject<number>;
     instantaneousPriceIncrease: boolean;
+    innerWidth: MutableRefObject<number>;
+    innerHeight: MutableRefObject<number>;
+    isMobile: MutableRefObject<boolean>;
     refreshBidsAndAsks: (zstdEncodedBuffer: Buffer) => void;
     setConnection: (newConn: web3.Connection) => void;
     setPhoenixClient: (newClient: Client) => void;
@@ -36,6 +39,9 @@ export const RootStateProvider = ({ children }) => {
     const [asks, setAsks] = useState<L3UiOrder[]>([]);
     const midPrice = useRef<number>(0.0);
     const spread = useRef<number>(0.0);
+    const innerWidth = useRef<number>(0.0);
+    const innerHeight = useRef<number>(0.0);
+    const isMobile = useRef<boolean>(false);
     const [instantaneousPriceIncrease, setInstantaneousPriceIncrease] = useState<boolean>(true);
 
     const loadConnection = async () => {
@@ -97,6 +103,9 @@ export const RootStateProvider = ({ children }) => {
         midPrice,
         spread,
         instantaneousPriceIncrease,
+        innerWidth,
+        innerHeight,
+        isMobile,
         refreshBidsAndAsks,
         setConnection,
         setPhoenixClient

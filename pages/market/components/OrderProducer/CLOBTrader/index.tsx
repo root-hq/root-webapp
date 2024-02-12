@@ -16,7 +16,7 @@ import {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { TOKEN_PROGRAM_ID, createCloseAccountInstruction, createSyncNativeInstruction, createTransferInstruction, getAssociatedTokenAddress, getMinimumBalanceForRentExemptAccount } from "@solana/spl-token";
 import { web3 } from "@coral-xyz/anchor";
-import { decimalPlacesFromTickSize, formatNumbersWithCommas, removeCommas } from "../../../../../utils";
+import { decimalPlacesFromTickSize, formatNumbersWithCommas, justFormatNumbersWithCommas, removeCommas } from "../../../../../utils";
 import { Button, Form } from "react-bootstrap";
 import dynamic from "next/dynamic";
 const KeyValueComponent = dynamic(
@@ -162,6 +162,12 @@ const CLOBTrader = ({
   const handleLimitPriceChange = (e) => {
     e.preventDefault();
 
+    console.log("target value: ", e.target.value);
+
+    if(sendUptoSize === undefined || e.target.value === ``){
+      setReceiveUptoSize(_ => ``);
+    }
+
     const limitPrice = removeCommas(e.target.value);
 
     let limitPriceFloat = parseFloat(limitPrice);
@@ -171,20 +177,15 @@ const CLOBTrader = ({
       sendUptoSizeFloat = parseFloat(sendUptoSize);
     }
 
-    let receiveUptoSizeFLoat = 0.0;
-    if (receiveUptoSize) {
-      receiveUptoSizeFLoat = parseFloat(receiveUptoSize);
-    }
-
     if (limitPriceFloat && sendUptoSizeFloat) {
       let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps);
 
       if (isBuyOrder) {
         let receivingAmount =
-          parseFloat(removeCommas(sendUptoSize)) /
-          parseFloat(removeCommas(limitPrice));
+          sendUptoSizeFloat *
+          limitPriceFloat;
         let amountPostFee =
-          receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+          receivingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
 
         formatNumbersWithCommas(
           amountPostFee.toFixed(baseTokenMetadata.decimals),
@@ -192,40 +193,14 @@ const CLOBTrader = ({
         );
       } else {
         let receivingAmount =
-          parseFloat(removeCommas(sendUptoSize)) *
-          parseFloat(removeCommas(limitPrice));
+        sendUptoSizeFloat *
+          limitPriceFloat;
         let amountPostFee =
           receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
 
         formatNumbersWithCommas(
           amountPostFee.toFixed(quoteTokenMetadata.decimals),
           setReceiveUptoSize,
-        );
-      }
-    }
-
-    if (limitPriceFloat && receiveUptoSizeFLoat) {
-      let takerFeeBps = parseFloat(spotGridMarket.taker_fee_bps);
-
-      if (isBuyOrder) {
-        let sendingAmount =
-          parseFloat(removeCommas(receiveUptoSize)) *
-          parseFloat(removeCommas(limitPrice));
-        let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
-
-        formatNumbersWithCommas(
-          amountPostFee.toFixed(baseTokenMetadata.decimals),
-          setSendUptoSize,
-        );
-      } else {
-        let sendingAmount =
-          parseFloat(removeCommas(receiveUptoSize)) /
-          parseFloat(removeCommas(limitPrice));
-        let amountPostFee = sendingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
-
-        formatNumbersWithCommas(
-          amountPostFee.toFixed(quoteTokenMetadata.decimals),
-          setSendUptoSize,
         );
       }
     }
@@ -237,6 +212,10 @@ const CLOBTrader = ({
   const handleSendUptoSizeChange = (e?: any, size?: any) => {
     if (e) {
       e.preventDefault();
+    }
+
+    if(size === undefined || limitPrice === undefined){
+      setReceiveUptoSize(_ => ``);
     }
 
     let sendUptoSize;
@@ -264,7 +243,7 @@ const CLOBTrader = ({
           parseFloat(removeCommas(sendUptoSize)) *
           parseFloat(removeCommas(limitPrice));
         let amountPostFee =
-          receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
+          receivingAmount * ((MAX_BPS + takerFeeBps) / MAX_BPS);
 
         formatNumbersWithCommas(
           amountPostFee.toFixed(baseTokenMetadata.decimals),
@@ -272,7 +251,7 @@ const CLOBTrader = ({
         );
       } else {
         let receivingAmount =
-          parseFloat(removeCommas(sendUptoSize)) /
+          parseFloat(removeCommas(sendUptoSize)) *
           parseFloat(removeCommas(limitPrice));
         let amountPostFee =
           receivingAmount * ((MAX_BPS - takerFeeBps) / MAX_BPS);
@@ -571,7 +550,7 @@ const CLOBTrader = ({
           </div>
         </Form.Group>
         <Form.Group controlId="formInput" className={styles.formGroupContainer}>
-          <div className={styles.formLabelAndFieldContainer}>
+          <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
             <Form.Label className={styles.formLabelContainer}>
               <span>Limit price</span>
             </Form.Label>
@@ -660,6 +639,30 @@ const CLOBTrader = ({
               </div>
             )}
           </div>
+        </Form.Group>
+        <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+          {
+            receiveUptoSize ?
+              <div className={styles.formLabelAndFieldContainerReceiveUptoSize}>
+                <Form.Label className={styles.formLabelContainer}>
+                  <span className={styles.fieldTitleContainer}>
+                    <span>{isBuyOrder ? `Pay upto` : `Receive upto`}</span>
+                  </span>
+                </Form.Label>
+                <Form.Label className={styles.formFieldContainerShortWidth}>
+                  <span className={styles.fieldTitleContainer}>
+                    <span>{`${spotGridMarket ? justFormatNumbersWithCommas(parseFloat(receiveUptoSize).toFixed(decimalPlacesFromTickSize(spotGridMarket.tick_size))) : justFormatNumbersWithCommas(receiveUptoSize)} ${
+                      quoteTokenMetadata ?
+                          quoteTokenMetadata.ticker
+                      :
+                        ``
+                    }`}</span>
+                  </span>
+                </Form.Label>
+              </div>
+            :
+              <div></div>
+          }
         </Form.Group>
         <Form.Group controlId="formInput" className={styles.formGroupContainer}>
           <div className={styles.tradeInfoContainer}>

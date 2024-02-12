@@ -229,16 +229,30 @@ const OrderManager = ({
           connection,
           { skipPreflight: true },
         );
-        green(
-          <span>
-            {`All orders cancelled `}
-            <Link
-              href={`https://solscan.io/tx/${response}`}
-              target="_blank"
-            >{` ↗️`}</Link>
-          </span>,
-          3_000,
-        );
+        if(activeManagerView === ManagerView.OpenOrders) {
+          green(
+            <span>
+              {`All orders cancelled `}
+              <Link
+                href={`https://solscan.io/tx/${response}`}
+                target="_blank"
+              >{` ↗️`}</Link>
+            </span>,
+            3_000,
+          );
+        }
+        else if(activeManagerView === ManagerView.Funds) {
+          green(
+            <span>
+              {`All funds withdrawn `}
+              <Link
+                href={`https://solscan.io/tx/${response}`}
+                target="_blank"
+              >{` ↗️`}</Link>
+            </span>,
+            3_000,
+          );
+        }
         // console.log("Signature: ", response);
       } catch (err) {
         // console.log(`Error placing cancel all request: ${err}`);
