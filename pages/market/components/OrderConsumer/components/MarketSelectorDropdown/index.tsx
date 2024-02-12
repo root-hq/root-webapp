@@ -9,6 +9,7 @@ import {
 import styles from "./MarketSelectorDropdown.module.css";
 import Image from "next/image";
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
+import { Form } from "react-bootstrap";
 
 export interface MarketSelectorDropdownProps {
   enumeratedMarkets: EnumeratedMarketToMetadata[];
@@ -37,12 +38,14 @@ const MarketSelectorDropdown = ({
   const [activeQuoteTokenMetadata, setActiveQuoteTokenMetadata] = useState(
     selectedQuoteTokenMetadata,
   );
+  const [searchText, setSearchText] = useState("");
 
   const handleMarketChange = (
     market: PhoenixMarket,
     baseMetadata: TokenMetadata,
     quoteMetadata: TokenMetadata,
   ) => {
+    setSearchText(_ => "");
     setTopLevelActiveMarketState(market);
     setDropdownOpen(false);
     setActiveBaseTokenMetadata(baseMetadata);
@@ -50,6 +53,10 @@ const MarketSelectorDropdown = ({
     // Redirect to the desired URL for the selected market
     router.push(`/market/${market.phoenix_market_address}`);
   };
+  
+  const handleSearchTextChange = (e) => {
+    setSearchText(_ => e.target.value.toLowerCase());
+  }
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -145,7 +152,38 @@ const MarketSelectorDropdown = ({
       </button>
       {isDropdownOpen && (
         <div className={styles.dropdownContent}>
-          {enumeratedMarkets.map((enumeratedMarket, index) => (
+          <div className={styles.tokenSearchContainer}>
+            <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+              <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
+                <Form.Control
+                  placeholder={`Search token`}
+                  // disabled={!walletState.connected}
+                  style={{
+                    backgroundColor: "transparent",
+                    border: "1px solid rgba(87, 87, 87, 0.25)",
+                    fontSize: "0.8rem",
+                    fontWeight: "bold",
+                    textAlign: "left",
+                    color: "#ddd",
+                    caretColor: "#ddd",
+                    margin: "0.5rem",
+                    padding: "0.5rem"
+                  }}
+                  min="0"
+                  step="0.01" // Allow any decimal value
+                  className={styles.formFieldContainer}
+                  onChange={(e) => handleSearchTextChange(e)}
+                  value={searchText} // Use inputText instead of inputAmount to show the decimal value
+                />
+              </div>
+          </Form.Group>
+          </div>
+          {enumeratedMarkets.filter(
+            (market) => (
+              (market.baseTokenMetadata.ticker.toLowerCase().includes(searchText) || market.quoteTokenMetadata.ticker.toLowerCase().includes(searchText)) ||
+              (market.baseTokenMetadata.name.toLowerCase().includes(searchText) || market.quoteTokenMetadata.name.toLowerCase().includes(searchText))
+            )
+          ).map((enumeratedMarket, index) => (
             <div
               className={styles.otherMarketRowContainer}
               key={enumeratedMarket.phoenixMarket.phoenix_market_address}
