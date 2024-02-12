@@ -73,7 +73,7 @@ const MarketPage = ({
     const handleResize = () => {
       innerWidth.current = window.innerWidth;
       innerHeight.current = window.innerHeight;
-      isMobile.current = window.innerWidth <= 700;
+      isMobile.current = window.innerWidth <= 1025;
     };
 
     handleResize(); // Call it initially
@@ -171,7 +171,7 @@ const MarketPage = ({
     <div className={styles.mainContainer}>
       <div className={styles.marketPageContainer}
         style={{
-          filter: !isMobileTradeModalOpen ? `` : `blur(5px)`
+          filter: !(isMobile.current && isMobileTradeModalOpen) ? `` : `blur(5px)`
         }}
       >
         <div className={styles.orderConsumerContainer}>
@@ -201,7 +201,7 @@ const MarketPage = ({
         </div>
       </div>
       {
-        isMobileTradeModalOpen ?
+        isMobileTradeModalOpen && isMobile.current ?
           <div className={styles.mobileTradeModalContainer}>
               <CLOBTrader
               spotGridMarket={selectedSpotGridMarket}
