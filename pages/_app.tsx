@@ -48,6 +48,8 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
       <Head>
         <title>Root - Best limit orders on Solana</title>
         <link rel="icon" href="/images/root-logo.png" />
+        <meta property="og:title" content="Root Exchange" />
+        <meta property="og:description" content="Best on-chain limit orders on Solana" />
       </Head>
 
       <Script
