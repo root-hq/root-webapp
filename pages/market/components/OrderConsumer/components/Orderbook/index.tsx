@@ -209,7 +209,10 @@ const Orderbook = ({
           <div
             className={styles.orderSkewness}
             style={{
-              backgroundImage: `linear-gradient(to right, rgba(61, 227, 131, 0.25) ${(bidDepth * 100) / totalDepth}%, rgba(227, 61, 61, 0.25) ${(100 - ((bidDepth * 100) / totalDepth))}%)`,
+              backgroundImage: bidDepth > askDepth ?
+                `linear-gradient(to right, rgba(61, 227, 131, 0.25) ${(bidDepth * 100) / totalDepth}%, rgba(227, 61, 61, 0.25) ${(100 - ((bidDepth * 100) / totalDepth))}%)`
+              :
+              `linear-gradient(to right, rgba(61, 227, 131, 0.25) ${100 - ((bidDepth * 100) / totalDepth)}%, rgba(227, 61, 61, 0.25) ${(((bidDepth * 100) / totalDepth))}%)`,
             }}
           >
             <div className={styles.bidDepth}>
