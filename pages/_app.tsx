@@ -11,6 +11,7 @@ import { clusterApiUrl } from "@solana/web3.js";
 
 import { WalletModalProvider } from "../components/Wallet";
 import { BottomStatusProvider } from "../components/BottomStatus";
+import { Analytics } from '@vercel/analytics/react';
 
 const BottomStatusBar = dynamic(
   () => import("../components/BottomStatus/BottomStatusBar"),
@@ -71,6 +72,9 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
                   <Component {...pageProps} />
                   <div>
                     <BottomStatusBar />
+                  </div>
+                  <div>
+                    <Analytics />
                   </div>
                 </RootStateProvider>
               </WalletModalProvider>
