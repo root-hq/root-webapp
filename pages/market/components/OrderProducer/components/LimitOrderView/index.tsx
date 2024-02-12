@@ -91,14 +91,14 @@ const LimitOrderView = ({
     }
   }, [receiveUptoSize]);
 
-  useEffect(() => {
-    const handleResetAllFields = () => {
-      setLimitPrice("");
-      setSendUptoSize("");
-      setReceiveUptoSize("");
-      resetStatus();
-    };
+  const handleResetAllFields = () => {
+    setLimitPrice("");
+    setSendUptoSize("");
+    setReceiveUptoSize("");
+    resetStatus();
+  };
 
+  useEffect(() => {
     handleResetAllFields();
   }, [resetFieldsSignal]);
 
@@ -427,6 +427,7 @@ const LimitOrderView = ({
           // console.log(`Error sending limit sell order: ${err}`);
           red(<span>{`Failed: ${err.message}`}</span>, 2_000);
         }
+        handleResetAllFields();
       }
     }
 

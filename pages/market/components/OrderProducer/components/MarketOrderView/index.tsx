@@ -24,6 +24,7 @@ import { BN } from "@coral-xyz/anchor";
 import { VersionedTransaction } from "@solana/web3.js";
 import { useRootState } from "components/RootStateContextType";
 import { fetchQuote, swapOnJupiterTx } from "utils/jupiter";
+import Link from "next/link";
 
 export interface MarketOrderViewProps {
   phoenixMarket: PhoenixMarket;
@@ -73,14 +74,14 @@ const MarketOrderView = ({
     }
   }, [receiveUptoSize]);
 
-  useEffect(() => {
-    const handleResetAllFields = () => {
-      setLimitPrice("");
-      setSendUptoSize("");
-      setReceiveUptoSize("");
-      resetStatus();
-    };
+  const handleResetAllFields = () => {
+    setLimitPrice("");
+    setSendUptoSize("");
+    setReceiveUptoSize("");
+    resetStatus();
+  };
 
+  useEffect(() => {
     handleResetAllFields();
   }, [resetFieldsSignal]);
 
@@ -188,20 +189,22 @@ const MarketOrderView = ({
         );
         green(
           <span>
-            <a
+            {`Order placed `}
+            <Link
               href={`https://solscan.io/tx/${response}`}
               target="_blank"
-            >{`Transaction confirmed`}</a>
+            >{` ↗️`}</Link>
           </span>,
-          4_000,
+          3_000,
         );
         console.log("Signature: ", response);
+        handleResetAllFields();
       }
     } catch (err) {
       console.log(`Error preparing Jupiter swap tx: ${err.message}`);
       red(<span>{`Failed: ${err.message}`}</span>, 2_000);
     }
-    // resetStatus();
+    
     setIsPlaceOrderButtonLoading((_) => false);
   };
 
