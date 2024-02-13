@@ -4,3 +4,5 @@ export const WRAPPED_SOL_MAINNET =
 export const JUPITER_V6_PROGRAM = "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4";
 
 export const USDC_MAINNET = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+
+export const ROOT_PROTOCOL_LAMPORT_COLLECTOR = "6HyM2raEk78s8PdiRKqSF36YtSZf3CjwmReTCtdaucuf";

@@ -9,6 +9,7 @@ import {
 import {
   ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS,
   ManagerView,
+  ROOT_PROTOCOL_LAMPORT_COLLECTOR,
   WRAPPED_SOL_MAINNET,
   getAllManagerView,
   getManagerViewText,
@@ -19,7 +20,7 @@ const OrderView = dynamic(() => import("../OrderView"), { ssr: false });
 
 import { EnumeratedMarketToMetadata } from "../../../../[market]";
 import { getPriorityFeeEstimate } from "../../../../../../utils/helius";
-import { web3 } from "@coral-xyz/anchor";
+import { BN, web3 } from "@coral-xyz/anchor";
 import {
   ComputeBudgetProgram,
   Connection,
@@ -245,7 +246,15 @@ const OrderManager = ({
           transaction.add(ix);
         }
 
-        updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
+        // Transfer 1 lamport to Root Multisig for future referencing purposes
+        const transferIx = SystemProgram.transfer({
+          fromPubkey: walletState.publicKey,
+          toPubkey: new web3.PublicKey(ROOT_PROTOCOL_LAMPORT_COLLECTOR),
+          lamports: new BN(1),
+        });
+        transaction.add(transferIx);
+
+        updateStatus(<span>{`Awaiting confirmation ⏱...`}</span>);
         let response = await walletState.sendTransaction(
           transaction,
           connection,

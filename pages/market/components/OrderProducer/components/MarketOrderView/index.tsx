@@ -181,7 +181,7 @@ const MarketOrderView = ({
           value: { blockhash, lastValidBlockHeight },
         } = await connection.getLatestBlockhashAndContext();
 
-        updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
+        updateStatus(<span>{`Awaiting confirmation ⏱...`}</span>);
         let response = await walletState.sendTransaction(
           transaction,
           connection,

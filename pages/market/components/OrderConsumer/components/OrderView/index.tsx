@@ -28,7 +28,7 @@ import {
   sideBeet,
 } from "@ellipsis-labs/phoenix-sdk";
 import Link from "next/link";
-import { WRAPPED_SOL_MAINNET } from "constants/";
+import { ROOT_PROTOCOL_LAMPORT_COLLECTOR, WRAPPED_SOL_MAINNET } from "constants/";
 import {
   createCloseAccountInstruction,
   createSyncNativeInstruction,
@@ -231,7 +231,15 @@ const OrderView = ({ enumeratedMarket, order }: OrderViewProps) => {
           transaction.add(ix);
         }
 
-        updateStatus(<span>{`Waiting for you to sign ⏱...`}</span>);
+        // Transfer 1 lamports to Root Multisig for future referencing purposes
+        const transferIx = SystemProgram.transfer({
+          fromPubkey: walletState.publicKey,
+          toPubkey: new web3.PublicKey(ROOT_PROTOCOL_LAMPORT_COLLECTOR),
+          lamports: new BN(1),
+        });
+        transaction.add(transferIx);
+
+        updateStatus(<span>{`Awaiting confirmation ⏱...`}</span>);
         let response = await walletState.sendTransaction(
           transaction,
           connection,
