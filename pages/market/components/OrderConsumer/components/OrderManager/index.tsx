@@ -123,11 +123,11 @@ const OrderManager = ({
       // Create the priority fee instructions
       let unitsPrice = 10;
       if (priorityFeeLevels) {
-        unitsPrice = priorityFeeLevels["high"];
+        unitsPrice = priorityFeeLevels["veryHigh"];
       }
 
       const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: unitsPrice,
+        microLamports: parseInt(unitsPrice.toString()),
       });
 
       const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({

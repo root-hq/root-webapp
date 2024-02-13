@@ -135,7 +135,7 @@ const MarketOrderView = ({
     try {
       let levels = (await getPriorityFeeEstimate([JUPITER_V6_PROGRAM]))
         .priorityFeeLevels;
-      priorityFeeLevels = levels["high"];
+      priorityFeeLevels = levels["veryHigh"];
     } catch (err) {
       console.log(`Error fetching priority fee levels`);
     }
@@ -346,23 +346,7 @@ const MarketOrderView = ({
         <Form.Group controlId="formInput" className={styles.formGroupContainer}>
           <div className={styles.tradeInfoContainer}>
             {walletState.connected ? (
-              <KeyValueComponent
-                keyElement={<p>Total fee</p>}
-                keyElementStyle={{}}
-                valueElement={
-                  phoenixMarket ? (
-                    <p>{`${(ROOT_PROTOCOL_FEE_BPS) / 100}%`}</p>
-                  ) : (
-                    <p>{`-%`}</p>
-                  )
-                }
-                valueElementStyle={{}}
-                justification={KeyValueJustification.SpaceBetween}
-                keyElementContainerStyle={{
-                  display: `flex`,
-                  flexDirection: `row`,
-                }}
-              />
+              <></>
             ) : (
               <></>
             )}

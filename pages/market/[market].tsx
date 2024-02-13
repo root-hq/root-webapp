@@ -30,7 +30,6 @@ import dynamic from "next/dynamic";
 import { useRootState } from "../../components/RootStateContextType";
 import { WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS } from "constants/";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { getWhitelistStatus } from "utils/supabase/UserWhitelist";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -188,26 +187,9 @@ const MarketPage = ({
     refreshBidsAndAsks(marketDataBuffer);
   }, [marketDataBuffer]);
 
-  const walletState = useWallet();
-  const [whitelistStatus, setWhitelistStatus] = useState<boolean>(false);
-
-  useEffect(() => {
-    const checkWhitelistStatus = async () => {
-      if(walletState.connected) {
-        const status = await getWhitelistStatus(walletState.publicKey.toString());
-        console.log("Fetched status: ", status);
-        setWhitelistStatus(_ => status);
-      }
-    }
-
-    checkWhitelistStatus();
-  }, [walletState]);
-
   return (
     <div className={styles.mainContainer}>
-      {
-        walletState && walletState.connected && whitelistStatus ?
-          <div>
+      <div>
           <div
             className={styles.marketPageContainer}
             style={{
@@ -269,18 +251,6 @@ const MarketPage = ({
             <></>
           )}
           </div>
-        :
-          <div className={styles.notEligibleOuterContainer}>
-            <div className={styles.notEligibleContainer}>
-            <span style={{fontSize: !isMobile.current ? `72px` : `48px`, fontWeight: 'bold', textAlign: `center`, color: `#ddd`}}>Root Exchange</span>
-            <span style={{fontSize: !isMobile.current ? `24px` : `18px`, textAlign: `center`, marginTop: `2rem`, color: `#ddd`}}>The best on-chain limit orders on Solana</span>
-            <span style={{fontSize: !isMobile.current ? `20px` : `14px`, textAlign: `center`, marginTop: `4rem`, color: `#ddd`}}>Powered by <Link href="https://x.com/phoenixtrade" target="_blank">@PhoenixTrade</Link></span>
-            <span style={{fontSize: !isMobile.current ? `18px` : `14px`, textAlign: `center`, position: `fixed`, bottom: `50px`, color: `#ddd`}}>
-              DM <Link href="https://x.com/mmdhrumil" target="_blank">@mmdhrumil</Link> or <Link href="https://x.com/roothq_" target="_blank">@roothq_</Link> for early access
-            </span>
-            </div>
-          </div>
-      }
     </div>
   );
 };

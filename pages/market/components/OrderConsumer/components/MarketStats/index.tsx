@@ -147,7 +147,6 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
         <div className={styles.statValue}>
           {formatWithCommas(
             (
-              dailyVolumeBase * (dailyHigh + dailyLow / 2.0) +
               dailyVolumeQuote
             ).toFixed(2),
           )}
