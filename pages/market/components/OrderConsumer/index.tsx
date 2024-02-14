@@ -37,7 +37,7 @@ import {
 import { useRootState } from "components/RootStateContextType";
 
 export interface OrderConsumerProps {
-  enumeratedMarkets: EnumeratedMarketToMetadata[];
+  enumeratedMarkets: Map<string, EnumeratedMarketToMetadata>;
   selectedPhoenixMarket: PhoenixMarket;
   baseTokenMetadata: TokenMetadata;
   quoteTokenMetadata: TokenMetadata;
@@ -59,6 +59,7 @@ const OrderConsumer = ({
 
   const [chartType, setChartType] = useState<ChartType>(isMobile.current ? ChartType.Lite : ChartType.Pro);
   const [showOrderBook, setShowOrderBook] = useState<boolean>(isMobile.current ? false : true);
+  const [enumeratedMarketsArray, setEnumeratedMarketsArray] = useState<EnumeratedMarketToMetadata[]>([]);
 
   const dummyCounter = useRef<number>(0);
 
@@ -81,12 +82,7 @@ const OrderConsumer = ({
       setActiveMarket((_) => selectedPhoenixMarket);
 
       if (selectedPhoenixMarket) {
-        let aem = enumeratedMarkets.find((value) => {
-          return (
-            value.phoenixMarket.phoenix_market_address ===
-            selectedPhoenixMarket.phoenix_market_address
-          );
-        });
+        let aem = enumeratedMarkets.get(selectedPhoenixMarket.phoenix_market_address);
         setActiveEnumeratedMarket((_) => aem);
       }
     };
@@ -110,6 +106,18 @@ const OrderConsumer = ({
 
     return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    const doStuff = () => {
+      let ema = [];
+      enumeratedMarkets.forEach((entry) => {
+        ema.push(entry);
+      });
+      setEnumeratedMarketsArray(_ => ema);
+    }
+
+    doStuff();
+  }, [enumeratedMarkets]);
 
   const defaultWidgetProps: Partial<ChartingLibraryWidgetOptions> = {
     symbol: `${baseTokenMetadata ? baseTokenMetadata.mint : WRAPPED_SOL_MAINNET}/${baseTokenMetadata ? baseTokenMetadata.ticker: `SOL`}/${quoteTokenMetadata ? quoteTokenMetadata.mint : USDC_MAINNET}/${quoteTokenMetadata ? quoteTokenMetadata.ticker : `USDC`}/${selectedPhoenixMarket ? selectedPhoenixMarket.tick_size : `0.001`}`,
@@ -141,7 +149,7 @@ const OrderConsumer = ({
           <div className={styles.marketInfoContainer}>
             <div className={styles.marketSelectorContainer}>
               <MarketSelectorDropdown
-                enumeratedMarkets={enumeratedMarkets}
+                enumeratedMarkets={enumeratedMarketsArray}
                 selectedBaseTokenMetadata={baseTokenMetadata}
                 selectedQuoteTokenMetadata={quoteTokenMetadata}
                 topLevelActiveMarketState={activeMarket}

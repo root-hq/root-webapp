@@ -4,5 +4,4 @@ export interface TokenMetadata {
   ticker: string;
   decimals: number;
   img_url: string;
-  network: string;
 }

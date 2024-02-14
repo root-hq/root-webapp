@@ -12,16 +12,12 @@ const FloatingTradeButton = dynamic(
   { ssr: false },
 );
 
+import { allTokenMetadata as ALL_TOKEN_METADATA, allPhoenixMarkets as ALL_PHOENIX_MARKETS } from "constants/types";
+
 import {
   PhoenixMarket,
   TokenMetadata,
-  getAllTokenMetadata,
 } from "../../utils/supabase";
-
-import {
-  getAllMarkets,
-  getMarket,
-} from "../../utils/supabase/PhoenixMarket";
 
 import { web3 } from "@coral-xyz/anchor";
 import { Client } from "@ellipsis-labs/phoenix-sdk";
@@ -29,9 +25,7 @@ import { Client } from "@ellipsis-labs/phoenix-sdk";
 import dynamic from "next/dynamic";
 import { useRootState } from "../../components/RootStateContextType";
 import { WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS } from "constants/";
-import { useWallet } from "@solana/wallet-adapter-react";
-import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/router";
 
 export interface EnumeratedMarketToMetadata {
   phoenixMarket: PhoenixMarket;
@@ -39,19 +33,7 @@ export interface EnumeratedMarketToMetadata {
   quoteTokenMetadata: TokenMetadata;
 }
 
-export interface MarketPageProps {
-  enumeratedMarkets: EnumeratedMarketToMetadata[];
-  phoenixMarketOnPage: PhoenixMarket;
-  baseTokenMetadata: TokenMetadata;
-  quoteTokenMetadata: TokenMetadata;
-}
-
-const MarketPage = ({
-  enumeratedMarkets,
-  phoenixMarketOnPage,
-  baseTokenMetadata,
-  quoteTokenMetadata,
-}: MarketPageProps) => {
+const MarketPage = () => {
   let {
     phoenixClient,
     setPhoenixClient,
@@ -63,23 +45,53 @@ const MarketPage = ({
     isMobile,
   } = useRootState();
 
-  const [selectedPhoenixMarket, setSelectedPhoenixMarket] =
-    useState<PhoenixMarket>();
-
   const [marketDataBuffer, setMarketDataBuffer] = useState<Buffer>(null);
 
   const [isMobileTradeModalOpen, setIsMobileTradeModalOpen] =
     useState<boolean>(false);
 
-  const handleMobileTradeModalToggle = () => {
-    setIsMobileTradeModalOpen((_) => !isMobileTradeModalOpen);
-  };
+  const [phoenixMarketData, setPhoenixMarketData] = useState<PhoenixMarket>();
+  const [baseTokenMetadata, setBaseTokenMetadata] = useState<TokenMetadata>();
+  const [quoteTokenMetadata, setQuoteTokenMetadata] = useState<TokenMetadata>();
+
+  const [enumeratedMarkets, setEnumeratedMarkets] = useState<Map<string, EnumeratedMarketToMetadata>>(new Map());
+
+  const router = useRouter();
+  const phoenixMarketOnPage = router.query[`market`];
 
   let lastMessageTimestamp = 0;
 
   useEffect(() => {
-    console.log("Selected SPM: ", phoenixMarketOnPage);
-    setSelectedPhoenixMarket((prev) => phoenixMarketOnPage);
+    const loadData = () => {
+      let atm: TokenMetadata[] = ALL_TOKEN_METADATA;
+      let apm: PhoenixMarket[] = ALL_PHOENIX_MARKETS;
+
+      let tm_map = new Map<string, TokenMetadata>();
+      for(let m of atm) {
+        tm_map.set(m.mint, m);
+      }
+    
+      apm.forEach((market) => {
+        let bm = tm_map.get(market.base_token_mint);
+        let qm = tm_map.get(market.quote_token_mint);
+
+        if(market.phoenix_market_address === phoenixMarketOnPage) {
+          setPhoenixMarketData(_ => market);
+          setBaseTokenMetadata(_ => bm);
+          setQuoteTokenMetadata(_ => qm);
+        }
+
+        if(!enumeratedMarkets.get(market.phoenix_market_address)) {
+          enumeratedMarkets.set(market.phoenix_market_address, {
+            phoenixMarket: market,
+            baseTokenMetadata: bm,
+            quoteTokenMetadata: qm
+          } as EnumeratedMarketToMetadata);
+        }
+      });
+    }
+
+    loadData();
   }, [phoenixMarketOnPage]);
 
   useEffect(() => {
@@ -100,7 +112,7 @@ const MarketPage = ({
 
   useEffect(() => {
     const setupConnectionBackup = async () => {
-      if (phoenixMarketOnPage) {
+      if (phoenixMarketData) {
         if (!phoenixClient) {
           let endpoint = process.env.RPC_ENDPOINT;
           if (!endpoint) {
@@ -116,7 +128,7 @@ const MarketPage = ({
 
           const client = await Client.create(conn);
 
-          client.addMarket(phoenixMarketOnPage.phoenix_market_address);
+          client.addMarket(phoenixMarketData.phoenix_market_address);
 
           setPhoenixClient(client);
           setConnection(conn);
@@ -127,10 +139,10 @@ const MarketPage = ({
     };
 
     setupConnectionBackup();
-  }, [phoenixMarketOnPage, connection]);
+  }, [phoenixMarketData, connection]);
 
   useEffect(() => {
-    if (phoenixMarketOnPage) {
+    if (phoenixMarketData) {
       const ws = new WebSocket(process.env.WS_ENDPOINT);
 
       ws.onopen = () => {
@@ -140,7 +152,7 @@ const MarketPage = ({
             id: 1,
             method: "accountSubscribe",
             params: [
-              phoenixMarketOnPage.phoenix_market_address,
+              phoenixMarketData.phoenix_market_address,
               {
                 encoding: "base64+zstd",
                 commitment: "processed",
@@ -181,11 +193,15 @@ const MarketPage = ({
         ws.close();
       };
     }
-  }, [phoenixMarketOnPage]);
+  }, [phoenixMarketData]);
 
   useEffect(() => {
     refreshBidsAndAsks(marketDataBuffer);
   }, [marketDataBuffer]);
+
+  const handleMobileTradeModalToggle = () => {
+    setIsMobileTradeModalOpen((_) => !isMobileTradeModalOpen);
+  };
 
   return (
     <div className={styles.mainContainer}>
@@ -202,7 +218,7 @@ const MarketPage = ({
               <div className={styles.orderConsumerChartContainer}>
                 <OrderConsumer
                   enumeratedMarkets={enumeratedMarkets}
-                  selectedPhoenixMarket={selectedPhoenixMarket}
+                  selectedPhoenixMarket={phoenixMarketData}
                   baseTokenMetadata={baseTokenMetadata}
                   quoteTokenMetadata={quoteTokenMetadata}
                   connection={connection}
@@ -211,7 +227,7 @@ const MarketPage = ({
             </div>
             <div className={styles.orderProducerContainer}>
               <CLOBTrader
-                phoenixMarket={selectedPhoenixMarket}
+                phoenixMarket={phoenixMarketData}
                 baseTokenMetadata={baseTokenMetadata}
                 quoteTokenMetadata={quoteTokenMetadata}
               />
@@ -229,7 +245,7 @@ const MarketPage = ({
           {isMobileTradeModalOpen && isMobile.current ? (
             <div className={styles.mobileTradeModalContainer}>
               <CLOBTrader
-                phoenixMarket={selectedPhoenixMarket}
+                phoenixMarket={phoenixMarketData}
                 baseTokenMetadata={baseTokenMetadata}
                 quoteTokenMetadata={quoteTokenMetadata}
               />
@@ -253,66 +269,6 @@ const MarketPage = ({
           </div>
     </div>
   );
-};
-
-export const getServerSideProps = async ({ params }) => {
-  const { market } = params;
-
-  let phoenixMarketOnPage: PhoenixMarket = null;
-  let allTokenMetadata: TokenMetadata[] = null;
-  let baseTokenMetadata: TokenMetadata = null;
-  let quoteTokenMetadata: TokenMetadata = null;
-  let allPhoenixMarkets: PhoenixMarket[] = [];
-  let enumeratedMarkets: EnumeratedMarketToMetadata[] = [];
-
-  [phoenixMarketOnPage, allTokenMetadata, allPhoenixMarkets] =
-    await Promise.all([
-      getMarket(market),
-      getAllTokenMetadata(),
-      getAllMarkets(),
-    ]);
-
-  if (allPhoenixMarkets && allPhoenixMarkets.length > 0) {
-    allPhoenixMarkets.forEach((market) => {
-      let baseMetadata = allTokenMetadata.find((value) => {
-        return value.mint === market.base_token_mint;
-      });
-
-      let quoteMetadata = allTokenMetadata.find((value) => {
-        return value.mint === market.quote_token_mint;
-      });
-
-      if (
-        market.phoenix_market_address ===
-        phoenixMarketOnPage.phoenix_market_address
-      ) {
-        baseTokenMetadata = allTokenMetadata.find((value) => {
-          return value.mint === phoenixMarketOnPage.base_token_mint;
-        });
-
-        quoteTokenMetadata = allTokenMetadata.find((value) => {
-          return value.mint === phoenixMarketOnPage.quote_token_mint;
-        });
-      }
-
-      enumeratedMarkets.push({
-        phoenixMarket: market,
-        baseTokenMetadata: baseMetadata,
-        quoteTokenMetadata: quoteMetadata,
-      } as EnumeratedMarketToMetadata);
-    });
-  }
-
-  return {
-    props: {
-      phoenixMarketOnPage: phoenixMarketOnPage ? phoenixMarketOnPage : null,
-      enumeratedMarkets: enumeratedMarkets ? enumeratedMarkets : null,
-      baseTokenMetadata:
-        baseTokenMetadata === undefined ? null : baseTokenMetadata,
-      quoteTokenMetadata:
-        quoteTokenMetadata === undefined ? null : quoteTokenMetadata,
-    },
-  };
 };
 
 export default MarketPage;
