@@ -9,6 +9,9 @@ export const getOpenOrdersForTrader = async (
   trader: string,
 ): Promise<Order[]> => {
   try {
+    if(!phoenixClient.marketStates.has(marketAddress)) {
+      await phoenixClient.addMarket(marketAddress, true);
+    }
     phoenixClient.refreshMarket(marketAddress, true);
 
     const book = phoenixClient.marketStates.get(marketAddress);
@@ -76,6 +79,9 @@ export const getTraderState = async (
   trader: string,
 ): Promise<UserGlobalBalances> => {
   try {
+    if(!phoenixClient.marketStates.has(marketAddress)) {
+      await phoenixClient.addMarket(marketAddress, true);
+    }
     phoenixClient.refreshMarket(marketAddress, true);
 
     const marketState = phoenixClient.marketStates.get(marketAddress);

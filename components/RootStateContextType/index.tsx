@@ -69,7 +69,7 @@ export const RootStateProvider = ({ children }) => {
     setConnection((_) => c);
   };
 
-  const loadPhoenixClient = async (connection: web3.Connection) => {
+  const loadPhoenixClient = async () => {
     let conn = new web3.Connection(process.env.RPC_ENDPOINT);
 
     let pc = await Client.create(conn);
@@ -78,14 +78,7 @@ export const RootStateProvider = ({ children }) => {
 
   const refreshBidsAndAsks = async (zstdEncodedBuffer: Buffer) => {
     if (zstdEncodedBuffer) {
-      const decoder = new ZSTDDecoder();
-      await decoder.init();
-      const marketBuffer = decoder.decode(
-        zstdEncodedBuffer,
-        MAX_ACCOUNT_SIZE_BYTES,
-      );
-
-      let marketData = deserializeMarketData(Buffer.from(marketBuffer));
+      let marketData = deserializeMarketData(zstdEncodedBuffer);
       let freshUiBook = getMarketL3UiBook(marketData, -1);
 
       setBids((_) => freshUiBook.bids);
@@ -95,9 +88,19 @@ export const RootStateProvider = ({ children }) => {
         ),
       );
 
+      let bestBid = 0;
+      if(freshUiBook.bids && freshUiBook.bids.length) {
+        bestBid = freshUiBook.bids[0].price;
+      }
+
+      let bestAsk = 0;
+      if(freshUiBook.asks && freshUiBook.asks.length) {
+        bestAsk = freshUiBook.asks[0].price;
+      }
+
       let newPrice =
-        (freshUiBook.bids[0].price + freshUiBook.asks[0].price) / 2.0;
-      let newSpread = freshUiBook.asks[0].price - freshUiBook.bids[0].price;
+        (bestBid + bestAsk) / 2.0;
+      let newSpread = bestAsk - bestBid;
 
       if (newPrice > midPrice.current) {
         setInstantaneousPriceIncrease((_) => true);
@@ -113,7 +116,7 @@ export const RootStateProvider = ({ children }) => {
   useEffect(() => {
     const loadStuff = async () => {
       await loadConnection();
-      await loadPhoenixClient(connection);
+      await loadPhoenixClient();
     };
 
     loadStuff();
