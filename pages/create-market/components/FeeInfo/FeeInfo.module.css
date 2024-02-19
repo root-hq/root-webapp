@@ -1,0 +1,37 @@
+.tokenInfoContainer {
+    display: flex;
+    flex-direction: column;
+    color: #ddd;
+}
+
+.headerContainer {
+    display: flex;
+    
+}
+
+.formGroup {
+    font-size: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .formLabelAndFieldContainerNoBottomMargin {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .fieldTitleContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .formLabelContainer {
+    width: 30%;
+  }
+  
+  .formFieldContainer {
+    width: 70%;
+  }
+  

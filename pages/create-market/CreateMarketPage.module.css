@@ -1,0 +1,110 @@
+.createMarketPageContainer {
+  margin: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mainHeaderContainer {
+  color: #ddd;
+}
+
+.resetFieldsButtonContainer {
+    width: 700px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.resetFieldsButton {
+    font-size: 0.85rem;
+    color: #bbb;
+    cursor: pointer;
+}
+
+.resetFieldsButton:hover {
+    color: #fff;
+}
+
+.mainFormContainer {
+  padding: 1%;
+  width: 700px;
+}
+
+.navButtonContainer {
+  margin-top: 2rem;
+  width: 700px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.navButton {
+  background-color: #ddd;
+  width: 100px;
+  color: #000;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.formProgressBarContainer {
+  width: 700px;
+  background-color: white;
+  min-height: 0.5rem;
+  border: none;
+  border-radius: 2rem;
+  margin-top: 2rem;
+}
+
+.formProgressBarContainerOverlay {
+  width: 0%;
+  background-color: #3cb36e;
+  height: 0.5rem;
+  border: none;
+  border-radius: 2rem;
+}
+
+.createMarketButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.createMarketButton {
+  width: 400px;
+  min-height: 3rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  background-color: #ddd;
+}
+
+.spinnerBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.threeQuarterSpinner {
+  width: 10px;
+  height: 10px;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.5s linear 0s infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
