@@ -35,6 +35,7 @@ interface CreateMarketContextType {
     setFeeCollector: React.Dispatch<React.SetStateAction<string>>;
 
     resetAllFields: () => void
+    getCapacityConfig: () => void
 }
 
 const CreateMarketContext = createContext<CreateMarketContextType | undefined>(
@@ -73,6 +74,18 @@ export const CreateMarketProvider = ({ children }) => {
         setFeeCollector(_ => "");
     }
 
+    const getCapacityConfig = () => {
+        if(capacity === Capacity.Low) {
+            return [1024, 2177];
+        }
+        else if(capacity === Capacity.Medium) {
+            return [2048, 4225];
+        }
+        else if(capacity === Capacity.High) {
+            return [4096, 8321];
+        }
+    }
+
     const value = {
         baseTokenMint,
         setBaseTokenMint,
@@ -92,7 +105,8 @@ export const CreateMarketProvider = ({ children }) => {
         setTakerFeeInBps,
         feeCollector,
         setFeeCollector,
-        resetAllFields
+        resetAllFields,
+        getCapacityConfig
     };
 
     return (

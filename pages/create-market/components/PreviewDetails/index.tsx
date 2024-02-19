@@ -88,7 +88,7 @@ const PreviewDetails = () => {
                 <Form.Group controlId="formInput" className={styles.formGroup}>
                     <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
                         <Form.Label className={styles.formLabelContainer}>
-                            <span>Tick size in quote units per base unit</span>
+                            <span>Tick size in quote lots per base unit</span>
                         </Form.Label>
                         <Form.Label className={styles.formFieldContainer}>
                             <span>{justFormatNumbersWithCommas((parseFloat(tickSizeInQuoteUnitsPerBaseUnit) / parseFloat(quoteUnitsPerQuoteLot)).toFixed(0))}</span>
@@ -140,6 +140,8 @@ const PreviewDetails = () => {
                     </div>
                 </Form.Group>
             </div>
+            <span style = {{marginTop: `2rem`, color: `#e3c334`}}>{`IMPORTANT: Your connected wallet will have a special authority over this market.`}</span>
+            <span style = {{marginTop: `1rem`, color: `#e3c334`}}>{`Highly recommended to use a Ledger or SquadsX multisig extension`}</span>
         </div>
     )
 }

@@ -5,12 +5,22 @@ import { useCreateMarketContext } from "components/CreateMarketContextType";
 import MarketInfo from "./components/MarketInfo";
 import FeeInfo from "./components/FeeInfo";
 import PreviewDetails from "./components/PreviewDetails";
-import { delay } from "utils";
+import { AnchorProvider, BN, web3 } from "@coral-xyz/anchor";
+import * as rootSdk from "@squarerootlabs/root-program-ts";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useRootState } from "components/RootStateContextType";
+import { useBottomStatus } from "components/BottomStatus";
+import Link from "next/link";
 
 const CreateMarketPage = () => {
 
-    const { resetAllFields } = useCreateMarketContext();
+    const { baseTokenMint, quoteTokenMint, baseUnitsPerBaseLot, quoteUnitsPerQuoteLot, rawBaseUnitsPerBaseUnit, takerFeeInBps, feeCollector, tickSizeInQuoteUnitsPerBaseUnit, resetAllFields, getCapacityConfig } = useCreateMarketContext();
+    const wallet = useWallet();
+    const { connection } = useRootState();
+    const { green, red } = useBottomStatus();
+
     const [formPage, setFormPage] = useState<number>(1);
+    const [newMarketKey, setNewMarketKey] = useState<string>("");
     const [isCreateMarketButtonLoading, setIsCreateMarketButtonLoading] = useState<boolean>(false);
 
     const handleNavigationEvent = (newPage) => {
@@ -19,7 +29,62 @@ const CreateMarketPage = () => {
 
     const handleCreateMarketAction = async() => {
         setIsCreateMarketButtonLoading(true);
-        await delay(3_000);
+
+        try {
+            const config = getCapacityConfig();
+            const numOrdersPerSide = new BN(config[0]);
+            const numSeats = new BN(config[1]);
+            const numQuoteLotsPerQuoteUnit = new BN(1 / parseFloat(quoteUnitsPerQuoteLot));
+            const numBaseLotsPerBaseUnit = new BN(1 / parseFloat(baseUnitsPerBaseLot));
+            const tickSizeInQuoteLotsPerBaseUnit = new BN(parseFloat(tickSizeInQuoteUnitsPerBaseUnit) / parseFloat(quoteUnitsPerQuoteLot))
+    
+            const baseTokenMintKey = new web3.PublicKey(baseTokenMint);
+            const quoteTokenMintKey = new web3.PublicKey(quoteTokenMint);
+            const feeCollectorKey = new web3.PublicKey(feeCollector);
+    
+            const provider = new AnchorProvider(connection, wallet, {});
+            const txes = await rootSdk.createPhoenixMarket({
+                provider,
+                createPhoenixMarketParams: {
+                    numOrdersPerSide,
+                    numSeats,
+                    numBaseLotsPerBaseUnit,
+                    numQuoteLotsPerQuoteUnit,
+                    tickSizeInQuoteLotsPerBaseUnit,
+                    takerFeeBps: parseFloat(takerFeeInBps),
+                    rawBaseUnitsPerBaseUnit: parseFloat(rawBaseUnitsPerBaseUnit)
+                } as rootSdk.CreatePhoenixMarketParams,
+                createPhoenixMarketAccounts: {
+                    baseTokenMint: baseTokenMintKey,
+                    quoteTokenMint: quoteTokenMintKey,
+                    feeCollector: feeCollectorKey
+                } as rootSdk.CreatePhoenixMarketAccounts
+            });
+    
+            const res = await rootSdk.executeTransactions({
+                provider,
+                transactionInfos: txes.transactionInfos
+            });
+            await res.confirm();
+            
+            if(txes) {
+                setNewMarketKey(_ => txes.phoenixMarket.toString());
+                green(
+                    <span>
+                      {`Market created successfully `}
+                      <Link
+                        href={`https://solscan.io/tx/${res.signatures[0]}`}
+                        target="_blank"
+                      >{` ↗️`}</Link>
+                    </span>,
+                    3_000,
+                  );
+            }
+        }
+        catch(err) {
+            console.log(`Error creating market: ${err}`);
+            red(<span>{`Failed: ${err.message}`}</span>, 2_000);
+        }
         setIsCreateMarketButtonLoading(false);
     }
 
@@ -91,9 +156,23 @@ const CreateMarketPage = () => {
                 >
                 </div>
             </div>
+            <div>
+                <div
+                    style = {{
+                        display: newMarketKey ? `flex` : `none`,
+                        flexDirection: `column`,
+                        color: `#ddd`,
+                        margin: `4rem`,
+                        padding: `2rem`,
+                        border: `1px solid #477df2`,
+                    }}
+                >
+                    <span style = {{margin: `1rem`}}>{`New market address: ${newMarketKey}`}</span>
+                </div>
+            </div>
             <div className={styles.createMarketButtonContainer}
                 style={{
-                    display: formPage !== 4 ? `none` : ``
+                    display: formPage !== 4 ? `none` : ``,
                 }}
             >
             <button className={styles.createMarketButton} onClick={
