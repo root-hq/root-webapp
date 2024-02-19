@@ -52,15 +52,15 @@ export const useCreateMarketContext = () => {
 
 //@ts-ignore
 export const CreateMarketProvider = ({ children }) => {
-    const [baseTokenMint, setBaseTokenMint] = useState<string>("So11111111111111111111111111111111111111112");
-    const [quoteTokenMint, setQuoteTokenMint] = useState<string>("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
-    const [baseUnitsPerBaseLot, setBaseUnitsPerBaseLot] = useState<string>("0.001");
-    const [quoteUnitsPerQuoteLot, setQuoteUnitsPerQuoteLot] = useState<string>("0.001");
+    const [baseTokenMint, setBaseTokenMint] = useState<string>("");
+    const [quoteTokenMint, setQuoteTokenMint] = useState<string>("");
+    const [baseUnitsPerBaseLot, setBaseUnitsPerBaseLot] = useState<string>("");
+    const [quoteUnitsPerQuoteLot, setQuoteUnitsPerQuoteLot] = useState<string>("");
     const [rawBaseUnitsPerBaseUnit, setRawBaseUnitsPerBaseUnit] = useState<string>("1.0");
-    const [tickSizeInQuoteUnitsPerBaseUnit, setTickSizeInQuoteUnitsPerBaseUnit] = useState<string>("0.001");
+    const [tickSizeInQuoteUnitsPerBaseUnit, setTickSizeInQuoteUnitsPerBaseUnit] = useState<string>("");
     const [capacity, setCapacity] = useState<Capacity>(Capacity.Low);
-    const [takerFeeInBps, setTakerFeeInBps] = useState<string>("2");
-    const [feeCollector, setFeeCollector] = useState<string>("6HyM2raEk78s8PdiRKqSF36YtSZf3CjwmReTCtdaucuf");
+    const [takerFeeInBps, setTakerFeeInBps] = useState<string>("");
+    const [feeCollector, setFeeCollector] = useState<string>("");
 
     const resetAllFields = () => {
         setBaseTokenMint(_ => "");

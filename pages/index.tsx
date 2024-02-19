@@ -6,11 +6,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    // Default address value
-    const defaultAddress = "4DoNfFBfF7UokCC2FQzriy7yHK6DY6NVdYpuekQ5pRgg";
-
-    // Redirect to the /market/[address] route with the default address
-    router.replace(`/market/${defaultAddress}`);
+    router.replace(`/create-market`);
   }, [router]);
 
   return (
