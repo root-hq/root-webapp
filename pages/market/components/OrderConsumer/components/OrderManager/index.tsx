@@ -301,9 +301,7 @@ const OrderManager = ({
       if (
         walletState.connected &&
         bids &&
-        bids.length &&
         asks &&
-        asks.length &&
         enumeratedMarket
       ) {
         let orders: Order[] = [];

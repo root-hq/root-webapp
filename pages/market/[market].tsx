@@ -20,12 +20,14 @@ import {
 } from "../../utils/supabase";
 
 import { web3 } from "@coral-xyz/anchor";
-import { Client } from "@ellipsis-labs/phoenix-sdk";
+import { Client, getConfirmedMarketAccountZstd } from "@ellipsis-labs/phoenix-sdk";
+import { ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS, MAX_ACCOUNT_SIZE_BYTES } from "constants/";
 
 import dynamic from "next/dynamic";
 import { useRootState } from "../../components/RootStateContextType";
 import { WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS } from "constants/";
 import { useRouter } from "next/router";
+import { ZSTDDecoder } from "zstddec";
 
 export interface EnumeratedMarketToMetadata {
   phoenixMarket: PhoenixMarket;
@@ -141,6 +143,7 @@ const MarketPage = () => {
     setupConnectionBackup();
   }, [phoenixMarketData, connection]);
 
+  // WS updates useEffect
   useEffect(() => {
     if (phoenixMarketData) {
       const ws = new WebSocket(process.env.WS_ENDPOINT);
@@ -195,8 +198,45 @@ const MarketPage = () => {
     }
   }, [phoenixMarketData]);
 
+  // Polling useEffect
   useEffect(() => {
-    refreshBidsAndAsks(marketDataBuffer);
+    const pollForMarketData = async () => {
+      if(phoenixMarketData) {
+        let conn = connection;
+        if(!connection) {
+          conn = new web3.Connection(process.env.RPC_ENDPOINT);
+          setConnection(conn);
+        }
+
+        let pc = phoenixClient;
+        if(!pc) {
+          pc = await Client.create(conn);
+          setPhoenixClient(pc);
+          pc.addMarket(phoenixMarketData.phoenix_market_address);
+        }
+
+        const buffer = await getConfirmedMarketAccountZstd(conn, new web3.PublicKey(phoenixMarketData.phoenix_market_address), 'processed');
+        refreshBidsAndAsks(buffer);
+      }
+    }
+
+    pollForMarketData();
+  }, [phoenixMarketData]);
+
+  useEffect(() => {
+    const decodeBuffer = async () => {
+      if(marketDataBuffer) {
+        const decoder = new ZSTDDecoder();
+        await decoder.init();
+        const marketBuffer = decoder.decode(
+          marketDataBuffer,
+          MAX_ACCOUNT_SIZE_BYTES,
+        );
+        refreshBidsAndAsks(Buffer.from(marketBuffer));
+      }
+    }
+
+    decodeBuffer();
   }, [marketDataBuffer]);
 
   const handleMobileTradeModalToggle = () => {
