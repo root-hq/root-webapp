@@ -8,7 +8,7 @@ import { web3 } from "@coral-xyz/anchor";
 
 const MarketInfo = () => {
 
-    const { quoteTokenMint, baseUnitsPerBaseLot, capacity, tickSizeInQuoteUnitsPerBaseUnit, setBaseUnitsPerBaseLot, setQuoteUnitsPerQuoteLot, setCapacity, setTickSizeInQuoteUnitsPerBaseUnit } = useCreateMarketContext();
+    const { quoteTokenMint, baseUnitsPerBaseLot, capacity, tickSizeInQuoteUnitsPerBaseUnit, setBaseUnitsPerBaseLot, setQuoteUnitsPerQuoteLot, setCapacity, setTickSizeInQuoteUnitsPerBaseUnit, getCapacityConfig} = useCreateMarketContext();
 
     useEffect(() => {
         const loadQuoteLotSize = async() => {
@@ -100,7 +100,7 @@ const MarketInfo = () => {
                                     setCapacity(_ => Capacity.Low)
                                 }}
                             >
-                                <span>Regular</span>
+                                <span>Starter</span>
                             </div>
                             <div className={styles.capacityButton}
                                 style = {{
@@ -130,36 +130,20 @@ const MarketInfo = () => {
             </div>
             <div className={styles.capacityTextContainer}>
                 <span className={styles.capacityText}>
-                    {`Maximum of ${
-                        capacity === Capacity.Low ?
-                            `2048`
-                        :
-                            capacity === Capacity.Medium ?
-                                `4096`
-                            :
-                                `8192`
-                    } active orders, maximum of ${
-                        capacity === Capacity.Low ?
-                            `2177`
-                        :
-                            capacity === Capacity.Medium ?
-                                `4225`
-                            :
-                                `8321`
-                    } traders at any given time`}
+                    {`Maximum of ${getCapacityConfig()[0] * 2} active orders, maximum of ${getCapacityConfig()[1]} traders at any given time`}
                 </span>
             </div>
             <div className={styles.capacityTextContainer}>
                 <span className={styles.capacityText}>
-                    {`Expected cost: ${0.000006970 * (
+                    {`Expected cost: ${(0.000006970 * (
                         capacity === Capacity.Low ?
-                            444960
+                        84368
                         :
                             capacity === Capacity.Medium ?
-                                870944
+                            444960
                             :
-                                1722912
-                    )} SOL`}
+                                870944
+                    )).toFixed(9)} SOL`}
                 </span>
             </div>
         </div>

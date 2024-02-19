@@ -105,7 +105,7 @@ const PreviewDetails = () => {
                         <Form.Label className={styles.formFieldContainer}>
                             <span>{
                                 capacity === Capacity.Low ?
-                                    `Regular`
+                                    `Starter`
                                 :
                                     capacity === Capacity.Medium ?
                                         `Growth`
