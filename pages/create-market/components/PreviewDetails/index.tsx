@@ -3,14 +3,15 @@ import styles from "./PreviewDetails.module.css";
 import { Capacity, useCreateMarketContext } from "components/CreateMarketContextType";
 import { Form } from "react-bootstrap";
 import { WRAPPED_SOL_MAINNET, USDC_MAINNET, ROOT_PROTOCOL_LAMPORT_COLLECTOR } from "constants/";
+import { justFormatNumbersWithCommas } from "utils";
 
 const PreviewDetails = () => {
 
     const {
         baseTokenMint,
         quoteTokenMint,
-        baseLotsPerBaseUnit,
-        quoteLotsPerQuoteUnit,
+        baseUnitsPerBaseLot,
+        quoteUnitsPerQuoteLot,
         rawBaseUnitsPerBaseUnit,
         tickSizeInQuoteUnitsPerBaseUnit,
         capacity,
@@ -51,10 +52,10 @@ const PreviewDetails = () => {
                 <Form.Group controlId="formInput" className={styles.formGroup}>
                     <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
                         <Form.Label className={styles.formLabelContainer}>
-                            <span>Base units per base lot</span>
+                            <span>Base lots per base unit</span>
                         </Form.Label>
                         <Form.Label className={styles.formFieldContainer}>
-                            <span>{baseLotsPerBaseUnit}</span>
+                            <span>{justFormatNumbersWithCommas((1 / parseFloat(baseUnitsPerBaseLot)).toString())}</span>
                         </Form.Label>
                     </div>
                 </Form.Group>
@@ -63,10 +64,10 @@ const PreviewDetails = () => {
                 <Form.Group controlId="formInput" className={styles.formGroup}>
                     <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
                         <Form.Label className={styles.formLabelContainer}>
-                            <span>Quote units per quote lot</span>
+                            <span>Quote lots per quote unit</span>
                         </Form.Label>
                         <Form.Label className={styles.formFieldContainer}>
-                            <span>{quoteLotsPerQuoteUnit}</span>
+                            <span>{justFormatNumbersWithCommas((1 / parseFloat(quoteUnitsPerQuoteLot)).toString())}</span>
                         </Form.Label>
                     </div>
                 </Form.Group>
@@ -90,7 +91,7 @@ const PreviewDetails = () => {
                             <span>Tick size in quote units per base unit</span>
                         </Form.Label>
                         <Form.Label className={styles.formFieldContainer}>
-                            <span>{tickSizeInQuoteUnitsPerBaseUnit}</span>
+                            <span>{justFormatNumbersWithCommas((parseFloat(tickSizeInQuoteUnitsPerBaseUnit) / parseFloat(quoteUnitsPerQuoteLot)).toFixed(0))}</span>
                         </Form.Label>
                     </div>
                 </Form.Group>

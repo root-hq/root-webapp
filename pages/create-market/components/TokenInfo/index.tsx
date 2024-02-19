@@ -6,7 +6,7 @@ import { WRAPPED_SOL_MAINNET, USDC_MAINNET } from "constants/";
 
 const TokenInfo = () => {
 
-    const { baseTokenMint, quoteTokenMint, setBaseTokenMint, setQuoteTokenMint} = useCreateMarketContext();
+    const { baseTokenMint, quoteTokenMint, rawBaseUnitsPerBaseUnit, setBaseTokenMint, setQuoteTokenMint, setRawBaseUnitsPerBaseUnit} = useCreateMarketContext();
 
     return (
         <div className={styles.tokenInfoContainer}>
@@ -67,6 +67,35 @@ const TokenInfo = () => {
                                 setQuoteTokenMint(_ => e.target.value)
                             }}
                             value={quoteTokenMint} // Use inputText instead of inputAmount to show the decimal value
+                        />
+                    </div>
+                </Form.Group>
+            </div>
+            <div className={styles.formGroupContainer}>
+                <Form.Group controlId="formInput" className={styles.formGroup}>
+                    <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
+                        <Form.Label className={styles.formLabelContainer}>
+                            <span>Base units multiplier</span>
+                        </Form.Label>
+                        <Form.Control
+                            placeholder={`Eg. 1.0`}
+                            style={{
+                                backgroundColor: "transparent",
+                                fontSize: "1rem",
+                                fontWeight: "bold",
+                                textAlign: "right",
+                                color: "#ddd",
+                                border: "1px solid rgba(87, 87, 87, 0.5)",
+                                caretColor: "#ddd",
+                                padding: "1rem",
+                            }}
+                            min="0"
+                            step="0.01" // Allow any decimal value
+                            className={styles.formFieldContainer}
+                            onChange={(e) => {
+                                setRawBaseUnitsPerBaseUnit(_ => e.target.value)
+                            }}
+                            value={rawBaseUnitsPerBaseUnit} // Use inputText instead of inputAmount to show the decimal value
                         />
                     </div>
                 </Form.Group>

@@ -8,16 +8,19 @@ import { web3 } from "@coral-xyz/anchor";
 
 const MarketInfo = () => {
 
-    const { quoteTokenMint, baseLotsPerBaseUnit, quoteLotsPerQuoteUnit, rawBaseUnitsPerBaseUnit, capacity, tickSizeInQuoteUnitsPerBaseUnit, setBaseLotsPerBaseUnit, setQuoteLotsPerQuoteUnit, setRawBaseUnitsPerBaseUnit, setCapacity, setTickSizeInQuoteUnitsPerBaseUnit } = useCreateMarketContext();
+    const { quoteTokenMint, baseUnitsPerBaseLot, capacity, tickSizeInQuoteUnitsPerBaseUnit, setBaseUnitsPerBaseLot, setQuoteUnitsPerQuoteLot, setCapacity, setTickSizeInQuoteUnitsPerBaseUnit } = useCreateMarketContext();
 
     useEffect(() => {
         const loadQuoteLotSize = async() => {
-            const qtInfo = await getTokenInfo(new web3.PublicKey(quoteTokenMint));
-            setQuoteLotsPerQuoteUnit(_ => (1 / Math.pow(10, qtInfo.decimals)).toString());
+            if(quoteTokenMint) {
+                const qtInfo = await getTokenInfo(new web3.PublicKey(quoteTokenMint));
+                setQuoteUnitsPerQuoteLot(_ => (1 / Math.pow(10, qtInfo.decimals)).toString());    
+            }
         }
 
         loadQuoteLotSize();
-    }, []);
+    }, [quoteTokenMint]);
+
     return (
         <div className={styles.tokenInfoContainer}>
             <div className={styles.headerContainer}>
@@ -45,9 +48,9 @@ const MarketInfo = () => {
                             step="0.01" // Allow any decimal value
                             className={styles.formFieldContainer}
                             onChange={(e) => {
-                                setBaseLotsPerBaseUnit(_ => e.target.value)
+                                setBaseUnitsPerBaseLot(_ => e.target.value)
                             }}
-                            value={baseLotsPerBaseUnit} // Use inputText instead of inputAmount to show the decimal value
+                            value={baseUnitsPerBaseLot} // Use inputText instead of inputAmount to show the decimal value
                         />
                     </div>
                 </Form.Group>

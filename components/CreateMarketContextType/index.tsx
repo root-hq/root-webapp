@@ -16,10 +16,10 @@ interface CreateMarketContextType {
     quoteTokenMint: string;
     setQuoteTokenMint: React.Dispatch<React.SetStateAction<string>>;
 
-    baseLotsPerBaseUnit: string;
-    setBaseLotsPerBaseUnit: React.Dispatch<React.SetStateAction<string>>;
-    quoteLotsPerQuoteUnit: string;
-    setQuoteLotsPerQuoteUnit: React.Dispatch<React.SetStateAction<string>>;
+    baseUnitsPerBaseLot: string;
+    setBaseUnitsPerBaseLot: React.Dispatch<React.SetStateAction<string>>;
+    quoteUnitsPerQuoteLot: string;
+    setQuoteUnitsPerQuoteLot: React.Dispatch<React.SetStateAction<string>>;
     rawBaseUnitsPerBaseUnit: string;
     setRawBaseUnitsPerBaseUnit: React.Dispatch<React.SetStateAction<string>>;
 
@@ -51,21 +51,21 @@ export const useCreateMarketContext = () => {
 
 //@ts-ignore
 export const CreateMarketProvider = ({ children }) => {
-    const [baseTokenMint, setBaseTokenMint] = useState<string>("");
-    const [quoteTokenMint, setQuoteTokenMint] = useState<string>("");
-    const [baseLotsPerBaseUnit, setBaseLotsPerBaseUnit] = useState<string>("");
-    const [quoteLotsPerQuoteUnit, setQuoteLotsPerQuoteUnit] = useState<string>("");
-    const [rawBaseUnitsPerBaseUnit, setRawBaseUnitsPerBaseUnit] = useState<string>("");
-    const [tickSizeInQuoteUnitsPerBaseUnit, setTickSizeInQuoteUnitsPerBaseUnit] = useState<string>("");
+    const [baseTokenMint, setBaseTokenMint] = useState<string>("So11111111111111111111111111111111111111112");
+    const [quoteTokenMint, setQuoteTokenMint] = useState<string>("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+    const [baseUnitsPerBaseLot, setBaseUnitsPerBaseLot] = useState<string>("0.001");
+    const [quoteUnitsPerQuoteLot, setQuoteUnitsPerQuoteLot] = useState<string>("0.001");
+    const [rawBaseUnitsPerBaseUnit, setRawBaseUnitsPerBaseUnit] = useState<string>("1.0");
+    const [tickSizeInQuoteUnitsPerBaseUnit, setTickSizeInQuoteUnitsPerBaseUnit] = useState<string>("0.001");
     const [capacity, setCapacity] = useState<Capacity>(Capacity.Low);
-    const [takerFeeInBps, setTakerFeeInBps] = useState<string>("");
-    const [feeCollector, setFeeCollector] = useState<string>("");
+    const [takerFeeInBps, setTakerFeeInBps] = useState<string>("2");
+    const [feeCollector, setFeeCollector] = useState<string>("6HyM2raEk78s8PdiRKqSF36YtSZf3CjwmReTCtdaucuf");
 
     const resetAllFields = () => {
         setBaseTokenMint(_ => "");
         setQuoteTokenMint(_ => "");
-        setBaseLotsPerBaseUnit(_ => "");
-        setQuoteLotsPerQuoteUnit(_ => "");
+        setBaseUnitsPerBaseLot(_ => "");
+        setQuoteUnitsPerQuoteLot(_ => "");
         setRawBaseUnitsPerBaseUnit(_ => "");
         setTickSizeInQuoteUnitsPerBaseUnit(_ => "");
         setCapacity(_ => Capacity.Low);
@@ -78,10 +78,10 @@ export const CreateMarketProvider = ({ children }) => {
         setBaseTokenMint,
         quoteTokenMint,
         setQuoteTokenMint,
-        baseLotsPerBaseUnit,
-        setBaseLotsPerBaseUnit,
-        quoteLotsPerQuoteUnit,
-        setQuoteLotsPerQuoteUnit,
+        baseUnitsPerBaseLot,
+        setBaseUnitsPerBaseLot,
+        quoteUnitsPerQuoteLot,
+        setQuoteUnitsPerQuoteLot,
         rawBaseUnitsPerBaseUnit,
         setRawBaseUnitsPerBaseUnit,
         tickSizeInQuoteUnitsPerBaseUnit,
