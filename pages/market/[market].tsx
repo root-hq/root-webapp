@@ -21,7 +21,7 @@ import {
 
 import { web3 } from "@coral-xyz/anchor";
 import { Client, getConfirmedMarketAccountZstd } from "@ellipsis-labs/phoenix-sdk";
-import { ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS, MAX_ACCOUNT_SIZE_BYTES } from "constants/";
+import { MAX_ACCOUNT_SIZE_BYTES } from "constants/";
 
 import dynamic from "next/dynamic";
 import { useRootState } from "../../components/RootStateContextType";

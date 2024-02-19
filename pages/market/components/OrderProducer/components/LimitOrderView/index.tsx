@@ -96,7 +96,7 @@ const LimitOrderView = ({
     setLimitPrice("");
     setSendUptoSize("");
     setReceiveUptoSize("");
-    resetStatus();
+    // resetStatus();
   };
 
   useEffect(() => {
@@ -379,7 +379,7 @@ const LimitOrderView = ({
       } else if (!isBuyOrder && parseFloat(removeCommas(sendUptoSize))) {
         let priceInTicks = new BN(
           phoenixClient.floatPriceToTicks(
-            parseFloat(limitPrice),
+            parseFloat(removeCommas(limitPrice)),
             marketAddress,
           ),
         );
@@ -390,6 +390,7 @@ const LimitOrderView = ({
             marketAddress,
           ),
         );
+        // console.log(`Selling ${sizeInBaseLosts} base lots at ${priceInTicks} price in ticks`);
 
         try {
           let orderPacket = {
