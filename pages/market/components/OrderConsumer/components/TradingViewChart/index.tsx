@@ -11,6 +11,7 @@ import Datafeed from "../../../../../../utils/birdeye/Datafeed";
 import React from "react";
 import { ChartType } from "constants/";
 import { useRootState } from "components/RootStateContextType";
+import Link from "next/link";
 
 export interface TVChartContainerProps {
   props: Partial<ChartingLibraryWidgetOptions>;
@@ -147,6 +148,7 @@ const TVChartContainer = ({ props, chartType }: TVChartContainerProps) => {
   return (
     <>
       <div ref={chartContainerRef} className={styles.TVChartContainer} />
+      <div className={styles.tradinvViewTextContainer}>Charts powered by <Link href="https://www.tradingview.com" target="_blank">TradingView</Link></div>
     </>
   );
 };

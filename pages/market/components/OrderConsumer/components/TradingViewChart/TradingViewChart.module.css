@@ -2,3 +2,10 @@
   height: 450px;
   margin: 0.75rem;
 }
+
+.tradinvViewTextContainer {
+  color: #ddd;
+  font-size: 0.65rem;
+  margin: 0.5rem;
+  opacity: 0.5;
+}
