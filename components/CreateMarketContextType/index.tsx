@@ -76,7 +76,7 @@ export const CreateMarketProvider = ({ children }) => {
 
     const getCapacityConfig = () => {
         if(capacity === Capacity.Low) {
-            return [512, 128];
+            return [512, 1153];
         }
         else if(capacity === Capacity.Medium) {
             return [1024, 2177];

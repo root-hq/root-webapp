@@ -137,7 +137,7 @@ const MarketInfo = () => {
                 <span className={styles.capacityText}>
                     {`Expected cost: ${(0.000006970 * (
                         capacity === Capacity.Low ?
-                        84368
+                        231968
                         :
                             capacity === Capacity.Medium ?
                             444960
