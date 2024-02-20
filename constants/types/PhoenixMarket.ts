@@ -64,4 +64,12 @@ export const allPhoenixMarkets = [
         taker_fee_bps: "5",
         tick_size: "0.0001"
     } as PhoenixMarket,
+
+    {
+        phoenix_market_address: "96GCoubLr9Zk6oPEb1wnzuY7PXRqaGF9oP6DSCMPpFE2",
+        base_token_mint: "27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4",
+        quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        taker_fee_bps: "5",
+        tick_size: "0.0001"
+    } as PhoenixMarket
 ] as PhoenixMarket[];
