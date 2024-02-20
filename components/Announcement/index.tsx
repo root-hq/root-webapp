@@ -7,7 +7,7 @@ const Announcement = () => {
     const [showAnnouncement, setShowAnnouncement] = useState(true);
 
     useEffect(() => {
-        const hasClosedAnnouncement = localStorage.getItem('closedAnnouncement');
+        const hasClosedAnnouncement = localStorage.getItem('new:jlpusdc');
         if (hasClosedAnnouncement) {
           setShowAnnouncement(false);
         }
