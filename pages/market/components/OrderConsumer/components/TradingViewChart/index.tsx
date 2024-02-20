@@ -148,7 +148,7 @@ const TVChartContainer = ({ props, chartType }: TVChartContainerProps) => {
   return (
     <>
       <div ref={chartContainerRef} className={styles.TVChartContainer} />
-      <div className={styles.tradinvViewTextContainer}>Charts powered by <Link href="https://www.tradingview.com" target="_blank">TradingView</Link></div>
+      <div className={styles.tradinvViewTextContainer}>{`Charts powered by`}<Link className={styles.tvLink} href="https://www.tradingview.com" target="_blank">{`TradingView`}</Link></div>
     </>
   );
 };

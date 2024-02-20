@@ -21,6 +21,7 @@ const Header = dynamic(() => import("../components/Header"));
 import Script from "next/script";
 import dynamic from "next/dynamic";
 import { RootStateProvider } from "../components/RootStateContextType";
+import Announcement from "components/Announcement";
 
 // Use require instead of import since order matters
 // require("bootstrap/dist/css/bootstrap.min.css");
@@ -67,6 +68,7 @@ const App: FC<AppProps> = ({ Component, pageProps }) => {
               <WalletModalProvider>
                 <RootStateProvider>
                   <div>
+                  <Announcement />
                     <Header />
                   </div>
                   <Component {...pageProps} />

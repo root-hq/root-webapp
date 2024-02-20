@@ -1,0 +1,27 @@
+.announcementInnerContainer {
+    background-color: #27A6D6;
+    padding: 0.1rem;
+    display: flex;
+    justify-content: space-between;
+    top: 0;
+    color: #000;
+}
+
+.announcement {
+    /* font-weight: bold; */
+}
+
+.link {
+    margin-left: 1rem;
+    color: #000;
+    font-weight: normal;
+}
+
+.link:hover {
+    color: #000;
+}
+
+.closeButton {
+    margin-right: 1rem;
+    cursor: pointer;
+}

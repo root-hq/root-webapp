@@ -8,4 +8,10 @@
   font-size: 0.65rem;
   margin: 0.5rem;
   opacity: 0.5;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.tvLink {
+  margin-left: 0.25rem;
 }
