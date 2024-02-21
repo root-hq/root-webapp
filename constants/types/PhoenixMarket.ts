@@ -71,5 +71,13 @@ export const allPhoenixMarkets = [
         quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         taker_fee_bps: "5",
         tick_size: "0.0001"
+    } as PhoenixMarket,
+
+    {
+        phoenix_market_address: "FWZ6XSuQyfaNkRGwi3eqrY2iFEAA9tY3uvynWMDWbcB1",
+        base_token_mint: "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
+        quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        taker_fee_bps: "5",
+        tick_size: "0.00001"
     } as PhoenixMarket
 ] as PhoenixMarket[];

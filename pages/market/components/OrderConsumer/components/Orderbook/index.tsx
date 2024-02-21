@@ -193,7 +193,10 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
           <div className={styles.spread}>
             <span>{`
               ${
-                enumeratedMarket
+                spread.current === 0 ?
+                  `0`
+                :
+                  enumeratedMarket
                   ? decimalPlacesFromTickSize(
                       enumeratedMarket.phoenixMarket.tick_size,
                     ) >= 5

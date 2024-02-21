@@ -7,7 +7,7 @@ const Announcement = () => {
     const [showAnnouncement, setShowAnnouncement] = useState(true);
 
     useEffect(() => {
-        const hasClosedAnnouncement = localStorage.getItem('new:jlpusdc');
+        const hasClosedAnnouncement = localStorage.getItem('new:stepusdc');
         if (hasClosedAnnouncement) {
           setShowAnnouncement(false);
         }
@@ -15,7 +15,7 @@ const Announcement = () => {
     
       const handleClose = () => {
         setShowAnnouncement(false);
-        localStorage.setItem('new:jlpusdc', 'true');
+        localStorage.setItem('new:stepusdc', 'true');
       };
     
 
@@ -25,7 +25,7 @@ const Announcement = () => {
                 showAnnouncement ?
                     <div className={styles.announcementInnerContainer}>
                         <span></span>
-                        <span className={styles.announcement}><Link className={styles.link} href="https://root.exchange/market/96GCoubLr9Zk6oPEb1wnzuY7PXRqaGF9oP6DSCMPpFE2" target="_blank">{`JLP - USDC`}</Link> is live</span>
+                        <span className={styles.announcement}><Link className={styles.link} href="https://root.exchange/market/FWZ6XSuQyfaNkRGwi3eqrY2iFEAA9tY3uvynWMDWbcB1" target="_blank">{`STEP - USDC`}</Link> is live</span>
                         <span className={styles.closeButton} onClick={() => handleClose()}><i className="fa-solid fa-xmark"></i></span>
                     </div>
                 :
