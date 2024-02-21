@@ -193,7 +193,7 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
           <div className={styles.spread}>
             <span>{`
               ${
-                spread.current === 0 ?
+                spread.current <= 0 ?
                   `0`
                 :
                   enumeratedMarket
