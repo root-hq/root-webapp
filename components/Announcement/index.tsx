@@ -25,7 +25,7 @@ const Announcement = () => {
                 showAnnouncement ?
                     <div className={styles.announcementInnerContainer}>
                         <span></span>
-                        <span className={styles.announcement}><Link className={styles.link} href="/market/96GCoubLr9Zk6oPEb1wnzuY7PXRqaGF9oP6DSCMPpFE2" target="_blank">{`JLP - USDC`}</Link> is live</span>
+                        <span className={styles.announcement}><Link className={styles.link} href="https://root.exchange/market/96GCoubLr9Zk6oPEb1wnzuY7PXRqaGF9oP6DSCMPpFE2" target="_blank">{`JLP - USDC`}</Link> is live</span>
                         <span className={styles.closeButton} onClick={() => handleClose()}><i className="fa-solid fa-xmark"></i></span>
                     </div>
                 :
