@@ -463,7 +463,7 @@ const LimitOrderView = ({
             <Form.Control
               placeholder={
                 phoenixMarket
-                  ? decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 5
+                  ? decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 6
                     ? `0.0001`
                     : phoenixMarket.tick_size
                   : ``
@@ -498,7 +498,7 @@ const LimitOrderView = ({
               </span>
             </Form.Label>
             <Form.Control
-              placeholder={`${phoenixMarket ? (decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 5 ? `0.0001` : phoenixMarket.tick_size) : ``} ${baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
+              placeholder={`${phoenixMarket ? (decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 6 ? `0.0001` : phoenixMarket.tick_size) : ``} ${baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
               // disabled={!walletState.connected}
               style={{
                 backgroundColor: "transparent",

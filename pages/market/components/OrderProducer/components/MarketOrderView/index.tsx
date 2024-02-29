@@ -255,7 +255,7 @@ const MarketOrderView = ({
             <Form.Control
               placeholder={`${
                 phoenixMarket
-                  ? decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 5
+                  ? decimalPlacesFromTickSize(phoenixMarket.tick_size) >= 6
                     ? `0.0001`
                     : phoenixMarket.tick_size
                   : ``

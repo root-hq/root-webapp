@@ -93,7 +93,7 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
                 enumeratedMarket
                   ? enumeratedMarket.phoenixMarket.tick_size
                   : `0.001`,
-              ) >= 5 ? (
+              ) >= 6 ? (
                 <>{toScientificNotation(midPrice.current)}</>
               ) : (
                 <>

@@ -76,7 +76,7 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
                       {enumeratedMarket
                         ? decimalPlacesFromTickSize(
                             enumeratedMarket.phoenixMarket.tick_size,
-                          ) >= 5
+                          ) >= 6
                           ? toScientificNotation(order.price)
                           : order.price
                         : order.price}
@@ -85,7 +85,7 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
                       {enumeratedMarket
                         ? decimalPlacesFromTickSize(
                             enumeratedMarket.phoenixMarket.tick_size,
-                          ) >= 5
+                          ) >= 6
                           ? toScientificNotation(order.size)
                           : order.size
                         : order.size}
@@ -138,7 +138,7 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
                       {enumeratedMarket
                         ? decimalPlacesFromTickSize(
                             enumeratedMarket.phoenixMarket.tick_size,
-                          ) >= 5
+                          ) >= 6
                           ? toScientificNotation(order.price)
                           : order.price
                         : order.price}
@@ -147,7 +147,7 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
                       {enumeratedMarket
                         ? decimalPlacesFromTickSize(
                             enumeratedMarket.phoenixMarket.tick_size,
-                          ) >= 5
+                          ) >= 6
                           ? toScientificNotation(order.size)
                           : order.size
                         : order.size}
@@ -199,7 +199,7 @@ const Orderbook = ({ enumeratedMarket }: OrderBookProps) => {
                   enumeratedMarket
                   ? decimalPlacesFromTickSize(
                       enumeratedMarket.phoenixMarket.tick_size,
-                    ) >= 5
+                    ) >= 6
                     ? toScientificNotation(spread.current)
                     : spread.current.toFixed(
                         decimalPlacesFromTickSize(

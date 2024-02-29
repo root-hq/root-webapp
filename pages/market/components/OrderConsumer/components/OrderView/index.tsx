@@ -308,7 +308,7 @@ const OrderView = ({ enumeratedMarket, order }: OrderViewProps) => {
             {enumeratedMarket
               ? decimalPlacesFromTickSize(
                   enumeratedMarket.phoenixMarket.tick_size,
-                ) >= 5
+                ) >= 6
                 ? toScientificNotation(floatPrice)
                 : floatPrice.toFixed(
                     decimalPlacesFromTickSize(
