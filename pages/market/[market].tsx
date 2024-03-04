@@ -21,13 +21,14 @@ import {
 
 import { web3 } from "@coral-xyz/anchor";
 import { Client, getConfirmedMarketAccountZstd } from "@ellipsis-labs/phoenix-sdk";
-import { MAX_ACCOUNT_SIZE_BYTES } from "constants/";
+import { MAX_ACCOUNT_SIZE_BYTES, PageTab } from "constants/";
 
 import dynamic from "next/dynamic";
 import { useRootState } from "../../components/RootStateContextType";
 import { WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS } from "constants/";
 import { useRouter } from "next/router";
 import { ZSTDDecoder } from "zstddec";
+import BotPage from "./components/BotPage";
 
 export interface EnumeratedMarketToMetadata {
   phoenixMarket: PhoenixMarket;
@@ -45,6 +46,7 @@ const MarketPage = () => {
     innerWidth,
     innerHeight,
     isMobile,
+    activeTab
   } = useRootState();
 
   const [marketDataBuffer, setMarketDataBuffer] = useState<Buffer>(null);
@@ -245,57 +247,38 @@ const MarketPage = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <div>
-          <div
-            className={styles.marketPageContainer}
-            style={{
-              filter: !(isMobile.current && isMobileTradeModalOpen)
-                ? ``
-                : `blur(5px)`,
-            }}
-          >
-            <div className={styles.orderConsumerContainer}>
-              <div className={styles.orderConsumerChartContainer}>
-                <OrderConsumer
-                  enumeratedMarkets={enumeratedMarkets}
-                  selectedPhoenixMarket={phoenixMarketData}
-                  baseTokenMetadata={baseTokenMetadata}
-                  quoteTokenMetadata={quoteTokenMetadata}
-                  connection={connection}
-                />
-              </div>
-            </div>
-            <div className={styles.orderProducerContainer}>
-              <CLOBTrader
-                phoenixMarket={phoenixMarketData}
-                baseTokenMetadata={baseTokenMetadata}
-                quoteTokenMetadata={quoteTokenMetadata}
-              />
-            </div>
+      {
+        activeTab === PageTab.Trade ?
+          <div>
             <div
-              onClick={() => {
-                handleMobileTradeModalToggle();
+              className={styles.marketPageContainer}
+              style={{
+                filter: !(isMobile.current && isMobileTradeModalOpen)
+                  ? ``
+                  : `blur(5px)`,
               }}
             >
-              <FloatingTradeButton
-                isMobileTradeModalOpen={isMobileTradeModalOpen}
-              />
-            </div>
-          </div>
-          {isMobileTradeModalOpen && isMobile.current ? (
-            <div className={styles.mobileTradeModalContainer}>
-              <CLOBTrader
-                phoenixMarket={phoenixMarketData}
-                baseTokenMetadata={baseTokenMetadata}
-                quoteTokenMetadata={quoteTokenMetadata}
-              />
-    
+              <div className={styles.orderConsumerContainer}>
+                <div className={styles.orderConsumerChartContainer}>
+                  <OrderConsumer
+                    enumeratedMarkets={enumeratedMarkets}
+                    selectedPhoenixMarket={phoenixMarketData}
+                    baseTokenMetadata={baseTokenMetadata}
+                    quoteTokenMetadata={quoteTokenMetadata}
+                    connection={connection}
+                  />
+                </div>
+              </div>
+              <div className={styles.orderProducerContainer}>
+                <CLOBTrader
+                  phoenixMarket={phoenixMarketData}
+                  baseTokenMetadata={baseTokenMetadata}
+                  quoteTokenMetadata={quoteTokenMetadata}
+                />
+              </div>
               <div
                 onClick={() => {
                   handleMobileTradeModalToggle();
-                }}
-                style={{
-                  filter: `none`,
                 }}
               >
                 <FloatingTradeButton
@@ -303,10 +286,36 @@ const MarketPage = () => {
                 />
               </div>
             </div>
-          ) : (
-            <></>
-          )}
+            {isMobileTradeModalOpen && isMobile.current ? (
+              <div className={styles.mobileTradeModalContainer}>
+                <CLOBTrader
+                  phoenixMarket={phoenixMarketData}
+                  baseTokenMetadata={baseTokenMetadata}
+                  quoteTokenMetadata={quoteTokenMetadata}
+                />
+      
+                <div
+                  onClick={() => {
+                    handleMobileTradeModalToggle();
+                  }}
+                  style={{
+                    filter: `none`,
+                  }}
+                >
+                  <FloatingTradeButton
+                    isMobileTradeModalOpen={isMobileTradeModalOpen}
+                  />
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
+        :
+          <div className={styles.botPageContainer}>
+            <BotPage enumeratedMarkets={enumeratedMarkets} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata} selectedPhoenixMarket={phoenixMarketData}/>
+          </div>
+      }
     </div>
   );
 };

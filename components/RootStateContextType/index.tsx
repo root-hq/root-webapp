@@ -8,6 +8,7 @@ import {
 } from "@ellipsis-labs/phoenix-sdk";
 import { WalletContextState, useWallet } from "@solana/wallet-adapter-react";
 import { MAX_ACCOUNT_SIZE_BYTES } from "constants/";
+import { PageTab } from "constants/";
 import React, {
   MutableRefObject,
   createContext,
@@ -23,6 +24,7 @@ interface RootStateContextType {
   phoenixClient: Client;
   bids: L3UiOrder[];
   asks: L3UiOrder[];
+  activeTab: PageTab;
   midPrice: MutableRefObject<number>;
   spread: MutableRefObject<number>;
   instantaneousPriceIncrease: boolean;
@@ -30,6 +32,7 @@ interface RootStateContextType {
   innerHeight: MutableRefObject<number>;
   isMobile: MutableRefObject<boolean>;
   refreshBidsAndAsks: (zstdEncodedBuffer: Buffer) => void;
+  setActiveTab: (newTab: PageTab) => void;
   setConnection: (newConn: web3.Connection) => void;
   setPhoenixClient: (newClient: Client) => void;
 }
@@ -54,6 +57,7 @@ export const RootStateProvider = ({ children }) => {
   const [phoenixClient, setPhoenixClient] = useState<Client | undefined>(
     undefined,
   );
+  const [activeTab, setActiveTab] = useState<PageTab>(PageTab.Trade);
   const [bids, setBids] = useState<L3UiOrder[]>([]);
   const [asks, setAsks] = useState<L3UiOrder[]>([]);
   const midPrice = useRef<number>(0.0);
@@ -130,6 +134,8 @@ export const RootStateProvider = ({ children }) => {
     midPrice,
     spread,
     instantaneousPriceIncrease,
+    activeTab,
+    setActiveTab,
     innerWidth,
     innerHeight,
     isMobile,

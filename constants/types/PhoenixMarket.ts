@@ -6,7 +6,8 @@ export const allPhoenixMarkets = [
         base_token_mint: "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3",
         quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         taker_fee_bps: "5",
-        tick_size: "0.0001"
+        tick_size: "0.0001",
+        is_bot_enabled: false,
     } as PhoenixMarket,
 
     {
@@ -14,7 +15,8 @@ export const allPhoenixMarkets = [
         base_token_mint: "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm",
         quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         taker_fee_bps: "5",
-        tick_size: "0.0001"
+        tick_size: "0.0001",
+        is_bot_enabled: false,
     } as PhoenixMarket,
 
     {
@@ -22,7 +24,8 @@ export const allPhoenixMarkets = [
         base_token_mint: "So11111111111111111111111111111111111111112",
         quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         taker_fee_bps: "2",
-        tick_size: "0.001"
+        tick_size: "0.001",
+        is_bot_enabled: true,
     } as PhoenixMarket,
 
     {
@@ -30,7 +33,8 @@ export const allPhoenixMarkets = [
         base_token_mint: "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL",
         quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         taker_fee_bps: "5",
-        tick_size: "0.0001"
+        tick_size: "0.0001",
+        is_bot_enabled: false,
     } as PhoenixMarket,
 
     {
@@ -38,7 +42,8 @@ export const allPhoenixMarkets = [
         base_token_mint: "So11111111111111111111111111111111111111112",
         quote_token_mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
         taker_fee_bps: "2",
-        tick_size: "0.001"
+        tick_size: "0.001",
+        is_bot_enabled: false,
     } as PhoenixMarket,
 
     {
@@ -46,7 +51,8 @@ export const allPhoenixMarkets = [
         base_token_mint: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
         quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         taker_fee_bps: "5",
-        tick_size: "1e-10"
+        tick_size: "1e-10",
+        is_bot_enabled: false,
     } as PhoenixMarket,
 
     {
@@ -54,7 +60,8 @@ export const allPhoenixMarkets = [
         base_token_mint: "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs",
         quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         taker_fee_bps: "2",
-        tick_size: "0.01"
+        tick_size: "0.01",
+        is_bot_enabled: false,
     } as PhoenixMarket,
 
     {
@@ -62,7 +69,8 @@ export const allPhoenixMarkets = [
         base_token_mint: "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
         quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         taker_fee_bps: "5",
-        tick_size: "0.0001"
+        tick_size: "0.0001",
+        is_bot_enabled: false,
     } as PhoenixMarket,
 
     {
@@ -70,7 +78,8 @@ export const allPhoenixMarkets = [
         base_token_mint: "27G8MtK7VtTcCHkpASjSDdkWWYfoqT6ggEuKidVJidD4",
         quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         taker_fee_bps: "5",
-        tick_size: "0.0001"
+        tick_size: "0.0001",
+        is_bot_enabled: false,
     } as PhoenixMarket,
 
     {
@@ -78,6 +87,7 @@ export const allPhoenixMarkets = [
         base_token_mint: "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
         quote_token_mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
         taker_fee_bps: "5",
-        tick_size: "0.00001"
+        tick_size: "0.00001",
+        is_bot_enabled: false,
     } as PhoenixMarket
 ] as PhoenixMarket[];

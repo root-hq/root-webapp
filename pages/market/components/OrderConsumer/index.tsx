@@ -130,7 +130,7 @@ const OrderConsumer = ({
   };
 
   const memoizedTradingViewChart = useMemo(
-    () => <TVChartContainer props={defaultWidgetProps} chartType={chartType} />,
+    () => <TVChartContainer props={defaultWidgetProps} chartType={chartType} paneColor={`#0b0c11`} isBotPage={false}/>,
     [chartType, selectedPhoenixMarket, dummyCounter.current],
   );
   const memoizedOrderbook = useMemo(() => {
@@ -154,12 +154,14 @@ const OrderConsumer = ({
                 selectedQuoteTokenMetadata={quoteTokenMetadata}
                 topLevelActiveMarketState={activeMarket}
                 setTopLevelActiveMarketState={setActiveMarket}
+                isBotPage={true}
               />
             </div>
             <div className={styles.marketStatsContainer}>
               <MarketStats
                 enumeratedMarket={activeEnumeratedMarket}
                 showOrderBook={showOrderBook}
+                isBotPage={false}
               />
             </div>
           </div>

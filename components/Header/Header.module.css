@@ -14,6 +14,25 @@
   margin-left: 1rem;
 }
 
+.tabButtonsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.tabButton {
+  margin-left: 2rem;
+  margin-right: 2rem;
+  color: #575757;
+  cursor: pointer;
+}
+
+.tabButton:hover {
+  color: #888;
+}
+
 .actionButtonsContainer {
   display: flex;
   justify-content: center;

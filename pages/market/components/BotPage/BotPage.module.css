@@ -1,0 +1,146 @@
+.botPageContainer {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-top: 4rem;
+}
+
+.createBotHeaderContainer {
+    display: flex;
+    justify-content: center;
+    color: #eee;
+    font-size: 0.9rem;
+}
+
+.botViewerContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    /* height: 300px; */
+}
+
+.botChartContainer {
+    background-color: #0f1118;
+    width: 70%;
+    border-radius: 0.75rem 0rem 0rem 0.75rem;
+    border-left: 1px solid rgba(87, 87, 87, 0.25);
+    border-top: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+}
+
+.marketDataContainer {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  
+  .chartContainer {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 70%;
+  }
+  
+  .marketInfoContainer {
+    display: flex;  
+  }
+  
+  .marketSelectorContainer {
+    width: 50%;
+  }
+  
+  .marketStatsContainer {
+    width: 50%;
+    margin: auto;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 2rem;
+  }
+  
+
+.createBotContainer {
+    background-color: #0b0c11;
+    width: 30%;
+    border-radius: 0rem 0.75rem 0.75rem 0rem;
+    border-right: 1px solid rgba(87, 87, 87, 0.25);
+    border-top: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+}
+
+.createBotFormHeader {
+    margin: 1rem;
+    color: #ccc;
+    font-weight: bold;
+}
+
+.resetFieldsButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 2rem;
+}
+
+.resetFieldsButton {
+    color: #ccc;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.resetFieldsButton:hover {
+    font-weight: 500;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 1);
+  }
+  
+.createBotFormContainer {
+    margin: 1rem;
+    margin-top: 1rem;
+    color: #ccc;
+}
+
+.formGroupContainer {
+    /* padding-left: 1.25rem;
+    padding-right: 1.25rem; */
+    padding-top: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .formLabelAndFieldContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+  }
+
+  .formLabelAndFieldContainerNoBottomMargin {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+.fieldTitleContainer {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    align-items: center;
+  }
+
+.formLabelContainer {
+    width: 40%;
+  }
+  
+  .formFieldContainer {
+    width: 40%;
+  }
+
+  .depositTextContainer {
+    color: #e33d3d;
+    font-size: 0.75rem;
+  }
+  
+.activeBotsContainer {
+    /* background-color: red; */
+    width: 100%;
+    height: 140px;
+}

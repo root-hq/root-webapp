@@ -14,9 +14,10 @@ import { useRootState } from "components/RootStateContextType";
 export interface MarketStatsProps {
   enumeratedMarket: EnumeratedMarketToMetadata;
   showOrderBook: boolean;
+  isBotPage: boolean;
 }
 
-const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
+const MarketStats = ({ enumeratedMarket, showOrderBook, isBotPage }: MarketStatsProps) => {
   const { midPrice, instantaneousPriceIncrease, innerWidth, isMobile } =
     useRootState();
 
@@ -114,7 +115,7 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
           )}
         </div>
       </div>
-      <div className={styles.marketStat}>
+      <div className={styles.marketStat} style={{display: isBotPage ? `none`: ``}}>
         <div className={styles.statKey}>24h High</div>
         <div className={styles.statValue}>
           {dailyHigh.toFixed(
@@ -126,7 +127,7 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
           )}
         </div>
       </div>
-      <div className={styles.marketStat}>
+      <div className={styles.marketStat} style={{display: isBotPage ? `none`: ``}}>
         <div className={styles.statKey}>24h Low</div>
         <div className={styles.statValue}>
           {dailyLow.toFixed(
@@ -138,7 +139,7 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
           )}
         </div>
       </div>
-      <div className={styles.marketStat}>
+      <div className={styles.marketStat} style={{display: isBotPage ? `none`: ``}}>
         <div className={styles.statKey}>
           24h volume(
           {`${enumeratedMarket ? enumeratedMarket.quoteTokenMetadata.ticker : ``}`}

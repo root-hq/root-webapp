@@ -28,7 +28,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: rgba(87, 87, 87, 1);
+  color: #575757;
 }
 
 .managerViewOption:hover {
@@ -71,7 +71,7 @@
   background-color: rgba(227, 61, 61, 0.05);
   border: 0.1px solid transparent;
   border-radius: 0.25rem;
-  color: rgb(227, 61, 61);
+  color: #e33d3d;
   font-weight: bold;
   cursor: pointer;
   margin-left: 0.5rem;

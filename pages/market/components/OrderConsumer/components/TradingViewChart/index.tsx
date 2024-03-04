@@ -16,17 +16,19 @@ import Link from "next/link";
 export interface TVChartContainerProps {
   props: Partial<ChartingLibraryWidgetOptions>;
   chartType: ChartType;
+  paneColor: String;
+  isBotPage: boolean;
 }
 
-const TVChartContainer = ({ props, chartType }: TVChartContainerProps) => {
+const TVChartContainer = ({ props, chartType, paneColor, isBotPage }: TVChartContainerProps) => {
   const chartContainerRef =
     useRef<HTMLDivElement>() as React.MutableRefObject<HTMLInputElement>;
 
   const { isMobile } = useRootState();
 
   var customCSS = `:root:not(.theme-dark) {
-		  --tv-color-platform-background: #0B0C11;
-		  --tv-color-pane-background: #0B0C11;
+		  --tv-color-platform-background: ${paneColor};
+		  --tv-color-pane-background: ${paneColor};
 		  --tv-color-toolbar-button-background-hover: #12161E;
 		  --tv-color-toolbar-button-background-expanded: #12161E;
 		  --tv-color-toolbar-button-background-active: #12161E;
@@ -76,7 +78,7 @@ const TVChartContainer = ({ props, chartType }: TVChartContainerProps) => {
     ];
   }
 
-  if(chartType === ChartType.Lite || isMobile.current) {
+  if(chartType === ChartType.Lite || isMobile.current || isBotPage) {
     DEFAULT_DISABLED_FEATURES.push("left_toolbar");
   }
 
@@ -131,7 +133,8 @@ const TVChartContainer = ({ props, chartType }: TVChartContainerProps) => {
       // 			},
       // 		})
       // 	);
-      // 	button.innerHTML = "Check API";
+      	
+      //   button.innerHTML = ``;
       // });
       if (chartType === ChartType.Lite) {
         tvWidget.activeChart().setChartType(3);
@@ -147,7 +150,12 @@ const TVChartContainer = ({ props, chartType }: TVChartContainerProps) => {
 
   return (
     <>
-      <div ref={chartContainerRef} className={styles.TVChartContainer} />
+      <div ref={chartContainerRef} className={styles.TVChartContainer} style={{
+        // margin: noMargin ? `none` : ``
+        marginLeft: `0.75rem`,
+        marginRight: `0.75rem`,
+        marginTop: `0.75rem`
+      }}/>
       <div className={styles.tradinvViewTextContainer}>{`Charts powered by`}<Link className={styles.tvLink} href="https://www.tradingview.com" target="_blank">{`TradingView`}</Link></div>
     </>
   );

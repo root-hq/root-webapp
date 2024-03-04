@@ -20,6 +20,7 @@ export interface MarketSelectorDropdownProps {
   setTopLevelActiveMarketState: React.Dispatch<
     React.SetStateAction<PhoenixMarket>
   >;
+  isBotPage: boolean;
 }
 
 const MarketSelectorDropdown = ({
@@ -28,6 +29,7 @@ const MarketSelectorDropdown = ({
   selectedQuoteTokenMetadata,
   topLevelActiveMarketState,
   setTopLevelActiveMarketState,
+  isBotPage
 }: MarketSelectorDropdownProps) => {
   const router = useRouter();
 
@@ -150,7 +152,11 @@ const MarketSelectorDropdown = ({
 
   return (
     <div className={styles.marketDropdown} ref={marketSelectorDropdownRef}>
-      <button className={styles.dropdownButton} onClick={toggleDropdown}>
+      <button className={styles.dropdownButton} onClick={toggleDropdown} style={{
+        borderRight: isBotPage ? `none` : ``,
+        backgroundColor: isBotPage ? `#0f1118` : ``,
+        width: !isBotPage ? `100%` : ``
+      }}>
         {getTokenPair(activeBaseTokenMetadata, activeQuoteTokenMetadata, true)}
       </button>
       {isDropdownOpen && (

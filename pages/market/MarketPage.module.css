@@ -78,3 +78,13 @@
     width: 90%;
   }
 }
+
+
+.botPageContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+}

@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import Logo from "../Logo";
 import styles from "./Header.module.css";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { PageTab } from "constants/";
+import { useRootState } from "components/RootStateContextType";
 const WalletMultiButtonDynamic = dynamic(
   async () => (await import("../Wallet")).WalletMultiButton,
   { ssr: false },
 );
 
 const Header = () => {
+
+  const { activeTab, setActiveTab } = useRootState();
+
+  const handleActiveTabChange = (newTab: PageTab) => {
+    setActiveTab(newTab);
+  }
+  
   return (
     <div className={styles.headerContainer}>
       <div className={styles.logoContainer}>
@@ -16,6 +25,30 @@ const Header = () => {
           <Link href="/">
             <Logo />
           </Link>
+        </div>
+      </div>
+      <div className={styles.tabButtonsContainer}>
+        <div className={styles.tabButton}
+          onClick={() => {
+            handleActiveTabChange(PageTab.Trade)
+          }}
+          style={{
+            color: activeTab === PageTab.Trade ? `#477df2` : ``,
+            fontWeight: activeTab === PageTab.Trade ? `bold` : ``
+          }}
+        >
+          Trade
+        </div>
+        <div className={styles.tabButton}
+          onClick={() => {
+            handleActiveTabChange(PageTab.Bots)
+          }}
+          style = {{
+            color: activeTab === PageTab.Bots ? `#477df2` : ``,
+            fontWeight: activeTab === PageTab.Bots ? `bold` : ``
+          }}
+        >
+          Bots
         </div>
       </div>
       <div className={styles.actionButtonsContainer}>
