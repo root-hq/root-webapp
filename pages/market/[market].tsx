@@ -29,6 +29,9 @@ import { WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS } from "constants/";
 import { useRouter } from "next/router";
 import { ZSTDDecoder } from "zstddec";
 import BotPage from "./components/BotPage";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { getAssociatedTokenAddress } from "@solana/spl-token";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
 export interface EnumeratedMarketToMetadata {
   phoenixMarket: PhoenixMarket;
@@ -58,10 +61,15 @@ const MarketPage = () => {
   const [baseTokenMetadata, setBaseTokenMetadata] = useState<TokenMetadata>();
   const [quoteTokenMetadata, setQuoteTokenMetadata] = useState<TokenMetadata>();
 
+  const [baseTokenBalance, setBaseTokenBalance] = useState(0.0);
+  const [quoteTokenBalance, setQuoteTokenBalance] = useState(0.0);
+  const [nativeSOLBalance, setNativeSOLBalance] = useState(0.0);
+
   const [enumeratedMarkets, setEnumeratedMarkets] = useState<Map<string, EnumeratedMarketToMetadata>>(new Map());
 
   const router = useRouter();
   const phoenixMarketOnPage = router.query[`market`];
+  const walletState = useWallet();
 
   let lastMessageTimestamp = 0;
 
@@ -241,9 +249,62 @@ const MarketPage = () => {
     decodeBuffer();
   }, [marketDataBuffer]);
 
+  useEffect(() => {
+    const updateBalance = async () => {
+      if (walletState.connected) {
+        const baseTokenAddress = await getAssociatedTokenAddress(
+          new web3.PublicKey(baseTokenMetadata.mint),
+          walletState.publicKey,
+        );
+        const quoteTokenAddress = await getAssociatedTokenAddress(
+          new web3.PublicKey(quoteTokenMetadata.mint),
+          walletState.publicKey,
+        );
+
+        let baseBalance = 0;
+        try {
+          baseBalance = (
+            await connection.getTokenAccountBalance(baseTokenAddress)
+          ).value.uiAmount;
+        } catch (Err) {
+          // console.log(`Error fetching base ata balance`);
+          baseBalance = 0;
+        }
+
+        let quoteBalance = 0;
+        try {
+          quoteBalance = (
+            await connection.getTokenAccountBalance(quoteTokenAddress)
+          ).value.uiAmount;
+        } catch (err) {
+          // console.log(`Error fetching quote ata balance`);
+          quoteBalance = 0;
+        }
+
+        let nativeSOLLamports = await connection.getBalance(
+          walletState.publicKey,
+        );
+        let nativeSOLBalance = nativeSOLLamports / LAMPORTS_PER_SOL;
+
+        setBaseTokenBalance((_) => baseBalance);
+        setQuoteTokenBalance((_) => quoteBalance);
+        setNativeSOLBalance((_) => nativeSOLBalance);
+      } else {
+        setBaseTokenBalance((_) => 0);
+        setQuoteTokenBalance((_) => 0);
+      }
+    };
+
+    updateBalance();
+  }, [
+    phoenixMarketData,
+    walletState
+  ]);
+
   const handleMobileTradeModalToggle = () => {
     setIsMobileTradeModalOpen((_) => !isMobileTradeModalOpen);
   };
+  
 
   return (
     <div className={styles.mainContainer}>
@@ -313,7 +374,15 @@ const MarketPage = () => {
           </div>
         :
           <div className={styles.botPageContainer}>
-            <BotPage enumeratedMarkets={enumeratedMarkets} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata} selectedPhoenixMarket={phoenixMarketData}/>
+            <BotPage
+              enumeratedMarkets={enumeratedMarkets}
+              baseTokenMetadata={baseTokenMetadata}
+              quoteTokenMetadata={quoteTokenMetadata}
+              selectedPhoenixMarket={phoenixMarketData}
+              baseBalance={baseTokenBalance}
+              quoteBalance={quoteTokenBalance}
+              nativeSOLBalance={nativeSOLBalance}
+            />
           </div>
       }
     </div>

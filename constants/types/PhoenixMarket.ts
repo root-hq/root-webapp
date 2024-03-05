@@ -8,6 +8,7 @@ export const allPhoenixMarkets = [
         taker_fee_bps: "5",
         tick_size: "0.0001",
         is_bot_enabled: false,
+        bot_market_address: ''
     } as PhoenixMarket,
 
     {
@@ -17,6 +18,7 @@ export const allPhoenixMarkets = [
         taker_fee_bps: "5",
         tick_size: "0.0001",
         is_bot_enabled: false,
+        bot_market_address: ''
     } as PhoenixMarket,
 
     {
@@ -26,6 +28,7 @@ export const allPhoenixMarkets = [
         taker_fee_bps: "2",
         tick_size: "0.001",
         is_bot_enabled: true,
+        bot_market_address: '8CYDRGjWxfo3nNDKbyHaftyayfdatAf34igLFZUeULsm'
     } as PhoenixMarket,
 
     {
@@ -35,6 +38,7 @@ export const allPhoenixMarkets = [
         taker_fee_bps: "5",
         tick_size: "0.0001",
         is_bot_enabled: false,
+        bot_market_address: ''
     } as PhoenixMarket,
 
     {
@@ -44,6 +48,7 @@ export const allPhoenixMarkets = [
         taker_fee_bps: "2",
         tick_size: "0.001",
         is_bot_enabled: false,
+        bot_market_address: ''
     } as PhoenixMarket,
 
     {
@@ -53,6 +58,7 @@ export const allPhoenixMarkets = [
         taker_fee_bps: "5",
         tick_size: "1e-10",
         is_bot_enabled: false,
+        bot_market_address: ''
     } as PhoenixMarket,
 
     {
@@ -62,6 +68,7 @@ export const allPhoenixMarkets = [
         taker_fee_bps: "2",
         tick_size: "0.01",
         is_bot_enabled: false,
+        bot_market_address: ''
     } as PhoenixMarket,
 
     {
@@ -71,6 +78,7 @@ export const allPhoenixMarkets = [
         taker_fee_bps: "5",
         tick_size: "0.0001",
         is_bot_enabled: false,
+        bot_market_address: ''
     } as PhoenixMarket,
 
     {
@@ -80,6 +88,7 @@ export const allPhoenixMarkets = [
         taker_fee_bps: "5",
         tick_size: "0.0001",
         is_bot_enabled: false,
+        bot_market_address: ''
     } as PhoenixMarket,
 
     {
@@ -89,5 +98,6 @@ export const allPhoenixMarkets = [
         taker_fee_bps: "5",
         tick_size: "0.00001",
         is_bot_enabled: false,
+        bot_market_address: ''
     } as PhoenixMarket
 ] as PhoenixMarket[];

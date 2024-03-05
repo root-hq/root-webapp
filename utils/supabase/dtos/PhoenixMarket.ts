@@ -5,4 +5,5 @@ export interface PhoenixMarket {
   taker_fee_bps: string;
   tick_size: string;
   is_bot_enabled: boolean;
+  bot_market_address: string;
 }

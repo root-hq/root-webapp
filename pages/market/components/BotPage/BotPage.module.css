@@ -100,7 +100,7 @@
 .formGroupContainer {
     /* padding-left: 1.25rem;
     padding-right: 1.25rem; */
-    padding-top: 1rem;
+    padding-top: 2rem;
     font-size: 0.9rem;
   }
   
@@ -138,9 +138,54 @@
     color: #e33d3d;
     font-size: 0.75rem;
   }
+
+  .createBotButtonContainer {
+    width: 100%;
+  }
+
+  .createBotButton {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    border: none;
+    cursor: pointer;
+    background-color: rgba(61, 227, 131, 0.90);
+    font-weight: bold;
+    font-size: 1rem;
+  }
   
 .activeBotsContainer {
     /* background-color: red; */
     width: 100%;
     height: 140px;
+}
+
+.spinnerBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.threeQuarterSpinner {
+  width: 12px;
+  height: 12px;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.5s linear 0s infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@media (max-width: 1025px) {
+  .placeOrderButtonContainer {
+    margin-bottom: 4rem;
+  }
 }

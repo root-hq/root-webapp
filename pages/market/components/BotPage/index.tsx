@@ -3,30 +3,41 @@ import styles from "./BotPage.module.css";
 import { EnumeratedMarketToMetadata } from "pages/market/[market]";
 import { Order, PhoenixMarket, TokenMetadata, decimalPlacesFromTickSize } from "utils";
 import { ChartingLibraryWidgetOptions, ResolutionString } from "public/static/charting_library/charting_library";
-import { WRAPPED_SOL_MAINNET, DEFAULT_RESOLUTION, ChartType, USDC_MAINNET } from "constants/";
+import { WRAPPED_SOL_MAINNET, DEFAULT_RESOLUTION, ChartType, USDC_MAINNET, ROOT_PROTOCOL_LAMPORT_COLLECTOR } from "constants/";
 import TVChartContainer from "../OrderConsumer/components/TradingViewChart";
 import MarketSelectorDropdown from "../OrderConsumer/components/MarketSelectorDropdown";
 import MarketStats from "../OrderConsumer/components/MarketStats";
-import { Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useBottomStatus } from "components/BottomStatus";
-import { L3UiOrder, Side } from "@ellipsis-labs/phoenix-sdk";
+import { L3UiOrder, Side, getCreateTokenAccountInstructions } from "@ellipsis-labs/phoenix-sdk";
 import { useRootState } from "components/RootStateContextType";
+import * as spotGridSdk from "@squarerootlabs/root-spot-grid-ts";
+import { AnchorProvider, BN, web3 } from "@coral-xyz/anchor";
+import { getPriorityFeeEstimate } from "utils/helius";
+import { ComputeBudgetProgram, SystemProgram, TransactionInstruction } from "@solana/web3.js";
+import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
+import Link from "next/link";
 
 export interface BotPageProps {
     enumeratedMarkets: Map<string, EnumeratedMarketToMetadata>;
     selectedPhoenixMarket: PhoenixMarket;
     baseTokenMetadata: TokenMetadata;
     quoteTokenMetadata: TokenMetadata;
+    baseBalance: number;
+    quoteBalance: number;
+    nativeSOLBalance: number;
 }
 
 const BotPage = ({
     enumeratedMarkets,
     selectedPhoenixMarket,
     baseTokenMetadata,
-    quoteTokenMetadata
+    quoteTokenMetadata,
+    baseBalance,
+    quoteBalance,
+    nativeSOLBalance
 }: BotPageProps) => {
-
     const [activeMarket, setActiveMarket] = useState(selectedPhoenixMarket);
     const [activeEnumeratedMarket, setActiveEnumeratedMarket] =
       useState<EnumeratedMarketToMetadata>(null);
@@ -38,11 +49,14 @@ const BotPage = ({
   
     const [enumeratedMarketsArray, setEnumeratedMarketsArray] = useState<EnumeratedMarketToMetadata[]>([]);
   
-    const walletState = useWallet();
     const { updateStatus, green, red, resetStatus } = useBottomStatus();
-    const { midPrice } = useRootState();
+    const { midPrice, phoenixClient, connection } = useRootState();
+    const wallet = useWallet();
 
     const [previewOrders, setPreviewOrders] = useState<L3UiOrder[]>([]);
+    const [previewText, setPreviewText] = useState("");
+
+    const [isButtonLoading, setIsButtonLoading] = useState(false);
 
     const dummyCounter = useRef<number>(0);
 
@@ -109,6 +123,43 @@ const BotPage = ({
         calculatePreviewOrders();
       }, [minimumPrice, maximumPrice, numOrders, size, midPrice]);
 
+      useEffect(() => {
+        const calculatePreviewText = () => {
+            console.log("Setting preview text");
+            let baseSize = 0;
+            let quoteSize = 0;
+            
+            for(let order of previewOrders) {
+                if(order.side === Side.Bid) {
+                    quoteSize += order.size * order.price;
+                }
+                else {
+                    baseSize += order.size;
+                }
+            }
+
+            let text = "";
+
+            if(baseSize && quoteSize) {
+                text = `You deposit`;
+                if(baseSize > 0) {
+                    text += ` ${baseSize} ${baseTokenMetadata.ticker}`;
+                }
+
+                if(quoteSize > 0) {
+                    if(baseSize) {
+                        text += " and "
+                    }
+                    text += ` ${quoteSize} ${quoteTokenMetadata.ticker}`
+                }
+            }
+
+            setPreviewText(_ => text);
+        }
+
+        calculatePreviewText();
+      }, [previewOrders]);
+
       const handleMinimumPriceChange = (e) => {
         setMinimumPrice(_ => e.target.value);
       }
@@ -125,11 +176,182 @@ const BotPage = ({
         setSize(_ => e.target.value);
       }
 
+      const handleCreateBotAction = async () => {
+        setIsButtonLoading(_ => true);
+        try {
+            if(minimumPrice && maximumPrice && size && numOrders && selectedPhoenixMarket.is_bot_enabled) {
+                let priorityFeeLevels = null;
+
+                try {
+                  priorityFeeLevels = (await getPriorityFeeEstimate([selectedPhoenixMarket.phoenix_market_address]))
+                    .priorityFeeLevels;
+                } catch (err) {
+                  // console.log(`Error fetching priority fee levels`);
+                }
+          
+                updateStatus(<span>{`Preparing bot creation transaction...`}</span>);
+                let transaction = new web3.Transaction();
+          
+                // Create the priority fee instructions
+                let unitsPrice = 10;
+                if (priorityFeeLevels) {
+                    unitsPrice = priorityFeeLevels["veryHigh"];
+                }
+
+                const computePriceIx = ComputeBudgetProgram.setComputeUnitPrice({
+                    microLamports: parseInt(unitsPrice.toString()),
+                });
+
+                const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({
+                    units: 200_000,
+                });
+                transaction.add(computePriceIx);
+                transaction.add(computeLimitIx);
+
+                let baseAtaInitIxs = await getCreateTokenAccountInstructions(
+                    connection,
+                    wallet.publicKey,
+                    wallet.publicKey,
+                    new web3.PublicKey(baseTokenMetadata.mint),
+                );
+                
+                let quoteAtaInitIxs = await getCreateTokenAccountInstructions(
+                    connection,
+                    wallet.publicKey,
+                    wallet.publicKey,
+                    new web3.PublicKey(quoteTokenMetadata.mint),
+                );
+
+                for (let ix of baseAtaInitIxs) {
+                    transaction.add(ix);
+                }
+                for (let ix of quoteAtaInitIxs) {
+                    transaction.add(ix);
+                }
+
+                let wrapSOLIxs: TransactionInstruction[] = [];
+                let unwrapSOLIxs: TransactionInstruction[] = [];
+
+                // Add wrap/unwrap SOL ixs here
+                if (
+                    (quoteTokenMetadata.mint === WRAPPED_SOL_MAINNET) ||
+                    (baseTokenMetadata.mint === WRAPPED_SOL_MAINNET)
+                ) {
+                    const wSOLAta = await getAssociatedTokenAddress(
+                    new web3.PublicKey(WRAPPED_SOL_MAINNET),
+                    wallet.publicKey,
+                    );
+
+                    let balance = parseInt(
+                    (nativeSOLBalance * 0.99 * Math.pow(10, 9)).toString(),
+                    );
+                    console.log("Balance transfer: ", balance);
+
+                    let transferIx = SystemProgram.transfer({
+                    fromPubkey: wallet.publicKey,
+                    toPubkey: wSOLAta,
+                    lamports: balance,
+                    });
+
+                    // sync wrapped SOL balance
+                    let syncNativeIx = createSyncNativeInstruction(wSOLAta);
+
+                    wrapSOLIxs.push(transferIx);
+                    wrapSOLIxs.push(syncNativeIx);
+
+                    let withdrawIx = createCloseAccountInstruction(
+                    wSOLAta,
+                    wallet.publicKey,
+                    wallet.publicKey,
+                    );
+
+                    unwrapSOLIxs.push(withdrawIx);
+                }
+
+                for (let ix of wrapSOLIxs) {
+                    transaction.add(ix);
+                }
+
+                const positionArgs = {
+                    mode: {
+                        arithmetic: {}
+                    },
+                    numOrders: new BN(numOrders),
+                    minPriceInTicks: new BN(phoenixClient.floatPriceToTicks(parseFloat(minimumPrice), selectedPhoenixMarket.phoenix_market_address)),
+                    maxPriceInTicks: new BN(phoenixClient.floatPriceToTicks(parseFloat(maximumPrice), selectedPhoenixMarket.phoenix_market_address)),
+                    orderSizeInBaseLots: new BN(
+                        phoenixClient.baseAtomsToBaseLots(
+                          parseFloat(size) *
+                            Math.pow(10, baseTokenMetadata.decimals),
+                          selectedPhoenixMarket.phoenix_market_address,
+                        ),
+                      ),
+                } as spotGridSdk.PositionArgs;
+
+                let baseTokenUserAc = await getAssociatedTokenAddress(new web3.PublicKey(baseTokenMetadata.mint), wallet.publicKey);
+                let quoteTokenUserAc = await getAssociatedTokenAddress(new web3.PublicKey(quoteTokenMetadata.mint), wallet.publicKey);
+            
+                const provider = new AnchorProvider(connection, wallet, {});
+
+                let createBotIx = await spotGridSdk.createPosition({
+                    provider,
+                    botMarketAddress: new web3.PublicKey(selectedPhoenixMarket.bot_market_address),
+                    baseTokenUserAc,
+                    quoteTokenUserAc,
+                    positionArgs
+                });
+
+                for(let ix of createBotIx.transactionInfos[0].transaction.instructions) {
+                    console.log("ix program: ", ix.programId.toString());
+                    transaction.add(ix);
+                }
+    
+                // for (let ix of unwrapSOLIxs) {
+                //     transaction.add(ix);
+                // }
+
+                // Transfer 1 lamports to Root Multisig for future referencing purposes
+                // const transferIx = SystemProgram.transfer({
+                //     fromPubkey: wallet.publicKey,
+                //     toPubkey: new web3.PublicKey(ROOT_PROTOCOL_LAMPORT_COLLECTOR),
+                //     lamports: new BN(1),
+                // });
+                // transaction.add(transferIx);
+
+                updateStatus(<span>{`Awaiting confirmation ⏱...`}</span>);
+                let response = await wallet.sendTransaction(
+                    transaction,
+                    connection,
+                    {
+                    skipPreflight: true,
+                    },
+                );
+                green(
+                    <span>
+                    {`Bot created `}
+                    <Link
+                        href={`https://solscan.io/tx/${response}`}
+                        target="_blank"
+                    >{` ↗️`}</Link>
+                    </span>,
+                    3_000,
+                );
+            }
+        }
+        catch(err) {
+            red(<span>{`Failed: ${err.message}`}</span>, 2_000);
+        }
+        setIsButtonLoading(_ => false);
+        resetFields();
+      }
+
       const resetFields = () => {
         setMinimumPrice(_ => "");
         setMaximumPrice(_ => "");
         setNumOrders(_ => "");
         setSize(_ => "");
+        setPreviewOrders(_ => []);
+        setPreviewText(_ => "");
       }
 
       const calculatePreviewOrders = () => {
@@ -230,7 +452,7 @@ const BotPage = ({
                                                 : selectedPhoenixMarket.tick_size
                                             : ``
                                         }
-                                        // disabled={!walletState.connected}
+                                        // disabled={!wallet.connected}
                                         style={{
                                             backgroundColor: "transparent",
                                             fontSize: "1.1rem",
@@ -264,7 +486,7 @@ const BotPage = ({
                                                 : selectedPhoenixMarket.tick_size
                                             : ``
                                         }
-                                        // disabled={!walletState.connected}
+                                        // disabled={!wallet.connected}
                                         style={{
                                             backgroundColor: "transparent",
                                             fontSize: "1.1rem",
@@ -292,7 +514,7 @@ const BotPage = ({
                                     </Form.Label>
                                     <Form.Control
                                         placeholder={`5`}
-                                        // disabled={!walletState.connected}
+                                        // disabled={!wallet.connected}
                                         style={{
                                             backgroundColor: "transparent",
                                             fontSize: "1.1rem",
@@ -325,7 +547,7 @@ const BotPage = ({
                                     </Form.Label>
                                     <Form.Control
                                     placeholder={`${selectedPhoenixMarket ? (decimalPlacesFromTickSize(selectedPhoenixMarket.tick_size) >= 6 ? `0.0001` : selectedPhoenixMarket.tick_size) : ``} ${baseTokenMetadata ? baseTokenMetadata.ticker : ""}`}
-                                    // disabled={!walletState.connected}
+                                    // disabled={!wallet.connected}
                                     style={{
                                         backgroundColor: "transparent",
                                         fontSize: "1.1rem",
@@ -344,7 +566,7 @@ const BotPage = ({
                                     />
                                 </div>
                                 {/* <div className={styles.tokenBalanceContainer}>
-                                    {walletState.connected && !isBuyOrder ? (
+                                    {wallet.connected && !isBuyOrder ? (
                                     <div className={styles.userBalanceContainer}>
                                         <span
                                         className={styles.userBalance}
@@ -388,10 +610,39 @@ const BotPage = ({
                                     <Form.Label className={styles.depositTextContainer}>
                                     <span className={styles.fieldTitleContainer}>
                                         <span>
-                                        You deposit{" "}
+                                            {
+                                                previewText && previewText.length ?
+                                                    `${previewText}`
+                                                :
+                                                    ``
+                                            }
                                         </span>
                                     </span>
                                     </Form.Label>
+                                </div>
+                            </Form.Group>
+                        </Form>
+                        <Form>
+                            <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+                                <div className={styles.createBotButtonContainer}>
+                                    <Button className={styles.createBotButton}
+                                        onClick={() => handleCreateBotAction()}
+                                    >
+                                        {isButtonLoading ? (
+                                            <div className={styles.spinnerBox}>
+                                            <div
+                                                className={styles.threeQuarterSpinner}
+                                                style={{
+                                                border: "3px solid #0B0C11",
+                                                borderTop: `3px solid transparent`,
+                                                }}
+                                            ></div>
+                                            </div>
+                                        ) : (
+                                            <>{`Create bot`}</>
+                                        )}
+
+                                    </Button>
                                 </div>
                             </Form.Group>
                         </Form>
