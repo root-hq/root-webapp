@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./BotPage.module.css";
 import { EnumeratedMarketToMetadata } from "pages/market/[market]";
-import { Order, PhoenixMarket, TokenMetadata, TradingBotMarket, decimalPlacesFromTickSize } from "utils";
+import { Order, PhoenixMarket, TokenMetadata, TradingBotMarket, TradingBotPosition, decimalPlacesFromTickSize } from "utils";
 import { ChartingLibraryWidgetOptions, ResolutionString } from "public/static/charting_library/charting_library";
 import { WRAPPED_SOL_MAINNET, DEFAULT_RESOLUTION, ChartType, USDC_MAINNET, ROOT_PROTOCOL_LAMPORT_COLLECTOR } from "constants/";
 import TVChartContainer from "../OrderConsumer/components/TradingViewChart";
@@ -19,6 +19,7 @@ import { ComputeBudgetProgram, SystemProgram, TransactionInstruction } from "@so
 import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import Link from "next/link";
 import { allTradingBotMarkets as ALL_TRADING_BOT_MARKETS_METADATA } from "constants/types";
+import { addPosition } from "utils/supabase/TradingBotPosition";
 
 export interface BotPageProps {
     enumeratedMarkets: Map<string, EnumeratedMarketToMetadata>;
@@ -351,6 +352,26 @@ const BotPage = ({
                     skipPreflight: true,
                     },
                 );
+
+                try {
+                    await addPosition({
+                        owner: wallet.publicKey.toString(),
+                        position_address: createBotIx.positionAddress.toString(),
+                        position_key: createBotIx.positionKey.toString(),
+                        bot_market_address: selectedPhoenixMarket.bot_market_address,
+                        trade_manager_address: createBotIx.tradeManagerAddress.toString(),
+                        seat: createBotIx.seat.toString(),
+                        mode: `arithmetic`,
+                        num_orders: positionArgs.numOrders.toString(),
+                        min_price_in_ticks: positionArgs.minPriceInTicks.toString(),
+                        max_price_in_ticks: positionArgs.maxPriceInTicks.toString(),
+                        order_size_in_base_lots: positionArgs.orderSizeInBaseLots.toString()
+                    } as TradingBotPosition);
+                }
+                catch(err) {
+                    console.log("Error adding TradingBotPosition to database");
+                }
+                
                 green(
                     <span>
                     {`Bot created `}
