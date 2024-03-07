@@ -135,8 +135,15 @@
   }
 
   .depositTextContainer {
-    color: #e33d3d;
     font-size: 0.75rem;
+  }
+
+  .validationErrorText {
+    color: #e33d3d;
+  }
+
+  .previewText {
+    color: #3de383;
   }
 
   .createBotButtonContainer {

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./BotPage.module.css";
 import { EnumeratedMarketToMetadata } from "pages/market/[market]";
-import { Order, PhoenixMarket, TokenMetadata, decimalPlacesFromTickSize } from "utils";
+import { Order, PhoenixMarket, TokenMetadata, TradingBotMarket, decimalPlacesFromTickSize } from "utils";
 import { ChartingLibraryWidgetOptions, ResolutionString } from "public/static/charting_library/charting_library";
 import { WRAPPED_SOL_MAINNET, DEFAULT_RESOLUTION, ChartType, USDC_MAINNET, ROOT_PROTOCOL_LAMPORT_COLLECTOR } from "constants/";
 import TVChartContainer from "../OrderConsumer/components/TradingViewChart";
@@ -18,6 +18,7 @@ import { getPriorityFeeEstimate } from "utils/helius";
 import { ComputeBudgetProgram, SystemProgram, TransactionInstruction } from "@solana/web3.js";
 import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import Link from "next/link";
+import { allTradingBotMarkets as ALL_TRADING_BOT_MARKETS_METADATA } from "constants/types";
 
 export interface BotPageProps {
     enumeratedMarkets: Map<string, EnumeratedMarketToMetadata>;
@@ -46,15 +47,19 @@ const BotPage = ({
     const [maximumPrice, setMaximumPrice] = useState("");
     const [numOrders, setNumOrders] = useState("");
     const [size, setSize] = useState("");
+    const [requiredBaseSize, setRequiredBaseSize] = useState("");
+    const [requiredQuoteSize, setRequiredQuoteSize] = useState("");
   
     const [enumeratedMarketsArray, setEnumeratedMarketsArray] = useState<EnumeratedMarketToMetadata[]>([]);
-  
+    const [tradingBotMarketMetadata, setTradingBotMarketMetadata] = useState<TradingBotMarket>();
+    
     const { updateStatus, green, red, resetStatus } = useBottomStatus();
     const { midPrice, phoenixClient, connection } = useRootState();
     const wallet = useWallet();
 
     const [previewOrders, setPreviewOrders] = useState<L3UiOrder[]>([]);
     const [previewText, setPreviewText] = useState("");
+    const [validationErrorText, setValidationErrorText] = useState("");
 
     const [isButtonLoading, setIsButtonLoading] = useState(false);
 
@@ -82,6 +87,9 @@ const BotPage = ({
           if (selectedPhoenixMarket) {
             let aem = enumeratedMarkets.get(selectedPhoenixMarket.phoenix_market_address);
             setActiveEnumeratedMarket((_) => aem);
+
+            let tbmm = ALL_TRADING_BOT_MARKETS_METADATA.find((i) => i.phoenix_market_address === selectedPhoenixMarket.phoenix_market_address);
+            setTradingBotMarketMetadata(_ => tbmm);
           }
         };
     
@@ -124,8 +132,28 @@ const BotPage = ({
       }, [minimumPrice, maximumPrice, numOrders, size, midPrice]);
 
       useEffect(() => {
+        const validateSize = () => {
+            if(size) {
+                let sizeFloat = parseFloat(size);
+                let minSizeFloat = phoenixClient.baseLotsToBaseAtoms(parseFloat(tradingBotMarketMetadata.min_order_size_in_base_lots), selectedPhoenixMarket.phoenix_market_address) / Math.pow(10, baseTokenMetadata.decimals);
+
+                if(sizeFloat < minSizeFloat) {
+                    setValidationErrorText(_ => `Min. order size: ${minSizeFloat}`)
+                }
+                else {
+                    setValidationErrorText(_ => "");
+                }
+            }
+            else {
+                setValidationErrorText(_ => "");
+            }
+        }
+
+        validateSize();
+      }, [size]);
+
+      useEffect(() => {
         const calculatePreviewText = () => {
-            console.log("Setting preview text");
             let baseSize = 0;
             let quoteSize = 0;
             
@@ -140,17 +168,19 @@ const BotPage = ({
 
             let text = "";
 
-            if(baseSize && quoteSize) {
+            if(baseSize || quoteSize) {
                 text = `You deposit`;
                 if(baseSize > 0) {
-                    text += ` ${baseSize} ${baseTokenMetadata.ticker}`;
+                    text += ` ${baseSize.toFixed(baseTokenMetadata.decimals)} ${baseTokenMetadata.ticker}`;
+                    setRequiredBaseSize(_ => baseSize.toString());
                 }
 
-                if(quoteSize > 0) {
+                if(quoteSize >= 0) {
                     if(baseSize) {
                         text += " and "
                     }
-                    text += ` ${quoteSize} ${quoteTokenMetadata.ticker}`
+                    text += ` ${quoteSize.toFixed(quoteTokenMetadata.decimals)} ${quoteTokenMetadata.ticker}`;
+                    setRequiredQuoteSize(_ => quoteSize.toString());
                 }
             }
 
@@ -203,7 +233,7 @@ const BotPage = ({
                 });
 
                 const computeLimitIx = ComputeBudgetProgram.setComputeUnitLimit({
-                    units: 200_000,
+                    units: 500_000,
                 });
                 transaction.add(computePriceIx);
                 transaction.add(computeLimitIx);
@@ -242,10 +272,12 @@ const BotPage = ({
                     wallet.publicKey,
                     );
 
-                    let balance = parseInt(
-                    (nativeSOLBalance * 0.99 * Math.pow(10, 9)).toString(),
-                    );
-                    console.log("Balance transfer: ", balance);
+                    let balance = 0;
+                    if(requiredBaseSize) {
+                        balance = parseInt(
+                            (parseFloat(requiredBaseSize) * Math.pow(10, 9)).toString(),
+                            );
+                    }
 
                     let transferIx = SystemProgram.transfer({
                     fromPubkey: wallet.publicKey,
@@ -279,13 +311,7 @@ const BotPage = ({
                     numOrders: new BN(numOrders),
                     minPriceInTicks: new BN(phoenixClient.floatPriceToTicks(parseFloat(minimumPrice), selectedPhoenixMarket.phoenix_market_address)),
                     maxPriceInTicks: new BN(phoenixClient.floatPriceToTicks(parseFloat(maximumPrice), selectedPhoenixMarket.phoenix_market_address)),
-                    orderSizeInBaseLots: new BN(
-                        phoenixClient.baseAtomsToBaseLots(
-                          parseFloat(size) *
-                            Math.pow(10, baseTokenMetadata.decimals),
-                          selectedPhoenixMarket.phoenix_market_address,
-                        ),
-                      ),
+                    orderSizeInBaseLots: new BN(phoenixClient.baseAtomsToBaseLots(parseFloat(size) * Math.pow(10, baseTokenMetadata.decimals), selectedPhoenixMarket.phoenix_market_address)),
                 } as spotGridSdk.PositionArgs;
 
                 let baseTokenUserAc = await getAssociatedTokenAddress(new web3.PublicKey(baseTokenMetadata.mint), wallet.publicKey);
@@ -302,21 +328,20 @@ const BotPage = ({
                 });
 
                 for(let ix of createBotIx.transactionInfos[0].transaction.instructions) {
-                    console.log("ix program: ", ix.programId.toString());
                     transaction.add(ix);
                 }
     
-                // for (let ix of unwrapSOLIxs) {
-                //     transaction.add(ix);
-                // }
+                for (let ix of unwrapSOLIxs) {
+                    transaction.add(ix);
+                }
 
                 // Transfer 1 lamports to Root Multisig for future referencing purposes
-                // const transferIx = SystemProgram.transfer({
-                //     fromPubkey: wallet.publicKey,
-                //     toPubkey: new web3.PublicKey(ROOT_PROTOCOL_LAMPORT_COLLECTOR),
-                //     lamports: new BN(1),
-                // });
-                // transaction.add(transferIx);
+                const transferIx = SystemProgram.transfer({
+                    fromPubkey: wallet.publicKey,
+                    toPubkey: new web3.PublicKey(ROOT_PROTOCOL_LAMPORT_COLLECTOR),
+                    lamports: new BN(1),
+                });
+                transaction.add(transferIx);
 
                 updateStatus(<span>{`Awaiting confirmation ⏱...`}</span>);
                 let response = await wallet.sendTransaction(
@@ -366,7 +391,7 @@ const BotPage = ({
             let maxPrice = parseFloat(maximumPrice);
             let numOrds = parseFloat(numOrders);
             let step = (maxPrice - minPrice) / numOrds;
-            
+
             let tracker = minPrice;
             while(tracker < maxPrice) {
                 orders.push({
@@ -382,7 +407,6 @@ const BotPage = ({
                 tracker += step;
             }
 
-            console.log("Setting preview orders: ", orders);
             setPreviewOrders(_ => orders);
         }
       }
@@ -611,10 +635,13 @@ const BotPage = ({
                                     <span className={styles.fieldTitleContainer}>
                                         <span>
                                             {
-                                                previewText && previewText.length ?
-                                                    `${previewText}`
+                                                validationErrorText && validationErrorText.length ?
+                                                    <div className={styles.validationErrorText}>{`${validationErrorText}`}</div>
                                                 :
-                                                    ``
+                                                    previewText && previewText.length ?
+                                                    <div className={styles.previewText}>{`${previewText}`}</div>
+                                                    :
+                                                        ``
                                             }
                                         </span>
                                     </span>
@@ -622,11 +649,15 @@ const BotPage = ({
                                 </div>
                             </Form.Group>
                         </Form>
+                        
                         <Form>
                             <Form.Group controlId="formInput" className={styles.formGroupContainer}>
                                 <div className={styles.createBotButtonContainer}>
                                     <Button className={styles.createBotButton}
                                         onClick={() => handleCreateBotAction()}
+                                        disabled= {
+                                            validationErrorText && validationErrorText.length > 0
+                                        }
                                     >
                                         {isButtonLoading ? (
                                             <div className={styles.spinnerBox}>

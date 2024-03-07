@@ -1405,10 +1405,10 @@
     eventemitter3 "^5.0.1"
     uuid "^9.0.0"
 
-"@squarerootlabs/root-spot-grid-ts@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@squarerootlabs/root-spot-grid-ts/-/root-spot-grid-ts-0.0.2.tgz#ff72f75218b061ccfe4b55a2a63b535bbe84f8cd"
-  integrity sha512-l82arT9JJwJ5IKiaePf+NgY7y+grVMROe/qAZ0ZukETjehFPtaKpMhEu5hXETWQKBbPn6oClH6891iBaEOmygw==
+"@squarerootlabs/root-spot-grid-ts@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@squarerootlabs/root-spot-grid-ts/-/root-spot-grid-ts-0.0.4.tgz#be45fdd86cd0e1c42d82eb553daecf8b7feeb4d9"
+  integrity sha512-LDMFKNXb2Z03i/tZnhcM4McM7hUUDrAt0AwlhdtHpiN/kGiwmnufTqfjMWc2R+oxAUXuwsg5jVlc9BNgpy2eMw==
   dependencies:
     "@coral-xyz/anchor" "^0.26.0"
     "@ellipsis-labs/phoenix-sdk" "^2.0.2"
