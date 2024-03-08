@@ -19,8 +19,9 @@ import { ComputeBudgetProgram, SystemProgram, TransactionInstruction } from "@so
 import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import Link from "next/link";
 import { allTradingBotMarkets as ALL_TRADING_BOT_MARKETS_METADATA } from "constants/types";
-import { addPosition } from "utils/supabase/TradingBotPosition";
+import { addPosition, getPositionsForOwner } from "utils/supabase/TradingBotPosition";
 import { BotManagerView } from "constants/enums/BotManagerView";
+import ActiveBots from "./components/ActiveBots";
 
 export interface BotPageProps {
     enumeratedMarkets: Map<string, EnumeratedMarketToMetadata>;
@@ -51,13 +52,6 @@ const BotPage = ({
     const [size, setSize] = useState("");
     const [requiredBaseSize, setRequiredBaseSize] = useState("");
     const [requiredQuoteSize, setRequiredQuoteSize] = useState("");
-  
-    const [enumeratedMarketsArray, setEnumeratedMarketsArray] = useState<EnumeratedMarketToMetadata[]>([]);
-    const [tradingBotMarketMetadata, setTradingBotMarketMetadata] = useState<TradingBotMarket>();
-    
-    const { updateStatus, green, red, resetStatus } = useBottomStatus();
-    const { midPrice, phoenixClient, connection } = useRootState();
-    const wallet = useWallet();
 
     const [previewOrders, setPreviewOrders] = useState<L3UiOrder[]>([]);
     const [previewText, setPreviewText] = useState("");
@@ -65,6 +59,15 @@ const BotPage = ({
 
     const [isButtonLoading, setIsButtonLoading] = useState(false);
     const [userBotsActiveTab, setUserBotsActiveTab] = useState<BotManagerView>(BotManagerView.ActiveBots);
+
+    const [userBots, setUserBots] = useState<TradingBotPosition[]>([]);
+  
+    const [enumeratedMarketsArray, setEnumeratedMarketsArray] = useState<EnumeratedMarketToMetadata[]>([]);
+    const [tradingBotMarketMetadata, setTradingBotMarketMetadata] = useState<TradingBotMarket>();
+    
+    const { updateStatus, green, red, resetStatus } = useBottomStatus();
+    const { midPrice, phoenixClient, connection } = useRootState();
+    const wallet = useWallet();
 
     const dummyCounter = useRef<number>(0);
 
@@ -98,6 +101,24 @@ const BotPage = ({
     
         doStuff();
       }, [selectedPhoenixMarket]);
+
+      useEffect(() => {
+        const fetchUserBots = async () => {
+            console.log("Fetching user bots");
+            if(wallet && wallet.connected) {
+                const ub = await getPositionsForOwner(wallet.publicKey.toString());
+                console.log("Ub: ", ub);
+
+                setUserBots(_ => ub);
+            }
+            else {
+                setUserBots(_ => []);
+            }
+        }
+
+        fetchUserBots();
+
+      }, [selectedPhoenixMarket, wallet]);
     
       useEffect(() => {
         const incrementer = () => {
@@ -732,8 +753,75 @@ const BotPage = ({
                         <span className={styles.userBotMenuTitle}>History</span>
                     </div>
                 </div>
+                <div className={styles.columnNamesOuterContainer}>
+                    {
+                        <div className={styles.columnNamesContainer}>
+                            <div
+                                className={styles.columnNameRow}
+                                style={{ width: `${100 / 6}%` }}
+                            >
+                                <span className={styles.columnName}>{`Min. price`}</span>
+                            </div>
+                            <div
+                                className={styles.columnNameRow}
+                                style={{ width: `${100 / 6}%` }}
+                            >
+                                <span className={styles.columnName}>{`Max. price`}</span>
+                            </div>
+                            <div
+                                className={styles.columnNameRow}
+                                style={{ width: `${100 / 6}%` }}
+                            >
+                                <span className={styles.columnName}>{`Num. orders`}</span>
+                            </div>
+                            <div
+                                className={styles.columnNameRow}
+                                style={{ width: `${100 / 6}%` }}
+                            >
+                                <span className={styles.columnName}>{`Order size`}</span>
+                            </div>
+                            <div
+                                className={styles.columnNameRow}
+                                style={{ width: `${100 / 6}%` }}
+                            >
+                                <span className={styles.columnName}>{`Profit (${quoteTokenMetadata ? quoteTokenMetadata.ticker : ``})`}</span>
+                            </div>
+                            <div
+                                className={styles.columnNameRow}
+                                style={{ width: `${100 / 6}%` }}
+                            >
+                                <span className={styles.columnName}>{``}</span>
+                            </div>
+                        </div>
+                    }
+                </div>
                 <div className={styles.botsListViewContainer}>
-                          
+                    {
+                        wallet && userBots && userBots.length > 0 ?
+                            <div className={styles.botsListView}>
+                                {
+                                    userBots.map((bot, i) => {
+                                        if(bot) {
+                                            return (
+                                                <div className={styles.botView} key={bot.position_address}>
+                                                   <ActiveBots phoenixMarket={selectedPhoenixMarket} bot={bot} baseTokenMetadata={baseTokenMetadata}/>
+                                                </div>
+                                            )
+                                        }
+                                        else {
+                                            return (
+                                                <div>
+                                                </div>
+                                            )
+                                        }
+                                    })
+                                }
+                            </div>
+                        :
+                            <div className={styles.noOrderViewContainer}>
+                                <span>{`No active orders`}</span>
+                            </div>
+                    }
                 </div>
             </div>
         </div>
