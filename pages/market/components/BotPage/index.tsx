@@ -20,6 +20,7 @@ import { createCloseAccountInstruction, createSyncNativeInstruction, getAssociat
 import Link from "next/link";
 import { allTradingBotMarkets as ALL_TRADING_BOT_MARKETS_METADATA } from "constants/types";
 import { addPosition } from "utils/supabase/TradingBotPosition";
+import { BotManagerView } from "constants/enums/BotManagerView";
 
 export interface BotPageProps {
     enumeratedMarkets: Map<string, EnumeratedMarketToMetadata>;
@@ -63,6 +64,7 @@ const BotPage = ({
     const [validationErrorText, setValidationErrorText] = useState("");
 
     const [isButtonLoading, setIsButtonLoading] = useState(false);
+    const [userBotsActiveTab, setUserBotsActiveTab] = useState<BotManagerView>(BotManagerView.ActiveBots);
 
     const dummyCounter = useRef<number>(0);
 
@@ -391,6 +393,10 @@ const BotPage = ({
         resetFields();
       }
 
+      const handleBotManagerViewChange = (newView: BotManagerView) => {
+        setUserBotsActiveTab((_) => newView);
+      };
+
       const resetFields = () => {
         setMinimumPrice(_ => "");
         setMaximumPrice(_ => "");
@@ -702,6 +708,33 @@ const BotPage = ({
                 </div>
             </div>
             <div className={styles.activeBotsContainer}>
+                <div className={styles.userBotsMenuSwitch}>
+                    <div
+                        className={styles.userBotsMenuOption}
+                        onClick={() => {
+                            handleBotManagerViewChange(BotManagerView.ActiveBots);
+                          }}
+                          style={{
+                            color: userBotsActiveTab === BotManagerView.ActiveBots ? `#eee` : ``,
+                          }}
+                    >
+                        <span className={styles.userBotMenuTitle}>Active bots</span>
+                    </div>
+                    <div
+                        className={styles.userBotsMenuOption}
+                        onClick={() => {
+                            handleBotManagerViewChange(BotManagerView.History);
+                          }}
+                          style={{
+                            color: userBotsActiveTab === BotManagerView.History ? `#eee` : ``,
+                          }}
+                    >
+                        <span className={styles.userBotMenuTitle}>History</span>
+                    </div>
+                </div>
+                <div className={styles.botsListViewContainer}>
+                          
+                </div>
             </div>
         </div>
     );
