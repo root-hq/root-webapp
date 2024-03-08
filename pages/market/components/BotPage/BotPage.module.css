@@ -254,4 +254,29 @@
   .placeOrderButtonContainer {
     margin-bottom: 4rem;
   }
+
+  .botViewerContainer {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .botChartContainer {
+    width: 100%;
+    border-bottom: none;
+    border-radius: 0.75rem 0.75rem 0rem 0rem;
+    border-right: 1px solid rgba(87, 87, 87, 0.25);
+    border-left: 1px solid rgba(87, 87, 87, 0.25);
+    border-top: 1px solid rgba(87, 87, 87, 0.25);
+  }
+
+  .createBotContainer {
+    width: 100%;
+    border-top: none;
+    border-radius: 0rem 0rem 0.75rem 0.75rem;
+    border-right: 1px solid rgba(87, 87, 87, 0.25);
+    border-left: 1px solid rgba(87, 87, 87, 0.25);
+    border-bottom: 1px solid rgba(87, 87, 87, 0.25);
+  }
+
 }
