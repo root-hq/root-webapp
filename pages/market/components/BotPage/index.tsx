@@ -65,7 +65,7 @@ const BotPage = ({
     const [enumeratedMarketsArray, setEnumeratedMarketsArray] = useState<EnumeratedMarketToMetadata[]>([]);
     const [tradingBotMarketMetadata, setTradingBotMarketMetadata] = useState<TradingBotMarket>();
     
-    const { updateStatus, green, red, resetStatus } = useBottomStatus();
+    const { updateStatus, green, red } = useBottomStatus();
     const { midPrice, phoenixClient, connection } = useRootState();
     const wallet = useWallet();
 
@@ -388,7 +388,8 @@ const BotPage = ({
                         num_orders: positionArgs.numOrders.toString(),
                         min_price_in_ticks: positionArgs.minPriceInTicks.toString(),
                         max_price_in_ticks: positionArgs.maxPriceInTicks.toString(),
-                        order_size_in_base_lots: positionArgs.orderSizeInBaseLots.toString()
+                        order_size_in_base_lots: positionArgs.orderSizeInBaseLots.toString(),
+                        is_closed: false
                     } as TradingBotPosition);
                 }
                 catch(err) {
@@ -461,9 +462,6 @@ const BotPage = ({
 
     return (
         <div className={styles.botPageContainer}>
-            {/* <div className={styles.createBotHeaderContainer}>
-                <h1>Create a  bot</h1>
-            </div> */}
             <div className={styles.botViewerContainer}>
                 <div className={styles.botChartContainer}>
                     <div className={styles.marketDataContainer}>
@@ -804,7 +802,7 @@ const BotPage = ({
                                         if(bot) {
                                             return (
                                                 <div className={styles.botView} key={bot.position_address}>
-                                                   <ActiveBots phoenixMarket={selectedPhoenixMarket} bot={bot} baseTokenMetadata={baseTokenMetadata}/>
+                                                   <ActiveBots phoenixMarket={selectedPhoenixMarket} bot={bot} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata}/>
                                                 </div>
                                             )
                                         }

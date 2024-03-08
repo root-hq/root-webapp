@@ -21,6 +21,26 @@ export const addPosition = async (
     }
 }
 
+export const closePosition = async (
+  position: TradingBotPosition
+): Promise<boolean> => {
+  try {
+      const response = await axios.post(
+          `${process.env.SPOT_GRID_DATABASE_SERVER_URL}/api/bot/position/close-position`,
+          position
+        );
+    
+        if (response && response.data) {
+          return true;
+        } else {
+          return false;
+        }
+        }
+  catch(err) {
+      return false;
+  }
+}
+
 export const getPosition = async (
   positionAddress: String,
 ): Promise<TradingBotPosition> => {
