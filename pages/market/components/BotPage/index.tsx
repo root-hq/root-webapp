@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./BotPage.module.css";
 import { EnumeratedMarketToMetadata } from "pages/market/[market]";
-import { Order, PhoenixMarket, TokenMetadata, TradingBotMarket, TradingBotPosition, decimalPlacesFromTickSize } from "utils";
+import { Order, PhoenixMarket, TokenMetadata, TradingBotMarket, TradingBotPosition, decimalPlacesFromTickSize, getTraderState } from "utils";
 import { ChartingLibraryWidgetOptions, ResolutionString } from "public/static/charting_library/charting_library";
-import { WRAPPED_SOL_MAINNET, DEFAULT_RESOLUTION, ChartType, USDC_MAINNET, ROOT_PROTOCOL_LAMPORT_COLLECTOR } from "constants/";
+import { WRAPPED_SOL_MAINNET, DEFAULT_RESOLUTION, ChartType, USDC_MAINNET, ROOT_PROTOCOL_LAMPORT_COLLECTOR, ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS } from "constants/";
 import TVChartContainer from "../OrderConsumer/components/TradingViewChart";
 import MarketSelectorDropdown from "../OrderConsumer/components/MarketSelectorDropdown";
 import MarketStats from "../OrderConsumer/components/MarketStats";
@@ -104,11 +104,8 @@ const BotPage = ({
 
       useEffect(() => {
         const fetchUserBots = async () => {
-            console.log("Fetching user bots");
             if(wallet && wallet.connected) {
                 const ub = await getPositionsForOwner(wallet.publicKey.toString());
-                console.log("Ub: ", ub);
-
                 setUserBots(_ => ub);
             }
             else {
@@ -116,8 +113,12 @@ const BotPage = ({
             }
         }
 
-        fetchUserBots();
-
+        const intervalId = setInterval(() => {
+            fetchUserBots();
+          }, ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS);
+      
+          return () => clearInterval(intervalId);
+      
       }, [selectedPhoenixMarket, wallet]);
     
       useEffect(() => {
@@ -368,6 +369,7 @@ const BotPage = ({
                 transaction.add(transferIx);
 
                 updateStatus(<span>{`Awaiting confirmation ⏱...`}</span>);
+                console.log("Gonna post: ", requiredQuoteSize);
                 let response = await wallet.sendTransaction(
                     transaction,
                     connection,
@@ -389,6 +391,7 @@ const BotPage = ({
                         min_price_in_ticks: positionArgs.minPriceInTicks.toString(),
                         max_price_in_ticks: positionArgs.maxPriceInTicks.toString(),
                         order_size_in_base_lots: positionArgs.orderSizeInBaseLots.toString(),
+                        quote_size_deposited: requiredQuoteSize,
                         is_closed: false
                     } as TradingBotPosition);
                 }
@@ -739,7 +742,7 @@ const BotPage = ({
                     >
                         <span className={styles.userBotMenuTitle}>Active bots</span>
                     </div>
-                    <div
+                    {/* <div
                         className={styles.userBotsMenuOption}
                         onClick={() => {
                             handleBotManagerViewChange(BotManagerView.History);
@@ -749,7 +752,7 @@ const BotPage = ({
                           }}
                     >
                         <span className={styles.userBotMenuTitle}>History</span>
-                    </div>
+                    </div> */}
                 </div>
                 <div className={styles.columnNamesOuterContainer}>
                     {
@@ -817,7 +820,7 @@ const BotPage = ({
                             </div>
                         :
                             <div className={styles.noOrderViewContainer}>
-                                <span>{`No active orders`}</span>
+                                <span>{`No active bots`}</span>
                             </div>
                     }
                 </div>

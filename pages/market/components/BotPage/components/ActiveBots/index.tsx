@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ActiveBots.module.css";
-import { PhoenixMarket, TokenMetadata, TradingBotPosition, delay } from "utils";
+import { PhoenixMarket, TokenMetadata, TradingBotPosition, delay, getTraderState } from "utils";
 import { useRootState } from "components/RootStateContextType";
 import { useBottomStatus } from "components/BottomStatus";
 import { getPriorityFeeEstimate } from "utils/helius";
@@ -8,7 +8,7 @@ import { AnchorProvider, BN, web3 } from "@coral-xyz/anchor";
 import { ComputeBudgetProgram, SystemProgram, TransactionInstruction } from "@solana/web3.js";
 import { getCreateTokenAccountInstructions } from "@ellipsis-labs/phoenix-sdk";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { ROOT_PROTOCOL_LAMPORT_COLLECTOR, WRAPPED_SOL_MAINNET } from "constants/";
+import { ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS, ROOT_PROTOCOL_LAMPORT_COLLECTOR, WRAPPED_SOL_MAINNET } from "constants/";
 import { createCloseAccountInstruction, getAssociatedTokenAddress } from "@solana/spl-token";
 import * as spotGridSdk from "@squarerootlabs/root-spot-grid-ts";
 import { addPosition, closePosition } from "utils/supabase/TradingBotPosition";
@@ -32,6 +32,9 @@ const ActiveBots = ({
     const [uiMaxPrice, setUiMaxPrice] = useState<string>("");
     const [uiNumOrders, setUiNumOrders] = useState<string>("");
     const [uiOrderSize, setUiOrderSize] = useState<string>("");
+    const [uiProfitQuoteSize, setUiProfitQuoteSize] = useState<string>("");
+
+    const [quoteWithdrawableBalance, setQuoteWithdrawableBalance] = useState<string>("0");
 
     const [isCloseBotButtonLoading, setIsCloseBotButtonLoading] = useState<boolean>(false);
 
@@ -62,6 +65,42 @@ const ActiveBots = ({
 
         populateLocalState();
     }, [phoenixMarket, bot]);
+
+    useEffect(() => {
+      const updateProfit = () => {
+        try {
+          let profit = parseFloat(quoteWithdrawableBalance) - parseFloat(bot.quote_size_deposited);
+          profit = Math.max(0, profit);
+          setUiProfitQuoteSize(_ => profit.toString());
+        }
+        catch(err) {
+          console.log(`Error updating profit: ${err}`);
+          setUiProfitQuoteSize(_ => "0");
+        }
+      }
+
+      updateProfit();
+    }, [quoteWithdrawableBalance]);
+
+    useEffect(() => {
+      const fetchUserWithdrawableQuoteBalance = async () => {
+          if(phoenixClient && wallet && wallet.connected) {
+              const traderState = await getTraderState(phoenixClient, phoenixMarket.phoenix_market_address, bot.trade_manager_address);
+              setQuoteWithdrawableBalance(_ => traderState.quoteWithdrawableBalance.toFixed(quoteTokenMetadata.decimals)); 
+          }
+          else {
+              setQuoteWithdrawableBalance(_ => "0");
+          }
+      }
+
+      const intervalId = setInterval(() => {
+          fetchUserWithdrawableQuoteBalance();
+        }, ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS);
+    
+        return () => clearInterval(intervalId);
+    
+    }, [phoenixMarket, wallet]);
+
 
     const handleCloseBotAction = async () => {
         setIsCloseBotButtonLoading(true);
@@ -127,11 +166,11 @@ const ActiveBots = ({
                   new web3.PublicKey(WRAPPED_SOL_MAINNET),
                   wallet.publicKey,
                   );
-
+                  
                   let withdrawIx = createCloseAccountInstruction(
-                  wSOLAta,
-                  wallet.publicKey,
-                  wallet.publicKey,
+                    wSOLAta,
+                    wallet.publicKey,
+                    wallet.publicKey,
                   );
 
                   unwrapSOLIxs.push(withdrawIx);
@@ -142,7 +181,7 @@ const ActiveBots = ({
           
               const provider = new AnchorProvider(connection, wallet, {});
 
-              let closeBotIx = await spotGridSdk.closePosition({
+              let closeBotIx = await spotGridSdk.cancelOrdersAndClosePosition({
                 provider,
                 botMarketAddress: new web3.PublicKey(phoenixMarket.bot_market_address),
                 positionAddress: new web3.PublicKey(bot.position_address),
@@ -178,7 +217,7 @@ const ActiveBots = ({
               try {
                   await closePosition({
                       owner: wallet.publicKey.toString(),
-                      position_address: closeBotIx.positionAddress.toString(),
+                      position_address: bot.position_address.toString(),
                       position_key: bot.position_key.toString(),
                       bot_market_address: phoenixMarket.bot_market_address,
                       trade_manager_address: bot.trade_manager_address.toString(),
@@ -209,6 +248,7 @@ const ActiveBots = ({
         }
         catch(err) {
             red(<span>{`Failed: ${err.message}`}</span>, 2_000);
+            console.log("err: ", err);
         }
         setIsCloseBotButtonLoading(false);
     }
@@ -238,7 +278,7 @@ const ActiveBots = ({
             </div>
             <div className={styles.columnNameRow}>
               <span className={styles.columnName}>
-                {uiOrderSize}
+                {uiProfitQuoteSize}
               </span>
             </div>
             <div className={styles.columnNameRow}>

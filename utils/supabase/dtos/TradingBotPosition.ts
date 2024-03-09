@@ -10,6 +10,7 @@ export interface TradingBotPosition {
     min_price_in_ticks: string;
     max_price_in_ticks: string;
     order_size_in_base_lots: string;
+    quote_size_deposited: string;
     is_closed: boolean;
   }
   
