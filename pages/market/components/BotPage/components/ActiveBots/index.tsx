@@ -86,7 +86,6 @@ const ActiveBots = ({
           if(phoenixClient && wallet && wallet.connected) {
               const traderState = await getTraderState(phoenixClient, phoenixMarket.phoenix_market_address, bot.trade_manager_address);
               const profit = (traderState.quoteWithdrawableBalance) / Math.pow(10, quoteTokenMetadata.decimals);
-              console.log("profit: ", profit);
               setQuoteWithdrawableBalance(_ => profit.toString()); 
           }
           else {
