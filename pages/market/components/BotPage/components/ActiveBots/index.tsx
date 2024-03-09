@@ -69,12 +69,11 @@ const ActiveBots = ({
     useEffect(() => {
       const updateProfit = () => {
         try {
-          let profit = parseFloat(quoteWithdrawableBalance) - parseFloat(bot.quote_size_deposited);
+          let profit = parseFloat(quoteWithdrawableBalance);
           profit = Math.max(0, profit);
           setUiProfitQuoteSize(_ => profit.toString());
         }
         catch(err) {
-          console.log(`Error updating profit: ${err}`);
           setUiProfitQuoteSize(_ => "0");
         }
       }
@@ -86,7 +85,9 @@ const ActiveBots = ({
       const fetchUserWithdrawableQuoteBalance = async () => {
           if(phoenixClient && wallet && wallet.connected) {
               const traderState = await getTraderState(phoenixClient, phoenixMarket.phoenix_market_address, bot.trade_manager_address);
-              setQuoteWithdrawableBalance(_ => traderState.quoteWithdrawableBalance.toFixed(quoteTokenMetadata.decimals)); 
+              const profit = (traderState.quoteWithdrawableBalance) / Math.pow(10, quoteTokenMetadata.decimals);
+              console.log("profit: ", profit);
+              setQuoteWithdrawableBalance(_ => profit.toString()); 
           }
           else {
               setQuoteWithdrawableBalance(_ => "0");
@@ -277,8 +278,14 @@ const ActiveBots = ({
               </span>
             </div>
             <div className={styles.columnNameRow}>
-              <span className={styles.columnName}>
-                {uiProfitQuoteSize}
+              <span className={styles.columnName}
+                style = {{
+                  color: `#3de383e6`
+                }}
+              >
+                {
+                  `+${Math.max(0, parseFloat(quoteWithdrawableBalance))}`
+                }
               </span>
             </div>
             <div className={styles.columnNameRow}>
