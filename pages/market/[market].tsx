@@ -28,7 +28,6 @@ import { useRootState } from "../../components/RootStateContextType";
 import { WEBSOCKETS_UPDATE_THROTTLING_INTERVAL_IN_MS } from "constants/";
 import { useRouter } from "next/router";
 import { ZSTDDecoder } from "zstddec";
-import BotPage from "./components/BotPage";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
@@ -309,9 +308,7 @@ const MarketPage = () => {
 
   return (
     <div className={styles.mainContainer}>
-      {
-        activeTab === PageTab.Trade ?
-          <div>
+      <div>
             <div
               className={styles.marketPageContainer}
               style={{
@@ -373,19 +370,6 @@ const MarketPage = () => {
               <></>
             )}
           </div>
-        :
-          <div className={styles.botPageContainer}>
-            <BotPage
-              enumeratedMarkets={enumeratedMarkets}
-              baseTokenMetadata={baseTokenMetadata}
-              quoteTokenMetadata={quoteTokenMetadata}
-              selectedPhoenixMarket={phoenixMarketData}
-              baseBalance={baseTokenBalance}
-              quoteBalance={quoteTokenBalance}
-              nativeSOLBalance={nativeSOLBalance}
-            />
-          </div>
-      }
     </div>
   );
 };

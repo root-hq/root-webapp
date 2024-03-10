@@ -30,15 +30,13 @@ const ActiveBots = ({
 
     const [uiMinPrice, setUiMinPrice] = useState<string>("");
     const [uiMaxPrice, setUiMaxPrice] = useState<string>("");
-    const [uiNumOrders, setUiNumOrders] = useState<string>("");
-    const [uiOrderSize, setUiOrderSize] = useState<string>("");
+    const [depositValueUSD, setDepositValueUSD] = useState<string>("");
     const [uiProfitQuoteSize, setUiProfitQuoteSize] = useState<string>("");
-
-    const [quoteWithdrawableBalance, setQuoteWithdrawableBalance] = useState<string>("0");
+    const [realizedAPR, setRealizedAPR] = useState<string>("");
 
     const [isCloseBotButtonLoading, setIsCloseBotButtonLoading] = useState<boolean>(false);
 
-    const { phoenixClient, connection } = useRootState();
+    const { phoenixClient, connection, midPrice } = useRootState();
     const { updateStatus, green, red } = useBottomStatus();
     const wallet = useWallet();
 
@@ -52,14 +50,10 @@ const ActiveBots = ({
 
                 setUiMinPrice(_ => minPriceFloat.toString());
                 setUiMaxPrice(_ => maxPriceFloat.toString());
-                setUiNumOrders(_ => numOrdersInt.toString());
-                setUiOrderSize(_ => orderSizeFloat.toString());
             }
             else {
                 setUiMinPrice(_ => ``);
                 setUiMaxPrice(_ => ``);
-                setUiNumOrders(_ => ``);
-                setUiOrderSize(_ => ``);
             }
         }
 
@@ -67,29 +61,24 @@ const ActiveBots = ({
     }, [phoenixMarket, bot]);
 
     useEffect(() => {
-      const updateProfit = () => {
-        try {
-          let profit = parseFloat(quoteWithdrawableBalance);
-          profit = Math.max(0, profit);
-          setUiProfitQuoteSize(_ => profit.toString());
-        }
-        catch(err) {
-          setUiProfitQuoteSize(_ => "0");
-        }
-      }
-
-      updateProfit();
-    }, [quoteWithdrawableBalance]);
-
-    useEffect(() => {
       const fetchUserWithdrawableQuoteBalance = async () => {
           if(phoenixClient && wallet && wallet.connected) {
               const traderState = await getTraderState(phoenixClient, phoenixMarket.phoenix_market_address, bot.trade_manager_address);
-              const profit = (traderState.quoteWithdrawableBalance) / Math.pow(10, quoteTokenMetadata.decimals);
-              setQuoteWithdrawableBalance(_ => profit.toString()); 
+              const quoteVal = (traderState.quoteWithdrawableBalance + traderState.quoteActiveOrdersBalance) / Math.pow(10, quoteTokenMetadata.decimals);
+              const baseValLots = traderState.baseActiveOrdersBalance + traderState.baseWithdrawableBalance;
+              const baseVal = phoenixClient.baseLotsToBaseAtoms(baseValLots, phoenixMarket.phoenix_market_address) / Math.pow(10, baseTokenMetadata.decimals);
+
+              const portfolioVal = (baseVal * midPrice.current) + quoteVal;
+              const growth = portfolioVal - parseFloat(bot.quote_size_deposited);
+
+              const apr = (growth / parseFloat(bot.quote_size_deposited)) * 100;
+
+              setDepositValueUSD(_ => portfolioVal.toFixed(4));
+              setUiProfitQuoteSize(_ => growth.toFixed(4));
+              setRealizedAPR(_ => apr.toFixed(4));
           }
           else {
-              setQuoteWithdrawableBalance(_ => "0");
+            setUiProfitQuoteSize(_ => "0");
           }
       }
 
@@ -99,7 +88,7 @@ const ActiveBots = ({
     
         return () => clearInterval(intervalId);
     
-    }, [phoenixMarket, wallet]);
+    }, [phoenixMarket, wallet, bot]);
 
 
     const handleCloseBotAction = async () => {
@@ -268,22 +257,34 @@ const ActiveBots = ({
             </div>
             <div className={styles.columnNameRow}>
               <span className={styles.columnName}>
-                {uiNumOrders}
-              </span>
-            </div>
-            <div className={styles.columnNameRow}>
-              <span className={styles.columnName}>
-                {uiOrderSize}
+                {depositValueUSD}
               </span>
             </div>
             <div className={styles.columnNameRow}>
               <span className={styles.columnName}
                 style = {{
-                  color: `#3de383e6`
+                  color: parseFloat(uiProfitQuoteSize) > 0 ? `#3de383e6` : `#e33d3d`
                 }}
               >
                 {
-                  `+${Math.max(0, parseFloat(quoteWithdrawableBalance))}`
+                  parseFloat(uiProfitQuoteSize) >= 0 ?
+                    `+${uiProfitQuoteSize}`
+                  :
+                    `-${uiProfitQuoteSize}`
+                }
+              </span>
+            </div>
+            <div className={styles.columnNameRow}>
+              <span className={styles.columnName}
+                style = {{
+                  color: parseFloat(uiProfitQuoteSize) > 0 ? `#3de383e6` : `#e33d3d`
+                }}
+              >
+                {
+                  parseFloat(uiProfitQuoteSize) >= 0 ?
+                    `+${realizedAPR}%`
+                  :
+                    `-${realizedAPR}$`
                 }
               </span>
             </div>

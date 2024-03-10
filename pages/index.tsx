@@ -10,7 +10,7 @@ export default function Home() {
     const defaultAddress = "4DoNfFBfF7UokCC2FQzriy7yHK6DY6NVdYpuekQ5pRgg";
 
     // Redirect to the /market/[address] route with the default address
-    router.replace(`/market/${defaultAddress}`);
+    router.replace(`/bot/${defaultAddress}`);
   }, [router]);
 
   return (

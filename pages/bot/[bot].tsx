@@ -587,7 +587,6 @@ const BotPage = () => {
                 transaction.add(transferIx);
 
                 updateStatus(<span>{`Awaiting confirmation ⏱...`}</span>);
-                console.log("Gonna post: ", requiredQuoteSize);
                 let response = await wallet.sendTransaction(
                     transaction,
                     connection,
@@ -609,7 +608,7 @@ const BotPage = () => {
                         min_price_in_ticks: positionArgs.minPriceInTicks.toString(),
                         max_price_in_ticks: positionArgs.maxPriceInTicks.toString(),
                         order_size_in_base_lots: positionArgs.orderSizeInBaseLots.toString(),
-                        quote_size_deposited: requiredQuoteSize,
+                        quote_size_deposited: (parseFloat(requiredQuoteSize) + (parseFloat(requiredBaseSize) * midPrice.current)).toString(),
                         is_closed: false
                     } as TradingBotPosition);
                 }
@@ -683,7 +682,7 @@ const BotPage = () => {
 
     return (
         <div className={styles.botPageOuterContainer}>
-<div className={styles.botPageContainer}>
+          <div className={styles.botPageContainer}>
             <div className={styles.botViewerContainer}>
                 <div className={styles.botChartContainer}>
                     <div className={styles.marketDataContainer}>
@@ -978,37 +977,37 @@ const BotPage = () => {
                         <div className={styles.columnNamesContainer}>
                             <div
                                 className={styles.columnNameRow}
-                                style={{ width: `${100 / 6}%` }}
+                                style={{ width: `${100 / 5}%` }}
                             >
                                 <span className={styles.columnName}>{`Min. price`}</span>
                             </div>
                             <div
                                 className={styles.columnNameRow}
-                                style={{ width: `${100 / 6}%` }}
+                                style={{ width: `${100 / 5}%` }}
                             >
                                 <span className={styles.columnName}>{`Max. price`}</span>
                             </div>
                             <div
                                 className={styles.columnNameRow}
-                                style={{ width: `${100 / 6}%` }}
+                                style={{ width: `${100 / 5}%` }}
                             >
-                                <span className={styles.columnName}>{`Num. orders`}</span>
+                                <span className={styles.columnName}>{`Portfolio value (USD)`}</span>
                             </div>
                             <div
                                 className={styles.columnNameRow}
-                                style={{ width: `${100 / 6}%` }}
+                                style={{ width: `${100 / 5}%` }}
                             >
-                                <span className={styles.columnName}>{`Order size`}</span>
+                                <span className={styles.columnName}>{`Growth (USD)`}</span>
                             </div>
                             <div
                                 className={styles.columnNameRow}
-                                style={{ width: `${100 / 6}%` }}
+                                style={{ width: `${100 / 5}%` }}
                             >
-                                <span className={styles.columnName}>{`Profit (${quoteTokenMetadata ? quoteTokenMetadata.ticker : ``})`}</span>
+                                <span className={styles.columnName}>{`Returns`}</span>
                             </div>
                             <div
                                 className={styles.columnNameRow}
-                                style={{ width: `${100 / 6}%` }}
+                                style={{ width: `${100 / 5}%` }}
                             >
                                 <span className={styles.columnName}>{``}</span>
                             </div>
