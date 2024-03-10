@@ -6,7 +6,7 @@ export const getMarket = async (
 ): Promise<PhoenixMarket> => {
   try {
     const response = await axios.get(
-      `${process.env.SPOT_GRID_DATABASE_SERVER_URL}/api/market/get-market?marketAddress=${marketAddress}`,
+      `${process.env.SPOT_GRID_DATABASE_SERVER_URL}/api/bot/market/get-market?marketAddress=${marketAddress}`,
     );
 
     if (response && response.data && response.data.length) {
@@ -27,7 +27,7 @@ export const getMarket = async (
 export const getAllMarkets = async (): Promise<PhoenixMarket[]> => {
   try {
     const response = await axios.get(
-      `${process.env.SPOT_GRID_DATABASE_SERVER_URL}/api/market/get-all-markets`,
+      `${process.env.SPOT_GRID_DATABASE_SERVER_URL}/api/bot/market/get-all-markets`,
     );
 
     if (response && response.data && response.data.length) {

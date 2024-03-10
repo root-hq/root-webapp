@@ -68,13 +68,14 @@ const MarketPage = () => {
   const [enumeratedMarkets, setEnumeratedMarkets] = useState<Map<string, EnumeratedMarketToMetadata>>(new Map());
 
   const router = useRouter();
-  const phoenixMarketOnPage = router.query[`market`];
+  let phoenixMarketOnPage = router.query[`market`];
   const walletState = useWallet();
 
   let lastMessageTimestamp = 0;
 
   useEffect(() => {
     const loadData = () => {
+      console.log("Loading all data");
       let atm: TokenMetadata[] = ALL_TOKEN_METADATA;
       let apm: PhoenixMarket[] = ALL_PHOENIX_MARKETS;
 

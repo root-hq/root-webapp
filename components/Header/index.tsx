@@ -5,6 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { PageTab } from "constants/";
 import { useRootState } from "components/RootStateContextType";
+import { useRouter } from "next/router";
 const WalletMultiButtonDynamic = dynamic(
   async () => (await import("../Wallet")).WalletMultiButton,
   { ssr: false },
@@ -12,10 +13,20 @@ const WalletMultiButtonDynamic = dynamic(
 
 const Header = () => {
 
+  const router = useRouter();
+  const isMarket = router.query[`market`];
+  const isBot = router.query[`bot`];
+
   const { activeTab, setActiveTab } = useRootState();
 
   const handleActiveTabChange = (newTab: PageTab) => {
     setActiveTab(newTab);
+    if(newTab === PageTab.Bots) {
+      router.push('/bot/4DoNfFBfF7UokCC2FQzriy7yHK6DY6NVdYpuekQ5pRgg');
+    }
+    else if(newTab === PageTab.Trade) {
+      router.push('/market/4DoNfFBfF7UokCC2FQzriy7yHK6DY6NVdYpuekQ5pRgg');
+    }
   }
   
   return (

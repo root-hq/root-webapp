@@ -57,7 +57,7 @@ export const RootStateProvider = ({ children }) => {
   const [phoenixClient, setPhoenixClient] = useState<Client | undefined>(
     undefined,
   );
-  const [activeTab, setActiveTab] = useState<PageTab>(PageTab.Trade);
+  const [activeTab, setActiveTab] = useState<PageTab>(PageTab.Bots);
   const [bids, setBids] = useState<L3UiOrder[]>([]);
   const [asks, setAsks] = useState<L3UiOrder[]>([]);
   const midPrice = useRef<number>(0.0);
