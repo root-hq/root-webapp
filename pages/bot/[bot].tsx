@@ -278,6 +278,7 @@ const BotPage = () => {
     const [validationErrorText, setValidationErrorText] = useState("");
 
     const [isButtonLoading, setIsButtonLoading] = useState(false);
+    const [loadingPositions, setLoadingPositions] = useState<boolean>(false);
     const [userBotsActiveTab, setUserBotsActiveTab] = useState<BotManagerView>(BotManagerView.ActiveBots);
 
     const [userBots, setUserBots] = useState<TradingBotPosition[]>([]);
@@ -609,7 +610,8 @@ const BotPage = () => {
                         max_price_in_ticks: positionArgs.maxPriceInTicks.toString(),
                         order_size_in_base_lots: positionArgs.orderSizeInBaseLots.toString(),
                         quote_size_deposited: (parseFloat(requiredQuoteSize) + (parseFloat(requiredBaseSize) * midPrice.current)).toString(),
-                        is_closed: false
+                        is_closed: false,
+                        timestamp: Date.now().toString()
                     } as TradingBotPosition);
                 }
                 catch(err) {
@@ -997,13 +999,13 @@ const BotPage = () => {
                                 className={styles.columnNameRow}
                                 style={{ width: `${100 / 5}%` }}
                             >
-                                <span className={styles.columnName}>{`Growth (USD)`}</span>
+                                <span className={styles.columnName}>{`Fee earned (${quoteTokenMetadata ? quoteTokenMetadata.ticker: ``})`}</span>
                             </div>
                             <div
                                 className={styles.columnNameRow}
                                 style={{ width: `${100 / 5}%` }}
                             >
-                                <span className={styles.columnName}>{`Returns`}</span>
+                                <span className={styles.columnName}>{`Fee APR`}</span>
                             </div>
                             <div
                                 className={styles.columnNameRow}
@@ -1023,7 +1025,13 @@ const BotPage = () => {
                                         if(bot) {
                                             return (
                                                 <div className={styles.botView} key={bot.position_address}>
-                                                   <ActiveBots phoenixMarket={phoenixMarketData} bot={bot} baseTokenMetadata={baseTokenMetadata} quoteTokenMetadata={quoteTokenMetadata}/>
+                                                   <ActiveBots 
+                                                      phoenixMarket={phoenixMarketData}
+                                                      bot={bot} baseTokenMetadata={baseTokenMetadata}
+                                                      quoteTokenMetadata={quoteTokenMetadata}
+                                                      loadingPositions={loadingPositions}
+                                                      setLoadingPositions={setLoadingPositions}  
+                                                    />
                                                 </div>
                                             )
                                         }
@@ -1038,7 +1046,12 @@ const BotPage = () => {
                             </div>
                         :
                             <div className={styles.noOrderViewContainer}>
-                                <span>{`No active bots`}</span>
+                                <span>{
+                                    loadingPositions ?
+                                      `Loading positions...`
+                                    :
+                                      `No active bots`
+                                  }</span>
                             </div>
                     }
                 </div>

@@ -19,13 +19,17 @@ export interface ActiveBotsProps {
     baseTokenMetadata: TokenMetadata;
     quoteTokenMetadata: TokenMetadata;
     bot: TradingBotPosition;
+    loadingPositions: boolean;
+    setLoadingPositions: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ActiveBots = ({
     phoenixMarket,
     baseTokenMetadata,
     quoteTokenMetadata,
-    bot
+    bot,
+    loadingPositions,
+    setLoadingPositions
 }: ActiveBotsProps) => {
 
     const [uiMinPrice, setUiMinPrice] = useState<string>("");
@@ -43,6 +47,7 @@ const ActiveBots = ({
     useEffect(() => {
         const populateLocalState = async () => {
             if(phoenixClient) {
+                setLoadingPositions(_ => true);
                 const minPriceFloat = phoenixClient.ticksToFloatPrice(parseInt(bot.min_price_in_ticks), phoenixMarket.phoenix_market_address);
                 const maxPriceFloat = phoenixClient.ticksToFloatPrice(parseInt(bot.max_price_in_ticks), phoenixMarket.phoenix_market_address);
                 const orderSizeFloat = phoenixClient.baseLotsToBaseAtoms(parseFloat(bot.order_size_in_base_lots), phoenixMarket.phoenix_market_address) / Math.pow(10, baseTokenMetadata.decimals);
@@ -50,6 +55,8 @@ const ActiveBots = ({
 
                 setUiMinPrice(_ => minPriceFloat.toString());
                 setUiMaxPrice(_ => maxPriceFloat.toString());
+                fetchUserWithdrawableQuoteBalance();
+                setLoadingPositions(_ => false);
             }
             else {
                 setUiMinPrice(_ => ``);
@@ -61,27 +68,6 @@ const ActiveBots = ({
     }, [phoenixMarket, bot]);
 
     useEffect(() => {
-      const fetchUserWithdrawableQuoteBalance = async () => {
-          if(phoenixClient && wallet && wallet.connected) {
-              const traderState = await getTraderState(phoenixClient, phoenixMarket.phoenix_market_address, bot.trade_manager_address);
-              const quoteVal = (traderState.quoteWithdrawableBalance + traderState.quoteActiveOrdersBalance) / Math.pow(10, quoteTokenMetadata.decimals);
-              const baseValLots = traderState.baseActiveOrdersBalance + traderState.baseWithdrawableBalance;
-              const baseVal = phoenixClient.baseLotsToBaseAtoms(baseValLots, phoenixMarket.phoenix_market_address) / Math.pow(10, baseTokenMetadata.decimals);
-
-              const portfolioVal = (baseVal * midPrice.current) + quoteVal;
-              const growth = portfolioVal - parseFloat(bot.quote_size_deposited);
-
-              const apr = (growth / parseFloat(bot.quote_size_deposited)) * 100;
-
-              setDepositValueUSD(_ => portfolioVal.toFixed(4));
-              setUiProfitQuoteSize(_ => growth.toFixed(4));
-              setRealizedAPR(_ => apr.toFixed(4));
-          }
-          else {
-            setUiProfitQuoteSize(_ => "0");
-          }
-      }
-
       const intervalId = setInterval(() => {
           fetchUserWithdrawableQuoteBalance();
         }, ACTIVE_ORDERS_REFRESH_FREQUENCY_IN_MS);
@@ -242,6 +228,31 @@ const ActiveBots = ({
         setIsCloseBotButtonLoading(false);
     }
 
+    const fetchUserWithdrawableQuoteBalance = async () => {
+      if(phoenixClient && wallet && wallet.connected) {
+          const traderState = await getTraderState(phoenixClient, phoenixMarket.phoenix_market_address, bot.trade_manager_address);
+          const quoteVal = (traderState.quoteWithdrawableBalance + traderState.quoteActiveOrdersBalance) / Math.pow(10, quoteTokenMetadata.decimals);
+          const baseValLots = traderState.baseActiveOrdersBalance + traderState.baseWithdrawableBalance;
+          const baseVal = phoenixClient.baseLotsToBaseAtoms(baseValLots, phoenixMarket.phoenix_market_address) / Math.pow(10, baseTokenMetadata.decimals);
+
+          const portfolioVal = (baseVal * midPrice.current) + quoteVal;
+
+          const feeEarned = traderState.quoteWithdrawableBalance / Math.pow(10, quoteTokenMetadata.decimals);
+
+          const millisecondsElapsed = Date.now() - parseInt(bot.timestamp);
+          let daysElapsed = millisecondsElapsed / (1_000 * 60 * 60 * 24);
+          
+          const apr = (feeEarned / parseFloat(bot.quote_size_deposited)) * 100 * (365 / daysElapsed);
+
+          setDepositValueUSD(_ => portfolioVal.toFixed(4));
+          setUiProfitQuoteSize(_ => feeEarned.toFixed(4));
+          setRealizedAPR(_ => apr.toFixed(4));
+      }
+      else {
+        setUiProfitQuoteSize(_ => "0");
+      }
+  }
+
     return (
         <div className={styles.orderViewOuterContainer}>
           <div className={styles.orderViewContainer}>
@@ -270,7 +281,7 @@ const ActiveBots = ({
                   parseFloat(uiProfitQuoteSize) >= 0 ?
                     `+${uiProfitQuoteSize}`
                   :
-                    `-${uiProfitQuoteSize}`
+                    `${uiProfitQuoteSize}`
                 }
               </span>
             </div>
@@ -284,7 +295,7 @@ const ActiveBots = ({
                   parseFloat(uiProfitQuoteSize) >= 0 ?
                     `+${realizedAPR}%`
                   :
-                    `-${realizedAPR}$`
+                    `${realizedAPR}%`
                 }
               </span>
             </div>

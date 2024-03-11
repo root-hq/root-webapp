@@ -12,5 +12,6 @@ export interface TradingBotPosition {
     order_size_in_base_lots: string;
     quote_size_deposited: string;
     is_closed: boolean;
+    timestamp: string;
   }
   
