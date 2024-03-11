@@ -27,7 +27,7 @@
 }
 
 .botChartContainer {
-    background-color: #0f1118;
+    background-color: #141721;
     width: 70%;
     border-radius: 0.75rem 0rem 0rem 0.75rem;
     border-left: 1px solid rgba(87, 87, 87, 0.25);
@@ -67,7 +67,7 @@
   
 
 .createBotContainer {
-    background-color: #0b0c11;
+    background-color: #0f1118;
     width: 30%;
     border-radius: 0rem 0.75rem 0.75rem 0rem;
     border-right: 1px solid rgba(87, 87, 87, 0.25);
@@ -215,7 +215,7 @@
     height: 300px;
     margin-top: 2rem;
     margin-bottom: 5rem;
-    background-color: #0b0d12;
+    background-color: #0f1118;
     border: 1px solid rgba(87, 87, 87, 0.25);
     border-radius: 0.25rem;
 }

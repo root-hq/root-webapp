@@ -102,7 +102,7 @@ const TVChartContainer = ({ props, chartType, paneColor, isBotPage }: TVChartCon
         foregroundColor: "#eee",
       },
       overrides: {
-        "paneProperties.background": "#0F1118",
+        "paneProperties.background": `${paneColor}`,
         "paneProperties.vertGridProperties.color": "rgba(221, 221, 221, 0.05)",
         "paneProperties.horzGridProperties.color": "rgba(221, 221, 221, 0.05)",
         "scalesProperties.lineColor": "rgba(221, 221, 221, 0.5)",

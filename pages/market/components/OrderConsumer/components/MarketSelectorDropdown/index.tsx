@@ -154,7 +154,7 @@ const MarketSelectorDropdown = ({
     <div className={styles.marketDropdown} ref={marketSelectorDropdownRef}>
       <button className={styles.dropdownButton} onClick={toggleDropdown} style={{
         borderRight: isBotPage ? `none` : ``,
-        backgroundColor: isBotPage ? `#0f1118` : ``,
+        backgroundColor: isBotPage ? `#141721` : ``,
         width: !isBotPage ? `100%` : ``
       }}>
         {getTokenPair(activeBaseTokenMetadata, activeQuoteTokenMetadata, true)}

@@ -251,7 +251,7 @@ const MarketPage = () => {
 
   useEffect(() => {
     const updateBalance = async () => {
-      if (walletState.connected) {
+      if (walletState.connected && baseTokenMetadata && quoteTokenMetadata) {
         const baseTokenAddress = await getAssociatedTokenAddress(
           new web3.PublicKey(baseTokenMetadata.mint),
           walletState.publicKey,

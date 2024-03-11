@@ -215,7 +215,7 @@ const BotPage = () => {
   
     useEffect(() => {
       const updateBalance = async () => {
-        if (wallet.connected) {
+        if (wallet.connected && baseTokenMetadata && quoteTokenMetadata) {
           const baseTokenAddress = await getAssociatedTokenAddress(
             new web3.PublicKey(baseTokenMetadata.mint),
             wallet.publicKey,
@@ -301,7 +301,7 @@ const BotPage = () => {
       };
     
       const memoizedTradingViewChart = useMemo(
-        () => <TVChartContainer props={defaultWidgetProps} chartType={ChartType.Pro} paneColor={`#0f1118`} isBotPage={true} />,
+        () => <TVChartContainer props={defaultWidgetProps} chartType={ChartType.Pro} paneColor={`#141721`} isBotPage={true} />,
         [phoenixMarketData, dummyCounter.current],
       );
 
