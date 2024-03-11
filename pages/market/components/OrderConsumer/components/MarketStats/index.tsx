@@ -39,19 +39,27 @@ const MarketStats = ({ enumeratedMarket, showOrderBook }: MarketStatsProps) => {
         );
 
         const freshStatsData = await makeApiRequest(
-          `defi/ohlcv/base_quote?base_address=${enumeratedMarket.baseTokenMetadata.mint}&quote_address=${enumeratedMarket.quoteTokenMetadata.mint}&type=1D&time_from=${oneDayBefore}&time_to=${oneSecondBefore}`,
+          `defi/token_overview/?address=${enumeratedMarket.baseTokenMetadata.mint}&quote_address=${enumeratedMarket.quoteTokenMetadata.mint}&type=1D&time_from=${oneDayBefore}&time_to=${oneSecondBefore}`,
         );
 
         if (freshStatsData.success) {
-          const data = freshStatsData.data.items[0];
+          const data = freshStatsData.data;
+          setDailyVolumeQuote((_) => data["v24hUSD"]);
+        }
+
+        const freshOHLCData = await makeApiRequest(
+          `defi/ohlcv/base_quote?base_address=${enumeratedMarket.baseTokenMetadata.mint}&quote_address=${enumeratedMarket.quoteTokenMetadata.mint}&type=1D&time_from=${oneDayBefore}&time_to=${oneSecondBefore}`,
+        );
+  
+        if (freshOHLCData.success) {
+          const data = freshOHLCData.data.items[0];
           setDailyHigh((_) => data.h);
           setDailyLow((_) => data.l);
-          setDailyVolumeBase((_) => data.vBase);
-          setDailyVolumeQuote((_) => data.vQuote);
         }
       } catch (err) {
         console.log(`Error refreshing market stats: `, err);
       }
+
     };
 
     refreshMarketStats();
