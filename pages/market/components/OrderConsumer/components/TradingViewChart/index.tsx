@@ -136,7 +136,7 @@ const TVChartContainer = ({ props, chartType, paneColor, isBotPage }: TVChartCon
       	
       //   button.innerHTML = ``;
       // });
-      if (chartType === ChartType.Lite) {
+      if (chartType === ChartType.Lite || isBotPage) {
         tvWidget.activeChart().setChartType(3);
       } else if (chartType === ChartType.Pro) {
         tvWidget.activeChart().setChartType(1);

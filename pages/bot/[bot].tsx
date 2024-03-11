@@ -286,7 +286,7 @@ const BotPage = () => {
     const [enumeratedMarketsArray, setEnumeratedMarketsArray] = useState<EnumeratedMarketToMetadata[]>([]);
     const [tradingBotMarketMetadata, setTradingBotMarketMetadata] = useState<TradingBotMarket>();
     
-    const { updateStatus, green, red } = useBottomStatus();
+    const { updateStatus, green, red, resetStatus } = useBottomStatus();
 
     const dummyCounter = useRef<number>(0);
 
@@ -383,13 +383,22 @@ const BotPage = () => {
 
                 if(sizeFloat < minSizeFloat) {
                     setValidationErrorText(_ => `Min. order size: ${minSizeFloat}`)
+                    updateStatus(
+                      <div>
+                        <span
+                          style={{ color: `#e33d3d`, marginLeft: `1rem` }}
+                        >{`Min. order size: ${minSizeFloat} ${baseTokenMetadata ? baseTokenMetadata.ticker : ``}`}</span>
+                      </div>,
+                    );
                 }
                 else {
                     setValidationErrorText(_ => "");
+                    // resetStatus();
                 }
             }
             else {
                 setValidationErrorText(_ => "");
+                // resetStatus();
             }
         }
 
@@ -398,37 +407,69 @@ const BotPage = () => {
 
       useEffect(() => {
         const calculatePreviewText = () => {
-            let baseSize = 0;
-            let quoteSize = 0;
-            
-            for(let order of previewOrders) {
-                if(order.side === Side.Bid) {
-                    quoteSize += order.size * order.price;
-                }
-                else {
-                    baseSize += order.size;
-                }
+            if(previewOrders.length > 0) {
+              let baseSize = 0;
+              let quoteSize = 0;
+              
+              for(let order of previewOrders) {
+                  if(order.side === Side.Bid) {
+                      quoteSize += order.size * order.price;
+                  }
+                  else {
+                      baseSize += order.size;
+                  }
+              }
+  
+              let text = "";
+  
+              if(baseSize || quoteSize) {
+                  text = `You deposit`;
+                  if(baseSize > 0) {
+                      text += ` ${baseSize.toFixed(baseTokenMetadata.decimals)} ${baseTokenMetadata.ticker}`;
+                      setRequiredBaseSize(_ => baseSize.toString());
+                  }
+  
+                  if(quoteSize >= 0) {
+                      if(baseSize) {
+                          text += " and "
+                      }
+                      text += ` ${quoteSize.toFixed(quoteTokenMetadata.decimals)} ${quoteTokenMetadata.ticker}`;
+                      setRequiredQuoteSize(_ => quoteSize.toString());
+                  }
+              }
+  
+              setPreviewText(_ => text);
+              updateStatus(
+                <div>
+                  <span
+                    style={{ color: `#3DE383` }}
+                  >{`${text}`}</span>
+                </div>,
+              );
+  
+              if(!validationErrorText) {
+                updateStatus(
+                  <div>
+                    <span
+                      style={{ color: `#3DE383` }}
+                    >{`${text}`}</span>
+                  </div>,
+                );
+              }
+              else {
+                updateStatus(
+                  <div>
+                    <span
+                      style={{ color: `#e33d3d` }}
+                    >{`${validationErrorText}`}</span>
+                  </div>,
+                );
+              }
             }
-
-            let text = "";
-
-            if(baseSize || quoteSize) {
-                text = `You deposit`;
-                if(baseSize > 0) {
-                    text += ` ${baseSize.toFixed(baseTokenMetadata.decimals)} ${baseTokenMetadata.ticker}`;
-                    setRequiredBaseSize(_ => baseSize.toString());
-                }
-
-                if(quoteSize >= 0) {
-                    if(baseSize) {
-                        text += " and "
-                    }
-                    text += ` ${quoteSize.toFixed(quoteTokenMetadata.decimals)} ${quoteTokenMetadata.ticker}`;
-                    setRequiredQuoteSize(_ => quoteSize.toString());
-                }
+            else {
+              resetStatus();
             }
-
-            setPreviewText(_ => text);
+      
         }
 
         calculatePreviewText();
@@ -648,6 +689,7 @@ const BotPage = () => {
         setSize(_ => "");
         setPreviewOrders(_ => []);
         setPreviewText(_ => "");
+        resetStatus();
       }
 
       const calculatePreviewOrders = () => {
@@ -896,29 +938,7 @@ const BotPage = () => {
                                     )}
                                 </div> */}
                             </Form.Group>
-                        </Form>
-                        <Form>
-                            <Form.Group controlId="formInput" className={styles.formGroupContainer}>
-                                <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
-                                    <Form.Label className={styles.depositTextContainer}>
-                                    <span className={styles.fieldTitleContainer}>
-                                        <span>
-                                            {
-                                                validationErrorText && validationErrorText.length ?
-                                                    <div className={styles.validationErrorText}>{`${validationErrorText}`}</div>
-                                                :
-                                                    previewText && previewText.length ?
-                                                    <div className={styles.previewText}>{`${previewText}`}</div>
-                                                    :
-                                                        ``
-                                            }
-                                        </span>
-                                    </span>
-                                    </Form.Label>
-                                </div>
-                            </Form.Group>
-                        </Form>
-                        
+                        </Form>                     
                         <Form>
                             <Form.Group controlId="formInput" className={styles.formGroupContainer}>
                                 <div className={styles.createBotButtonContainer}>
