@@ -33,7 +33,7 @@
   border-bottom: 1px solid rgba(87, 87, 87, 0.25);
 
   border-radius: 0.75rem 0.75rem 0rem 0rem;
-  background-color: #0b0c11;
+  background-color: #0f1118;
 }
 
 .marketSelectorContainer {
@@ -51,7 +51,7 @@
   padding: 1rem;
   color: #777;
   font-size: 0.9rem;
-  background-color: #0b0c11;
+  background-color: #0f1118;
   border-top: 1px solid rgba(87, 87, 87, 0.25);
   border-radius: 0rem 0rem 0.75rem 0.75rem;
 }
@@ -108,7 +108,7 @@
 }
 
 .tradingViewChartContainer {
-  background-color: #0b0c11;
+  background-color: #0f1118;
 }
 
 .orderManagerOuterContainer {
@@ -125,7 +125,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 0.75rem;
-  background-color: #0b0c11;
+  background-color: #0f1118;
 }
 
 @media (max-width: 1024px) {

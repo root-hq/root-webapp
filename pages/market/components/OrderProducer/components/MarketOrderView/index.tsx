@@ -364,7 +364,7 @@ const MarketOrderView = ({
                 backgroundColor: isBuyOrder
                   ? "rgba(61, 227, 131, 0.90)"
                   : "rgba(227, 61, 61, 0.90)",
-                color: "#0B0C11",
+                color: "#0f1118",
               }}
             >
               {isPlaceOrderButtonLoading ? (
@@ -372,7 +372,7 @@ const MarketOrderView = ({
                   <div
                     className={styles.threeQuarterSpinner}
                     style={{
-                      border: "3px solid #0B0C11",
+                      border: "3px solid #0f1118",
                       borderTop: `3px solid transparent`,
                     }}
                   ></div>

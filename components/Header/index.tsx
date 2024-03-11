@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "../Logo";
 import styles from "./Header.module.css";
 import Link from "next/link";
@@ -16,6 +16,15 @@ const Header = () => {
   const router = useRouter();
   const isMarket = router.query[`market`];
   const isBot = router.query[`bot`];
+
+  useEffect(() => {
+    if(isMarket && !isBot) {
+      setActiveTab(PageTab.Trade);
+    }
+    else if(!isMarket && isBot) {
+      setActiveTab(PageTab.Bots);
+    }
+  }, []);
 
   const { activeTab, setActiveTab } = useRootState();
 

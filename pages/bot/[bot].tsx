@@ -933,7 +933,7 @@ const BotPage = () => {
                                             <div
                                                 className={styles.threeQuarterSpinner}
                                                 style={{
-                                                border: "3px solid #0B0C11",
+                                                border: "3px solid #0f1118",
                                                 borderTop: `3px solid transparent`,
                                                 }}
                                             ></div>

@@ -38,7 +38,7 @@ const TVChartContainer = ({ props, chartType, paneColor, isBotPage }: TVChartCon
 		  --tv-color-toolbar-button-text-active: #e33d3d;
 		  --tv-color-toolbar-button-text-active-hover: #fff;
 		  --tv-color-item-active-text: #ddd;
-		  --tv-color-toolbar-toggle-button-background-active: #0B0C11;
+		  --tv-color-toolbar-toggle-button-background-active: #0f1118;
 		  --tv-color-toolbar-toggle-button-background-active-hover: #ddd;
 		  --tv-color-toolbar-divider-background: #ddd;
 	  }
@@ -98,7 +98,7 @@ const TVChartContainer = ({ props, chartType, paneColor, isBotPage }: TVChartCon
       ],
       custom_css_url: cssBlobUrl,
       loading_screen: {
-        backgroundColor: "#0B0C11",
+        backgroundColor: "#0f1118",
         foregroundColor: "#eee",
       },
       overrides: {

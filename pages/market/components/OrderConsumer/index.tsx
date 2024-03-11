@@ -130,7 +130,7 @@ const OrderConsumer = ({
   };
 
   const memoizedTradingViewChart = useMemo(
-    () => <TVChartContainer props={defaultWidgetProps} chartType={chartType} paneColor={`#0b0c11`} isBotPage={false}/>,
+    () => <TVChartContainer props={defaultWidgetProps} chartType={chartType} paneColor={`#0f1118`} isBotPage={false}/>,
     [chartType, selectedPhoenixMarket, dummyCounter.current],
   );
   const memoizedOrderbook = useMemo(() => {
