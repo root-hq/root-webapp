@@ -393,12 +393,10 @@ const BotPage = () => {
                 }
                 else {
                     setValidationErrorText(_ => "");
-                    // resetStatus();
                 }
             }
             else {
                 setValidationErrorText(_ => "");
-                // resetStatus();
             }
         }
 
@@ -466,10 +464,6 @@ const BotPage = () => {
                 );
               }
             }
-            else {
-              resetStatus();
-            }
-      
         }
 
         calculatePreviewText();
@@ -679,7 +673,6 @@ const BotPage = () => {
             }
         }
         catch(err) {
-            console.log("yeh: ", err);
             red(<span>{`Failed: ${err.message}`}</span>, 2_000);
         }
         setIsButtonLoading(_ => false);
@@ -945,7 +938,18 @@ const BotPage = () => {
                                     )}
                                 </div> */}
                             </Form.Group>
-                        </Form>                     
+                        </Form>
+                        <Form>
+                            <Form.Group controlId="formInput" className={styles.formGroupContainer}>
+                                <div className={styles.formLabelAndFieldContainerNoBottomMargin}>
+                                    <Form.Label className={styles.withdrawalFeeLabelContainer}>
+                                    <span className={styles.fieldTitleContainer}>
+                                        <span>Withdrawal fee: {`${tradingBotMarketMetadata ? parseInt(tradingBotMarketMetadata.withdrawal_fee_in_hundredth_bps) / 10_000 : 0}%`}</span>
+                                    </span>
+                                    </Form.Label>
+                                </div>
+                            </Form.Group>
+                        </Form>                   
                         <Form>
                             <Form.Group controlId="formInput" className={styles.formGroupContainer}>
                                 <div className={styles.createBotButtonContainer}>

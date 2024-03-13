@@ -136,6 +136,12 @@
 .formLabelContainer {
     width: 40%;
   }
+
+  .withdrawalFeeLabelContainer {
+    font-size: 0.8rem;
+    color: rgb(93, 93, 93);
+    font-weight: bold;
+  }
   
   .formFieldContainer {
     width: 40%;
