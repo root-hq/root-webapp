@@ -557,24 +557,31 @@ const BotPage = () => {
                     wallet.publicKey,
                     );
 
-                    let balance = 0;
+                    let requiredBalance = 0;
                     if(requiredBaseSize) {
-                        balance = parseInt(
+                        requiredBalance = parseInt(
                             (parseFloat(requiredBaseSize) * Math.pow(10, 9)).toString(),
                             );
                     }
 
-                    let transferIx = SystemProgram.transfer({
-                    fromPubkey: wallet.publicKey,
-                    toPubkey: wSOLAta,
-                    lamports: balance,
-                    });
+                    let currentBalance = (await connection.getTokenAccountBalance(wSOLAta)).value.uiAmount;
+                    currentBalance = parseInt(
+                      (currentBalance * Math.pow(10, 9)).toString(),
+                      );
 
-                    // sync wrapped SOL balance
-                    let syncNativeIx = createSyncNativeInstruction(wSOLAta);
-
-                    wrapSOLIxs.push(transferIx);
-                    wrapSOLIxs.push(syncNativeIx);
+                    if(currentBalance < requiredBalance) {
+                      let transferIx = SystemProgram.transfer({
+                        fromPubkey: wallet.publicKey,
+                        toPubkey: wSOLAta,
+                        lamports: requiredBalance,
+                        });
+    
+                        // sync wrapped SOL balance
+                        let syncNativeIx = createSyncNativeInstruction(wSOLAta);
+    
+                        wrapSOLIxs.push(transferIx);
+                        wrapSOLIxs.push(syncNativeIx);
+                    }
 
                     let withdrawIx = createCloseAccountInstruction(
                     wSOLAta,
@@ -672,6 +679,7 @@ const BotPage = () => {
             }
         }
         catch(err) {
+            console.log("yeh: ", err);
             red(<span>{`Failed: ${err.message}`}</span>, 2_000);
         }
         setIsButtonLoading(_ => false);
@@ -689,7 +697,6 @@ const BotPage = () => {
         setSize(_ => "");
         setPreviewOrders(_ => []);
         setPreviewText(_ => "");
-        resetStatus();
       }
 
       const calculatePreviewOrders = () => {
