@@ -23,6 +23,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { Client, getConfirmedMarketAccountZstd } from "@ellipsis-labs/phoenix-sdk";
 import { ZSTDDecoder } from "zstddec";
+import { getWhitelistStatus } from "utils/supabase/UserWhitelist";
 
 const ActiveBots = dynamic(() => import("./components/ActiveBots"));
 const TVChartContainer = dynamic(() => import("../market/components/OrderConsumer/components/TradingViewChart"));
@@ -304,6 +305,20 @@ const BotPage = () => {
         () => <TVChartContainer props={defaultWidgetProps} chartType={ChartType.Pro} paneColor={`#141721`} isBotPage={true} />,
         [phoenixMarketData, dummyCounter.current],
       );
+
+      const [whitelistStatus, setWhitelistStatus] = useState<boolean>(false);
+
+      useEffect(() => {
+        const checkWhitelistStatus = async () => {
+          if(wallet.connected) {
+            const status = await getWhitelistStatus(wallet.publicKey.toString());
+            console.log("Fetched status: ", status);
+            setWhitelistStatus(_ => status);
+          }
+        }
+    
+        checkWhitelistStatus();
+      }, [wallet]);
 
       useEffect(() => {
         const doStuff = () => {
@@ -726,7 +741,9 @@ const BotPage = () => {
 
     return (
         <div className={styles.botPageOuterContainer}>
-          <div className={styles.botPageContainer}>
+          {
+            whitelistStatus ?
+            <div className={styles.botPageContainer}>
             <div className={styles.botViewerContainer}>
                 <div className={styles.botChartContainer}>
                     <div className={styles.marketDataContainer}>
@@ -1087,7 +1104,12 @@ const BotPage = () => {
                     }
                 </div>
             </div>
-        </div>
+          </div>
+          :
+          <div className={styles.notWhitelistedContainer}>
+              <span>The app is currently in private beta. For early access, DM @mmdhrumil on Telegram</span>
+          </div>
+          }
         </div>
     );
 }
