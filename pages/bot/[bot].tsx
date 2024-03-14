@@ -573,7 +573,14 @@ const BotPage = () => {
                             );
                     }
 
-                    let currentBalance = (await connection.getTokenAccountBalance(wSOLAta)).value.uiAmount;
+                    let currentBalance = 0;
+                    try {
+                      currentBalance = (await connection.getTokenAccountBalance(wSOLAta)).value.uiAmount;
+                    }
+                    catch(err) {
+                      console.log("Failed to fetch wsol token account balance");
+                    }
+
                     currentBalance = parseInt(
                       (currentBalance * Math.pow(10, 9)).toString(),
                       );
