@@ -56,7 +56,12 @@ const MarketSelectorDropdown = ({
     setActiveBaseTokenMetadata(baseMetadata);
     setActiveQuoteTokenMetadata(quoteMetadata);
     // Redirect to the desired URL for the selected market
-    router.push(`/market/${market.phoenix_market_address}`);
+    if(isBotPage) {
+      router.push(`/bot/${market.phoenix_market_address}`);
+    }
+    else {
+      router.push(`/market/${market.phoenix_market_address}`);
+    }
   };
   
   const handleSearchTextChange = (e) => {
