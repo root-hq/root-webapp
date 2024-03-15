@@ -154,7 +154,7 @@ const OrderConsumer = ({
                 selectedQuoteTokenMetadata={quoteTokenMetadata}
                 topLevelActiveMarketState={activeMarket}
                 setTopLevelActiveMarketState={setActiveMarket}
-                isBotPage={true}
+                isBotPage={false}
               />
             </div>
             <div className={styles.marketStatsContainer}>
