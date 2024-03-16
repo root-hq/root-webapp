@@ -310,6 +310,11 @@ const BotPage = () => {
 
       useEffect(() => {
         const checkWhitelistStatus = async () => {
+          console.log("eq: ", process.env.DISABLE_USER_WHITELIST === "true");
+          if(process.env.DISABLE_USER_WHITELIST === "true") {
+            setWhitelistStatus(_ => true);
+          }
+
           if(wallet.connected) {
             const status = await getWhitelistStatus(wallet.publicKey.toString());
             console.log("Fetched status: ", status);

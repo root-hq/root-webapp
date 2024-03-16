@@ -15,6 +15,7 @@ const nextConfig = {
     RPC_ENDPOINT: process.env.RPC_ENDPOINT,
     WS_ENDPOINT: process.env.WS_ENDPOINT,
     BIRDEYE_API_KEY: process.env.BIRDEYE_API_KEY,
+    DISABLE_USER_WHITELIST: process.env.DISABLE_USER_WHITELIST,
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
