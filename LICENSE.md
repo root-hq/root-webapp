@@ -9,7 +9,7 @@ Parameters
 
 Licensor:             SquareRoot Labs
 
-Licensed Work:        Root Spot Grid
+Licensed Work:        Root webapp
                       The Licensed Work is (c) 2024 SquareRoot Labs
 
 
